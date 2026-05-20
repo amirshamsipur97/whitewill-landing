@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+  <!-- Hexagonal "C" icon on the left -->
+  <g transform="translate(8 14)">
+    <polygon
+      points="26,0 48,13 48,39 26,52 4,39 4,13"
+      fill="none"
+      stroke="#fff"
+      stroke-width="2.5"
+    />
+    <path
+      d="M 34 16 A 12 12 0 1 0 34 36"
+      stroke="#fff"
+      stroke-width="3"
+      stroke-linecap="round"
+      fill="none"
+    />
+  </g>
+  <!-- Arabic top line "المدينة المستدامة - يتي" -->
+  <text x="68" y="34" fill="#fff" font-family="'Tahoma','Noto Kufi Arabic',Arial,sans-serif" font-size="13" font-weight="500" direction="rtl">
+    المدينة المستدامة - يتي
+  </text>
+  <!-- English bottom line "THE SUSTAINABLE CITY · YITI" -->
+  <text x="68" y="56" fill="#fff" font-family="'Inter',Arial,sans-serif" font-size="13" font-weight="600" letter-spacing="1.5">
+    THE SUSTAINABLE CITY · YITI
+  </text>
+</svg>

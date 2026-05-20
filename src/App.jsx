@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Box } from '@mui/material'
 import Header from './components/Header'
-import HeroSection from './components/HeroSection'
+import ScrollVideoHero from './components/ScrollVideoHero'
+import AboutFounder from './components/AboutFounder'
+import LogosMarquee from './components/LogosMarquee'
+import DiscoverProperties from './components/DiscoverProperties'
 import LeadCards from './components/LeadCards'
 import CatalogCarousel from './components/CatalogCarousel'
 import AwardsRow from './components/AwardsRow'
@@ -13,13 +16,17 @@ import PartnerBanner from './components/PartnerBanner'
 import Offices from './components/Offices'
 import SiteFooter from './components/SiteFooter'
 import CookieBanner from './components/CookieBanner'
-import ExpertPopup from './components/ExpertPopup'
+import ChatWidget from './components/chat/ChatWidget'
 import SellPage from './pages/SellPage'
 
 function LandingPage() {
   return (
     <>
-      <HeroSection />
+      <ScrollVideoHero />
+      <div id="after-video-hero" />
+      <AboutFounder />
+      <LogosMarquee />
+      <DiscoverProperties />
       <LeadCards />
       <CatalogCarousel />
       <AwardsRow />
@@ -48,7 +55,7 @@ export default function App() {
         </main>
         <SiteFooter />
         <CookieBanner />
-        <ExpertPopup />
+        <ChatWidget />
       </Box>
     </BrowserRouter>
   )

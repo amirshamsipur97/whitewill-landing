@@ -10,7 +10,6 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Chip,
   Drawer,
   List,
   ListItem,
@@ -26,6 +25,51 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import CheckIcon from '@mui/icons-material/Check'
 import { useI18n, LANGS } from '../i18n.jsx'
 
+/**
+ * Header — built to match the Figma "Demo design" navbar exactly.
+ * Reference design tokens (from Figma node 158:16615):
+ *  - bg:          rgba(8, 8, 10, 0.55) + backdrop-blur(9px)
+ *  - border-bot:  1px rgba(255,255,255,0.08)
+ *  - shadow:      0 12px 32px rgba(0,0,0,0.35) + inset 0 1px 0 rgba(255,255,255,0.06)
+ *  - nav font:    Inter Medium 14 / 24.5 / letter-spacing 0.7 / color #fff
+ *  - address:     Inter Regular 12 / 14.4 / color #f1e0e0
+ *  - phone:       Inter Medium 14 / 24.5 / color #fff
+ *  - online pill: border 1px #69ef1c, radius 6, height 18, text #69ef1c 11px
+ *  - dividers:    vertical 48px, 1px rgba(255,255,255,0.12)
+ *  - nav gap:     50px between items
+ */
+
+// Tailwind/MUI-friendly tokens lifted straight from the Figma node.
+const NAV_FONT = {
+  fontFamily: 'Inter, system-ui, sans-serif',
+  fontWeight: 500,
+  fontSize: '14px',
+  lineHeight: '24.5px',
+  letterSpacing: '0.7px',
+}
+const ADDRESS_FONT = {
+  fontFamily: 'Inter, system-ui, sans-serif',
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '14.4px',
+  color: '#f1e0e0',
+}
+const ONLINE_GREEN = '#69ef1c'
+
+function VerticalDivider() {
+  return (
+    <Box
+      aria-hidden
+      sx={{
+        width: '1px',
+        height: 48,
+        bgcolor: 'rgba(255,255,255,0.12)',
+        flexShrink: 0,
+      }}
+    />
+  )
+}
+
 export default function Header() {
   const { t, lang, setLang } = useI18n()
   const navigate = useNavigate()
@@ -35,8 +79,8 @@ export default function Header() {
   const navLinks = [
     { label: t.nav.buy, to: '/sell' },
     { label: t.nav.sell, to: '/sell' },
-    { label: t.nav.rent, to: '/' },
-    { label: t.nav.projects, to: '/' },
+    { label: t.nav.project, to: '/' },
+    { label: t.nav.maison, to: '/' },
     { label: t.nav.about, to: '/' },
   ]
 
@@ -47,85 +91,171 @@ export default function Header() {
       position="sticky"
       elevation={0}
       sx={{
-        bgcolor: 'rgba(10,10,10,0.85)',
-        backdropFilter: 'blur(8px)',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
+        bgcolor: 'rgba(8, 8, 10, 0.55)',
+        backdropFilter: 'blur(9px) saturate(160%)',
+        WebkitBackdropFilter: 'blur(9px) saturate(160%)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow:
+          'inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 32px rgba(0,0,0,0.35)',
       }}
     >
-      <Toolbar sx={{ minHeight: { xs: 64, md: 80 }, px: { xs: 2, md: 6 } }}>
-        <Typography
+      <Toolbar
+        sx={{
+          minHeight: { xs: 64, md: 80 },
+          px: { xs: 2, md: 6 },
+          gap: { md: 3 },
+        }}
+      >
+        {/* Logo */}
+        <Box
           component={RouterLink}
           to="/"
-          variant="h6"
-          sx={{ fontWeight: 700, letterSpacing: '0.2em', mr: 4, color: 'inherit', textDecoration: 'none' }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            mr: { md: 2 },
+            textDecoration: 'none',
+            color: 'inherit',
+            transition: 'opacity 200ms ease',
+            '&:hover': { opacity: 0.85 },
+          }}
         >
-          WHITEWILL
-        </Typography>
+          <Box
+            component="img"
+            src="/logo.svg"
+            alt="Irfan Investment"
+            sx={{
+              height: { xs: 36, md: 44 },
+              width: 'auto',
+              display: 'block',
+            }}
+          />
+        </Box>
 
+        {/* Nav links — Figma uses 50px gap between items, hidden < lg */}
         <Stack
           direction="row"
-          spacing={3}
-          sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1 }}
+          sx={{
+            display: { xs: 'none', lg: 'flex' },
+            alignItems: 'center',
+            gap: '50px',
+            ml: 2,
+          }}
         >
           {navLinks.map((item) => (
-            <Button
+            <Box
               key={item.label}
               component={RouterLink}
               to={item.to}
-              color="inherit"
-              sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
+              sx={{
+                ...NAV_FONT,
+                color: '#fff',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                position: 'relative',
+                transition: 'opacity 180ms ease',
+                '&:hover': { opacity: 0.75 },
+              }}
             >
               {item.label}
-            </Button>
+            </Box>
           ))}
         </Stack>
 
-        <Box sx={{ flexGrow: { xs: 1, md: 0 } }} />
+        {/* Pushes everything after to the right */}
+        <Box sx={{ flexGrow: 1 }} />
 
+        {/* Divider before phone block (lg+) */}
+        <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+          <VerticalDivider />
+        </Box>
+
+        {/* Phone + Online badge */}
         <Stack
           direction="row"
-          spacing={1.5}
-          sx={{ display: { xs: 'none', lg: 'flex' }, mr: 2, alignItems: 'center' }}
+          spacing={1.25}
+          alignItems="center"
+          sx={{ display: { xs: 'none', lg: 'flex' } }}
         >
-          <Box sx={{ textAlign: 'right', maxWidth: 280 }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', lineHeight: 1.2 }}>
-              {t.address}
+          <PhoneIcon sx={{ fontSize: 18, color: '#fff' }} />
+          <Box
+            component="a"
+            href={`tel:${t.phone.replace(/[^+\d]/g, '')}`}
+            sx={{
+              ...NAV_FONT,
+              color: '#fff',
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+              '&:hover': { opacity: 0.85 },
+            }}
+          >
+            {t.phone}
+          </Box>
+          <Box
+            sx={{
+              border: `1px solid ${ONLINE_GREEN}`,
+              borderRadius: '6px',
+              height: 18,
+              px: 1,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography
+              sx={{
+                color: ONLINE_GREEN,
+                fontSize: 11,
+                fontWeight: 500,
+                lineHeight: 1,
+                fontFamily: 'Inter, system-ui, sans-serif',
+                letterSpacing: '0.5px',
+              }}
+            >
+              {t.online}
             </Typography>
           </Box>
         </Stack>
 
-        <Button
-          href="tel:+96896786933"
-          startIcon={<PhoneIcon fontSize="small" />}
-          color="inherit"
-          sx={{
-            display: { xs: 'none', md: 'inline-flex' },
-            border: '1px solid',
-            borderColor: 'divider',
-            mr: 1,
-          }}
-          endIcon={
-            <Chip
-              label={t.online}
-              size="small"
-              color="success"
-              sx={{ height: 18, fontSize: 10, '& .MuiChip-label': { px: 0.75 } }}
-            />
-          }
-        >
-          +968 (967) 8-6933
-        </Button>
+        {/* Divider between phone and address (lg+) */}
+        <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+          <VerticalDivider />
+        </Box>
 
+        {/* Address — pre-line so '\n' in the string becomes a real line break */}
+        <Box
+          sx={{
+            display: { xs: 'none', lg: 'block' },
+            maxWidth: 260,
+          }}
+        >
+          <Typography sx={{ ...ADDRESS_FONT, whiteSpace: 'pre-line' }}>
+            {t.address}
+          </Typography>
+        </Box>
+
+        {/* Language switcher */}
         <Button
           color="inherit"
-          startIcon={<LanguageIcon fontSize="small" />}
-          endIcon={<KeyboardArrowDownIcon fontSize="small" />}
+          startIcon={<LanguageIcon sx={{ fontSize: 18 }} />}
+          endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 18 }} />}
           onClick={(e) => setLangAnchor(e.currentTarget)}
+          sx={{
+            ...NAV_FONT,
+            color: '#fff',
+            textTransform: 'none',
+            ml: { xs: 0, lg: 2 },
+            px: 1.5,
+            minWidth: 0,
+            '& .MuiButton-startIcon': { mr: 0.75 },
+            '& .MuiButton-endIcon': { ml: 0.5 },
+          }}
         >
-          <Box component="span" sx={{ mr: 0.5 }}>{current.flag}</Box>
+          <Box component="span" sx={{ mr: 0.5, fontSize: 14 }}>
+            {current.flag}
+          </Box>
           <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-            {current.label}
+            {current.label.split(' ')[0]}
           </Box>
         </Button>
         <Menu
@@ -143,27 +273,37 @@ export default function Header() {
               }}
               sx={{ minWidth: 180 }}
             >
-              <ListItemIcon sx={{ minWidth: 32, fontSize: 18 }}>{l.flag}</ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 32, fontSize: 18 }}>
+                {l.flag}
+              </ListItemIcon>
               <ListItemText primary={l.label} />
-              {lang === l.code && <CheckIcon fontSize="small" sx={{ ml: 1, color: 'primary.main' }} />}
+              {lang === l.code && (
+                <CheckIcon
+                  fontSize="small"
+                  sx={{ ml: 1, color: 'primary.main' }}
+                />
+              )}
             </MenuItem>
           ))}
         </Menu>
 
+        {/* Mobile hamburger */}
         <IconButton
           color="inherit"
-          sx={{ display: { xs: 'inline-flex', md: 'none' } }}
+          sx={{ display: { xs: 'inline-flex', lg: 'none' }, ml: 1 }}
           onClick={() => setDrawerOpen(true)}
+          aria-label="Open menu"
         >
           <MenuIcon />
         </IconButton>
       </Toolbar>
 
+      {/* Mobile drawer — keeps all the desktop info available on phones */}
       <Drawer
         anchor="right"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        PaperProps={{ sx: { bgcolor: 'background.default', width: 280 } }}
+        PaperProps={{ sx: { bgcolor: 'background.default', width: 300 } }}
       >
         <List>
           {navLinks.map((item) => (
@@ -174,15 +314,34 @@ export default function Header() {
                   navigate(item.to)
                 }}
               >
-                <ListItemText primary={item.label} />
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{ sx: NAV_FONT }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
           <Divider sx={{ my: 1 }} />
           <ListItem disablePadding>
-            <ListItemButton component="a" href="tel:+96896786933">
-              <ListItemText primary="+968 (967) 8-6933" />
+            <ListItemButton
+              component="a"
+              href={`tel:${t.phone.replace(/[^+\d]/g, '')}`}
+            >
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <PhoneIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText
+                primary={t.phone}
+                secondary={t.online}
+                secondaryTypographyProps={{ sx: { color: ONLINE_GREEN } }}
+              />
             </ListItemButton>
+          </ListItem>
+          <Divider sx={{ my: 1 }} />
+          <ListItem>
+            <Typography sx={{ ...ADDRESS_FONT, whiteSpace: 'pre-line' }}>
+              {t.address}
+            </Typography>
           </ListItem>
         </List>
       </Drawer>

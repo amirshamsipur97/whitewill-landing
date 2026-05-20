@@ -174,7 +174,7 @@ export default function ExpertPopup() {
               </Tooltip>
               <Tooltip title={t.expertPopup.telegram}>
                 <IconButton
-                  href="https://t.me/whitewill"
+                  href="https://t.me/irfaninvestment"
                   target="_blank"
                   rel="noreferrer"
                   size="small"

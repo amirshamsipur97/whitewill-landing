@@ -1,4 +1,4 @@
-// Stock imagery used as placeholders for the Whitewill design.
+// Stock imagery used as placeholders for the Irfan Investment design.
 // Real implementation would swap these for production assets.
 export const heroBg =
   'https://images.unsplash.com/photo-1542317854-cdb59c4ed4f0?auto=format&fit=crop&w=2000&q=80'
@@ -52,12 +52,12 @@ export const ceoImg =
 
 export const reviews = [
   {
-    name: 'Whitewill client',
+    name: 'Irfan Investment client',
     rating: 5,
     text: 'The meeting was very helpful for the client. Mikhail was attentive to the client\'s investment inquiry and demonstrated a strong willingness to assist. He explained the available opportunities and possibilities in detail.',
   },
   {
-    name: 'Whitewill client',
+    name: 'Irfan Investment client',
     rating: 5,
     text: 'The client noted that Anna was excellent to work with and made the entire process easy and straightforward. She was very responsive, including over the weekend, and maintained clear communication throughout.',
   },
@@ -67,14 +67,14 @@ export const reviews = [
     text: 'We have had a truly positive experience buying our property. From the very beginning, both Ilya and Ivan were incredibly helpful, always available to answer any questions we had, no matter what the time difference between us.',
   },
   {
-    name: "Whitewill's client",
+    name: "Irfan Investment's client",
     rating: 5,
     text: 'I would like to take a moment to express my sincere appreciation for the exceptional support I received from Ms. Kateryna Pleshko throughout my recent property purchase at Al Mouj.',
   },
   {
     name: 'Salome',
     rating: 5,
-    text: 'I am very pleased with the cooperation with the whitewill agency, definitely for me, the guys are the best! They organized the rental of two units, everything was very prompt and professional.',
+    text: 'I am very pleased with the cooperation with the Irfan Investment agency, definitely for me, the guys are the best! They organized the rental of two units, everything was very prompt and professional.',
   },
   {
     name: 'Bogdan Krut',

@@ -73,7 +73,7 @@ export default function Offices() {
         >
           <Box
             component="iframe"
-            title="Whitewill Office, Muscat"
+            title="Irfan Investment Office, Muscat"
             src={mapSrc}
             sx={{
               width: '100%',

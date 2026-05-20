@@ -43,3 +43,30 @@ html, body, #root {
 .section-divider {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
 }
+
+/* Slow continuous rotation — used by SpinnerDots in the chat widget */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+/* Chat widget input fields */
+.chat-input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.15s, background-color 0.15s;
+  font-family: inherit;
+}
+.chat-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+.chat-input:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+}

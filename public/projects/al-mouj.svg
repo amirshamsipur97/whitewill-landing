@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 100" fill="none">
+  <!-- Arabic "الموج" -->
+  <text x="6" y="50" fill="#fff" font-family="'Tahoma','Noto Kufi Arabic',Arial,sans-serif" font-size="34" font-weight="700" direction="rtl">الموج</text>
+  <!-- English "al mouj" -->
+  <text x="105" y="48" fill="#fff" font-family="'Inter',Arial,sans-serif" font-size="32" font-weight="700" letter-spacing="-1">al mouj</text>
+  <!-- bottom line: "مسقط muscat" -->
+  <text x="40" y="80" fill="#fff" font-family="'Inter',Arial,sans-serif" font-size="13" font-weight="400" letter-spacing="2">مسقط · muscat</text>
+</svg>

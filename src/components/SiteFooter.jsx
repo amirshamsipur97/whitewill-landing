@@ -39,7 +39,7 @@ export default function SiteFooter() {
         <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: '0.2em', mb: 2 }}>
-              WHITEWILL
+              IRFAN INVESTMENT
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
               {t.footer.desc}
