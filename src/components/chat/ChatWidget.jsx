@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CtaPill from './CtaPill'
 import ChatPanel from './ChatPanel'
 
@@ -8,11 +8,20 @@ import ChatPanel from './ChatPanel'
  *   - closed: only CtaPill visible
  *   - open:   only ChatPanel visible (the pill hides)
  *
+ * Dispatches `chat:open` / `chat:close` events on the window so other
+ * sections (DiscoverProperties, AthurayaCity) can hide their cursor-
+ * following cards while the AI panel is visible.
+ *
  * No state is persisted across page loads on purpose — the widget should
  * feel always-available rather than "remembering" that you dismissed it.
  */
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent(open ? 'chat:open' : 'chat:close'))
+  }, [open])
+
   return (
     <>
       {!open && <CtaPill onClick={() => setOpen(true)} />}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -44,6 +44,20 @@ export default function DiscoverProperties() {
   const { t, lang } = useI18n()
   const isRTL = lang === 'ar'
 
+  // Hide the cursor-tracked card while the chat AI panel is open so the
+  // floating card doesn't draw the user's eye away from their conversation.
+  const [chatOpen, setChatOpen] = useState(false)
+  useEffect(() => {
+    const onOpen = () => setChatOpen(true)
+    const onClose = () => setChatOpen(false)
+    window.addEventListener('chat:open', onOpen)
+    window.addEventListener('chat:close', onClose)
+    return () => {
+      window.removeEventListener('chat:open', onOpen)
+      window.removeEventListener('chat:close', onClose)
+    }
+  }, [])
+
   // Refs
   const sectionRef = useRef(null)
   const titleBlockRef = useRef(null)  // whole title+sub block (used for scale math)
@@ -51,6 +65,7 @@ export default function DiscoverProperties() {
   const subRef = useRef(null)
   const greaterRef = useRef(null)      // wrapper for Greater Muscat logo+text
   const cardRef = useRef(null)
+  const videoRef = useRef(null)        // muscat-greater.mp4 — scroll-scrubbed
   // Cursor-tracked card refs (added later — see CursorCard below)
   const cursorWrapRef = useRef(null)        // takes the mouse-follow translate
   const cursorCardRef = useRef(null)        // takes the GSAP fade/scale
@@ -132,20 +147,31 @@ export default function DiscoverProperties() {
 
       gsap.to(charsRef.current, {
         color: '#FFFFFF',
-        // Explicit per-tween duration so total timeline length is
-        // deterministic: (n-1) × 0.035 + 0.25 ≈ 1.3s for 30 chars.
-        duration: 0.25,
-        stagger: { each: 0.035, from: 'start' },
+        // Faster per-char tween + tighter stagger so the timeline length
+        // is shorter: (n-1) × 0.022 + 0.2 ≈ 0.86s for 31 chars.
+        duration: 0.2,
+        stagger: { each: 0.022, from: 'start' },
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 85%',
-          // End at 'top 50%' (was 25%). Pin starts at 'top top', so by
-          // ending at 50% we guarantee EVERY char (including the last
-          // ones in "PROPERTIES") has completed its color tween well
-          // before the section pins.
-          end: 'top 50%',
-          scrub: 0.5,
+          // Wider scroll range than before (90% → 25% = 65% of viewport,
+          // was 35%). With more pixels per char, even fast scrolling
+          // can't outrun the stagger.
+          start: 'top 90%',
+          end: 'top 25%',
+          // Lower scrub lag so the trailing chars catch up faster when
+          // the user stops scrolling. Was 0.5 — visibly lagged on
+          // "PROPERTIES" tail.
+          scrub: 0.25,
+          // Safety net: when the user scrolls fully past the trigger
+          // end, force every char to white in case scrub-lag left any
+          // mid-tween. Without this the tail of the title can appear
+          // permanently dim if the user scrolls quickly.
+          onLeave: () => gsap.set(charsRef.current, { color: '#FFFFFF' }),
+          // Mirror safety when scrolling back UP past the start —
+          // reset all chars to the initial dark color so the next
+          // forward scroll re-animates cleanly.
+          onLeaveBack: () => gsap.set(charsRef.current, { color: '#333030' }),
         },
       })
 
@@ -166,10 +192,16 @@ export default function DiscoverProperties() {
         const cardR = card.getBoundingClientRect()
         const titleR = titleBlock.getBoundingClientRect()
         const imageAreaH = window.innerHeight - titleR.bottom
-        return Math.max(
-          window.innerWidth / cardR.width,
-          imageAreaH / cardR.height,
-        )
+        // Width-only fit. Cover (Math.max with height) was over-zooming
+        // peninsula.jpg on viewports where the image area is "taller"
+        // than 16:9 — the image grew to ~1.7-1.8× and showed only a
+        // tiny pixelated crop of the city. Scaling to viewport WIDTH
+        // means the image always fills the screen edge-to-edge, never
+        // upscales past its natural width, and matches AthurayaCity.
+        const widthScale = window.innerWidth / cardR.width
+        // Defensive cap so absurd viewports (mobile vertical etc.) can't
+        // push scale past a sane upper bound.
+        return Math.min(widthScale, 1.6)
       }
 
       // Greater Muscat overlay starts hidden + slightly down.
@@ -200,6 +232,13 @@ export default function DiscoverProperties() {
           scrub: 1.0,
           invalidateOnRefresh: true,
           anticipatePin: 1,
+          // Hide the global navbar while this presentation is on-screen,
+          // restore it on the way out. The Header listens for these on
+          // window (decoupled — no shared selectors).
+          onEnter: () => window.dispatchEvent(new CustomEvent('navbar:hide')),
+          onLeave: () => window.dispatchEvent(new CustomEvent('navbar:show')),
+          onEnterBack: () => window.dispatchEvent(new CustomEvent('navbar:hide')),
+          onLeaveBack: () => window.dispatchEvent(new CustomEvent('navbar:show')),
         },
         defaults: { ease: 'none' },
       })
@@ -222,17 +261,30 @@ export default function DiscoverProperties() {
         0.03,
       )
 
-      // ─── PHASE 2a (0.24 → 0.32): "Greater Muscat" logo fades in ─────
+      // ─── PHASE 1b (0.22 → 0.86): Scroll-scrubbed video playback ────
+      // muscat-greater.mp4 is 12.04s. We tween currentTime across the
+      // PHASE 2 window (the whole cursor-card stretch) so the video
+      // plays forward as the user scrolls down, and reverses cleanly on
+      // scroll-up — same pattern as AkdtScrollVideo.
+      const MUSCAT_VIDEO_DURATION = 12.04
+      if (videoRef.current) {
+        tl.fromTo(
+          videoRef.current,
+          { currentTime: 0 },
+          { currentTime: MUSCAT_VIDEO_DURATION - 0.05, duration: 0.64 },
+          0.22,
+        )
+      }
+
+      // ─── PHASE 2a (0.24 → end): "Greater Muscat" logo + tagline
+      // Fade in here and KEEP VISIBLE through the rest of the cursor-card
+      // + image-shrink phase. Mirrors AthurayaCity's second overlay
+      // behavior — the brand identity stays present for the whole
+      // presentation, only fading out just before the image shrinks.
       tl.to(
         greaterRef.current,
         { opacity: 1, y: 0, duration: 0.08, ease: 'power2.out' },
         0.24,
-      )
-      // Hold briefly, then fade out before the cursor card takes over.
-      tl.to(
-        greaterRef.current,
-        { opacity: 0, y: -24, duration: 0.06, ease: 'power2.in' },
-        0.38,
       )
 
       // ─── PHASE 2b (0.40 → 0.86): Cursor card with FOUR states ───────
@@ -277,6 +329,15 @@ export default function DiscoverProperties() {
         cursorCardRef.current,
         { opacity: 0, scale: 0.92, duration: 0.06, ease: 'power2.in' },
         0.82,
+      )
+      // Greater Muscat overlay fades out just before shrink — stays
+      // visible from 0.24 all the way until 0.85 so it remains present
+      // during every cursor-card state, just like AthurayaCity's
+      // secondOverlay.
+      tl.to(
+        greaterRef.current,
+        { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' },
+        0.85,
       )
 
       // ─── PHASE 3 (0.86 → 1.00): Shrink + restore originals ──────────
@@ -521,10 +582,15 @@ export default function DiscoverProperties() {
           }}
         >
           <Box
-            component="img"
-            src="/peninsula.jpg"
-            alt="Premium Oman coastline development"
-            loading="lazy"
+            ref={videoRef}
+            component="video"
+            src="/video/muscat-greater.mp4"
+            muted
+            playsInline
+            preload="auto"
+            // Poster falls back to the old still while the video buffers
+            // so there's no black frame on first paint.
+            poster="/peninsula.jpg"
             sx={{
               position: 'absolute',
               inset: 0,
@@ -532,6 +598,7 @@ export default function DiscoverProperties() {
               height: '100%',
               objectFit: 'cover',
               display: 'block',
+              backgroundColor: '#000',
             }}
           />
         </Box>
@@ -557,6 +624,10 @@ export default function DiscoverProperties() {
           pointerEvents: 'none',
           zIndex: 20,
           willChange: 'transform',
+          // Soft-hide while the AI chat is open (kept as a CSS opacity so
+          // it doesn't fight GSAP's tweens on the inner cursorCardRef).
+          opacity: chatOpen ? 0 : 1,
+          transition: 'opacity 220ms ease',
         }}
       >
         <Box
@@ -715,6 +786,7 @@ export default function DiscoverProperties() {
                 willChange: 'opacity, filter',
               }}
             >
+              {t.discoverProperties.cardThreePrefix}
               <Box component="span" sx={{ fontWeight: 700 }}>
                 {t.discoverProperties.cardThreeName}
               </Box>

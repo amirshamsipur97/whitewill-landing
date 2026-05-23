@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { gsap } from 'gsap'
 import {
   AppBar,
   Toolbar,
@@ -75,6 +76,39 @@ export default function Header() {
   const navigate = useNavigate()
   const [langAnchor, setLangAnchor] = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const headerRef = useRef(null)
+
+  // ── Hide / show navbar around pinned project sections ─────────────
+  // DiscoverProperties + AthurayaCity dispatch `navbar:hide` when their
+  // pin engages and `navbar:show` when it disengages. We tween yPercent
+  // so the bar slides smoothly out and back in. Decoupled via events so
+  // Header doesn't need to know about which sections exist.
+  useEffect(() => {
+    const hide = () => {
+      if (!headerRef.current) return
+      gsap.to(headerRef.current, {
+        yPercent: -100,
+        duration: 0.55,
+        ease: 'power2.inOut',
+        overwrite: 'auto',
+      })
+    }
+    const show = () => {
+      if (!headerRef.current) return
+      gsap.to(headerRef.current, {
+        yPercent: 0,
+        duration: 0.55,
+        ease: 'power2.inOut',
+        overwrite: 'auto',
+      })
+    }
+    window.addEventListener('navbar:hide', hide)
+    window.addEventListener('navbar:show', show)
+    return () => {
+      window.removeEventListener('navbar:hide', hide)
+      window.removeEventListener('navbar:show', show)
+    }
+  }, [])
 
   const navLinks = [
     { label: t.nav.buy, to: '/sell' },
@@ -88,6 +122,7 @@ export default function Header() {
 
   return (
     <AppBar
+      ref={headerRef}
       position="sticky"
       elevation={0}
       sx={{
@@ -97,6 +132,7 @@ export default function Header() {
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow:
           'inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 32px rgba(0,0,0,0.35)',
+        willChange: 'transform',
       }}
     >
       <Toolbar
