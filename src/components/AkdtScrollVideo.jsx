@@ -353,7 +353,7 @@ export default function AkdtScrollVideo() {
                 color: '#fff',
                 border: 'none',
                 borderRadius: '9999px',   // fully pill, matches CtaPill
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 fontSize: { xs: 12, md: 14 },
                 lineHeight: 1.4,

@@ -36,10 +36,27 @@ export async function submitForm(payload) {
   })()
 
   const fnUrl = `${url}/functions/v1/submit-form`
+
+  // ── dedup_key (required by the leads table) ────────────────────
+  // The `public.leads` schema has `dedup_key text NOT NULL UNIQUE`. The
+  // edge function used to mint one server-side but currently passes null
+  // through, causing 500s. We mint a unique key client-side so every form
+  // submission inserts cleanly: `${source}_${uuid}` keeps it human-greppable
+  // while staying unique even if the same user submits twice.
+  const mintDedupKey = () => {
+    const src = (payload.source || 'form').replace(/[^a-z0-9_]/gi, '_').toLowerCase()
+    const rand =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+    return `${src}_${rand}`
+  }
+
   const body = {
     ...utmFromQuery,
     page_url: typeof window !== 'undefined' ? window.location.href : undefined,
     ...payload,
+    dedup_key: payload.dedup_key || mintDedupKey(),
   }
 
   const res = await fetch(fnUrl, {
@@ -74,4 +91,97 @@ export async function fetchProperties({ limit = 50 } = {}) {
 
   if (error) throw error
   return data ?? []
+}
+
+/**
+ * Fetch every available unit across every project — used by the global
+ * filter toolbar so price/size ranges can be derived from actual data
+ * and the map can dim projects with zero matching units.
+ *
+ * Returns flat list: [{ id, project_id, unit_type, bedrooms, view, total_area_sqm, price_omr, ... }]
+ */
+export async function fetchAllUnits() {
+  const { data, error } = await supabase
+    .from('project_units')
+    .select(`
+      id, project_id, unit_no, floor_label, unit_type, layout_type, bedrooms, view,
+      internal_area_sqm, balcony_area_sqm, total_garden_sqm, total_area_sqm,
+      price_omr, price_per_sqm_omr, availability_status
+    `)
+    .eq('availability_status', 'available')
+
+  if (error) throw error
+  return (data ?? []).map((u) => ({
+    ...u,
+    internal_area_sqm: u.internal_area_sqm != null ? Number(u.internal_area_sqm) : null,
+    balcony_area_sqm:  u.balcony_area_sqm  != null ? Number(u.balcony_area_sqm)  : null,
+    total_garden_sqm:  u.total_garden_sqm  != null ? Number(u.total_garden_sqm)  : null,
+    total_area_sqm:    u.total_area_sqm    != null ? Number(u.total_area_sqm)    : null,
+    price_omr:         u.price_omr         != null ? Number(u.price_omr)         : null,
+    price_per_sqm_omr: u.price_per_sqm_omr != null ? Number(u.price_per_sqm_omr) : null,
+  }))
+}
+
+/**
+ * Fetch all available units for a single project. Sorted by floor then unit_no.
+ * Returns an empty array if the project has no inventory rows.
+ *
+ * unit_no is included in the result so the modal/AI form can pass it to
+ * Supabase + the Google Sheet, but the DetailsPanel UI deliberately omits
+ * it from the visible card (internal-only field per client request).
+ */
+export async function fetchProjectUnits(projectId) {
+  if (projectId == null) return []
+  const { data, error } = await supabase
+    .from('project_units')
+    .select(`
+      id, unit_no, floor_label, unit_type, layout_type, bedrooms, view,
+      internal_area_sqm, balcony_area_sqm, total_garden_sqm, total_area_sqm,
+      price_omr, price_per_sqm_omr, availability_status
+    `)
+    .eq('project_id', projectId)
+    .eq('availability_status', 'available')
+    .order('floor_label', { ascending: true })
+    .order('unit_no', { ascending: true })
+
+  if (error) throw error
+  return (data ?? []).map((u) => ({
+    ...u,
+    internal_area_sqm: u.internal_area_sqm != null ? Number(u.internal_area_sqm) : null,
+    balcony_area_sqm:  u.balcony_area_sqm  != null ? Number(u.balcony_area_sqm)  : null,
+    total_garden_sqm:  u.total_garden_sqm  != null ? Number(u.total_garden_sqm)  : null,
+    total_area_sqm:    u.total_area_sqm    != null ? Number(u.total_area_sqm)    : null,
+    price_omr:         u.price_omr         != null ? Number(u.price_omr)         : null,
+    price_per_sqm_omr: u.price_per_sqm_omr != null ? Number(u.price_per_sqm_omr) : null,
+  }))
+}
+
+/**
+ * Fetch every project that has its own GPS coordinates, joined with
+ * developer + area context for the popup.
+ *
+ * Returns: [{
+ *   id, name, location, latitude, longitude,
+ *   developer: { name },
+ *   area: { name, city, governorate }
+ * }]
+ */
+export async function fetchProjects() {
+  const { data, error } = await supabase
+    .from('projects')
+    .select(`
+      id, name, location, latitude, longitude,
+      developer:developers(name),
+      area:areas(name, city, governorate)
+    `)
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+    .order('name', { ascending: true })
+
+  if (error) throw error
+  return (data ?? []).map((p) => ({
+    ...p,
+    latitude: Number(p.latitude),
+    longitude: Number(p.longitude),
+  }))
 }

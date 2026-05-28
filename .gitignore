@@ -30,6 +30,7 @@ pnpm-debug.log*
 .env.production.local
 .env.test.local
 
+
 # Vercel
 .vercel
 
@@ -46,3 +47,6 @@ coverage
 .cache
 .parcel-cache
 .eslintcache
+
+# Local MCP server config (dev tooling)
+.mcp.json

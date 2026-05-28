@@ -1,11 +1,90 @@
-import { useEffect, useRef } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useLayoutEffect } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Header from './components/Header'
+import { useIsMobile } from './hooks/useIsMobile'
 
 gsap.registerPlugin(ScrollTrigger)
+
+/**
+ * ScrollManager — resets scroll + recalculates ScrollTrigger on every
+ * client-side navigation.
+ *
+ * Without this, two things go wrong when the user switches pages:
+ *   1) The browser keeps the previous page's scrollTop. Land on a new
+ *      route halfway down and ScrollTriggers think their entrance is
+ *      already finished — sections render in "end state" and the page
+ *      looks broken / unloaded.
+ *   2) Triggers on the unmounted page leave stale measurements behind.
+ *      A refresh() forces every remaining trigger to recompute against
+ *      the new DOM.
+ *
+ * We do BOTH eagerly:
+ *   - useLayoutEffect runs SYNCHRONOUSLY before paint, so the user never
+ *     sees the new route at the wrong scroll position.
+ *   - useEffect chains a refresh() after the new page has mounted and
+ *     a second one ~300 ms later to catch lazy chunks (PropertyMap, etc.)
+ *     that change the page height once they arrive.
+ *
+ * Hash links (#section) are left alone — the browser's native anchor
+ * jump should win.
+ */
+function ScrollManager() {
+  const { pathname, hash } = useLocation()
+
+  // Listen for the synthetic 'app:beforenav' event we dispatch from the
+  // patched history.pushState (see main.jsx). Firing in capture phase
+  // means we kill ScrollTriggers + orphan pin-spacers BEFORE React Router
+  // commits the new route, so the next page mounts onto a clean DOM.
+  useEffect(() => {
+    const cleanup = () => {
+      // 1. Kill every active ScrollTrigger so they don't fight the new page.
+      try {
+        ScrollTrigger.getAll().forEach((t) => {
+          try { t.kill() } catch {}
+        })
+      } catch {}
+
+      // 2. Remove every orphan pin-spacer that GSAP may have left behind.
+      //    GSAP's auto-generated wrappers carry the .pin-spacer class.
+      try {
+        document.querySelectorAll('.pin-spacer').forEach((el) => {
+          // Move children out first so we don't lose anything important.
+          while (el.firstChild) {
+            try { el.parentNode?.insertBefore(el.firstChild, el) } catch { break }
+          }
+          try { el.remove() } catch {}
+        })
+      } catch {}
+    }
+    window.addEventListener('app:beforenav', cleanup)
+    return () => window.removeEventListener('app:beforenav', cleanup)
+  }, [])
+
+  useLayoutEffect(() => {
+    if (hash) return
+    // Lenis owns the visible scroll position; jump it instantly so the
+    // smoothing engine doesn't lerp across pages. Fall back to native
+    // window.scrollTo if Lenis hasn't booted yet.
+    if (typeof window !== 'undefined' && window.__lenis) {
+      window.__lenis.scrollTo(0, { immediate: true, force: true })
+    }
+    window.scrollTo(0, 0)
+  }, [pathname, hash])
+
+  useEffect(() => {
+    // Immediate refresh — picks up the new route's component tree.
+    ScrollTrigger.refresh()
+    // Follow-up refresh — covers lazy-loaded chunks (e.g. PropertyMap)
+    // and image/video metadata that resolves a few hundred ms later.
+    const id = setTimeout(() => ScrollTrigger.refresh(), 350)
+    return () => clearTimeout(id)
+  }, [pathname])
+
+  return null
+}
 import ScrollVideoHero from './components/ScrollVideoHero'
 import AboutFounder from './components/AboutFounder'
 import LogosMarquee from './components/LogosMarquee'
@@ -13,53 +92,44 @@ import DiscoverProperties from './components/DiscoverProperties'
 import AthurayaCity from './components/AthurayaCity'
 import GlobalPresence from './components/GlobalPresence'
 import AkdtScrollVideo from './components/AkdtScrollVideo'
-import LeadCards from './components/LeadCards'
-import CatalogCarousel from './components/CatalogCarousel'
-import AwardsRow from './components/AwardsRow'
-import Testimonials from './components/Testimonials'
-import FeedbackForm from './components/FeedbackForm'
-import Projects from './components/Projects'
-import OfficeGallery from './components/OfficeGallery'
-import PartnerBanner from './components/PartnerBanner'
-import Offices from './components/Offices'
+import HearFromTheTeam from './components/HearFromTheTeam'
+// Mapbox is ~800 KB gzipped — split it out so the initial bundle stays light.
+// The map sits low on the page, so users almost always reach it after the
+// hero is interactive.
+const PropertyMap = lazy(() => import('./components/PropertyMap'))
+import WaterfrontResidences from './components/WaterfrontResidences'
+import HorizontalCarousel from './components/HorizontalCarousel'
+import ContactCTA from './components/ContactCTA'
 import SiteFooter from './components/SiteFooter'
+import BackToTop from './components/BackToTop'
 import CookieBanner from './components/CookieBanner'
 import ChatWidget from './components/chat/ChatWidget'
-import SellPage from './pages/SellPage'
+// Page routes are code-split — each lives in its own chunk so a visitor
+// who only browses the landing never downloads the BuyProject or About
+// bundles. PropertyMap (Mapbox, ~1MB) was already split above and stays
+// split here too.
+const SellPage = lazy(() => import('./pages/SellPage'))
+const BuyPage = lazy(() => import('./pages/BuyPage'))
+const BuyProjectPage = lazy(() => import('./pages/BuyProjectPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const MaisonShirdelPage = lazy(() => import('./pages/MaisonShirdelPage'))
+
+// Bare placeholder while a route chunk loads. Kept transparent + tall
+// enough to prevent a layout collapse on slow networks.
+function RouteFallback() {
+  return <Box sx={{ minHeight: '70vh', bgcolor: '#000' }} />
+}
 
 function LandingPage() {
-  // Smooth bg transition: after AthurayaCity ends, fade the page bg
-  // from the dark theme color → #F7F7F7 over ~70vh of scroll. Reverses
-  // naturally on scroll-up because `scrub` is tied to scroll progress.
-  const bgTransitionRef = useRef(null)
-  useEffect(() => {
-    if (!bgTransitionRef.current) return
-    const appRoot = document.getElementById('app-root')
-    if (!appRoot) return
-
-    const FROM_BG = '#0a0a0a'
-    const TO_BG = '#F7F7F7'
-
-    // Baseline so the inline style wins over the MUI theme bgcolor.
-    appRoot.style.backgroundColor = FROM_BG
-
-    const trigger = ScrollTrigger.create({
-      trigger: bgTransitionRef.current,
-      start: 'top 90%',   // marker just entered viewport bottom
-      end: 'top 20%',     // marker near top of viewport (~70vh later)
-      scrub: 1.2,         // soft lag for the buttery feel the user asked for
-      onUpdate: (self) => {
-        appRoot.style.backgroundColor = gsap.utils.interpolate(
-          FROM_BG, TO_BG, self.progress,
-        )
-      },
-    })
-
-    return () => {
-      trigger.kill()
-      appRoot.style.backgroundColor = ''
-    }
-  }, [])
+  // Heavy scroll-pinned sections (DiscoverProperties +620vh,
+  // AthurayaCity +900vh, AkdtScrollVideo +1100vh + 21-second video scrub,
+  // HorizontalCarousel +650vh horizontal strip) were designed for desktop.
+  // On a phone they pin a single tile to the viewport for thousands of
+  // pixels of scroll, which feels broken — the page seems frozen and
+  // mobile Safari throttles the video scrub anyway. We drop them entirely
+  // below 900 px and let the user reach the meatier sections (map,
+  // residences, contact form) much faster.
+  const isMobile = useIsMobile()
 
   return (
     <>
@@ -67,27 +137,32 @@ function LandingPage() {
       <div id="after-video-hero" />
       <AboutFounder />
       <LogosMarquee />
-      <DiscoverProperties />
-      <AthurayaCity />
+      {!isMobile && <DiscoverProperties />}
+      {!isMobile && <AthurayaCity />}
       <GlobalPresence />
-      <AkdtScrollVideo />
-      {/* 0-height marker — acts as the scroll anchor for the bg fade.
-          Lives right after the AKDT video so the transition starts the
-          moment that section's pin releases. */}
-      <Box
-        ref={bgTransitionRef}
-        aria-hidden
-        sx={{ height: 0, width: '100%', pointerEvents: 'none' }}
-      />
-      <LeadCards />
-      <CatalogCarousel />
-      <AwardsRow />
-      <Testimonials />
-      <FeedbackForm />
-      <Projects />
-      <OfficeGallery />
-      <PartnerBanner />
-      <Offices />
+      {!isMobile && <AkdtScrollVideo />}
+      {!isMobile && <HearFromTheTeam />}
+      {/* PropertyMap is a lazy chunk. The fallback height MUST approximate
+          the loaded section's actual height — otherwise the page jumps
+          when the chunk swaps in. ~1080 px md, ~1600 px xs. */}
+      <Suspense
+        fallback={
+          <Box
+            sx={{
+              minHeight: { xs: 1600, md: 1080 },
+              py: { xs: 4, md: 6 },
+            }}
+          />
+        }
+      >
+        <PropertyMap />
+      </Suspense>
+      <WaterfrontResidences />
+      {!isMobile && <HorizontalCarousel />}
+      <ContactCTA source="landing_contact" />
+      {/* Floating "back to top" — hidden until the user scrolls past one
+          viewport-height, then materialises centred at the bottom. */}
+      <BackToTop />
     </>
   )
 }
@@ -98,22 +173,26 @@ export default function App() {
       <Box
         id="app-root"
         sx={{
-          bgcolor: 'background.default',
+          // Pure #000000 everywhere — no more scroll-driven fade to white.
+          bgcolor: '#000000',
           color: 'text.primary',
           minHeight: '100vh',
-          // Smooth bg-color tween from JS — keeps the transition feeling
-          // continuous even if scrub-lag overshoots slightly.
-          transition: 'background-color 120ms linear',
         }}
       >
+        <ScrollManager />
         <Header />
         <main>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/sell" element={<SellPage />} />
-            <Route path="/buy" element={<SellPage />} />
-            <Route path="*" element={<LandingPage />} />
-          </Routes>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/sell" element={<SellPage />} />
+              <Route path="/buy" element={<BuyPage />} />
+              <Route path="/buy/:slug" element={<BuyProjectPage />} />
+              <Route path="/maison-shirdel" element={<MaisonShirdelPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="*" element={<LandingPage />} />
+            </Routes>
+          </Suspense>
         </main>
         <SiteFooter />
         <CookieBanner />

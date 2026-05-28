@@ -42,15 +42,31 @@ export default function GlobalPresence() {
     [t.globalPresence],
   )
 
+  // Split into reveal "units" — the smallest chunk that gets its own
+  // ref + stagger slot:
+  //   • EN / RU: one unit per character (classic per-letter wave).
+  //   • AR: one unit per WORD, preserving any whitespace as separate
+  //     units so visual spacing stays right. Why words: Arabic
+  //     letters rely on the OpenType shaping engine seeing adjacent
+  //     letters in the SAME text run. Char-level splitting wraps
+  //     every letter in `display:inline-block`, which breaks initial
+  //     /medial/final glyph substitution and reorders embedded Latin
+  //     via the bidi algorithm (IRFAN INVESTMENT → TNEMTSEVNI NAFRI).
+  //     Word-level split keeps each word as one text run, so shaping
+  //     and bidi work normally, while still giving the stagger
+  //     animation multiple targets to wave across.
   const allChars = useMemo(() => {
     const out = []
     segments.forEach((seg, sIdx) => {
-      seg.text.split('').forEach((char, cIdx) => {
+      const parts = isRTL
+        ? seg.text.split(/(\s+)/).filter((p) => p.length > 0)
+        : seg.text.split('')
+      parts.forEach((char, cIdx) => {
         out.push({ char, sIdx, cIdx, where: seg.where, bold: seg.bold })
       })
     })
     return out
-  }, [segments])
+  }, [segments, isRTL])
 
   // Split for rendering: title chars on top line, body chars in paragraph.
   const titleChars = allChars.filter((c) => c.where === 'title')
@@ -69,7 +85,10 @@ export default function GlobalPresence() {
         // Tighter stagger than DiscoverProperties (0.022 → 0.012) so a
         // longer text — title + ~150 body chars — still finishes within
         // the trigger range without leaving trailing chars dim.
-        stagger: { each: 0.012, from: 'start' },
+        // In RTL we have ~20 words instead of ~150 chars, so each
+        // word can take a bigger slice of the timeline (looks the
+        // same to the eye).
+        stagger: { each: isRTL ? 0.06 : 0.012, from: 'start' },
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -122,7 +141,7 @@ export default function GlobalPresence() {
         <Typography
           component="h2"
           sx={{
-            fontFamily: '"Inter", system-ui, sans-serif',
+            fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
             fontWeight: 700,
             fontSize: { xs: 20, md: 28 },
             lineHeight: 1.2,
@@ -152,9 +171,9 @@ export default function GlobalPresence() {
         <Typography
           component="p"
           sx={{
-            fontFamily: '"Inter", system-ui, sans-serif',
+            fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
             fontWeight: 400,
-            fontSize: { xs: 14, md: 22 },
+            fontSize: { xs: 16, md: 26 },
             lineHeight: 1.5,
             letterSpacing: '0.02em',
             textTransform: 'uppercase',

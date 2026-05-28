@@ -78,6 +78,18 @@ export default function DiscoverProperties() {
   const cardNumber2Ref = useRef(null)       // "2 / 4"
   const cardNumber3Ref = useRef(null)       // "3 / 4"
   const cardNumber4Ref = useRef(null)       // "4 / 4"
+  // Arabic + many other RTL/connected scripts rely on the OpenType
+  // shaping engine seeing adjacent letters in the SAME text run. If
+  // we wrap each char in its own `<span style="display:inline-block">`,
+  // initial/medial/final glyph substitution falls back to the isolated
+  // form and English words inside an RTL paragraph get reordered by
+  // the bidi algorithm (e.g. IRFAN INVESTMENT → TNEMTSEVNI NAFRI).
+  //
+  // For Arabic we therefore render the title as ONE text run and skip
+  // the per-char stagger entirely — GSAP still animates the whole
+  // title's colour, just as a single tween instead of 14 staggered
+  // tweens. (`isRTL` is already declared above; reused here.)
+
   // Index-based ref collection — fixed slots so React re-renders never
   // wipe the array. The previous `charsRef.current = []` in render body
   // was getting cleared on every render and (in StrictMode) the late
@@ -88,9 +100,13 @@ export default function DiscoverProperties() {
     if (el) charsRef.current[i] = el
   }
 
-  // Pre-compute the FULL flat list of characters once. Each entry has
-  // its segment + char-in-segment index for stable React keys, and a
-  // global index so GSAP staggers across the whole title.
+  // Pre-compute the flat list of reveal "units". Each unit gets a
+  // ref + a stagger slot in the GSAP color tween:
+  //   • EN / RU: one unit per character (per-letter wave).
+  //   • AR: one unit per WORD (whitespace kept as separate units)
+  //     so OpenType Arabic shaping keeps initial/medial/final glyph
+  //     joins and the bidi algorithm can resolve embedded Latin
+  //     correctly. Char-level wrapping breaks both.
   const allChars = useMemo(() => {
     const out = []
     const segments = [
@@ -98,12 +114,15 @@ export default function DiscoverProperties() {
       t.discoverProperties.titleSecond,
     ]
     segments.forEach((text, sIdx) => {
-      text.split('').forEach((char, cIdx) => {
+      const parts = isRTL
+        ? text.split(/(\s+)/).filter((p) => p.length > 0)
+        : text.split('')
+      parts.forEach((char, cIdx) => {
         out.push({ char, sIdx, cIdx })
       })
     })
     return out
-  }, [t.discoverProperties.titleFirst, t.discoverProperties.titleSecond])
+  }, [isRTL, t.discoverProperties.titleFirst, t.discoverProperties.titleSecond])
 
   // ── Cursor tracking for the floating card ────────────────────────────
   // Lerp the card position toward the mouse via GSAP's ticker so the motion
@@ -147,10 +166,10 @@ export default function DiscoverProperties() {
 
       gsap.to(charsRef.current, {
         color: '#FFFFFF',
-        // Faster per-char tween + tighter stagger so the timeline length
-        // is shorter: (n-1) × 0.022 + 0.2 ≈ 0.86s for 31 chars.
         duration: 0.2,
-        stagger: { each: 0.022, from: 'start' },
+        // ~5 words on AR vs ~31 chars on EN — bigger stagger step
+        // keeps the visual rhythm equivalent.
+        stagger: { each: isRTL ? 0.1 : 0.022, from: 'start' },
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -452,7 +471,7 @@ export default function DiscoverProperties() {
               display: 'inline-block',
               // Very tight to the logo — almost touching.
               mt: { xs: 0.25, md: 0.5 },
-              fontFamily: '"Inter", system-ui, sans-serif',
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
               fontWeight: 400,
               // Larger than before BUT still safe to keep one line on
               // typical desktops (~1024px+). At max 18px with 80 chars
@@ -484,12 +503,9 @@ export default function DiscoverProperties() {
         <Typography
           component="h2"
           sx={{
-            fontFamily: '"Inter", system-ui, sans-serif',
-            fontWeight: 400,
-            // clamp scales smoothly: small on mobile, big on desktop,
-            // never breaks past 52px. With `nowrap` the whole heading
-            // stays on a single line at every breakpoint.
-            fontSize: 'clamp(20px, 3.8vw, 50px)',
+            fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+            fontWeight: 700,
+            fontSize: 'clamp(22px, 4vw, 56px)',
             lineHeight: 1.1,
             letterSpacing: '0.015em',
             textTransform: 'uppercase',
@@ -504,7 +520,12 @@ export default function DiscoverProperties() {
               component="span"
               ref={setCharRef(i)}
               sx={{
-                display: 'inline-block',
+                // RTL units are whole words → must stay `inline` so the
+                // text engine keeps adjacent letters in the same run
+                // and OpenType joining works. LTR units are single
+                // chars → `inline-block` is fine and slightly faster
+                // to paint per-frame.
+                display: isRTL ? 'inline' : 'inline-block',
                 whiteSpace: 'pre',
                 // Initial colour set inline so the very first paint shows
                 // the right state — GSAP's `set` runs after mount.
@@ -531,12 +552,18 @@ export default function DiscoverProperties() {
             component="span"
             sx={{
               display: 'inline-block',
-              fontFamily: '"Inter", system-ui, sans-serif',
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
               fontWeight: 400,
-              fontSize: { xs: 11.5, md: 14 },
+              // AR runs slightly larger — Peyda has a smaller x-height
+              // than Arsenal SC at the same point size, so the EN value
+              // looks tiny in Arabic.
+              fontSize: isRTL ? { xs: 15, md: 19 } : { xs: 11.5, md: 14 },
               lineHeight: 1.65,
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
+              // Letter-spacing is already overridden to 0 globally on
+              // AR via index.css, but we drop it from the sx too so
+              // the cascade is explicit.
+              letterSpacing: isRTL ? 0 : '0.05em',
+              textTransform: isRTL ? 'none' : 'uppercase',
               color: 'rgba(255, 255, 255, 0.78)',
               maxWidth: 660,
             }}
@@ -690,7 +717,7 @@ export default function DiscoverProperties() {
                 top: '50%',
                 transform: 'translateY(-50%)',
                 textAlign: 'center',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontSize: { xs: 16, md: 18 },
                 letterSpacing: '0.04em',
               }}
@@ -744,7 +771,7 @@ export default function DiscoverProperties() {
                 inset: 0,
                 p: { xs: 1.5, md: 2.5 },
                 color: '#fff',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontSize: { xs: 12, md: 15.5 },
                 lineHeight: 1.5,
                 willChange: 'opacity, filter',
@@ -762,7 +789,7 @@ export default function DiscoverProperties() {
                 inset: 0,
                 p: { xs: 1.5, md: 2.5 },
                 color: '#fff',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontSize: { xs: 12, md: 15.5 },
                 lineHeight: 1.5,
                 willChange: 'opacity, filter',
@@ -780,7 +807,7 @@ export default function DiscoverProperties() {
                 inset: 0,
                 p: { xs: 1.5, md: 2.5 },
                 color: '#fff',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontSize: { xs: 12, md: 15.5 },
                 lineHeight: 1.5,
                 willChange: 'opacity, filter',
@@ -799,7 +826,7 @@ export default function DiscoverProperties() {
                 inset: 0,
                 p: { xs: 1.5, md: 2.5 },
                 color: '#fff',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontSize: { xs: 12, md: 15.5 },
                 lineHeight: 1.5,
                 willChange: 'opacity, filter',

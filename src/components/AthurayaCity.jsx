@@ -71,12 +71,22 @@ export default function AthurayaCity() {
   const cardNumber3Ref = useRef(null)
   const cardNumber4Ref = useRef(null)
 
+  // Arabic locales render the title as one text run instead of one
+  // span per char — see the long-form comment in DiscoverProperties.
+  // OpenType shaping needs adjacent letters in the same run to pick
+  // the correct initial/medial/final glyph forms.
+  // (`isRTL` is already declared above; reused here.)
+
   // Index-based ref slots for title chars (re-render-safe)
   const charsRef = useRef([])
   const setCharRef = (i) => (el) => {
     if (el) charsRef.current[i] = el
   }
 
+  // EN / RU: per-char split. AR: per-word split — Arabic shaping
+  // breaks when each letter is wrapped in its own inline-block, so
+  // we keep words as single text runs. See DiscoverProperties for
+  // the full explanation.
   const allChars = useMemo(() => {
     const out = []
     const segments = [
@@ -84,12 +94,15 @@ export default function AthurayaCity() {
       t.athurayaCity.titleSecond,
     ]
     segments.forEach((text, sIdx) => {
-      text.split('').forEach((char, cIdx) => {
+      const parts = isRTL
+        ? text.split(/(\s+)/).filter((p) => p.length > 0)
+        : text.split('')
+      parts.forEach((char, cIdx) => {
         out.push({ char, sIdx, cIdx })
       })
     })
     return out
-  }, [t.athurayaCity.titleFirst, t.athurayaCity.titleSecond])
+  }, [isRTL, t.athurayaCity.titleFirst, t.athurayaCity.titleSecond])
 
   // ── Cursor tracking for the floating card ─────────────────────────
   useEffect(() => {
@@ -127,7 +140,8 @@ export default function AthurayaCity() {
       gsap.to(charsRef.current, {
         color: '#FFFFFF',
         duration: 0.2,
-        stagger: { each: 0.022, from: 'start' },
+        // Word-level units on AR → bigger stagger step.
+        stagger: { each: isRTL ? 0.1 : 0.022, from: 'start' },
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -346,9 +360,9 @@ export default function AthurayaCity() {
             component="span"
             sx={{
               display: 'inline-block',
-              fontFamily: '"Inter", system-ui, sans-serif',
-              fontWeight: 500,
-              fontSize: 'clamp(14px, 1.8vw, 22px)',
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+              fontWeight: 700,
+              fontSize: 'clamp(15px, 2vw, 24px)',
               lineHeight: 1.4,
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
@@ -401,15 +415,18 @@ export default function AthurayaCity() {
             sx={{
               display: 'inline-block',
               mt: { xs: 0.5, md: 1 },
-              fontFamily: '"Inter", system-ui, sans-serif',
-              fontWeight: 400,
-              fontSize: 'clamp(12px, 1.55vw, 18px)',
-              lineHeight: 1.4,
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+              fontWeight: 700,
+              fontSize: 'clamp(13px, 1.7vw, 20px)',
+              lineHeight: 1.5,
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
               color: '#3F6A4C',
-              whiteSpace: { xs: 'normal', md: 'nowrap' },
-              maxWidth: { xs: 720, md: 'none' },
+              // Allow normal wrapping so the copy breaks into ~2 lines
+              // instead of stretching across the whole viewport.
+              whiteSpace: 'normal',
+              maxWidth: { xs: 720, md: 880 },
+              mx: 'auto',
               textAlign: 'center',
             }}
           >
@@ -428,7 +445,7 @@ export default function AthurayaCity() {
           <Typography
             component="h2"
             sx={{
-              fontFamily: '"Inter", system-ui, sans-serif',
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
               fontWeight: 400,
               fontSize: 'clamp(20px, 3.8vw, 50px)',
               lineHeight: 1.1,
@@ -445,7 +462,7 @@ export default function AthurayaCity() {
                 component="span"
                 ref={setCharRef(i)}
                 sx={{
-                  display: 'inline-block',
+                  display: isRTL ? 'inline' : 'inline-block',
                   whiteSpace: 'pre',
                   color: '#333030',
                   willChange: 'color',
@@ -468,12 +485,12 @@ export default function AthurayaCity() {
               component="span"
               sx={{
                 display: 'inline-block',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 400,
-                fontSize: { xs: 11.5, md: 14 },
+                fontSize: isRTL ? { xs: 15, md: 19 } : { xs: 11.5, md: 14 },
                 lineHeight: 1.65,
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
+                letterSpacing: isRTL ? 0 : '0.05em',
+                textTransform: isRTL ? 'none' : 'uppercase',
                 color: 'rgba(255, 255, 255, 0.78)',
                 maxWidth: 660,
               }}
@@ -622,7 +639,7 @@ export default function AthurayaCity() {
                 color: '#fff',
                 border: 'none',
                 borderRadius: '999px',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 400,
                 fontSize: { xs: 10.5, md: 12 },
                 lineHeight: 1,
@@ -702,7 +719,7 @@ export default function AthurayaCity() {
             <Box sx={{
               position: 'absolute', left: 0, right: 0, top: '50%',
               transform: 'translateY(-50%)', textAlign: 'center',
-              fontFamily: '"Inter", system-ui, sans-serif',
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
               fontSize: { xs: 16, md: 18 }, letterSpacing: '0.04em',
             }}>
               {[
@@ -745,40 +762,40 @@ export default function AthurayaCity() {
           >
             <Box ref={cardState1Ref} sx={{
               position: 'absolute', inset: 0, p: { xs: 1.5, md: 2.5 },
-              color: '#fff', fontFamily: '"Inter", system-ui, sans-serif',
-              fontSize: { xs: 12, md: 15.5 }, lineHeight: 1.5,
+              color: '#fff', fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+              fontSize: { xs: 14, md: 18 }, lineHeight: 1.5,
               willChange: 'opacity, filter',
             }}>
-              <Box component="span" sx={{ fontWeight: 700 }}>{t.athurayaCity.cardOneName}</Box>
+              <Box component="span" sx={{ fontWeight: 900 }}>{t.athurayaCity.cardOneName}</Box>
               {t.athurayaCity.cardOneBody}
             </Box>
             <Box ref={cardState2Ref} sx={{
               position: 'absolute', inset: 0, p: { xs: 1.5, md: 2.5 },
-              color: '#fff', fontFamily: '"Inter", system-ui, sans-serif',
-              fontSize: { xs: 12, md: 15.5 }, lineHeight: 1.5,
+              color: '#fff', fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+              fontSize: { xs: 14, md: 18 }, lineHeight: 1.5,
               willChange: 'opacity, filter',
             }}>
               {t.athurayaCity.cardTwoPrefix}
-              <Box component="span" sx={{ fontWeight: 700 }}>{t.athurayaCity.cardTwoName}</Box>
+              <Box component="span" sx={{ fontWeight: 900 }}>{t.athurayaCity.cardTwoName}</Box>
               {t.athurayaCity.cardTwoBody}
             </Box>
             <Box ref={cardState3Ref} sx={{
               position: 'absolute', inset: 0, p: { xs: 1.5, md: 2.5 },
-              color: '#fff', fontFamily: '"Inter", system-ui, sans-serif',
-              fontSize: { xs: 12, md: 15.5 }, lineHeight: 1.5,
+              color: '#fff', fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+              fontSize: { xs: 14, md: 18 }, lineHeight: 1.5,
               willChange: 'opacity, filter',
             }}>
-              <Box component="span" sx={{ fontWeight: 700 }}>{t.athurayaCity.cardThreeName}</Box>
+              <Box component="span" sx={{ fontWeight: 900 }}>{t.athurayaCity.cardThreeName}</Box>
               {t.athurayaCity.cardThreeBody}
             </Box>
             <Box ref={cardState4Ref} sx={{
               position: 'absolute', inset: 0, p: { xs: 1.5, md: 2.5 },
-              color: '#fff', fontFamily: '"Inter", system-ui, sans-serif',
-              fontSize: { xs: 12, md: 15.5 }, lineHeight: 1.5,
+              color: '#fff', fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+              fontSize: { xs: 14, md: 18 }, lineHeight: 1.5,
               willChange: 'opacity, filter',
             }}>
               {t.athurayaCity.cardFourPrefix}
-              <Box component="span" sx={{ fontWeight: 700 }}>{t.athurayaCity.cardFourName}</Box>
+              <Box component="span" sx={{ fontWeight: 900 }}>{t.athurayaCity.cardFourName}</Box>
               {t.athurayaCity.cardFourBody}
             </Box>
           </Box>

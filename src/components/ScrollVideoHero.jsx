@@ -40,7 +40,6 @@ export default function ScrollVideoHero() {
   const step3Ref = useRef(null)
   const step4Ref = useRef(null)
   const hintRef = useRef(null)
-  const progressRef = useRef(null)
   const ctaRef = useRef(null)
   const logoRef = useRef(null)
   const [videoReady, setVideoReady] = useState(false)
@@ -61,6 +60,37 @@ export default function ScrollVideoHero() {
 
     let tl
     let metadataReady = false
+
+    // ── iOS Safari unlock ────────────────────────────────────────────
+    // On iOS Safari a <video> that has never been played stays on its
+    // poster (or a black frame). Setting `currentTime` to drive scrub
+    // animation BEFORE the element has been activated by `.play()` may
+    // be silently ignored — the user sees a black hero forever.
+    //
+    // Fix: kick off `.play()` once muted/playsInline are confirmed, then
+    // immediately pause. The video is now "primed": seeking via
+    // currentTime renders frames normally, and there's no audible /
+    // visible playback to interfere with the scroll-scrub story.
+    //
+    // We do this once, when metadata has loaded enough that play() is
+    // valid (readyState >= 2 = HAVE_CURRENT_DATA).
+    const primeForScrub = async () => {
+      try {
+        video.muted = true
+        video.playsInline = true
+        const p = video.play()
+        if (p && typeof p.then === 'function') await p
+        video.pause()
+        if (video.currentTime !== 0) video.currentTime = 0
+      } catch {
+        // Some browsers reject. The scroll timeline will still attempt
+        // to seek and most browsers will recover; iOS is the only one
+        // that strictly requires the prime, and it permits muted+inline
+        // play in our context.
+      }
+    }
+    if (video.readyState >= 2) primeForScrub()
+    else video.addEventListener('canplay', primeForScrub, { once: true })
 
     const buildTimeline = () => {
       if (tl) tl.kill()
@@ -175,9 +205,6 @@ export default function ScrollVideoHero() {
         ease: 'sine.inOut',
       }, logoSegment.peak)
 
-      // Progress bar grows linearly with scroll
-      tl.to(progressRef.current, { scaleX: 1, ease: 'none', duration: 1 }, 0)
-
       ScrollTrigger.refresh()
     }
 
@@ -251,7 +278,22 @@ export default function ScrollVideoHero() {
           borderRadius: 0,
         }}
       >
-        {/* Video */}
+        {/* Video — mobile uses the lighter hero-mobile.mp4; desktop
+            uses hero.mp4 (see pickVideoSrc).
+
+            CRITICAL: this is a SEEK-DRIVEN scrub video, NOT a playback
+            video. It must NOT carry `autoPlay`. With autoplay on
+            Safari the element plays forward on its own (the scrub
+            `onUpdate` only seeks when the user scrolls), runs ~1s past
+            the intro, and lands on a dark transition frame — the hero
+            "goes black after a second". The established unlock is
+            `primeForScrub` (play→pause→currentTime=0 on canplay),
+            which renders frame 0 and leaves the element seekable.
+
+            `poster` is the safety net: the browser paints it until a
+            real frame is decoded, and keeps it if decoding ever fails
+            (older Safari / Low-Power Mode). So the hero can never fall
+            back to pure black. */}
         <Box
           component="video"
           ref={videoRef}
@@ -259,6 +301,7 @@ export default function ScrollVideoHero() {
           muted
           playsInline
           preload="auto"
+          poster="/peninsula.jpg"
           onLoadedData={() => setVideoReady(true)}
           sx={{
             position: 'absolute',
@@ -267,27 +310,8 @@ export default function ScrollVideoHero() {
             height: '100%',
             objectFit: 'cover',
             filter: 'brightness(0.78) contrast(1.05)',
-            opacity: videoReady ? 1 : 0,
-            transition: 'opacity 600ms ease-out',
           }}
         />
-
-        {/* Loading shimmer */}
-        {!videoReady && (
-          <Box
-            sx={{
-              position: 'absolute',
-              inset: 0,
-              background:
-                'radial-gradient(ellipse at center, rgba(40,40,40,0.6) 0%, rgba(0,0,0,1) 75%)',
-              animation: 'wwHeroLoad 1.4s ease-in-out infinite',
-              '@keyframes wwHeroLoad': {
-                '0%, 100%': { opacity: 0.85 },
-                '50%': { opacity: 1 },
-              },
-            }}
-          />
-        )}
 
         {/* Readability gradient */}
         <Box
@@ -360,9 +384,10 @@ export default function ScrollVideoHero() {
                   sx={{
                     display: 'inline-block',
                     letterSpacing: { xs: '0.18em', md: '0.3em' },
-                    fontWeight: 600,
-                    fontSize: { xs: 11, md: 13 },
-                    color: 'rgba(255,255,255,0.78)',
+                    fontWeight: 700,
+                    fontSize: { xs: 15, md: 20 },
+                    lineHeight: 1.2,
+                    color: 'rgba(255,255,255,0.88)',
                   }}
                 >
                   {s.eyebrow}
@@ -375,7 +400,7 @@ export default function ScrollVideoHero() {
                   sx={{
                     display: 'block',
                     m: 0,
-                    fontFamily: '"Manrope", "Inter", system-ui, sans-serif',
+                    fontFamily: '"Arsenal SC", "Manrope", "Inter", system-ui, sans-serif',
                     fontWeight: 700,
                     fontSize: { xs: '2.2rem', sm: '3rem', md: '4.5rem', lg: '5.5rem' },
                     lineHeight: 1.04,
@@ -490,7 +515,7 @@ export default function ScrollVideoHero() {
             willChange: 'opacity',
           }}
         >
-          <Stack alignItems="center" spacing={1}>
+          <Stack spacing={1} sx={{ alignItems: 'center' }}>
             <Typography
               sx={{
                 color: 'rgba(255,255,255,0.7)',
@@ -516,29 +541,6 @@ export default function ScrollVideoHero() {
           </Stack>
         </Box>
 
-        {/* Progress bar */}
-        <Box
-          sx={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 2,
-            background: 'rgba(255,255,255,0.08)',
-          }}
-        >
-          <Box
-            ref={progressRef}
-            sx={{
-              height: '100%',
-              width: '100%',
-              transform: 'scaleX(0)',
-              transformOrigin: 'left center',
-              background: 'linear-gradient(90deg, #fff, rgba(255,255,255,0.6))',
-              willChange: 'transform',
-            }}
-          />
-        </Box>
       </Box>
     </Box>
   )

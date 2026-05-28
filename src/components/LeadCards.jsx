@@ -117,7 +117,7 @@ export default function LeadCards() {
         onClose={() => setOpenKey(null)}
         fullWidth
         maxWidth="sm"
-        PaperProps={{ sx: { bgcolor: 'background.paper', backgroundImage: 'none' } }}
+        slotProps={{ paper: { sx: { bgcolor: 'background.paper', backgroundImage: 'none' } } }}
       >
         <form onSubmit={submit}>
           <DialogTitle>{card?.title}</DialogTitle>

@@ -42,14 +42,16 @@ import { useI18n, LANGS } from '../i18n.jsx'
 
 // Tailwind/MUI-friendly tokens lifted straight from the Figma node.
 const NAV_FONT = {
-  fontFamily: 'Inter, system-ui, sans-serif',
-  fontWeight: 500,
+  // Navbar links pinned to Arsenal SC Bold per brand spec.
+  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+  fontWeight: 700,
   fontSize: '14px',
   lineHeight: '24.5px',
   letterSpacing: '0.7px',
 }
 const ADDRESS_FONT = {
-  fontFamily: 'Inter, system-ui, sans-serif',
+  // Address line stays Regular — it's body copy, not a UI control.
+  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
   fontWeight: 400,
   fontSize: '12px',
   lineHeight: '14.4px',
@@ -111,11 +113,11 @@ export default function Header() {
   }, [])
 
   const navLinks = [
-    { label: t.nav.buy, to: '/sell' },
+    { label: t.nav.buy, to: '/buy' },
     { label: t.nav.sell, to: '/sell' },
     { label: t.nav.project, to: '/' },
-    { label: t.nav.maison, to: '/' },
-    { label: t.nav.about, to: '/' },
+    { label: t.nav.maison, to: '/maison-shirdel' },
+    { label: t.nav.about, to: '/about' },
   ]
 
   const current = LANGS.find((l) => l.code === lang) || LANGS[0]
@@ -210,8 +212,7 @@ export default function Header() {
         <Stack
           direction="row"
           spacing={1.25}
-          alignItems="center"
-          sx={{ display: { xs: 'none', lg: 'flex' } }}
+          sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center' }}
         >
           <PhoneIcon sx={{ fontSize: 18, color: '#fff' }} />
           <Box
@@ -244,7 +245,7 @@ export default function Header() {
                 fontSize: 11,
                 fontWeight: 500,
                 lineHeight: 1,
-                fontFamily: 'Inter, system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 letterSpacing: '0.5px',
               }}
             >
@@ -339,7 +340,10 @@ export default function Header() {
         anchor="right"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        PaperProps={{ sx: { bgcolor: 'background.default', width: 300 } }}
+        // MUI v6/v9 renamed `PaperProps` → `slotProps.paper`. Using
+        // the old name leaks the prop to the DOM as `paperprops` and
+        // triggers an "unknown attribute" warning.
+        slotProps={{ paper: { sx: { bgcolor: 'background.default', width: 300 } } }}
       >
         <List>
           {navLinks.map((item) => (
@@ -352,7 +356,9 @@ export default function Header() {
               >
                 <ListItemText
                   primary={item.label}
-                  primaryTypographyProps={{ sx: NAV_FONT }}
+                  // MUI v6/v9 renamed primary/secondaryTypographyProps
+                  // → slotProps.primary / slotProps.secondary.
+                  slotProps={{ primary: { sx: NAV_FONT } }}
                 />
               </ListItemButton>
             </ListItem>
@@ -369,7 +375,7 @@ export default function Header() {
               <ListItemText
                 primary={t.phone}
                 secondary={t.online}
-                secondaryTypographyProps={{ sx: { color: ONLINE_GREEN } }}
+                slotProps={{ secondary: { sx: { color: ONLINE_GREEN } } }}
               />
             </ListItemButton>
           </ListItem>

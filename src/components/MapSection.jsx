@@ -181,10 +181,10 @@ export default function MapSection() {
         */}
         <Stack
           spacing={2}
-          alignItems="center"
           sx={{
             width: '100%',
             textAlign: 'center',
+            alignItems: 'center',
             mb: { xs: 5, md: 8 },
           }}
         >
@@ -194,7 +194,7 @@ export default function MapSection() {
               component="h2"
               sx={{
                 display: 'inline-block',
-                fontFamily: '"Manrope", "Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Manrope", "Inter", system-ui, sans-serif',
                 fontWeight: 700,
                 fontSize: { xs: 28, sm: 34, md: 44, lg: 52 },
                 lineHeight: 1.1,
@@ -214,7 +214,7 @@ export default function MapSection() {
               component="span"
               sx={{
                 display: 'inline-block',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 400,
                 fontSize: { xs: 14, md: 16 },
                 lineHeight: 1.55,
@@ -346,7 +346,7 @@ export default function MapSection() {
                 border: '1px solid rgba(255, 255, 255, 0.14)',
                 bgcolor: 'rgba(255, 255, 255, 0.04)',
                 color: 'rgba(255, 255, 255, 0.88)',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 fontSize: { xs: 12.5, md: 13.5 },
                 letterSpacing: '0.02em',

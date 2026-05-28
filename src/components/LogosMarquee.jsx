@@ -128,6 +128,15 @@ export default function LogosMarquee() {
   return (
     <Box
       component="section"
+      // Force LTR regardless of locale. The whole marquee is a
+      // graphic strip (logos + laurels), not localized copy — and
+      // under RTL the flex children reverse order (left/right
+      // laurels swap, so the leaves end up facing AWAY from the
+      // logo) AND the `translateX(-50%)` keyframe runs in the
+      // wrong direction. Locking `dir="ltr"` here lets the same
+      // animation + laurel orientation work identically in EN, RU
+      // and AR.
+      dir="ltr"
       sx={{
         bgcolor: '#000',
         py: { xs: 4, md: 6 },

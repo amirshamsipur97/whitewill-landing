@@ -182,7 +182,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
         <Typography
           component="h3"
           sx={{
-            fontFamily: '"Inter", system-ui, sans-serif',
+            fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
             fontWeight: 700,
             fontSize: { xs: 22, md: 26 },
             lineHeight: 1.1,
@@ -195,7 +195,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
         <Typography
           component="p"
           sx={{
-            fontFamily: '"Inter", system-ui, sans-serif',
+            fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
             fontWeight: 400,
             fontSize: { xs: 14, md: 16 },
             lineHeight: 1.3,
@@ -211,7 +211,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
         <Typography
           component="p"
           sx={{
-            fontFamily: '"Inter", system-ui, sans-serif',
+            fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
             fontWeight: 400,
             fontSize: { xs: 11.5, md: 12 },
             lineHeight: 1.55,
@@ -262,7 +262,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
               alignItems: 'center',
               justifyContent: 'space-between',
               color: '#fff',
-              fontFamily: '"Inter", system-ui, sans-serif',
+              fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
               fontSize: 14,
               fontWeight: 400,
               py: 0.5,
@@ -381,7 +381,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
                       <Typography
                         component="div"
                         sx={{
-                          fontFamily: '"Inter", system-ui, sans-serif',
+                          fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                           fontWeight: 500,
                           fontSize: { xs: 10.5, md: 11.5 },
                           lineHeight: 1.2,
@@ -397,7 +397,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
                     <Typography
                       component="div"
                       sx={{
-                        fontFamily: '"Inter", system-ui, sans-serif',
+                        fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                         fontWeight: 700,
                         fontSize: { xs: 15, md: 17 },
                         lineHeight: 1.15,
@@ -455,9 +455,9 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
                   <Typography
                     component="p"
                     sx={{
-                      fontFamily: '"Inter", system-ui, sans-serif',
+                      fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                       fontWeight: 400,
-                      fontSize: { xs: 10.5, md: 11 },
+                      fontSize: { xs: 13, md: 14 },
                       lineHeight: 1.55,
                       letterSpacing: '0.02em',
                       textTransform: 'uppercase',

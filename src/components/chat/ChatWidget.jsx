@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import CtaPill from './CtaPill'
 import ChatPanel from './ChatPanel'
+import { useI18n } from '../../i18n.jsx'
 
 /**
  * Sticky support widget — fixed at bottom-left for the entire site.
@@ -17,6 +18,7 @@ import ChatPanel from './ChatPanel'
  */
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent(open ? 'chat:open' : 'chat:close'))
@@ -24,7 +26,12 @@ export default function ChatWidget() {
 
   return (
     <>
-      {!open && <CtaPill onClick={() => setOpen(true)} />}
+      {!open && (
+        <CtaPill
+          onClick={() => setOpen(true)}
+          label={t.chatPill?.label || "Let's work together"}
+        />
+      )}
       <ChatPanel open={open} onClose={() => setOpen(false)} />
     </>
   )

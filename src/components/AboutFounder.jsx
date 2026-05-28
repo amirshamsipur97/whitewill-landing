@@ -3,6 +3,7 @@ import { Box, Grid, Stack, Typography } from '@mui/material'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useI18n } from '../i18n.jsx'
+import { useIsMobile } from '../hooks/useIsMobile.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -23,7 +24,7 @@ gsap.registerPlugin(ScrollTrigger)
  */
 
 const BODY_FONT = {
-  fontFamily: '"Inter", system-ui, sans-serif',
+  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
   fontWeight: 400,
   fontSize: { xs: '14px', md: '15px' },
   lineHeight: 1.55,
@@ -32,9 +33,9 @@ const BODY_FONT = {
 }
 
 const TITLE_FONT = {
-  fontFamily: '"Inter", system-ui, sans-serif',
-  fontWeight: 500,
-  fontSize: { xs: '20px', md: '24px' },
+  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+  fontWeight: 700,
+  fontSize: { xs: '22px', md: '26px' },
   lineHeight: 1.2,
   color: '#fff',
 }
@@ -42,8 +43,11 @@ const TITLE_FONT = {
 export default function AboutFounder() {
   const { t, lang } = useI18n()
   const isRTL = lang === 'ar'
+  const isMobile = useIsMobile()
 
   // Refs for GSAP — each one will be animated independently.
+  // Declared unconditionally above any early return so the hook order
+  // stays stable when useIsMobile flips after mount (React rules-of-hooks).
   const sectionRef = useRef(null)
   const leftLogoRef = useRef(null)
   const leftTitleRef = useRef(null)
@@ -58,6 +62,11 @@ export default function AboutFounder() {
   const rightBody2Ref = useRef(null)
 
   useEffect(() => {
+    // Desktop-only choreography. On mobile we render an entirely
+    // different layout (AboutFounderMobile) that has none of these
+    // refs attached, so the GSAP setup would no-op anyway. Bailing
+    // out early also avoids creating a ScrollTrigger we'd never use.
+    if (isMobile) return
     const ctx = gsap.context(() => {
       // -------- Initial states (CSS-level → no FOUC before scroll) --------
       gsap.set(
@@ -128,7 +137,14 @@ export default function AboutFounder() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
+
+  // Mobile renders the Figma node 336:18007 layout — stacked vertically
+  // with the decorative geometric pattern + circular portrait band
+  // between the two brand blocks. Desktop keeps the 3-column layout.
+  if (isMobile) {
+    return <AboutFounderMobile t={t} isRTL={isRTL} />
+  }
 
   return (
     <Box
@@ -177,8 +193,7 @@ export default function AboutFounder() {
         <Grid
           container
           spacing={{ xs: 4, md: 3, lg: 4 }}
-          alignItems="flex-start"
-          sx={{ position: 'relative', zIndex: 1 }}
+          sx={{ position: 'relative', zIndex: 1, alignItems: 'flex-start' }}
         >
           {/* LEFT — Maison Shirdel column */}
           <Grid size={{ xs: 12, md: 4 }}>
@@ -216,7 +231,7 @@ export default function AboutFounder() {
             size={{ xs: 12, md: 4 }}
             sx={{ display: 'flex', justifyContent: 'center' }}
           >
-            <Stack spacing={2.5} alignItems="center" sx={{ width: '100%' }}>
+            <Stack spacing={2.5} sx={{ width: '100%', alignItems: 'center' }}>
               <Box
                 ref={photoRef}
                 sx={{
@@ -256,7 +271,7 @@ export default function AboutFounder() {
                 <Typography
                   ref={nameRef}
                   sx={{
-                    fontFamily: '"Inter", system-ui, sans-serif',
+                    fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                     fontWeight: 600,
                     fontSize: { xs: 20, md: 24 },
                     lineHeight: 1.4,
@@ -273,7 +288,7 @@ export default function AboutFounder() {
                 <Typography
                   ref={titleRef}
                   sx={{
-                    fontFamily: '"Inter", system-ui, sans-serif',
+                    fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                     fontWeight: 400,
                     fontSize: { xs: 15, md: 18 },
                     lineHeight: 1.5,
@@ -296,11 +311,24 @@ export default function AboutFounder() {
           <Grid size={{ xs: 12, md: 4 }}>
             <Stack spacing={2.5}>
               <Box ref={rightLogoRef} sx={{ willChange: 'transform, opacity, filter' }}>
+                {/* Same /logo.svg the navbar uses. The previous
+                    `irfan-logo-section.svg` had `preserveAspectRatio="none"`
+                    plus width/height="100%" on the SVG root — Safari + iOS
+                    interpreted that as "stretch to fill parent", and on
+                    mobile the right column is narrow enough that the
+                    text mark wrapped and looked squished. The clean
+                    navbar SVG ships with a real viewBox and no stretch
+                    override, so the aspect ratio stays locked. */}
                 <Box
                   component="img"
-                  src="/irfan-logo-section.svg"
+                  src="/logo.svg"
                   alt="Irfan Investment Group"
-                  sx={{ height: { xs: 50, md: 60 }, width: 'auto' }}
+                  sx={{
+                    height: { xs: 48, md: 60 },
+                    width: 'auto',
+                    maxWidth: '100%',
+                    display: 'block',
+                  }}
                 />
               </Box>
 
@@ -316,6 +344,196 @@ export default function AboutFounder() {
             </Stack>
           </Grid>
         </Grid>
+      </Box>
+    </Box>
+  )
+}
+
+// ───────────────────────────────────────────────────────────────────
+// Mobile layout — Figma node 336:18007
+// Vertical stack: Maison block → decorative geometric band with the
+// circular founder portrait centered → Irfan Investment block.
+// The pattern SVG (public/patterns/about-pattern.svg) is rendered
+// behind the portrait at low opacity. Pattern strokes were retinted
+// to rgba(255,255,255,0.18) at download time to read on the black bg.
+// ───────────────────────────────────────────────────────────────────
+// Shared text styles for the two brand blocks. `mx: 'auto'` + a fixed
+// maxWidth on the paragraph wrapper is the trick that keeps the text
+// optically centered on the page regardless of how MUI's parent flex
+// box happens to lay it out.
+const MOBILE_BLOCK_TITLE = {
+  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+  fontWeight: 700,
+  fontSize: 22,
+  lineHeight: 1.2,
+  color: '#fff',
+  textAlign: 'center',
+  width: '100%',
+  m: 0,
+  mt: 1.25,
+}
+
+const MOBILE_BLOCK_BODY = {
+  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+  fontWeight: 400,
+  fontSize: 14,
+  lineHeight: 1.55,
+  color: 'rgba(255,255,255,0.88)',
+  textAlign: 'center',
+  maxWidth: 300,
+  mx: 'auto',
+  mt: 1,
+}
+
+function AboutFounderMobile({ t, isRTL }) {
+  return (
+    <Box
+      component="section"
+      sx={{
+        position: 'relative',
+        bgcolor: '#000',
+        py: { xs: 7 },
+        px: 3,
+        overflow: 'hidden',
+        direction: isRTL ? 'rtl' : 'ltr',
+        textAlign: 'center',
+      }}
+    >
+      {/* Inner wrapper — fixed-width, centered with mx:auto. Everything
+          inside is laid out relative to THIS box, which guarantees the
+          whole stack reads as centered on the viewport. */}
+      <Box sx={{ width: '100%', maxWidth: 360, mx: 'auto' }}>
+        {/* ── Maison Shirdel block ────────────────────────────────── */}
+        <Box sx={{ mb: 6, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {/* Logo: explicit width derived from the natural 532×130
+              aspect at the target 60px height (= 245px). Bare img with
+              auto width inside a flex parent gets stretched on Safari
+              when the parent has alignItems:center + spacing; pinning
+              both dimensions kills the squish. */}
+          <Box
+            component="img"
+            src="/maison-shirdel-logo.png"
+            alt="Maison Shirdel — Defined by Elegance"
+            sx={{
+              width: 245,
+              height: 60,
+              maxWidth: '90%',
+              objectFit: 'contain',
+              display: 'block',
+              flexShrink: 0,
+              mb: 1,
+            }}
+          />
+          <Typography sx={MOBILE_BLOCK_TITLE}>
+            {t.aboutFounder.maisonTitle}
+          </Typography>
+          <Typography sx={MOBILE_BLOCK_BODY}>
+            {t.aboutFounder.maisonBodyMobile}
+          </Typography>
+        </Box>
+
+        {/* ── Decorative band with circular portrait ──────────────── */}
+        <Box
+          sx={{
+            position: 'relative',
+            height: 220,
+            // Bleed past the inner wrapper AND the outer section padding
+            // so the geometric pattern reaches both viewport edges.
+            mx: 'calc(50% - 50vw)',
+            mb: 6,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            component="img"
+            src="/patterns/about-pattern.svg"
+            alt=""
+            aria-hidden
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '120%',
+              maxWidth: 'none',
+              height: 'auto',
+              pointerEvents: 'none',
+              userSelect: 'none',
+              opacity: 0.55,
+            }}
+          />
+
+          {/* Gradient ring + circular portrait. Figma node 341:18046
+              shows a 3px ring with a pink → amber gradient (the flat
+              `#ff00c5` returned by the MCP was Figma's selection
+              outline, not the rendered fill). We approximate with a
+              padded conic-style linear gradient wrapper. */}
+          <Box
+            sx={{
+              position: 'relative',
+              zIndex: 1,
+              width: 112,
+              height: 112,
+              borderRadius: '50%',
+              padding: '3px',
+              background: 'linear-gradient(180deg, #FF1493 0%, #FF4F8A 35%, #F08C2E 70%, #F3A833 100%)',
+              boxShadow: '0 10px 28px rgba(0,0,0,0.6)',
+            }}
+          >
+            <Box
+              sx={{
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                position: 'relative',
+                bgcolor: '#000',
+              }}
+            >
+              <Box
+                component="img"
+                src="/mohsen.png"
+                alt={t.aboutFounder.founderName}
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center top',
+                  display: 'block',
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+
+        {/* ── Irfan Investment Group block ────────────────────────── */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {/* Logo SVG is 150×60 natural; at height 72 the width is 180. */}
+          <Box
+            component="img"
+            src="/logo.svg"
+            alt="Irfan Investment Group"
+            sx={{
+              width: 180,
+              height: 72,
+              maxWidth: '90%',
+              objectFit: 'contain',
+              display: 'block',
+              flexShrink: 0,
+              mb: 1,
+            }}
+          />
+          <Typography sx={MOBILE_BLOCK_TITLE}>
+            {t.aboutFounder.irfanTitle}
+          </Typography>
+          <Typography sx={MOBILE_BLOCK_BODY}>
+            {t.aboutFounder.irfanBodyMobile}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   )

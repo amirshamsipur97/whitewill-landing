@@ -47,7 +47,7 @@ export default function HeroSection() {
             <Typography
               component="h1"
               sx={{
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 color: '#F0EAE3',
                 textTransform: 'uppercase',
@@ -64,7 +64,7 @@ export default function HeroSection() {
               component="span"
               sx={{
                 display: 'block',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 color: '#F0EAE3',
                 textTransform: 'uppercase',
@@ -133,7 +133,7 @@ export default function HeroSection() {
           >
             <Box
               sx={{
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 color: '#FFFFFF',
                 fontSize: { xs: 11, md: 11.5 },
@@ -148,7 +148,7 @@ export default function HeroSection() {
             <Box
               sx={{
                 maxWidth: 600,
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 color: '#FFFFFF',
                 fontSize: { xs: 16, md: 20 },

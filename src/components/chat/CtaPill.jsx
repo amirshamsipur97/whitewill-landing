@@ -15,10 +15,15 @@ export default function CtaPill({ onClick, label = "Let's work together" }) {
         boxShadow: '0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset',
       }}
     >
-      <span className="text-white">
+      {/* `leading-none` zeros the line-height so the spinner is
+          measured by its actual 20px box, not the inherited line-
+          height of the parent button. Without this the icon ends up
+          ~2 px above the optical centre of the Arabic baseline
+          (Peyda has a higher hanging baseline than Arsenal SC). */}
+      <span className="text-white inline-flex items-center leading-none">
         <SpinnerDots size={20} />
       </span>
-      <span>{label}</span>
+      <span className="inline-flex items-center leading-none">{label}</span>
     </button>
   )
 }

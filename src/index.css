@@ -1,8 +1,50 @@
 @import "tailwindcss";
 
+/* ── Arsenal SC ──────────────────────────────────────────────────────
+   Brand display + body font for EN / RU. Two TTF weights:
+     • ArsenalSC-Regular (400) — paragraph copy
+     • ArsenalSC-Bold   (700) — headings, navbar, CTAs, labels
+   Declared under one family name so MUI's `fontWeight` lookups
+   (300–700) all resolve to one of the two real faces — browser
+   picks Regular for 100–500 and Bold for 600–900. */
+@font-face {
+  font-family: 'Arsenal SC';
+  src: url('/fonts/ArsenalSC-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Arsenal SC';
+  src: url('/fonts/ArsenalSC-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Peyda ──────────────────────────────────────────────────────────
+   Arabic display + body font. Mirrors the Arsenal SC two-weight
+   setup so the same MUI fontWeight values render correctly under
+   RTL. Applied automatically when `<html lang="ar">` (set by the
+   i18n provider) — see the `[lang="ar"]` rule further down. */
+@font-face {
+  font-family: 'Peyda';
+  src: url('/fonts/Peyda-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Peyda';
+  src: url('/fonts/Peyda-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-sans: 'Poppins', system-ui, sans-serif;
-  --font-display: 'Manrope', system-ui, sans-serif;
+  --font-sans: 'Arsenal SC', 'Inter', 'Poppins', system-ui, sans-serif;
+  --font-display: 'Arsenal SC', 'Manrope', system-ui, sans-serif;
   --color-bg: #000000;
   --color-card: #0e0e0e;
   --color-card-2: #131313;
@@ -14,9 +56,53 @@
 html, body, #root {
   background: #000;
   color: #fff;
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: 'Arsenal SC', 'Inter', 'Poppins', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Arabic locale override ─────────────────────────────────────────
+   The i18n provider sets `<html lang="ar" dir="rtl">` whenever the
+   user picks Arabic. Hundreds of components have inline
+   `fontFamily: '"Arsenal SC", "Inter", ...'` sx props — rewriting
+   each one would be brittle. Instead we override at the locale
+   root: every descendant inherits Peyda first, and the original
+   Arsenal SC / Inter fallbacks still apply if Peyda fails to load.
+
+   `!important` is necessary because MUI's inline `sx` styles are
+   higher specificity than a normal selector. Scoped to `[lang="ar"]`
+   so EN / RU pages remain untouched. */
+html[lang="ar"],
+html[lang="ar"] body,
+html[lang="ar"] #root,
+html[lang="ar"] * {
+  font-family: 'Peyda', 'Arsenal SC', 'Inter', 'Tahoma', system-ui, sans-serif !important;
+}
+
+/* Material icons / emoji shouldn't get the font swap forced on
+   them — the icon ligatures stop rendering when their PUA glyphs
+   resolve through a text font. Carve them out explicitly. */
+html[lang="ar"] .material-icons,
+html[lang="ar"] [class*="MuiSvgIcon-root"],
+html[lang="ar"] svg,
+html[lang="ar"] svg * {
+  font-family: inherit !important;
+}
+
+/* ── Arabic letter joining (OpenType shaping) fix ────────────────────
+   Many components use `letterSpacing` (e.g. 0.04em / 0.18em) for
+   English all-caps eyebrow labels. When that gets inherited under
+   `lang="ar"`, the browser separates each Arabic glyph by that
+   amount AND falls back to the isolated form — so words like
+   `حضور عالمي` render as detached letters `ح ض و ر  ع ا ل م ي`.
+   Resetting letter-spacing on Arabic restores the OpenType
+   substitution chain that joins initial / medial / final forms.
+
+   `word-spacing` is left alone — gaps between Arabic words are
+   normal whitespace, not the cause of the issue. */
+html[lang="ar"],
+html[lang="ar"] * {
+  letter-spacing: 0 !important;
 }
 
 @keyframes scroll-x {

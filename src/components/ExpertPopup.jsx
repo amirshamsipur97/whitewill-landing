@@ -119,7 +119,7 @@ export default function ExpertPopup() {
 
             <Box
               sx={{
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 500,
                 color: '#fff',
                 fontSize: 20,
@@ -132,7 +132,7 @@ export default function ExpertPopup() {
 
             <Box
               sx={{
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 300,
                 color: 'rgba(255,255,255,0.5)',
                 fontSize: 11,
@@ -198,7 +198,7 @@ export default function ExpertPopup() {
               href={`tel:${t.expertPopup.phone.replace(/\s/g, '')}`}
               sx={{
                 display: 'block',
-                fontFamily: '"Inter", system-ui, sans-serif',
+                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
                 fontWeight: 400,
                 color: '#fff',
                 fontSize: 12.5,
