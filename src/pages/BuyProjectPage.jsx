@@ -24,6 +24,28 @@ import {
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
+// Feature/amenity line icons (MUI outlined — same thin-line language as the
+// Figma "Features" spec). Mapped to stable feature keys in FEATURE_META below.
+import WavesOutlined from '@mui/icons-material/WavesOutlined'
+import WaterOutlined from '@mui/icons-material/WaterOutlined'
+import TerrainOutlined from '@mui/icons-material/TerrainOutlined'
+import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined'
+import GolfCourseOutlined from '@mui/icons-material/GolfCourseOutlined'
+import BeachAccessOutlined from '@mui/icons-material/BeachAccessOutlined'
+import SailingOutlined from '@mui/icons-material/SailingOutlined'
+import PoolOutlined from '@mui/icons-material/PoolOutlined'
+import HotelOutlined from '@mui/icons-material/HotelOutlined'
+import SpaOutlined from '@mui/icons-material/SpaOutlined'
+import FitnessCenterOutlined from '@mui/icons-material/FitnessCenterOutlined'
+import RoomServiceOutlined from '@mui/icons-material/RoomServiceOutlined'
+import RestaurantOutlined from '@mui/icons-material/RestaurantOutlined'
+import WorkspacePremiumOutlined from '@mui/icons-material/WorkspacePremiumOutlined'
+import SettingsRemoteOutlined from '@mui/icons-material/SettingsRemoteOutlined'
+import ParkOutlined from '@mui/icons-material/ParkOutlined'
+import DirectionsBikeOutlined from '@mui/icons-material/DirectionsBikeOutlined'
+import SchoolOutlined from '@mui/icons-material/SchoolOutlined'
+import LocalParkingOutlined from '@mui/icons-material/LocalParkingOutlined'
+import VerifiedOutlined from '@mui/icons-material/VerifiedOutlined'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useI18n } from '../i18n.jsx'
@@ -35,6 +57,44 @@ import { slugify } from './BuyPage.jsx'
 const OLIVE = '#7c7856'
 const OLIVE_BRIGHT = '#8c8d25'
 const INDIGO = '#391FAF'
+
+// Feature key → icon + localized label. `projectDetails.js` stores stable
+// English keys so the icon mapping is locale-independent; the label is picked
+// per active language here (falls back to English).
+const FEATURE_META = {
+  seaView:           { icon: WavesOutlined,            en: 'Sea View',           ar: 'إطلالة بحرية',       ru: 'Вид на море' },
+  waterfront:        { icon: WaterOutlined,            en: 'Waterfront',         ar: 'واجهة بحرية',        ru: 'Набережная' },
+  mountainView:      { icon: TerrainOutlined,          en: 'Mountain View',      ar: 'إطلالة جبلية',       ru: 'Вид на горы' },
+  skyViews:          { icon: VisibilityOutlined,       en: 'Sky Views',          ar: 'إطلالات سماوية',     ru: 'Панорамные виды' },
+  golfCourse:        { icon: GolfCourseOutlined,       en: 'Golf Course',        ar: 'ملعب غولف',          ru: 'Гольф-поле' },
+  beachClub:         { icon: BeachAccessOutlined,      en: 'Beach Club',         ar: 'نادٍ شاطئي',         ru: 'Пляжный клуб' },
+  beachAccess:       { icon: BeachAccessOutlined,      en: 'Beach Access',       ar: 'وصول للشاطئ',        ru: 'Выход к пляжу' },
+  marina:            { icon: SailingOutlined,          en: 'Marina',             ar: 'مارينا',             ru: 'Марина' },
+  infinityPool:      { icon: PoolOutlined,             en: 'Infinity Pool',      ar: 'مسبح لا متناهٍ',     ru: 'Бассейн-инфинити' },
+  pool:              { icon: PoolOutlined,             en: 'Swimming Pool',      ar: 'مسبح',               ru: 'Бассейн' },
+  privatePool:       { icon: PoolOutlined,             en: 'Private Pool',       ar: 'مسبح خاص',           ru: 'Частный бассейн' },
+  fiveStarHotel:     { icon: HotelOutlined,            en: '5-Star Hotel',       ar: 'فندق 5 نجوم',        ru: '5-звёздочный отель' },
+  spa:               { icon: SpaOutlined,              en: 'Spa & Wellness',     ar: 'سبا وعافية',         ru: 'Спа' },
+  gym:               { icon: FitnessCenterOutlined,    en: 'Fitness Centre',     ar: 'صالة لياقة',         ru: 'Фитнес-центр' },
+  concierge:         { icon: RoomServiceOutlined,      en: 'Concierge',          ar: 'كونسيرج',            ru: 'Консьерж' },
+  butlerService:     { icon: RoomServiceOutlined,      en: 'Butler Service',     ar: 'خدمة الخادم الشخصي', ru: 'Сервис дворецкого' },
+  retailDining:      { icon: RestaurantOutlined,       en: 'Retail & Dining',    ar: 'تجزئة ومطاعم',       ru: 'Магазины и рестораны' },
+  fineDining:        { icon: RestaurantOutlined,       en: 'Fine Dining',        ar: 'مطاعم راقية',        ru: 'Высокая кухня' },
+  brandedResidences: { icon: WorkspacePremiumOutlined, en: 'Branded Residences', ar: 'إقامات مُوقَّعة',    ru: 'Брендированные резиденции' },
+  smartHome:         { icon: SettingsRemoteOutlined,   en: 'Smart Home',         ar: 'منزل ذكي',           ru: 'Умный дом' },
+  landscapedGardens: { icon: ParkOutlined,             en: 'Landscaped Gardens', ar: 'حدائق منسّقة',       ru: 'Ландшафтные сады' },
+  centralPark:       { icon: ParkOutlined,             en: 'Central Park',       ar: 'حديقة مركزية',       ru: 'Центральный парк' },
+  cyclingPaths:      { icon: DirectionsBikeOutlined,   en: 'Cycling Paths',      ar: 'مسارات دراجات',      ru: 'Велодорожки' },
+  schools:           { icon: SchoolOutlined,           en: 'Schools Nearby',     ar: 'مدارس قريبة',        ru: 'Школы рядом' },
+  parking:           { icon: LocalParkingOutlined,     en: 'Parking',            ar: 'مواقف سيارات',       ru: 'Парковка' },
+  freehold:          { icon: VerifiedOutlined,         en: 'Freehold Ownership', ar: 'تملّك حر',           ru: 'Полная собственность' },
+}
+
+const FEATURES_HEADING = {
+  en: 'Features & amenities',
+  ar: 'المزايا والمرافق',
+  ru: 'Особенности и удобства',
+}
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 if (MAPBOX_TOKEN) mapboxgl.accessToken = MAPBOX_TOKEN
@@ -470,6 +530,41 @@ export default function BuyProjectPage() {
                 {details.description}
               </Typography>
             )}
+
+            {/* Multi-section project copy (overview / location / design /
+                investment) — richer, SEO-friendly body content. */}
+            {Array.isArray(details?.sections) && details.sections.length > 0 && (
+              <Stack spacing={{ xs: 3, md: 3.5 }} sx={{ mt: { xs: 4, md: 5 }, maxWidth: 680 }}>
+                {details.sections.map((s, i) => (
+                  <Box key={i}>
+                    <Typography
+                      component="h2"
+                      sx={{
+                        fontFamily: '"Arsenal SC", "Inter", sans-serif',
+                        fontSize: 12,
+                        fontWeight: 600,
+                        letterSpacing: '0.16em',
+                        textTransform: 'uppercase',
+                        color: OLIVE_BRIGHT,
+                        mb: 1,
+                      }}
+                    >
+                      {s.title}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: '"Arsenal SC", "Inter", sans-serif',
+                        fontSize: { xs: 15.5, md: 17 },
+                        color: 'rgba(255,255,255,0.74)',
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {s.body}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+            )}
           </Box>
 
           <Box
@@ -533,6 +628,54 @@ export default function BuyProjectPage() {
             </Stack>
           </Box>
         </Box>
+
+        {/* ── Features & amenities (icon grid, Figma 378-17112) ────── */}
+        {Array.isArray(details?.features) && details.features.length > 0 && (
+          <Box sx={{ mb: { xs: 6, md: 9 }, pt: { xs: 1, md: 2 }, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <Typography
+              component="h2"
+              sx={{
+                fontFamily: '"Arsenal SC", "Inter", sans-serif',
+                fontWeight: 300,
+                fontSize: { xs: 24, md: 30 },
+                letterSpacing: '-0.01em',
+                mt: { xs: 4, md: 5 },
+                mb: { xs: 3, md: 4 },
+              }}
+            >
+              {FEATURES_HEADING[lang] || FEATURES_HEADING.en}
+            </Typography>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(3, 1fr)' },
+                columnGap: { xs: 2, md: 6 },
+                rowGap: { xs: 2, md: 2.75 },
+                maxWidth: 920,
+              }}
+            >
+              {details.features.map((key) => {
+                const meta = FEATURE_META[key]
+                if (!meta) return null
+                const Icon = meta.icon
+                return (
+                  <Stack key={key} direction="row" spacing={1.5} alignItems="center">
+                    <Icon sx={{ fontSize: 22, color: OLIVE_BRIGHT, flexShrink: 0 }} />
+                    <Typography
+                      sx={{
+                        fontFamily: '"Arsenal SC", "Inter", sans-serif',
+                        fontSize: { xs: 14.5, md: 16 },
+                        color: 'rgba(255,255,255,0.86)',
+                      }}
+                    >
+                      {meta[lang] || meta.en}
+                    </Typography>
+                  </Stack>
+                )
+              })}
+            </Box>
+          </Box>
+        )}
 
         {/* ── Inventory section (only if there are live units) ────── */}
         {hasInventory ? (
