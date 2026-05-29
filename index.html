@@ -23,9 +23,123 @@
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Irfan Investment Group — a premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations.">
     <title>Irfan Investment — Real Estate Experts</title>
+    <!-- ─────────────────────────────────────────────────────────────────
+         Boot splash — painted on the very first frame (inline, before the
+         JS bundle loads) so the user never sees an empty page while the
+         bundle parses, the hero video buffers, and Supabase data arrives.
+         Black canvas + brand lockup + tagline + dotted spinner. A tiny
+         script below fades it out after ~2.3–3s (waits for `load`, capped
+         at 3s) and removes it from the DOM. Lives outside #root so React
+         never touches it. ─────────────────────────────────────────────── -->
+    <style>
+      html, body { background: #000; margin: 0; }
+      #app-splash {
+        position: fixed; inset: 0; z-index: 2147483000; background: #000;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 64px;
+        opacity: 1; transition: opacity .6s ease;
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      }
+      #app-splash.app-splash-hide { opacity: 0; pointer-events: none; }
+      .app-splash-inner {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 22px; padding: 0 24px; transform: translateY(-6px);
+      }
+      .app-splash-logo {
+        width: 200px; height: auto; display: block;
+        filter: drop-shadow(0 6px 30px rgba(0,0,0,.5));
+        animation: app-splash-rise .9s cubic-bezier(.22,.61,.36,1) both;
+      }
+      .app-splash-tagline {
+        margin: 0; max-width: 600px; text-align: center; color: #fff;
+        text-transform: capitalize;
+        font-family: "Arsenal SC", "Inter", system-ui, -apple-system, sans-serif;
+        font-size: 22px; line-height: 1.5; font-weight: 400; letter-spacing: .3px;
+        animation: app-splash-rise .9s cubic-bezier(.22,.61,.36,1) .12s both;
+      }
+      .app-splash-spinner { position: relative; width: 48px; height: 48px; }
+      .app-splash-spinner i {
+        position: absolute; left: calc(50% - 3px); top: 1px;
+        width: 6px; height: 6px; border-radius: 50%;
+        background: #c8bd9c; transform-origin: 3px 23px;
+        animation: app-splash-fade 1s linear infinite;
+      }
+      .app-splash-spinner i:nth-child(1){ transform: rotate(0deg);   animation-delay: -.875s }
+      .app-splash-spinner i:nth-child(2){ transform: rotate(45deg);  animation-delay: -.750s }
+      .app-splash-spinner i:nth-child(3){ transform: rotate(90deg);  animation-delay: -.625s }
+      .app-splash-spinner i:nth-child(4){ transform: rotate(135deg); animation-delay: -.500s }
+      .app-splash-spinner i:nth-child(5){ transform: rotate(180deg); animation-delay: -.375s }
+      .app-splash-spinner i:nth-child(6){ transform: rotate(225deg); animation-delay: -.250s }
+      .app-splash-spinner i:nth-child(7){ transform: rotate(270deg); animation-delay: -.125s }
+      .app-splash-spinner i:nth-child(8){ transform: rotate(315deg); animation-delay: 0s }
+      @keyframes app-splash-fade { 0% { opacity: 1 } 100% { opacity: .18 } }
+      @keyframes app-splash-rise { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: translateY(0) } }
+      @media (max-width: 600px) {
+        #app-splash { gap: 48px; }
+        .app-splash-logo { width: 158px; }
+        .app-splash-tagline { font-size: 16px; max-width: 320px; line-height: 1.45; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .app-splash-logo, .app-splash-tagline { animation: none; }
+        .app-splash-spinner i { animation-duration: 1.8s; }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Boot splash (see <style> in <head>). Removed by the script below. -->
+    <div id="app-splash" role="status" aria-label="Loading Irfan Investment Group">
+      <div class="app-splash-inner">
+        <img class="app-splash-logo" src="/logo.svg" width="200" height="80" alt="Irfan Investment Group" />
+        <p class="app-splash-tagline" id="app-splash-tagline">Irfan Investment Group is a strategic investment division focused on business growth and international opportunities.</p>
+      </div>
+      <div class="app-splash-spinner" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // Localize the tagline from the persisted language (matches i18n's
+        // 'ww_lang' key) so RTL/Arabic and Russian visitors see their copy.
+        try {
+          var lang = localStorage.getItem('ww_lang') || 'en';
+          var taglines = {
+            en: 'Irfan Investment Group is a strategic investment division focused on business growth and international opportunities.',
+            ru: 'Irfan Investment Group — стратегическое инвестиционное подразделение, ориентированное на рост бизнеса и международные возможности.',
+            ar: 'مجموعة عرفان الاستثمارية هي ذراعٌ استثماري استراتيجي يركّز على نمو الأعمال والفرص الدولية.'
+          };
+          var tEl = document.getElementById('app-splash-tagline');
+          if (tEl && taglines[lang]) tEl.textContent = taglines[lang];
+          if (lang === 'ar') {
+            var sp = document.getElementById('app-splash');
+            if (sp) { sp.dir = 'rtl'; }
+            if (tEl) tEl.style.textTransform = 'none';
+          }
+        } catch (e) {}
+
+        var splash = document.getElementById('app-splash');
+        if (!splash) return;
+        var now = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
+        var MIN = 2300, MAX = 3000, start = now(), done = false;
+
+        function hide() {
+          if (done) return; done = true;
+          splash.classList.add('app-splash-hide');
+          setTimeout(function () {
+            if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+          }, 650);
+        }
+        function afterLoad() {
+          setTimeout(hide, Math.max(0, MIN - (now() - start)));
+        }
+        if (document.readyState === 'complete') afterLoad();
+        else window.addEventListener('load', afterLoad);
+        setTimeout(hide, MAX); // hard cap — never lingers past ~3s
+      })();
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
