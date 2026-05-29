@@ -78,19 +78,42 @@ export default function ScrollVideoHero() {
       try {
         video.muted = true
         video.playsInline = true
+        // iOS Safari often ignores preload="auto" and defers loading until a
+        // gesture, so canplay may never fire. Nudge the load if we still
+        // don't have frame data.
+        if (video.readyState < 2) { try { video.load() } catch {} }
         const p = video.play()
         if (p && typeof p.then === 'function') await p
         video.pause()
-        if (video.currentTime !== 0) video.currentTime = 0
+        // Force a frame paint. iOS won't repaint when you set the SAME
+        // currentTime it's already on, so seek to a tiny non-zero offset —
+        // this guarantees the decoded frame replaces the poster.
+        video.currentTime = 0.05
       } catch {
-        // Some browsers reject. The scroll timeline will still attempt
-        // to seek and most browsers will recover; iOS is the only one
-        // that strictly requires the prime, and it permits muted+inline
-        // play in our context.
+        // play() was rejected (iOS Low-Power Mode, or no user gesture yet).
+        // CRITICAL: we must NOT bail here — that's what left the poster
+        // (peninsula.jpg) showing forever on mobile, so the hero looked like
+        // a static image. Seeking does NOT require play() permission, so we
+        // force a decode+paint of frame 0 directly. The real scrub then takes
+        // over the moment the user scrolls.
+        try { video.currentTime = 0.05 } catch {}
       }
     }
     if (video.readyState >= 2) primeForScrub()
-    else video.addEventListener('canplay', primeForScrub, { once: true })
+    else {
+      video.addEventListener('canplay', primeForScrub, { once: true })
+      video.addEventListener('loadeddata', primeForScrub, { once: true })
+    }
+
+    // iOS unlocks media playback only after a real user gesture. Our hero is
+    // the first thing on the page, so the user's first touch/scroll is the
+    // perfect moment to (re)prime the video — this is the most reliable iOS
+    // unlock and the final safety net against the "stuck on poster" bug.
+    const gestureUnlock = () => { primeForScrub() }
+    const gestureOpts = { once: true, passive: true }
+    window.addEventListener('touchstart', gestureUnlock, gestureOpts)
+    window.addEventListener('pointerdown', gestureUnlock, gestureOpts)
+    window.addEventListener('scroll', gestureUnlock, gestureOpts)
 
     const buildTimeline = () => {
       if (tl) tl.kill()
@@ -228,7 +251,12 @@ export default function ScrollVideoHero() {
     return () => {
       video.removeEventListener('loadedmetadata', onMetadata)
       video.removeEventListener('loadeddata', onMetadata)
+      video.removeEventListener('canplay', primeForScrub)
+      video.removeEventListener('loadeddata', primeForScrub)
       window.removeEventListener('resize', onResize)
+      window.removeEventListener('touchstart', gestureUnlock)
+      window.removeEventListener('pointerdown', gestureUnlock)
+      window.removeEventListener('scroll', gestureUnlock)
       if (tl) tl.kill()
       ScrollTrigger.getAll().forEach(st => {
         if (st.trigger === wrap) st.kill()
