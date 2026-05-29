@@ -1,0 +1,7 @@
+# Irfan Investment Group — https://www.irfaninvest.com
+User-agent: *
+Allow: /
+
+# Block nothing extra; this is a public marketing site.
+
+Sitemap: https://www.irfaninvest.com/sitemap.xml

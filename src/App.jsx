@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Header from './components/Header'
 import { useIsMobile } from './hooks/useIsMobile'
+import SeoManager from './seo.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -180,6 +181,7 @@ export default function App() {
         }}
       >
         <ScrollManager />
+        <SeoManager />
         <Header />
         <main>
           <Suspense fallback={<RouteFallback />}>

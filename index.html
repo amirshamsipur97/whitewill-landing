@@ -21,8 +21,58 @@
     <link rel="preload" as="video" type="video/mp4" href="/video/hero.mp4" media="(min-width: 769px)">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="Irfan Investment Group — a premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations.">
-    <title>Irfan Investment — Real Estate Experts</title>
+    <title>Irfan Investment Group — Premium Real Estate in Oman</title>
+    <meta name="description" content="Irfan Investment Group is a premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations." />
+
+    <!-- ─── SEO / crawling ──────────────────────────────────────────────
+         Static defaults below are the site-wide fallback (homepage). The
+         <SeoManager> React component rewrites title/description/canonical/OG
+         per route for JS-rendering crawlers (e.g. Googlebot). Non-JS social
+         scrapers read these static values. ─────────────────────────────── -->
+    <link rel="canonical" href="https://www.irfaninvest.com/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="author" content="Irfan Investment Group" />
+    <meta name="keywords" content="Oman real estate, property for sale Oman, Muscat property, luxury residences Oman, Irfan Investment Group, buy property Oman, real estate brokerage Oman, invest in Oman" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- Open Graph (link previews on WhatsApp, Facebook, LinkedIn, …) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Irfan Investment Group" />
+    <meta property="og:title" content="Irfan Investment Group — Premium Real Estate in Oman" />
+    <meta property="og:description" content="A premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations." />
+    <meta property="og:url" content="https://www.irfaninvest.com/" />
+    <meta property="og:image" content="https://www.irfaninvest.com/peninsula.jpg" />
+    <meta property="og:image:width" content="2200" />
+    <meta property="og:image:height" content="1238" />
+    <meta property="og:image:alt" content="A curated Irfan Investment development in Oman" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_OM" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Irfan Investment Group — Premium Real Estate in Oman" />
+    <meta name="twitter:description" content="A premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations." />
+    <meta name="twitter:image" content="https://www.irfaninvest.com/peninsula.jpg" />
+
+    <!-- Structured data — helps search engines understand the business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "Irfan Investment Group",
+      "url": "https://www.irfaninvest.com/",
+      "logo": "https://www.irfaninvest.com/logo.svg",
+      "image": "https://www.irfaninvest.com/peninsula.jpg",
+      "description": "A premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations.",
+      "areaServed": { "@type": "Country", "name": "Oman" },
+      "address": { "@type": "PostalAddress", "addressCountry": "OM", "addressRegion": "Muscat" },
+      "knowsLanguage": ["en", "ar", "ru"]
+    }
+    </script>
     <!-- ─────────────────────────────────────────────────────────────────
          Boot splash — painted on the very first frame (inline, before the
          JS bundle loads) so the user never sees an empty page while the
