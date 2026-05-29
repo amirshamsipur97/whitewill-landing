@@ -318,10 +318,15 @@ export default function ScrollVideoHero() {
             `primeForScrub` (play→pause→currentTime=0 on canplay),
             which renders frame 0 and leaves the element seekable.
 
-            `poster` is the safety net: the browser paints it until a
-            real frame is decoded, and keeps it if decoding ever fails
-            (older Safari / Low-Power Mode). So the hero can never fall
-            back to pure black. */}
+            No `poster` by request: instead of painting a placeholder
+            image during the load delay, we lean on (a) the solid #000
+            wrap background — so the gap is a clean cinematic black, never
+            a white flash — and (b) progressive load. The MP4s are
+            faststart (moov atom first), so the very first frame's bytes
+            arrive first and `primeForScrub` seeks to 0.05 to paint it the
+            instant data is available. A <link rel="preload"> hint in
+            index.html also kicks the download off in parallel with the
+            bundle, so the frame lands fast. */}
         <Box
           component="video"
           ref={videoRef}
@@ -329,7 +334,6 @@ export default function ScrollVideoHero() {
           muted
           playsInline
           preload="auto"
-          poster="/peninsula.jpg"
           onLoadedData={() => setVideoReady(true)}
           sx={{
             position: 'absolute',
