@@ -3,6 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Analytics 4 (GA4) — global gtag, loads on every route. This is
+         a Vite SPA, so the tag lives here in index.html (the single HTML
+         document) rather than a Next.js layout. GA4 enhanced measurement
+         tracks SPA route changes via the History API automatically. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P2PTCKJKYK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P2PTCKJKYK');
+    </script>
+
     <!-- Resource hints — open TCP/TLS sockets to the third parties we hit
          from the first paint (fonts, Mapbox tiles + analytics, Supabase
          REST/edge functions) so the browser doesn't pay handshake latency
