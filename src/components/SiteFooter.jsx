@@ -223,7 +223,7 @@ export default function SiteFooter() {
               }}
             >
               A premium real estate brokerage in Oman, operating under
-              Maison Shirdel — connecting global capital with curated
+              Maison Shirdel, connecting global capital with curated
               developments across Oman and emerging investment destinations.
             </Typography>
 

@@ -105,6 +105,22 @@ html[lang="ar"] *, html[lang="fa"] * {
   letter-spacing: 0 !important;
 }
 
+/* ── RTL button arrows ──────────────────────────────────────────────
+   MUI keeps its LTR endIcon margins (margin-left:8px / margin-right:-4px)
+   even under dir=rtl, so the trailing arrow sits cramped against the
+   text. Under rtl flex-row the icon renders to the LEFT of the label,
+   so we move the gap to its right edge and mirror the glyph (→ becomes
+   ←) to point in the reading direction. */
+html[lang="ar"] .MuiButton-endIcon,
+html[lang="fa"] .MuiButton-endIcon {
+  margin-left: -4px !important;
+  margin-right: 8px !important;
+}
+html[lang="ar"] .MuiButton-endIcon > *,
+html[lang="fa"] .MuiButton-endIcon > * {
+  transform: scaleX(-1);
+}
+
 @keyframes scroll-x {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

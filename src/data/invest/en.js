@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────
-// invest/en.js — English content for the /invest page (canonical structure).
+// invest/en.js: English content for the /invest page (canonical structure).
 // ru.js and ar.js mirror this exact shape; only human-readable strings are
 // translated. Non-translatable values are kept identical across languages:
 //   • law `ref` (e.g. "Royal Decree 50/2019")
@@ -13,12 +13,12 @@ export default {
     eyebrow: 'Company Registration & Investment in Oman',
     title: 'Set up your company and invest in Oman',
     subtitle:
-      'End-to-end company formation, licensing, banking, residency and investment advisory — so international investors can establish, operate and grow in Oman with up to 100% foreign ownership.',
+      'End-to-end company formation, licensing, banking, residency and investment advisory, so international investors can establish, operate and grow in Oman with up to 100% foreign ownership.',
     cta: 'Talk to an advisor',
   },
 
   intro:
-    'Oman has modernised its corporate and foreign-investment laws to become one of the most investor-friendly economies in the GCC. Foreign investors can own up to 100% of a company in most sectors — with no Omani partner required, no statutory minimum capital for an LLC, and remote registration through the Invest Easy portal. We guide you through every step: choosing the right legal structure, securing licenses, opening corporate bank accounts, arranging residency, and identifying high-yield real-estate and business opportunities.',
+    'Oman has modernised its corporate and foreign-investment laws to become one of the most investor-friendly economies in the GCC. Foreign investors can own up to 100% of a company in most sectors, with no Omani partner required, no statutory minimum capital for an LLC, and remote registration through the Invest Easy portal. We guide you through every step: choosing the right legal structure, securing licenses, opening corporate bank accounts, arranging residency, and identifying high-yield real-estate and business opportunities.',
 
   whyOman: [
     { stat: '100%', label: 'Foreign ownership in most sectors' },
@@ -40,7 +40,7 @@ export default {
     recommended: { eyebrow: 'Quick guide', title: 'Recommended structure by business type' },
     process: { eyebrow: 'How it works', title: 'The registration process, step by step' },
     postReg: { eyebrow: 'After your CR', title: 'Post-registration requirements' },
-    tax: { eyebrow: 'Tax & compliance', title: "What you'll pay — and when" },
+    tax: { eyebrow: 'Tax & compliance', title: "What you'll pay, and when" },
     docs: { eyebrow: 'What to prepare', title: 'Documents required' },
     docsNote: 'Foreign documents usually require legalization / attestation before submission.',
     timeline: { eyebrow: 'How long it takes', title: 'Typical timeline' },
@@ -60,11 +60,11 @@ export default {
   laws: [
     { law: 'Foreign Capital Investment Law', ref: 'Royal Decree 50/2019', purpose: 'Allows up to 100% foreign ownership in most sectors and grants equal treatment to local and foreign investors.' },
     { law: 'Commercial Companies Law', ref: 'Royal Decree 18/2019', purpose: 'Governs the formation, management, restructuring and liquidation of companies, plus corporate governance.' },
-    { law: 'Commercial Registration Law', ref: '—', purpose: 'Governs the Commercial Registration (CR) — every company’s legal identity.' },
+    { law: 'Commercial Registration Law', ref: '—', purpose: 'Governs the Commercial Registration (CR), every company’s legal identity.' },
     { law: 'Labour Law', ref: 'Royal Decree 53/2023', purpose: 'Employment, work permits and Omanisation requirements (replaced the 2003 law).' },
     { law: 'Income Tax Law', ref: 'Royal Decree 28/2009', purpose: 'Corporate income tax at a 15% standard rate.' },
     { law: 'VAT Law', ref: 'Royal Decree 121/2020', purpose: '5% Value Added Tax, in force since April 2021.' },
-    { law: 'Personal Income Tax Law', ref: 'Royal Decree 56/2025 · NEW', purpose: 'A GCC first — 5% on personal income above OMR 42,000/year, effective 1 January 2028.' },
+    { law: 'Personal Income Tax Law', ref: 'Royal Decree 56/2025 · NEW', purpose: 'A GCC first: 5% on personal income above OMR 42,000/year, effective 1 January 2028.' },
   ],
 
   authorities: [
@@ -92,8 +92,8 @@ export default {
     {
       code: 'LLC', name: 'Limited Liability Company', tagline: 'The cornerstone of business in Oman',
       price: 'OMR 1,599', theme: 'olive', featured: true, badge: 'Most chosen',
-      description: 'The most established and versatile entity in the Sultanate — granting up to 100% foreign ownership with full limited-liability protection. The default vehicle for companies that intend to trade, operate and scale on the Omani mainland.',
-      features: ['Up to 100% foreign ownership in most sectors', 'Limited liability — personal assets protected', '1–50 shareholders', 'No statutory minimum capital', 'Unrestricted mainland trading', 'Full access to government tenders & contracts'],
+      description: 'The most established and versatile entity in the Sultanate, granting up to 100% foreign ownership with full limited-liability protection. The default vehicle for companies that intend to trade, operate and scale on the Omani mainland.',
+      features: ['Up to 100% foreign ownership in most sectors', 'Limited liability, personal assets protected', '1–50 shareholders', 'No statutory minimum capital', 'Unrestricted mainland trading', 'Full access to government tenders & contracts'],
       advantages: ['The structure banks and regulators know best', 'Eligible for investor residency visas', 'Straightforward corporate banking', 'Flexible ownership & profit distribution', 'Built for long-term growth'],
       idealFor: ['SMEs', 'Technology companies', 'Agencies', 'Consulting firms', 'Trading & import/export'],
       cta: 'Register an LLC',
@@ -101,7 +101,7 @@ export default {
     {
       code: 'SPC', name: 'Single Person Company', tagline: 'Full ownership, full control',
       price: 'OMR 1,499', theme: 'gold',
-      description: 'A limited-liability entity owned and controlled by a single shareholder — purpose-built for founders and professionals who want 100% ownership with no partners, while keeping the same legal protection as an LLC.',
+      description: 'A limited-liability entity owned and controlled by a single shareholder, purpose-built for founders and professionals who want 100% ownership with no partners, while keeping the same legal protection as an LLC.',
       features: ['Single shareholder (individual or corporate)', 'Up to 100% foreign ownership', 'Limited liability protection', 'Complete management control', 'Separate legal personality', 'No statutory minimum capital'],
       advantages: ['100% ownership and decision-making power', 'Lean administration & faster setup', 'Eligible for corporate banking', 'Eligible for investor residency', 'Personal assets ring-fenced'],
       idealFor: ['Consultants', 'Freelancers', 'Coaches', 'Designers', 'Developers', 'Digital businesses'],
@@ -110,8 +110,8 @@ export default {
     {
       code: 'Branch', name: 'Branch Office', tagline: 'Your global brand, established in Oman',
       price: 'OMR 1,399', theme: 'slate',
-      description: 'A direct extension of your foreign parent company, enabling immediate market entry under your existing brand and balance sheet — the natural route for executing local contracts and projects.',
-      features: ['Extension of a foreign parent company', 'Operates under the parent’s name & reputation', 'Direct market entry — no new legal entity', 'Eligible to execute local contracts & projects', 'Centralised control from headquarters'],
+      description: 'A direct extension of your foreign parent company, enabling immediate market entry under your existing brand and balance sheet: the natural route for executing local contracts and projects.',
+      features: ['Extension of a foreign parent company', 'Operates under the parent’s name & reputation', 'Direct market entry, no new legal entity', 'Eligible to execute local contracts & projects', 'Centralised control from headquarters'],
       advantages: ['Fastest route to an Omani presence', 'Leverages established corporate reputation', 'Well-suited to government & project-based work', 'Seamless alignment with group operations'],
       idealFor: ['International corporations', 'Engineering firms', 'Contractors', 'Global service providers'],
       cta: 'Open a branch',
@@ -119,7 +119,7 @@ export default {
     {
       code: 'Free Zone', name: 'Free Zone Company', tagline: 'Trade globally, operate tax-efficiently',
       price: 'OMR 1,299', theme: 'teal',
-      description: 'An entity established within Oman’s free zones — Sohar, Salalah and Duqm — offering 100% foreign ownership, customs and tax incentives, and direct access to world-class ports and logistics corridors.',
+      description: 'An entity established within Oman’s free zones (Sohar, Salalah and Duqm) offering 100% foreign ownership, customs and tax incentives, and direct access to world-class ports and logistics corridors.',
       features: ['100% foreign ownership', 'Tax & customs incentives', 'Simplified licensing', 'Strategic access to ports & logistics hubs', 'Streamlined import/export operations'],
       advantages: ['Significant cost & duty savings', 'World-class logistics & port connectivity', 'Fast, simplified setup', 'Built for export-oriented trade'],
       idealFor: ['Manufacturing', 'Logistics', 'Warehousing', 'Import/export', 'International trade'],
@@ -151,14 +151,14 @@ export default {
   ],
 
   steps: [
-    { title: 'Select activity', body: 'Choose approved activities from the MOCIIP classification — e.g. software development, AI solutions, marketing, import/export, consultancy or data analytics.' },
+    { title: 'Select activity', body: 'Choose approved activities from the MOCIIP classification, e.g. software development, AI solutions, marketing, import/export, consultancy or data analytics.' },
     { title: 'Reserve trade name', body: 'Reserve a unique trade name (Arabic, or Arabic + English) that does not conflict with existing registrations.' },
     { title: 'Create an Invest Easy account', body: 'Register on the Invest Easy portal, which handles name reservation, incorporation, license issuance and manager registration.' },
-    { title: 'Upload incorporation documents', body: 'Submit shareholder documents — passport/visa for individuals, or incorporation certificate, board resolution and AoA for corporate shareholders. Foreign documents usually require legalization.' },
+    { title: 'Upload incorporation documents', body: 'Submit shareholder documents: passport/visa for individuals, or incorporation certificate, board resolution and AoA for corporate shareholders. Foreign documents usually require legalization.' },
     { title: 'Prepare constitutive documents', body: 'Draft the Memorandum of Association (MoA) and, where required, the Articles of Association (AoA).' },
-    { title: 'Obtain activity approvals', body: 'Some sectors need extra approvals — education, tourism, healthcare, financial services and telecom each have a dedicated regulator.' },
+    { title: 'Obtain activity approvals', body: 'Some sectors need extra approvals: education, tourism, healthcare, financial services and telecom each have a dedicated regulator.' },
     { title: 'Pay registration fees', body: 'Fees depend on the activity, legal structure, municipality and ownership.' },
-    { title: 'Receive Commercial Registration (CR)', body: 'The CR is your company’s legal identity — name, registration number, activities and ownership. It is mandatory before operations begin.' },
+    { title: 'Receive Commercial Registration (CR)', body: 'The CR is your company’s legal identity: name, registration number, activities and ownership. It is mandatory before operations begin.' },
   ],
 
   postReg: [
@@ -173,7 +173,7 @@ export default {
   tax: [
     { rate: '15%', title: 'Corporate Income Tax', body: 'Standard flat rate on company profits (Royal Decree 28/2009).' },
     { rate: '5%', title: 'Value Added Tax', body: 'On most goods & services; registration mandatory above OMR 38,500 turnover (Royal Decree 121/2020).' },
-    { rate: '5%', title: 'Personal Income Tax — from 2028', body: 'A GCC first (Royal Decree 56/2025): 5% on personal income above OMR 42,000/year, effective 1 January 2028.' },
+    { rate: '5%', title: 'Personal Income Tax, from 2028', body: 'A GCC first (Royal Decree 56/2025): 5% on personal income above OMR 42,000/year, effective 1 January 2028.' },
     { rate: '0%', title: 'Free Zone Incentives', body: 'Tax holidays and customs exemptions in the Sohar, Salalah and Duqm zones.' },
   ],
 
@@ -205,7 +205,7 @@ export default {
   whyInvest: [
     { stat: '100%', title: 'Foreign Ownership', body: 'Own your company outright across most sectors, with no local partner required under the Foreign Capital Investment Law.' },
     { stat: '3', statSuffix: ' continents', title: 'Strategic Gateway', body: 'A natural hub linking the GCC, East Africa and Asia, with deep-water ports on the world’s busiest shipping routes.' },
-    { stat: '15%', title: 'Competitive Tax Environment', body: 'A flat 15% corporate tax, 5% VAT, and free-zone incentives — among the most efficient regimes in the region.' },
+    { stat: '15%', title: 'Competitive Tax Environment', body: 'A flat 15% corporate tax, 5% VAT, and free-zone incentives, among the most efficient regimes in the region.' },
     { stat: '2040', title: 'Stability & Vision', body: 'Decades of political stability, strong sovereign credit, and a long-term Vision 2040 diversification strategy.' },
     { stat: '2019', title: 'Modern Companies Law', body: 'A corporate framework aligned with international standards on governance, transparency and investor rights.' },
     { stat: '100%', statSuffix: ' online', title: 'Investor-Friendly Regulation', body: 'Remote registration via Invest Easy, streamlined licensing, and dedicated facilitation from Invest Oman.' },

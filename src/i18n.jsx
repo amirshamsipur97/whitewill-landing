@@ -418,14 +418,14 @@ const dict = {
     contactCta: {
       eyebrow: 'Talk to us',
       title: 'Plan your next investment with us.',
-      subtitle: 'Tell us about your goals — a senior advisor from the closest office will reach out within one business day.',
+      subtitle: 'Tell us about your goals, and a senior advisor from the closest office will reach out within one business day.',
       placeholderName: 'Full name',
       placeholderEmail: 'Email',
       placeholderPhone: 'Phone (optional)',
       placeholderMessage: 'Tell us about your interest',
       sending: 'Sending…',
       submit: 'Send inquiry',
-      successMsg: 'Thank you — we will reach out within one business day.',
+      successMsg: 'Thank you. We will reach out within one business day.',
       errorMsg: 'Something went wrong. Please try again.',
     },
     buyPage: {
@@ -931,14 +931,14 @@ const dict = {
     contactCta: {
       eyebrow: 'Связаться с нами',
       title: 'Спланируйте следующую инвестицию вместе с нами.',
-      subtitle: 'Расскажите о ваших целях — старший консультант из ближайшего офиса свяжется с вами в течение одного рабочего дня.',
+      subtitle: 'Расскажите о ваших целях, и старший консультант из ближайшего офиса свяжется с вами в течение одного рабочего дня.',
       placeholderName: 'Полное имя',
       placeholderEmail: 'Email',
       placeholderPhone: 'Телефон (необязательно)',
       placeholderMessage: 'Расскажите о вашем интересе',
       sending: 'Отправка…',
       submit: 'Отправить запрос',
-      successMsg: 'Спасибо — мы свяжемся с вами в течение одного рабочего дня.',
+      successMsg: 'Спасибо! Мы свяжемся с вами в течение одного рабочего дня.',
       errorMsg: 'Что-то пошло не так. Попробуйте ещё раз.',
     },
     buyPage: {
@@ -1426,7 +1426,7 @@ const dict = {
       placeholderMessage: 'أخبرنا عن اهتمامك',
       sending: 'جارٍ الإرسال…',
       submit: 'إرسال الطلب',
-      successMsg: 'شكراً — سنتواصل معك خلال يوم عمل واحد.',
+      successMsg: 'شكراً، سنتواصل معك خلال يوم عمل واحد.',
       errorMsg: 'حدث خطأ ما. حاول مرة أخرى.',
     },
     buyPage: {
