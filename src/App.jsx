@@ -114,6 +114,7 @@ const BuyPage = lazy(() => import('./pages/BuyPage'))
 const BuyProjectPage = lazy(() => import('./pages/BuyProjectPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MaisonShirdelPage = lazy(() => import('./pages/MaisonShirdelPage'))
+const InvestPage = lazy(() => import('./pages/InvestPage'))
 
 // Bare placeholder while a route chunk loads. Kept transparent + tall
 // enough to prevent a layout collapse on slow networks.
@@ -191,6 +192,7 @@ export default function App() {
               <Route path="/buy" element={<BuyPage />} />
               <Route path="/buy/:slug" element={<BuyProjectPage />} />
               <Route path="/maison-shirdel" element={<MaisonShirdelPage />} />
+              <Route path="/invest" element={<InvestPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="*" element={<LandingPage />} />
             </Routes>

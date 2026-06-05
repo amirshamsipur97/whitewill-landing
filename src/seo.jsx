@@ -36,6 +36,10 @@ const ROUTES = {
     title: 'Maison Shirdel — Luxury Residences in Oman | Irfan Investment',
     desc: 'Discover Maison Shirdel, a collection of luxury residences curated by Irfan Investment Group in Oman.',
   },
+  '/invest': {
+    title: 'Company Registration & Investment in Oman | Irfan Investment Group',
+    desc: 'Set up your company and invest in Oman — end-to-end company formation, licensing, banking, residency, and investment advisory for international investors.',
+  },
   '/about': {
     title: 'About Irfan Investment Group',
     desc: 'Irfan Investment Group is a strategic investment division focused on business growth and international real estate opportunities.',

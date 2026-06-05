@@ -117,6 +117,7 @@ export default function Header() {
     { label: t.nav.sell, to: '/sell' },
     { label: t.nav.project, to: '/' },
     { label: t.nav.maison, to: '/maison-shirdel' },
+    { label: t.nav.invest, to: '/invest' },
     { label: t.nav.about, to: '/about' },
   ]
 
