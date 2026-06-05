@@ -16,7 +16,6 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ENTITIES } from '../data/investContent'
 
 const FONT = '"Arsenal SC", "Inter", system-ui, sans-serif'
 
@@ -50,7 +49,7 @@ function Label({ children }) {
   )
 }
 
-function EntityCard({ e, onCta }) {
+function EntityCard({ e, onCta, labels }) {
   const t = THEME[e.theme] || THEME.olive
   const { accent } = t
   return (
@@ -95,7 +94,7 @@ function EntityCard({ e, onCta }) {
       {e.price && (
         <Box sx={{ mb: 2 }}>
           <Typography sx={{ fontFamily: FONT, fontSize: 11.5, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.42)', mb: 0.3 }}>
-            Starting from
+            {labels.startingFrom}
           </Typography>
           <Typography sx={{ fontFamily: FONT, fontSize: { xs: 30, md: 34 }, fontWeight: 700, letterSpacing: '-0.5px', color: '#fff', lineHeight: 1.1 }}>
             {e.price}
@@ -130,18 +129,18 @@ function EntityCard({ e, onCta }) {
       </Button>
 
       {/* Key features */}
-      <Label>Key features</Label>
+      <Label>{labels.keyFeatures}</Label>
       <MiniList items={e.features} accent={accent} />
 
       {/* Advantages */}
       <Box sx={{ mt: 2.5, pt: 2.5, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-        <Label>Advantages</Label>
+        <Label>{labels.advantages}</Label>
         <MiniList items={e.advantages} accent={accent} />
       </Box>
 
       {/* Ideal for */}
       <Box sx={{ mt: 'auto', pt: 2.5, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-        <Label>Ideal for</Label>
+        <Label>{labels.idealFor}</Label>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8 }}>
           {e.idealFor.map((x) => (
             <Box key={x} sx={{ px: 1.3, py: 0.5, borderRadius: '999px', border: '1px solid rgba(255,255,255,0.1)', bgcolor: 'rgba(255,255,255,0.03)' }}>
@@ -154,7 +153,7 @@ function EntityCard({ e, onCta }) {
   )
 }
 
-export default function InvestEntityCards() {
+export default function InvestEntityCards({ entities, labels }) {
   const ref = useRef(null)
 
   const scrollToContact = () => {
@@ -180,7 +179,7 @@ export default function InvestEntityCards() {
       })
     }, el)
     return () => ctx.revert()
-  }, [])
+  }, [entities])
 
   return (
     <Box
@@ -192,8 +191,8 @@ export default function InvestEntityCards() {
         alignItems: 'stretch',
       }}
     >
-      {ENTITIES.map((e) => (
-        <EntityCard key={e.code} e={e} onCta={scrollToContact} />
+      {entities.map((e) => (
+        <EntityCard key={e.code} e={e} onCta={scrollToContact} labels={labels} />
       ))}
     </Box>
   )

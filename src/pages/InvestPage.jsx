@@ -1,13 +1,14 @@
 /**
  * InvestPage — /invest
  *
- * "Company Registration & Investment in Oman" — a comprehensive content/service
- * landing page in the site's visual language (Arsenal SC type, olive accent,
- * #000 canvas, shared ContactCTA lead form).
+ * "Company Registration & Investment in Oman" — a comprehensive, multilingual
+ * content/service landing page in the site's visual language (Arsenal SC type,
+ * olive accent, #000 canvas, shared ContactCTA lead form).
  *
- * ALL COPY LIVES IN  src/data/investContent.js  — edit the arrays there to
- * change wording; this file only renders them. Figures are verified against
- * current (2025–2026) Omani regulations (see the data file header).
+ * COPY IS LANGUAGE-DRIVEN: the active language comes from useI18n(); content
+ * lives in src/data/invest/{en,ru,ar}.js (same shape — see en.js). Arabic
+ * renders right-to-left via the app's RTL provider. Figures are verified
+ * against current (2025–2026) Omani regulations (see the data file header).
  */
 
 import { Box, Container, Typography, Stack, Button } from '@mui/material'
@@ -18,11 +19,8 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import ContactCTA from '../components/ContactCTA'
 import InvestEntityCards from '../components/InvestEntityCards'
-import {
-  HERO, INTRO, WHY_OMAN, LAWS, AUTHORITIES, OWNERSHIP_RULES, COMPARISON,
-  WHY_INVEST, INVEST_CTA, RECOMMENDED, STEPS, POST_REG, TAX, DOCS, TIMELINE,
-  ACTIVITIES, MAINTAIN,
-} from '../data/investContent'
+import { useI18n } from '../i18n'
+import { getInvestContent } from '../data/investContent'
 
 const OLIVE = '#7c7856'
 const OLIVE_BRIGHT = '#8c8d25'
@@ -88,6 +86,11 @@ function MarkerList({ items, color = OLIVE_BRIGHT, icon: Icon }) {
 }
 
 export default function InvestPage() {
+  const { lang } = useI18n()
+  const C = getInvestContent(lang)
+  const H = C.headings
+  const TH = C.tableHeads
+
   const scrollToContact = () => {
     document.getElementById('invest-contact')?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -100,32 +103,31 @@ export default function InvestPage() {
         <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.85) 100%)' }} />
         <Container maxWidth="xl" sx={{ position: 'relative', pb: { xs: 6, md: 9 }, pt: { xs: 12, md: 16 } }}>
           <Typography sx={{ fontFamily: FONT, fontSize: { xs: 13, md: 15 }, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: OLIVE_BRIGHT, mb: 2 }}>
-            {HERO.eyebrow}
+            {C.hero.eyebrow}
           </Typography>
           <Typography component="h1" sx={{ fontFamily: FONT, fontWeight: 300, fontSize: { xs: 36, sm: 48, md: 68 }, lineHeight: 1.04, letterSpacing: '-0.02em', maxWidth: 900, mb: 2.5 }}>
-            {HERO.title}
+            {C.hero.title}
           </Typography>
           <Typography sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 19 }, color: 'rgba(255,255,255,0.82)', lineHeight: 1.6, maxWidth: 680, mb: 4 }}>
-            {HERO.subtitle}
+            {C.hero.subtitle}
           </Typography>
           <Button
             onClick={scrollToContact}
             endIcon={<ArrowForwardRoundedIcon />}
             sx={{ bgcolor: OLIVE_BRIGHT, color: '#000', fontFamily: FONT, fontWeight: 600, textTransform: 'none', fontSize: 16, px: 3.5, py: 1.4, borderRadius: '12px', '&:hover': { bgcolor: OLIVE } }}
           >
-            {HERO.cta}
+            {C.hero.cta}
           </Button>
         </Container>
       </Box>
 
-      {/* ── Intro ────────────────────────────────────────────────────── */}
+      {/* ── Intro + headline stats ───────────────────────────────────── */}
       <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
         <Typography sx={{ fontFamily: FONT, fontSize: { xs: 18, md: 24 }, lineHeight: 1.6, color: 'rgba(255,255,255,0.86)', maxWidth: 920 }}>
-          {INTRO}
+          {C.intro}
         </Typography>
-        {/* Headline stats */}
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: { xs: 3, md: 4 }, mt: { xs: 5, md: 7 } }}>
-          {WHY_OMAN.map((w) => (
+          {C.whyOman.map((w) => (
             <Box key={w.label}>
               <Typography sx={{ fontFamily: FONT, fontSize: { xs: 30, md: 44 }, fontWeight: 700, color: OLIVE_BRIGHT, lineHeight: 1 }}>{w.stat}</Typography>
               <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14, md: 15 }, color: 'rgba(255,255,255,0.72)', mt: 1, lineHeight: 1.45 }}>{w.label}</Typography>
@@ -137,19 +139,19 @@ export default function InvestPage() {
       {/* ── Legal framework ──────────────────────────────────────────── */}
       <Box sx={{ borderTop: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
         <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <SectionHeading eyebrow="Legal & regulatory framework" title="The laws that govern your setup" />
-          <DefTable rows={LAWS} left="Law" right="Purpose" leftKey="law" rightKey="purpose" />
+          <SectionHeading eyebrow={H.legal.eyebrow} title={H.legal.title} />
+          <DefTable rows={C.laws} left={TH.law} right={TH.purpose} leftKey="law" rightKey="purpose" />
           <Typography sx={{ fontFamily: FONT, fontSize: 14, color: 'rgba(255,255,255,0.5)', mt: 2.5, maxWidth: 920, lineHeight: 1.6 }}>
-            Foreign investors can own 100% of companies in most sectors, subject to activity restrictions and licensing. A list of ~95 sovereignty-sensitive or reserved activities still requires special arrangements.
+            {H.legalNote}
           </Typography>
         </Container>
       </Box>
 
       {/* ── Government authorities ────────────────────────────────────── */}
       <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-        <SectionHeading eyebrow="Who you'll deal with" title="Main government authorities" />
+        <SectionHeading eyebrow={H.authorities.eyebrow} title={H.authorities.title} />
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
-          {AUTHORITIES.map((a) => (
+          {C.authorities.map((a) => (
             <Box key={a.name} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 2.5, md: 3 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
               <AccountBalanceOutlinedIcon sx={{ fontSize: 26, color: OLIVE_BRIGHT, mb: 1.2 }} />
               <Typography sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 17 }, fontWeight: 600, lineHeight: 1.3, mb: 0.8 }}>{a.name}</Typography>
@@ -162,35 +164,33 @@ export default function InvestPage() {
       {/* ── Foreign ownership rules ───────────────────────────────────── */}
       <Box sx={{ borderTop: HAIR_SOFT, borderBottom: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
         <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <SectionHeading eyebrow="Current rules · 2026" title="Foreign ownership at a glance" />
-          <DefTable rows={OWNERSHIP_RULES} left="Item" right="Status" leftKey="item" rightKey="status" />
+          <SectionHeading eyebrow={H.ownership.eyebrow} title={H.ownership.title} />
+          <DefTable rows={C.ownershipRules} left={TH.item} right={TH.status} leftKey="item" rightKey="status" />
         </Container>
       </Box>
 
       {/* ── Business entities (premium 4-card) ───────────────────────── */}
       <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-        <SectionHeading eyebrow="Choose your entity" title="Types of business entities in Oman" />
+        <SectionHeading eyebrow={H.entities.eyebrow} title={H.entities.title} />
         <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 17 }, color: 'rgba(255,255,255,0.6)', maxWidth: 760, mt: -1.5, mb: { xs: 4, md: 5 }, lineHeight: 1.6 }}>
-          Four structures cover the vast majority of foreign-investor setups in Oman. Compare them below, then talk to an advisor to confirm the right fit for your activity and goals.
+          {H.entitiesIntro}
         </Typography>
-        <InvestEntityCards />
+        <InvestEntityCards entities={C.entities} labels={C.entityLabels} />
       </Container>
 
       {/* ── Entity comparison table ──────────────────────────────────── */}
       <Box sx={{ borderTop: HAIR_SOFT, borderBottom: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
         <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <SectionHeading eyebrow="Side by side" title="Compare the four entities" />
+          <SectionHeading eyebrow={H.comparison.eyebrow} title={H.comparison.title} />
           <Box sx={{ overflowX: 'auto', border: HAIR, borderRadius: '16px', bgcolor: 'rgba(255,255,255,0.02)' }}>
             <Box sx={{ minWidth: 860 }}>
-              {/* Header */}
               <Box sx={{ display: 'grid', gridTemplateColumns: '1.1fr repeat(6, 1fr)', px: { xs: 2, md: 3 }, py: 2, borderBottom: HAIR, bgcolor: 'rgba(255,255,255,0.03)' }}>
-                <Typography sx={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: OLIVE_BRIGHT }}>Entity</Typography>
-                {COMPARISON.columns.map((c) => (
+                <Typography sx={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: OLIVE_BRIGHT }}>{TH.entity}</Typography>
+                {C.comparison.columns.map((c) => (
                   <Typography key={c} sx={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: OLIVE_BRIGHT }}>{c}</Typography>
                 ))}
               </Box>
-              {/* Rows */}
-              {COMPARISON.rows.map((r, i) => (
+              {C.comparison.rows.map((r, i) => (
                 <Box key={r.entity} sx={{ display: 'grid', gridTemplateColumns: '1.1fr repeat(6, 1fr)', px: { xs: 2, md: 3 }, py: { xs: 2, md: 2.4 }, borderTop: i === 0 ? 'none' : HAIR_SOFT, alignItems: 'center' }}>
                   <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14.5, md: 16 }, fontWeight: 700, color: '#fff' }}>{r.entity}</Typography>
                   {r.cells.map((cell, j) => (
@@ -204,143 +204,141 @@ export default function InvestPage() {
       </Box>
 
       {/* ── Recommended structure by business type ───────────────────── */}
-      <Box sx={{ borderTop: HAIR_SOFT, borderBottom: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
-        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <SectionHeading eyebrow="Quick guide" title="Recommended structure by business type" />
-          <DefTable rows={RECOMMENDED} left="Business type" right="Recommended structure" leftKey="type" rightKey="structure" />
-        </Container>
-      </Box>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
+        <SectionHeading eyebrow={H.recommended.eyebrow} title={H.recommended.title} />
+        <DefTable rows={C.recommended} left={TH.businessType} right={TH.recommended} leftKey="type" rightKey="structure" />
+      </Container>
 
       {/* ── Registration process ─────────────────────────────────────── */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-        <SectionHeading eyebrow="How it works" title="The registration process, step by step" />
-        <Stack spacing={0}>
-          {STEPS.map((step, i) => (
-            <Box key={step.title} sx={{ display: 'grid', gridTemplateColumns: { xs: '40px 1fr', md: '64px 1fr' }, gap: { xs: 2, md: 4 }, alignItems: 'start', py: { xs: 2.5, md: 3.5 }, borderTop: i === 0 ? 'none' : HAIR_SOFT }}>
-              <Typography sx={{ fontFamily: FONT, fontSize: { xs: 22, md: 34 }, fontWeight: 700, color: 'rgba(140,141,37,0.5)' }}>
-                {String(i + 1).padStart(2, '0')}
-              </Typography>
-              <Box>
-                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 19, md: 24 }, fontWeight: 600, mb: 0.5 }}>{step.title}</Typography>
-                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 16 }, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, maxWidth: 760 }}>{step.body}</Typography>
+      <Box sx={{ borderTop: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
+        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
+          <SectionHeading eyebrow={H.process.eyebrow} title={H.process.title} />
+          <Stack spacing={0}>
+            {C.steps.map((step, i) => (
+              <Box key={step.title} sx={{ display: 'grid', gridTemplateColumns: { xs: '40px 1fr', md: '64px 1fr' }, gap: { xs: 2, md: 4 }, alignItems: 'start', py: { xs: 2.5, md: 3.5 }, borderTop: i === 0 ? 'none' : HAIR_SOFT }}>
+                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 22, md: 34 }, fontWeight: 700, color: 'rgba(140,141,37,0.5)' }}>
+                  {String(i + 1).padStart(2, '0')}
+                </Typography>
+                <Box>
+                  <Typography sx={{ fontFamily: FONT, fontSize: { xs: 19, md: 24 }, fontWeight: 600, mb: 0.5 }}>{step.title}</Typography>
+                  <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 16 }, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, maxWidth: 760 }}>{step.body}</Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
-        </Stack>
-      </Container>
+            ))}
+          </Stack>
+        </Container>
+      </Box>
 
       {/* ── Post-registration ─────────────────────────────────────────── */}
-      <Box sx={{ borderTop: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
-        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <SectionHeading eyebrow="After your CR" title="Post-registration requirements" />
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 3 } }}>
-            {POST_REG.map((p) => (
-              <Box key={p.title} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
-                <VerifiedOutlinedIcon sx={{ fontSize: 26, color: OLIVE_BRIGHT, mb: 1.2 }} />
-                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 18, md: 19 }, fontWeight: 600, mb: 0.8 }}>{p.title}</Typography>
-                <Typography sx={{ fontFamily: FONT, fontSize: 14.5, color: 'rgba(255,255,255,0.68)', lineHeight: 1.55 }}>{p.body}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Container>
-      </Box>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
+        <SectionHeading eyebrow={H.postReg.eyebrow} title={H.postReg.title} />
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 3 } }}>
+          {C.postReg.map((p) => (
+            <Box key={p.title} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
+              <VerifiedOutlinedIcon sx={{ fontSize: 26, color: OLIVE_BRIGHT, mb: 1.2 }} />
+              <Typography sx={{ fontFamily: FONT, fontSize: { xs: 18, md: 19 }, fontWeight: 600, mb: 0.8 }}>{p.title}</Typography>
+              <Typography sx={{ fontFamily: FONT, fontSize: 14.5, color: 'rgba(255,255,255,0.68)', lineHeight: 1.55 }}>{p.body}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </Container>
 
       {/* ── Tax & compliance ─────────────────────────────────────────── */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-        <SectionHeading eyebrow="Tax & compliance" title="What you'll pay — and when" />
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(4, 1fr)' }, gap: { xs: 2, md: 3 } }}>
-          {TAX.map((t) => (
-            <Box key={t.title} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
-              <Typography sx={{ fontFamily: FONT, fontSize: { xs: 38, md: 46 }, fontWeight: 700, color: OLIVE_BRIGHT, lineHeight: 1, mb: 1 }}>{t.rate}</Typography>
-              <Typography sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 17 }, fontWeight: 600, mb: 0.6, lineHeight: 1.25 }}>{t.title}</Typography>
-              <Typography sx={{ fontFamily: FONT, fontSize: 14, color: 'rgba(255,255,255,0.66)', lineHeight: 1.5 }}>{t.body}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Container>
-
-      {/* ── Documents + timeline (two columns) ───────────────────────── */}
       <Box sx={{ borderTop: HAIR_SOFT, borderBottom: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
         <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.1fr 0.9fr' }, gap: { xs: 5, md: 7 } }}>
-            {/* Documents */}
-            <Box>
-              <SectionHeading eyebrow="What to prepare" title="Documents required" sx={{ mb: { xs: 3, md: 4 } }} />
-              <Stack spacing={3}>
-                {DOCS.map((d) => (
-                  <Box key={d.group}>
-                    <Typography sx={{ fontFamily: FONT, fontSize: 16, fontWeight: 600, color: OLIVE_BRIGHT, mb: 1.4 }}>{d.group}</Typography>
-                    <MarkerList items={d.items} icon={CheckCircleOutlineRoundedIcon} />
-                  </Box>
-                ))}
-              </Stack>
-              <Typography sx={{ fontFamily: FONT, fontSize: 13.5, color: 'rgba(255,255,255,0.5)', mt: 3, lineHeight: 1.6 }}>
-                Foreign documents usually require legalization / attestation before submission.
-              </Typography>
-            </Box>
-            {/* Timeline */}
-            <Box>
-              <SectionHeading eyebrow="How long it takes" title="Typical timeline" sx={{ mb: { xs: 3, md: 4 } }} />
-              <Stack spacing={0}>
-                {TIMELINE.map((t, i) => (
-                  <Box key={t.process} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 2, py: 2.2, borderTop: i === 0 ? 'none' : HAIR_SOFT }}>
-                    <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15.5, md: 16.5 }, color: 'rgba(255,255,255,0.82)' }}>{t.process}</Typography>
-                    <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14.5, md: 15.5 }, fontWeight: 600, color: OLIVE_BRIGHT, whiteSpace: 'nowrap' }}>{t.time}</Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-
-      {/* ── Popular activities ───────────────────────────────────────── */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-        <SectionHeading eyebrow="Popular activities" title="Common 100%-foreign-owned activities" />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1.2, md: 1.5 } }}>
-          {ACTIVITIES.map((a) => (
-            <Box key={a} sx={{ px: 2.2, py: 1.1, borderRadius: '999px', border: HAIR, bgcolor: 'rgba(255,255,255,0.03)' }}>
-              <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14, md: 15 }, color: 'rgba(255,255,255,0.8)' }}>{a}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Container>
-
-      {/* ── Compliance documents to maintain ─────────────────────────── */}
-      <Box sx={{ borderTop: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
-        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-          <SectionHeading eyebrow="Stay compliant" title="Documents every company must maintain" />
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2.5, md: 3 } }}>
-            {MAINTAIN.map((m) => (
-              <Box key={m.group} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
-                <GavelOutlinedIcon sx={{ fontSize: 24, color: OLIVE_BRIGHT, mb: 1.2 }} />
-                <Typography sx={{ fontFamily: FONT, fontSize: 17, fontWeight: 600, mb: 1.6 }}>{m.group}</Typography>
-                <MarkerList items={m.items} />
+          <SectionHeading eyebrow={H.tax.eyebrow} title={H.tax.title} />
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(4, 1fr)' }, gap: { xs: 2, md: 3 } }}>
+            {C.tax.map((t) => (
+              <Box key={t.title} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
+                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 38, md: 46 }, fontWeight: 700, color: OLIVE_BRIGHT, lineHeight: 1, mb: 1 }}>{t.rate}</Typography>
+                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 17 }, fontWeight: 600, mb: 0.6, lineHeight: 1.25 }}>{t.title}</Typography>
+                <Typography sx={{ fontFamily: FONT, fontSize: 14, color: 'rgba(255,255,255,0.66)', lineHeight: 1.5 }}>{t.body}</Typography>
               </Box>
             ))}
           </Box>
         </Container>
       </Box>
 
-      {/* ── Why foreign investors choose Oman ────────────────────────── */}
+      {/* ── Documents + timeline ─────────────────────────────────────── */}
       <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
-        <SectionHeading eyebrow="The opportunity" title="Why foreign investors choose Oman" />
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2.5, md: 3 } }}>
-          {WHY_INVEST.map((w) => (
-            <Box key={w.title} sx={{ border: HAIR, borderRadius: '18px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)', backgroundImage: 'radial-gradient(120% 80% at 50% 0%, rgba(140,141,37,0.08) 0%, rgba(0,0,0,0) 72%)' }}>
-              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5, mb: 1.2 }}>
-                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 34, md: 44 }, fontWeight: 700, color: OLIVE_BRIGHT, lineHeight: 1 }}>{w.stat}</Typography>
-                {w.statSuffix && <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14, md: 15 }, fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>{w.statSuffix}</Typography>}
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.1fr 0.9fr' }, gap: { xs: 5, md: 7 } }}>
+          <Box>
+            <SectionHeading eyebrow={H.docs.eyebrow} title={H.docs.title} sx={{ mb: { xs: 3, md: 4 } }} />
+            <Stack spacing={3}>
+              {C.docs.map((d) => (
+                <Box key={d.group}>
+                  <Typography sx={{ fontFamily: FONT, fontSize: 16, fontWeight: 600, color: OLIVE_BRIGHT, mb: 1.4 }}>{d.group}</Typography>
+                  <MarkerList items={d.items} icon={CheckCircleOutlineRoundedIcon} />
+                </Box>
+              ))}
+            </Stack>
+            <Typography sx={{ fontFamily: FONT, fontSize: 13.5, color: 'rgba(255,255,255,0.5)', mt: 3, lineHeight: 1.6 }}>
+              {H.docsNote}
+            </Typography>
+          </Box>
+          <Box>
+            <SectionHeading eyebrow={H.timeline.eyebrow} title={H.timeline.title} sx={{ mb: { xs: 3, md: 4 } }} />
+            <Stack spacing={0}>
+              {C.timeline.map((t, i) => (
+                <Box key={t.process} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 2, py: 2.2, borderTop: i === 0 ? 'none' : HAIR_SOFT }}>
+                  <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15.5, md: 16.5 }, color: 'rgba(255,255,255,0.82)' }}>{t.process}</Typography>
+                  <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14.5, md: 15.5 }, fontWeight: 600, color: OLIVE_BRIGHT, whiteSpace: 'nowrap' }}>{t.time}</Typography>
+                </Box>
+              ))}
+            </Stack>
+          </Box>
+        </Box>
+      </Container>
+
+      {/* ── Popular activities ───────────────────────────────────────── */}
+      <Box sx={{ borderTop: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
+        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
+          <SectionHeading eyebrow={H.activities.eyebrow} title={H.activities.title} />
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1.2, md: 1.5 } }}>
+            {C.activities.map((a) => (
+              <Box key={a} sx={{ px: 2.2, py: 1.1, borderRadius: '999px', border: HAIR, bgcolor: 'rgba(255,255,255,0.03)' }}>
+                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14, md: 15 }, color: 'rgba(255,255,255,0.8)' }}>{a}</Typography>
               </Box>
-              <Typography sx={{ fontFamily: FONT, fontSize: { xs: 18, md: 20 }, fontWeight: 600, mb: 0.8 }}>{w.title}</Typography>
-              <Typography sx={{ fontFamily: FONT, fontSize: 14.5, color: 'rgba(255,255,255,0.68)', lineHeight: 1.55 }}>{w.body}</Typography>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
+      {/* ── Compliance documents to maintain ─────────────────────────── */}
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
+        <SectionHeading eyebrow={H.maintain.eyebrow} title={H.maintain.title} />
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2.5, md: 3 } }}>
+          {C.maintain.map((m) => (
+            <Box key={m.group} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
+              <GavelOutlinedIcon sx={{ fontSize: 24, color: OLIVE_BRIGHT, mb: 1.2 }} />
+              <Typography sx={{ fontFamily: FONT, fontSize: 17, fontWeight: 600, mb: 1.6 }}>{m.group}</Typography>
+              <MarkerList items={m.items} />
             </Box>
           ))}
         </Box>
       </Container>
 
+      {/* ── Why foreign investors choose Oman ────────────────────────── */}
+      <Box sx={{ borderTop: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
+        <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
+          <SectionHeading eyebrow={H.whyInvest.eyebrow} title={H.whyInvest.title} />
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2.5, md: 3 } }}>
+            {C.whyInvest.map((w) => (
+              <Box key={w.title} sx={{ border: HAIR, borderRadius: '18px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)', backgroundImage: 'radial-gradient(120% 80% at 50% 0%, rgba(140,141,37,0.08) 0%, rgba(0,0,0,0) 72%)' }}>
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5, mb: 1.2 }}>
+                  <Typography sx={{ fontFamily: FONT, fontSize: { xs: 34, md: 44 }, fontWeight: 700, color: OLIVE_BRIGHT, lineHeight: 1 }}>{w.stat}</Typography>
+                  {w.statSuffix && <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14, md: 15 }, fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>{w.statSuffix}</Typography>}
+                </Box>
+                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 18, md: 20 }, fontWeight: 600, mb: 0.8 }}>{w.title}</Typography>
+                <Typography sx={{ fontFamily: FONT, fontSize: 14.5, color: 'rgba(255,255,255,0.68)', lineHeight: 1.55 }}>{w.body}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
       {/* ── Premium closing CTA ──────────────────────────────────────── */}
-      <Container maxWidth="xl" sx={{ pb: { xs: 6, md: 10 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
         <Box
           sx={{
             position: 'relative',
@@ -355,17 +353,17 @@ export default function InvestPage() {
           }}
         >
           <Typography component="h2" sx={{ fontFamily: FONT, fontWeight: 300, fontSize: { xs: 30, md: 50 }, lineHeight: 1.08, letterSpacing: '-0.02em', color: '#fff', maxWidth: 820, mx: 'auto', mb: 2.5 }}>
-            {INVEST_CTA.headline}
+            {C.cta.headline}
           </Typography>
           <Typography sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 19 }, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6, maxWidth: 640, mx: 'auto', mb: 4 }}>
-            {INVEST_CTA.subheadline}
+            {C.cta.subheadline}
           </Typography>
           <Button
-            onClick={() => document.getElementById('invest-contact')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={scrollToContact}
             endIcon={<ArrowForwardRoundedIcon />}
             sx={{ bgcolor: OLIVE_BRIGHT, color: '#000', fontFamily: FONT, fontWeight: 600, textTransform: 'none', fontSize: { xs: 16, md: 17 }, px: 4, py: 1.5, borderRadius: '12px', '&:hover': { bgcolor: OLIVE } }}
           >
-            {INVEST_CTA.cta}
+            {C.cta.cta}
           </Button>
         </Box>
       </Container>
