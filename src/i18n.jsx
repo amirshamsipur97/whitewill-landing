@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import faDict from './i18n.fa.js'
 
 const STORAGE_KEY = 'ww_lang'
 
@@ -1526,11 +1527,15 @@ const dict = {
   },
 }
 
+// Persian (fa) site-wide dictionary lives in its own module (it mirrors the
+// en/ru/ar blocks above). Attaching it here makes `fa` a first-class locale
+// across the whole site, not just the /invest page.
+dict.fa = faDict
+
 const I18nContext = createContext(null)
 
-// RTL locales (Arabic + Persian). Persian content currently exists only for
-// the /invest page; the rest of the site falls back to English strings (still
-// rendered in the Peyda font + RTL — see index.css).
+// RTL locales (Arabic + Persian). Both have full site-wide dictionaries and
+// render in the Peyda font with dir="rtl" (see index.css).
 const RTL = new Set(['ar', 'fa'])
 const isValidLang = (code) => LANGS.some((l) => l.code === code)
 

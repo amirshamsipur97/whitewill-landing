@@ -27,23 +27,27 @@ import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
 import LocalPhoneRoundedIcon from '@mui/icons-material/LocalPhoneRounded'
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded'
 import { BRANCHES } from '../data/branches'
+import { useI18n } from '../i18n'
 
 const OLIVE_BRIGHT = '#8c8d25'
 
 // Page links shown in the footer sitemap column — these mirror the
 // navbar items so the footer is a complete sitemap.
+// `navKey` resolves to t.nav[...] and `legalKey` to t.footer.menu[...] at
+// render time, so the footer follows the active language. `label` is the
+// English fallback; brand wordmarks (Maison Shirdel) carry no key and stay.
 const PAGE_LINKS = [
-  { label: 'Buy', to: '/buy' },
-  { label: 'Sell', to: '/sell' },
-  { label: 'Project', to: '/' },
+  { label: 'Buy', to: '/buy', navKey: 'buy' },
+  { label: 'Sell', to: '/sell', navKey: 'sell' },
+  { label: 'Project', to: '/', navKey: 'project' },
   { label: 'Maison Shirdel', to: '/maison-shirdel' },
-  { label: 'About us', to: '/about' },
+  { label: 'About us', to: '/about', navKey: 'about' },
 ]
 
 const LEGAL_LINKS = [
-  { label: 'Privacy', to: '/' },
-  { label: 'Terms', to: '/' },
-  { label: 'Cookies', to: '/' },
+  { label: 'Privacy', to: '/', legalKey: 'privacy' },
+  { label: 'Terms', to: '/', legalKey: 'userAgreement' },
+  { label: 'Cookies', to: '/', legalKey: 'cookie' },
 ]
 
 const SOCIALS = [
@@ -169,6 +173,9 @@ function BranchCard({ branch }) {
 
 export default function SiteFooter() {
   const year = new Date().getFullYear()
+  const { t } = useI18n()
+  const pageLabel = (l) => (l.navKey && t?.nav?.[l.navKey]) || l.label
+  const legalLabel = (l) => (l.legalKey && t?.footer?.menu?.[l.legalKey]) || l.label
 
   return (
     <Box
@@ -288,7 +295,7 @@ export default function SiteFooter() {
                       '&:hover': { color: '#fff', transform: 'translateX(3px)' },
                     }}
                   >
-                    {l.label}
+                    {pageLabel(l)}
                   </MuiLink>
                 ))}
               </Stack>
@@ -388,7 +395,7 @@ export default function SiteFooter() {
                   '&:hover': { color: '#fff' },
                 }}
               >
-                {l.label}
+                {legalLabel(l)}
               </MuiLink>
             ))}
           </Stack>
