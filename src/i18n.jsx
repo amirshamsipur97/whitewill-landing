@@ -6,6 +6,7 @@ export const LANGS = [
   { code: 'en', label: 'English', flag: '🇬🇧' },
   { code: 'ru', label: 'Русский', flag: '🇷🇺' },
   { code: 'ar', label: 'العربية (Oman)', flag: '🇴🇲' },
+  { code: 'fa', label: 'فارسی', flag: '🇮🇷' },
 ]
 
 const dict = {
@@ -1527,12 +1528,18 @@ const dict = {
 
 const I18nContext = createContext(null)
 
+// RTL locales (Arabic + Persian). Persian content currently exists only for
+// the /invest page; the rest of the site falls back to English strings (still
+// rendered in the Peyda font + RTL — see index.css).
+const RTL = new Set(['ar', 'fa'])
+const isValidLang = (code) => LANGS.some((l) => l.code === code)
+
 export function I18nProvider({ children }) {
   const [lang, setLangState] = useState('en')
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
-    if (saved && dict[saved]) setLangState(saved)
+    if (saved && isValidLang(saved)) setLangState(saved)
   }, [])
 
   const setLang = (code) => {
@@ -1540,19 +1547,19 @@ export function I18nProvider({ children }) {
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEY, code)
     if (typeof document !== 'undefined') {
       document.documentElement.lang = code
-      document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr'
+      document.documentElement.dir = RTL.has(code) ? 'rtl' : 'ltr'
     }
   }
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = lang
-      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+      document.documentElement.dir = RTL.has(lang) ? 'rtl' : 'ltr'
     }
   }, [lang])
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, t: dict[lang] }}>
+    <I18nContext.Provider value={{ lang, setLang, t: dict[lang] || dict.en }}>
       {children}
     </I18nContext.Provider>
   )

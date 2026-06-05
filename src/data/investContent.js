@@ -10,8 +10,9 @@
 import en from './invest/en'
 import ru from './invest/ru'
 import ar from './invest/ar'
+import fa from './invest/fa'
 
-const CONTENT = { en, ru, ar }
+const CONTENT = { en, ru, ar, fa }
 
 export function getInvestContent(lang) {
   return CONTENT[lang] || en

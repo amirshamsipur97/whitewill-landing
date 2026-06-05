@@ -72,20 +72,20 @@ html, body, #root {
    `!important` is necessary because MUI's inline `sx` styles are
    higher specificity than a normal selector. Scoped to `[lang="ar"]`
    so EN / RU pages remain untouched. */
-html[lang="ar"],
-html[lang="ar"] body,
-html[lang="ar"] #root,
-html[lang="ar"] * {
+html[lang="ar"], html[lang="fa"],
+html[lang="ar"] body, html[lang="fa"] body,
+html[lang="ar"] #root, html[lang="fa"] #root,
+html[lang="ar"] *, html[lang="fa"] * {
   font-family: 'Peyda', 'Arsenal SC', 'Inter', 'Tahoma', system-ui, sans-serif !important;
 }
 
 /* Material icons / emoji shouldn't get the font swap forced on
    them — the icon ligatures stop rendering when their PUA glyphs
    resolve through a text font. Carve them out explicitly. */
-html[lang="ar"] .material-icons,
-html[lang="ar"] [class*="MuiSvgIcon-root"],
-html[lang="ar"] svg,
-html[lang="ar"] svg * {
+html[lang="ar"] .material-icons, html[lang="fa"] .material-icons,
+html[lang="ar"] [class*="MuiSvgIcon-root"], html[lang="fa"] [class*="MuiSvgIcon-root"],
+html[lang="ar"] svg, html[lang="fa"] svg,
+html[lang="ar"] svg *, html[lang="fa"] svg * {
   font-family: inherit !important;
 }
 
@@ -100,8 +100,8 @@ html[lang="ar"] svg * {
 
    `word-spacing` is left alone — gaps between Arabic words are
    normal whitespace, not the cause of the issue. */
-html[lang="ar"],
-html[lang="ar"] * {
+html[lang="ar"], html[lang="fa"],
+html[lang="ar"] *, html[lang="fa"] * {
   letter-spacing: 0 !important;
 }
 
