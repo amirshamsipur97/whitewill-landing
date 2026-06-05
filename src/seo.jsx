@@ -38,7 +38,7 @@ const ROUTES = {
   },
   '/invest': {
     title: 'Company Registration & Investment in Oman | Irfan Investment Group',
-    desc: 'Set up your company and invest in Oman — end-to-end company formation, licensing, banking, residency, and investment advisory for international investors.',
+    desc: 'Company formation & business setup in Oman with up to 100% foreign ownership — LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax (15% corporate, 5% VAT). Updated 2026 legal & regulatory framework.',
   },
   '/about': {
     title: 'About Irfan Investment Group',
