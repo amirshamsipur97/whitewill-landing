@@ -131,7 +131,14 @@ export default function InvestmentPage() {
           <Stack spacing={{ xs: 2, md: 2.5 }}>
             {C.banks.items.map((b) => (
               <Box key={b.name} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 2.5, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
-                <Typography dir="ltr" component="h3" sx={{ fontFamily: FONT, fontSize: { xs: 20, md: 23 }, fontWeight: 700, color: '#fff', mb: 2, textAlign: 'right' }}>{b.name}</Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2.5 }}>
+                  <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#fff', borderRadius: '12px', px: { xs: 2, md: 2.5 }, py: { xs: 1.4, md: 1.8 }, boxShadow: '0 6px 20px -10px rgba(0,0,0,0.6)' }}>
+                    {b.logo
+                      ? <Box component="img" src={b.logo} alt={b.name} loading="lazy" sx={{ height: { xs: 28, md: 34 }, width: 'auto', maxWidth: { xs: 180, md: 230 }, objectFit: 'contain', display: 'block' }} />
+                      : <Typography dir="ltr" sx={{ fontFamily: FONT, fontSize: 20, fontWeight: 700, color: '#0a0a0a' }}>{b.name}</Typography>}
+                  </Box>
+                </Box>
+                <Typography dir="ltr" component="h3" sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 17 }, fontWeight: 600, color: 'rgba(255,255,255,0.85)', mb: 2, textAlign: 'right' }}>{b.name}</Typography>
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 2, md: 2.5 } }}>
                   {[['نقاط قوت', b.strengths], ['انواع وام', b.loanTypes], ['مناسب چه کسانی', b.suitableFor], ['شرایط دریافت تسهیلات', b.terms]].map(([label, val]) => (
                     <Box key={label}>
