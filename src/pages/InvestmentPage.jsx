@@ -130,22 +130,35 @@ export default function InvestmentPage() {
           <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 17 }, color: 'rgba(255,255,255,0.6)', maxWidth: 820, mt: -1.5, mb: { xs: 4, md: 5 }, lineHeight: 1.8 }}>{C.banks.intro}</Typography>
           <Stack spacing={{ xs: 2, md: 2.5 }}>
             {C.banks.items.map((b) => (
-              <Box key={b.name} sx={{ border: HAIR, borderRadius: '16px', p: { xs: 2.5, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2.5 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#fff', borderRadius: '14px', width: { xs: 220, md: 264 }, height: { xs: 84, md: 100 }, p: { xs: 1.8, md: 2.2 }, boxShadow: '0 6px 20px -10px rgba(0,0,0,0.6)' }}>
-                    {b.logo
-                      ? <Box component="img" src={b.logo} alt={b.name} loading="lazy" sx={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }} />
-                      : <Typography dir="ltr" sx={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: '#0a0a0a' }}>{b.name}</Typography>}
-                  </Box>
+              <Box
+                key={b.name}
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', md: 'row' },
+                  alignItems: 'stretch',
+                  overflow: 'hidden',
+                  border: HAIR,
+                  borderRadius: '16px',
+                  bgcolor: 'rgba(255,255,255,0.02)',
+                }}
+              >
+                {/* White logo panel — full height on the right (RTL start); top strip on mobile */}
+                <Box sx={{ flexShrink: 0, width: { xs: '100%', md: 320 }, minHeight: { xs: 116, md: 'auto' }, bgcolor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', p: { xs: 2.5, md: 3 }, boxShadow: '0 6px 24px -12px rgba(0,0,0,0.6)' }}>
+                  {b.logo
+                    ? <Box component="img" src={b.logo} alt={b.name} loading="lazy" sx={{ width: 'auto', maxWidth: { xs: 220, md: 256 }, maxHeight: { xs: 72, md: 96 }, objectFit: 'contain', display: 'block' }} />
+                    : <Typography dir="ltr" sx={{ fontFamily: FONT, fontSize: 22, fontWeight: 700, color: '#0a0a0a' }}>{b.name}</Typography>}
                 </Box>
-                <Typography dir="ltr" component="h3" sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 17 }, fontWeight: 600, color: 'rgba(255,255,255,0.85)', mb: 2, textAlign: 'right' }}>{b.name}</Typography>
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 2, md: 2.5 } }}>
-                  {[['نقاط قوت', b.strengths], ['انواع وام', b.loanTypes], ['مناسب چه کسانی', b.suitableFor], ['شرایط دریافت تسهیلات', b.terms]].map(([label, val]) => (
-                    <Box key={label}>
-                      <Typography sx={{ fontFamily: FONT, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.04em', color: OLIVE_BRIGHT, mb: 0.6 }}>{label}</Typography>
-                      <Typography sx={{ fontFamily: FONT, fontSize: 14.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.8 }}>{val}</Typography>
-                    </Box>
-                  ))}
+                {/* Text content — fills the left */}
+                <Box sx={{ flex: 1, p: { xs: 3, md: 3.5 } }}>
+                  <Typography component="h3" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>{b.name}</Typography>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: { xs: 2, md: 2.5 } }}>
+                    {[['نقاط قوت', b.strengths], ['انواع وام', b.loanTypes], ['مناسب چه کسانی', b.suitableFor], ['شرایط دریافت تسهیلات', b.terms]].map(([label, val]) => (
+                      <Box key={label}>
+                        <Typography sx={{ fontFamily: FONT, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.04em', color: OLIVE_BRIGHT, mb: 0.6 }}>{label}</Typography>
+                        <Typography sx={{ fontFamily: FONT, fontSize: 14.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.8 }}>{val}</Typography>
+                      </Box>
+                    ))}
+                  </Box>
                 </Box>
               </Box>
             ))}
