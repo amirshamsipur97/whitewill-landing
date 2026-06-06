@@ -150,9 +150,13 @@ export default function InvestmentPage() {
                   flexDirection: { xs: 'column', md: 'row' },
                   alignItems: 'stretch',
                   overflow: 'hidden',
-                  border: HAIR,
                   borderRadius: '16px',
-                  bgcolor: 'rgba(255,255,255,0.02)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  // Figma material (node 407:19700): dark diagonal base + soft glow
+                  // (shifted to the left text area, since the white panel covers the
+                  // right) + inset top highlight.
+                  backgroundImage: 'radial-gradient(55% 75% at 32% 50%, rgba(230,237,245,0.10) 0%, rgba(230,237,245,0) 72%), linear-gradient(153deg, rgba(20,21,24,0.9) 0%, rgba(10,11,13,0.95) 100%)',
+                  boxShadow: 'inset 0 1px 1px 1px rgba(255,255,255,0.08)',
                 }}
               >
                 {/* White logo panel — full height on the right (RTL start); top strip on mobile */}
@@ -163,7 +167,7 @@ export default function InvestmentPage() {
                 </Box>
                 {/* Text content — fills the left */}
                 <Box sx={{ flex: 1, p: { xs: 3, md: 3.5 } }}>
-                  <Typography component="h3" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>{b.name}</Typography>
+                  <Typography component="h3" sx={{ position: 'absolute', width: '1px', height: '1px', p: 0, m: '-1px', border: 0, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>{b.name}</Typography>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: { xs: 2, md: 2.5 } }}>
                     {[['نقاط قوت', b.strengths], ['انواع وام', b.loanTypes], ['مناسب چه کسانی', b.suitableFor], ['شرایط دریافت تسهیلات', b.terms]].map(([label, val]) => (
                       <Box key={label}>

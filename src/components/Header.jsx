@@ -220,12 +220,14 @@ export default function Header() {
           <PhoneIcon sx={{ fontSize: 18, color: '#fff' }} />
           <Box
             component="a"
+            dir="ltr"
             href={`tel:${t.phone.replace(/[^+\d]/g, '')}`}
             sx={{
               ...NAV_FONT,
               color: '#fff',
               textDecoration: 'none',
               whiteSpace: 'nowrap',
+              unicodeBidi: 'isolate',
               '&:hover': { opacity: 0.85 },
             }}
           >
@@ -378,7 +380,10 @@ export default function Header() {
               <ListItemText
                 primary={t.phone}
                 secondary={t.online}
-                slotProps={{ secondary: { sx: { color: ONLINE_GREEN } } }}
+                slotProps={{
+                  primary: { dir: 'ltr', sx: { unicodeBidi: 'isolate', textAlign: 'start' } },
+                  secondary: { sx: { color: ONLINE_GREEN } },
+                }}
               />
             </ListItemButton>
           </ListItem>
