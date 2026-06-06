@@ -114,8 +114,13 @@ export default function DiscoverProperties() {
       t.discoverProperties.titleSecond,
     ]
     segments.forEach((text, sIdx) => {
+      // RTL: split Arabic-script segments by word (preserves shaping/bidi),
+      // but keep a purely-Latin segment as one unit so the RTL layout can't
+      // reverse its words.
       const parts = isRTL
-        ? text.split(/(\s+)/).filter((p) => p.length > 0)
+        ? (/[؀-ۿ]/.test(text)
+            ? text.split(/(\s+)/).filter((p) => p.length > 0)
+            : [text])
         : text.split('')
       parts.forEach((char, cIdx) => {
         out.push({ char, sIdx, cIdx })

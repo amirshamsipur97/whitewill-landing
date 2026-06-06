@@ -58,8 +58,14 @@ export default function GlobalPresence() {
   const allChars = useMemo(() => {
     const out = []
     segments.forEach((seg, sIdx) => {
+      // In RTL, split Arabic-script segments by WORD (keeps shaping + bidi
+      // intact), but keep a purely-Latin segment (e.g. the brand "Irfan
+      // Investment") as ONE unit — splitting it into per-word inline-block
+      // spans would let the RTL layout reverse the words (→ "Investment Irfan").
       const parts = isRTL
-        ? seg.text.split(/(\s+)/).filter((p) => p.length > 0)
+        ? (/[؀-ۿ]/.test(seg.text)
+            ? seg.text.split(/(\s+)/).filter((p) => p.length > 0)
+            : [seg.text])
         : seg.text.split('')
       parts.forEach((char, cIdx) => {
         out.push({ char, sIdx, cIdx, where: seg.where, bold: seg.bold })
