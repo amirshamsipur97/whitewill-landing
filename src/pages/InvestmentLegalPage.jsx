@@ -13,7 +13,7 @@ import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'
 import ChecklistRtlOutlinedIcon from '@mui/icons-material/ChecklistRtlOutlined'
 import ContactCTA from '../components/ContactCTA'
-import { FONT, OLIVE, OLIVE_BRIGHT, HAIR, HAIR_SOFT, SectionHeading, MarkerList, Chips, FaqAccordion } from '../components/invest/ui'
+import { FONT, OLIVE, OLIVE_BRIGHT, HAIR, HAIR_SOFT, SectionHeading, MarkerList, DocGrid, FaqAccordion } from '../components/invest/ui'
 import C from '../data/investmentLegalFa'
 
 const card = { border: HAIR, borderRadius: '16px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)' }
@@ -106,7 +106,7 @@ export default function InvestmentLegalPage() {
       <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
         <SectionHeading eyebrow={C.kyc.eyebrow} title={C.kyc.title} />
         <Lead>{C.kyc.body}</Lead>
-        <Box dir="ltr"><Chips items={C.kyc.documents} /></Box>
+        <DocGrid items={C.kyc.documents} />
       </Container>
 
       {/* ── 4. AML ───────────────────────────────────────────────────── */}
@@ -132,7 +132,7 @@ export default function InvestmentLegalPage() {
           <Lead>{C.sourceOfFunds.intro}</Lead>
           <Box sx={{ mb: { xs: 3.5, md: 4.5 } }}><CardGrid items={C.sourceOfFunds.sources} cols={3} /></Box>
           <Typography sx={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', color: OLIVE_BRIGHT, mb: 2 }}>مدارک مورد نیاز</Typography>
-          <Box dir="ltr"><Chips items={C.sourceOfFunds.documents} /></Box>
+          <DocGrid items={C.sourceOfFunds.documents} />
         </Container>
       </Box>
 
@@ -149,7 +149,7 @@ export default function InvestmentLegalPage() {
           ))}
         </Box>
         <Typography sx={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', color: OLIVE_BRIGHT, mb: 2 }}>مدارک مورد نیاز</Typography>
-        <Box dir="ltr"><Chips items={C.businessLoanCompliance.documents} /></Box>
+        <DocGrid items={C.businessLoanCompliance.documents} />
       </Container>
 
       {/* ── 8. Property finance ──────────────────────────────────────── */}
@@ -158,7 +158,7 @@ export default function InvestmentLegalPage() {
           <SectionHeading eyebrow={C.propertyFinance.eyebrow} title={C.propertyFinance.title} />
           <Box sx={{ mb: { xs: 3.5, md: 4.5 } }}><CardGrid items={C.propertyFinance.types} cols={3} /></Box>
           <Typography sx={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', color: OLIVE_BRIGHT, mb: 2 }}>الزامات</Typography>
-          <Box dir="ltr"><Chips items={C.propertyFinance.requirements} /></Box>
+          <DocGrid items={C.propertyFinance.requirements} />
         </Container>
       </Box>
 
@@ -168,7 +168,7 @@ export default function InvestmentLegalPage() {
           <Box>
             <SectionHeading eyebrow={C.corporateGovernance.eyebrow} title={C.corporateGovernance.title} sx={{ mb: { xs: 3, md: 4 } }} />
             {C.corporateGovernance.intro && <Typography sx={{ fontFamily: FONT, fontSize: 15, color: 'rgba(255,255,255,0.7)', mb: 3, lineHeight: 1.9 }}>{C.corporateGovernance.intro}</Typography>}
-            <Box dir="ltr"><Chips items={C.corporateGovernance.items} /></Box>
+            <DocGrid items={C.corporateGovernance.items} />
           </Box>
           <Box>
             <SectionHeading eyebrow={C.taxCompliance.eyebrow} title={C.taxCompliance.title} sx={{ mb: { xs: 3, md: 4 } }} />

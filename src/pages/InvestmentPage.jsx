@@ -18,7 +18,7 @@ import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'
 import ContactCTA from '../components/ContactCTA'
-import { FONT, OLIVE, OLIVE_BRIGHT, HAIR, HAIR_SOFT, SectionHeading, MarkerList, Chips, FaqAccordion } from '../components/invest/ui'
+import { FONT, OLIVE, OLIVE_BRIGHT, HAIR, HAIR_SOFT, SectionHeading, MarkerList, DocGrid, FaqAccordion } from '../components/invest/ui'
 import C from '../data/investmentFa'
 
 const ICONS = {
@@ -163,7 +163,7 @@ export default function InvestmentPage() {
       <Box sx={{ borderTop: HAIR_SOFT, borderBottom: HAIR_SOFT, bgcolor: 'rgba(255,255,255,0.015)' }}>
         <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
           <SectionHeading eyebrow={C.documents.eyebrow} title={C.documents.title} />
-          <Box dir="ltr"><Chips items={C.documents.items} /></Box>
+          <DocGrid items={C.documents.items} />
         </Container>
       </Box>
 

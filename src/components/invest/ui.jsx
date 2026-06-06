@@ -7,6 +7,7 @@ import { Box, Typography, Stack, Collapse } from '@mui/material'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 
 export const OLIVE = '#7c7856'
 export const OLIVE_BRIGHT = '#8c8d25'
@@ -49,6 +50,35 @@ export function Chips({ items }) {
       {items.map((a) => (
         <Box key={a} sx={{ px: 2, py: 0.9, borderRadius: '999px', border: HAIR, bgcolor: 'rgba(255,255,255,0.03)' }}>
           <Typography sx={{ fontFamily: FONT, fontSize: { xs: 13.5, md: 14.5 }, color: 'rgba(255,255,255,0.82)' }}>{a}</Typography>
+        </Box>
+      ))}
+    </Box>
+  )
+}
+
+// Premium "required documents" material: a responsive grid of cards, each with
+// a tinted file icon + the document name. `icon` lets a caller swap the glyph
+// (e.g. a checkmark for requirement lists). Names are usually Latin → laid LTR.
+export function DocGrid({ items, icon: Icon = DescriptionOutlinedIcon, cols = 3 }) {
+  return (
+    <Box dir="ltr" sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: `repeat(${cols}, 1fr)` }, gap: { xs: 1.5, md: 2 } }}>
+      {items.map((d, i) => (
+        <Box
+          key={d}
+          sx={{
+            display: 'flex', alignItems: 'center', gap: 1.6,
+            border: HAIR, borderRadius: '14px', px: { xs: 2, md: 2.4 }, py: { xs: 1.6, md: 2 },
+            bgcolor: 'rgba(255,255,255,0.02)',
+            backgroundImage: 'radial-gradient(120% 100% at 0% 0%, rgba(140,141,37,0.06) 0%, rgba(0,0,0,0) 60%)',
+            transition: 'border-color .2s, transform .2s',
+            '&:hover': { borderColor: 'rgba(140,141,37,0.45)', transform: 'translateY(-2px)' },
+          }}
+        >
+          <Box sx={{ width: 38, height: 38, borderRadius: '11px', display: 'grid', placeItems: 'center', bgcolor: 'rgba(140,141,37,0.15)', border: '1px solid rgba(140,141,37,0.32)', flexShrink: 0 }}>
+            <Icon sx={{ fontSize: 19, color: OLIVE_BRIGHT }} />
+          </Box>
+          <Typography sx={{ fontFamily: FONT, fontSize: { xs: 13.5, md: 14.5 }, fontWeight: 500, color: 'rgba(255,255,255,0.85)', lineHeight: 1.4 }}>{d}</Typography>
+          <Typography sx={{ fontFamily: FONT, fontSize: 12, color: 'rgba(255,255,255,0.28)', ml: 'auto', flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</Typography>
         </Box>
       ))}
     </Box>
