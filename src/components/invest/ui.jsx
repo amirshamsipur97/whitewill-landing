@@ -85,6 +85,32 @@ export function DocGrid({ items, icon: Icon = DescriptionOutlinedIcon, cols = 3 
   )
 }
 
+// Generic data table. `columns` = header labels, `rows` = array of cell arrays.
+// Latin cells render LTR (so brand/model lists keep order); Persian cells RTL.
+const hasFa = (s) => /[؀-ۿ]/.test(String(s))
+export function DataTable({ columns, rows, minWidth }) {
+  const n = columns.length
+  const grid = n === 2 ? '1fr 1.5fr' : `repeat(${n}, 1fr)`
+  return (
+    <Box sx={{ overflowX: 'auto', border: HAIR, borderRadius: '16px', bgcolor: 'rgba(255,255,255,0.02)' }}>
+      <Box sx={{ minWidth: minWidth || (n > 2 ? 560 : 'auto') }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: grid, gap: 1.5, px: { xs: 2, md: 3 }, py: 2, borderBottom: HAIR, bgcolor: 'rgba(255,255,255,0.03)' }}>
+          {columns.map((c) => (
+            <Typography key={c} sx={{ fontFamily: FONT, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.04em', color: OLIVE_BRIGHT }}>{c}</Typography>
+          ))}
+        </Box>
+        {rows.map((r, i) => (
+          <Box key={i} sx={{ display: 'grid', gridTemplateColumns: grid, gap: 1.5, px: { xs: 2, md: 3 }, py: { xs: 1.6, md: 2 }, borderTop: i === 0 ? 'none' : HAIR_SOFT, alignItems: 'center' }}>
+            {r.map((cell, j) => (
+              <Typography key={j} dir={hasFa(cell) ? 'rtl' : 'ltr'} sx={{ fontFamily: FONT, fontSize: { xs: 13.5, md: 14.5 }, fontWeight: j === 0 ? 600 : 400, color: j === 0 ? '#fff' : 'rgba(255,255,255,0.74)', lineHeight: 1.7, textAlign: 'right' }}>{cell}</Typography>
+            ))}
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  )
+}
+
 export function FaqAccordion({ items }) {
   const [open, setOpen] = useState(0)
   return (
