@@ -6,6 +6,7 @@ export default {
     maison: "Maison Shirdel",
     invest: "ثبت شرکت",
     investment: "سرمایه‌گذاری",
+    carImport: "واردات خودرو",
     about: "درباره ما",
   },
   address: "واحد 617، طبقه ششم، دفتر 1991\nخیابان الغبرة، مسقط، سلطنت عمان",

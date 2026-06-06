@@ -118,8 +118,8 @@ export default function Header() {
     { label: t.nav.project, to: '/' },
     { label: t.nav.maison, to: '/maison-shirdel' },
     { label: t.nav.invest, to: '/invest' },
-    // The dedicated investment page exists only in the Persian site.
-    ...(lang === 'fa' ? [{ label: t.nav.investment, to: '/investment' }] : []),
+    // These pages exist only in the Persian site.
+    ...(lang === 'fa' ? [{ label: t.nav.investment, to: '/investment' }, { label: t.nav.carImport, to: '/car-import' }] : []),
     { label: t.nav.about, to: '/about' },
   ]
 

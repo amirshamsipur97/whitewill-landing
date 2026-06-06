@@ -48,6 +48,10 @@ const ROUTES = {
     title: 'الزامات قانونی دریافت وام و تامین مالی در عمان | Irfan Investment Group',
     desc: 'راهنمای کامل الزامات قانونی، بانکی و انطباقی دریافت تسهیلات در عمان: مقررات بانک مرکزی عمان، KYC، AML، UBO، منبع سرمایه، مدارک و شرایط دریافت وام کسب‌وکار و خرید ملک.',
   },
+  '/car-import': {
+    title: 'واردات خودرو از عمان به ایران | Irfan Investment Group',
+    desc: 'خدمات واردات خودرو از عمان به ایران؛ انتخاب و خرید خودرو، ترخیص گمرکی، حمل و ترانزیت، بیمه و تحویل، همراه با مشاوره کامل.',
+  },
   '/about': {
     title: 'About Irfan Investment Group',
     desc: 'Irfan Investment Group is a strategic investment division focused on business growth and international real estate opportunities.',
