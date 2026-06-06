@@ -5,6 +5,7 @@ export default {
     project: "پروژه", projects: "پروژه‌ها",
     maison: "Maison Shirdel",
     invest: "ثبت شرکت",
+    investment: "سرمایه‌گذاری",
     about: "درباره ما",
   },
   address: "واحد 617، طبقه ششم، دفتر 1991\nخیابان الغبرة، مسقط، سلطنت عمان",

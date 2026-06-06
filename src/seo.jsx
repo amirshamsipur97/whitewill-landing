@@ -40,6 +40,10 @@ const ROUTES = {
     title: 'Company Registration & Investment in Oman | Irfan Investment Group',
     desc: 'Company formation & business setup in Oman with up to 100% foreign ownership — LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax (15% corporate, 5% VAT). Updated 2026 legal & regulatory framework.',
   },
+  '/investment': {
+    title: 'سرمایه‌گذاری در عمان | Irfan Investment Group',
+    desc: 'فرصت‌های سرمایه‌گذاری در عمان؛ املاک، توسعه و کسب‌وکار، همراه با مشاوره و بدرقهٔ کامل برای سرمایه‌گذاران.',
+  },
   '/about': {
     title: 'About Irfan Investment Group',
     desc: 'Irfan Investment Group is a strategic investment division focused on business growth and international real estate opportunities.',
