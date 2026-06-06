@@ -4,7 +4,7 @@ export default {
     buy: "خرید", sell: "فروش", rent: "اجاره",
     project: "پروژه", projects: "پروژه‌ها",
     maison: "Maison Shirdel",
-    invest: "سرمایه‌گذاری",
+    invest: "ثبت شرکت",
     about: "درباره ما",
   },
   address: "واحد 617، طبقه ششم، دفتر 1991\nخیابان الغبرة، مسقط، سلطنت عمان",
