@@ -75,7 +75,20 @@ export default function InvestmentPage() {
           {C.services.map((s) => {
             const Icon = ICONS[s.icon] || AccountBalanceOutlinedIcon
             return (
-              <Box key={s.title} sx={{ display: 'flex', flexDirection: 'column', border: HAIR, borderRadius: '18px', p: { xs: 3, md: 3.5 }, bgcolor: 'rgba(255,255,255,0.02)', backgroundImage: 'radial-gradient(120% 80% at 50% 0%, rgba(140,141,37,0.07) 0%, rgba(0,0,0,0) 70%)', transition: 'border-color .2s, transform .2s', '&:hover': { borderColor: 'rgba(140,141,37,0.5)', transform: 'translateY(-3px)' } }}>
+              <Box key={s.title} sx={{
+                position: 'relative',
+                display: 'flex', flexDirection: 'column',
+                borderRadius: '15px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                overflow: 'hidden',
+                p: { xs: 3, md: 3.5 },
+                // Figma material (node 407:19700): dark diagonal base gradient +
+                // a soft light glow toward the centre-right + inset top highlight.
+                backgroundImage: 'radial-gradient(75% 60% at 70% 50%, rgba(230,237,245,0.12) 0%, rgba(230,237,245,0) 72%), linear-gradient(153deg, rgba(20,21,24,0.9) 0%, rgba(10,11,13,0.95) 100%)',
+                boxShadow: 'inset 0 1px 1px 1px rgba(255,255,255,0.08)',
+                transition: 'border-color .2s, transform .2s',
+                '&:hover': { borderColor: 'rgba(140,141,37,0.5)', transform: 'translateY(-3px)' },
+              }}>
                 <Box sx={{ width: 44, height: 44, borderRadius: '12px', display: 'grid', placeItems: 'center', bgcolor: 'rgba(140,141,37,0.15)', border: '1px solid rgba(140,141,37,0.35)', mb: 2 }}>
                   <Icon sx={{ fontSize: 24, color: OLIVE_BRIGHT }} />
                 </Box>
