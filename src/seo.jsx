@@ -41,8 +41,12 @@ const ROUTES = {
     desc: 'Company formation & business setup in Oman with up to 100% foreign ownership — LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax (15% corporate, 5% VAT). Updated 2026 legal & regulatory framework.',
   },
   '/investment': {
-    title: 'سرمایه‌گذاری در عمان | Irfan Investment Group',
-    desc: 'فرصت‌های سرمایه‌گذاری در عمان؛ املاک، توسعه و کسب‌وکار، همراه با مشاوره و بدرقهٔ کامل برای سرمایه‌گذاران.',
+    title: 'بانکداری، تامین مالی و سرمایه‌گذاری در عمان | Irfan Investment Group',
+    desc: 'افتتاح حساب بانکی شرکتی، وام کسب‌وکار و خرید ملک، تامین مالی شرکت‌ها، اقامت سرمایه‌گذاری و مشاوره سرمایه‌گذاری در عمان. خدمات بانکداری شرکتی و انتقال پول بین‌المللی.',
+  },
+  '/investment/legal': {
+    title: 'الزامات قانونی دریافت وام و تامین مالی در عمان | Irfan Investment Group',
+    desc: 'راهنمای کامل الزامات قانونی، بانکی و انطباقی دریافت تسهیلات در عمان: مقررات بانک مرکزی عمان، KYC، AML، UBO، منبع سرمایه، مدارک و شرایط دریافت وام کسب‌وکار و خرید ملک.',
   },
   '/about': {
     title: 'About Irfan Investment Group',
