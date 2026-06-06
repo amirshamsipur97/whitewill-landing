@@ -116,7 +116,7 @@ const pad2 = (n) => String(n).padStart(2, '0')
 
 export default function WaterfrontResidences() {
   const { lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
   const sectionRef  = useRef(null)
   const innerRef    = useRef(null)
   const contentRef  = useRef(null)   // text block — animated on slide change

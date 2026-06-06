@@ -44,7 +44,7 @@ export default function ScrollVideoHero() {
   const logoRef = useRef(null)
   const [videoReady, setVideoReady] = useState(false)
   const [videoSrc] = useState(pickVideoSrc)
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {

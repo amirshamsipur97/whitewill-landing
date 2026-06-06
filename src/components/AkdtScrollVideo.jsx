@@ -39,7 +39,7 @@ const VIDEO_DURATION = 21.05  // seconds — confirmed from ffprobe
 
 export default function AkdtScrollVideo() {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
   const sectionRef = useRef(null)
   const cardRef = useRef(null)
   const videoRef = useRef(null)

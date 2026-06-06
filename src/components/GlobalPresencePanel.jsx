@@ -28,7 +28,7 @@ const GlobalPresencePanel = forwardRef(function GlobalPresencePanel(
   ref,
 ) {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
 
   // Order: Muscat → Tehran → Hong Kong → Moscow (matches Figma + the
   // user's scroll-progress mapping: 01 Oman, 02 Iran, 03 China, 04 Russia).

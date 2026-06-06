@@ -25,7 +25,7 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export default function AthurayaCity() {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
 
   // Soft-hide the cursor card when either the AI chat panel is open OR
   // the user is hovering the "More information" CTA — both situations

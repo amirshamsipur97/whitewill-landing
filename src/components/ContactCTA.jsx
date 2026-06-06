@@ -36,7 +36,7 @@ export default function ContactCTA({
   subtitle,
 }) {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
   const c = t.contactCta
   const localizedEyebrow = eyebrow ?? c.eyebrow
   const localizedTitle = title ?? c.title

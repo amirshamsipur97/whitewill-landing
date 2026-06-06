@@ -42,7 +42,7 @@ const TITLE_FONT = {
 
 export default function AboutFounder() {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
   const isMobile = useIsMobile()
 
   // Refs for GSAP — each one will be animated independently.

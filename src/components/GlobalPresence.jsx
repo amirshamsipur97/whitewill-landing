@@ -20,7 +20,7 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export default function GlobalPresence() {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
 
   const sectionRef = useRef(null)
 

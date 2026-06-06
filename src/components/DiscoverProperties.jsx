@@ -42,7 +42,7 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export default function DiscoverProperties() {
   const { t, lang } = useI18n()
-  const isRTL = lang === 'ar'
+  const isRTL = lang === 'ar' || lang === 'fa'
 
   // Hide the cursor-tracked card while the chat AI panel is open so the
   // floating card doesn't draw the user's eye away from their conversation.
