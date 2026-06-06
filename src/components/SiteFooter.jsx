@@ -301,7 +301,9 @@ export default function SiteFooter() {
               </Stack>
             </Box>
 
-            <Box>
+            {/* Latin content (flags + English city names) — pin to LTR so it
+                stays flag-left / left-aligned under RTL locales (ar/fa). */}
+            <Box dir="ltr" sx={{ textAlign: 'left' }}>
               <Typography
                 sx={{
                   fontFamily: '"Arsenal SC", "Inter", sans-serif',
@@ -348,7 +350,10 @@ export default function SiteFooter() {
         </Box>
 
         {/* ── Middle row: branch detail grid ───────────────────────── */}
+        {/* All-Latin content (flags, English city/label/address/phone/email) —
+            pin to LTR so cards order naturally and align flag-left under RTL. */}
         <Box
+          dir="ltr"
           sx={{
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
