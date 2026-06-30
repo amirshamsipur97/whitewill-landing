@@ -1,11 +1,13 @@
 import { lazy, Suspense, useEffect, useLayoutEffect } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Header from './components/Header'
 import { useIsMobile } from './hooks/useIsMobile'
 import SeoManager from './seo.jsx'
+import { useI18n } from './i18n.jsx'
+import { trackPageView } from './analytics.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -32,6 +34,22 @@ gsap.registerPlugin(ScrollTrigger)
  * Hash links (#section) are left alone — the browser's native anchor
  * jump should win.
  */
+/**
+ * AnalyticsManager — sends a manual GA4 page_view on every route change AND
+ * whenever the visitor switches language (so a re-view in another language is
+ * counted with the right title). GA4 base config uses send_page_view:false, so
+ * this is the ONLY place page_views originate. Title carries page name + lang;
+ * content_group carries the page category.
+ */
+function AnalyticsManager() {
+  const { pathname } = useLocation()
+  const { lang } = useI18n()
+  useEffect(() => {
+    trackPageView({ path: pathname, lang })
+  }, [pathname, lang])
+  return null
+}
+
 function ScrollManager() {
   const { pathname, hash } = useLocation()
 
@@ -118,6 +136,10 @@ const InvestPage = lazy(() => import('./pages/InvestPage'))
 const InvestmentPage = lazy(() => import('./pages/InvestmentPage'))
 const InvestmentLegalPage = lazy(() => import('./pages/InvestmentLegalPage'))
 const CarImportPage = lazy(() => import('./pages/CarImportPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const InsightsPage = lazy(() => import('./pages/InsightsPage'))
+const InsightDetailPage = lazy(() => import('./pages/InsightDetailPage'))
+const InsightsAdminPage = lazy(() => import('./pages/InsightsAdminPage'))
 
 // Bare placeholder while a route chunk loads. Kept transparent + tall
 // enough to prevent a layout collapse on slow networks.
@@ -172,42 +194,63 @@ function LandingPage() {
   )
 }
 
-export default function App() {
+// The page routes, defined ONCE as paths RELATIVE to a language prefix. This
+// component is mounted under each `/:lang/*` prefix and under `/*` (English),
+// so the same definitions serve `/buy` and `/ar/buy` without duplication.
+function PageRoutes() {
   return (
-    <BrowserRouter>
-      <Box
-        id="app-root"
-        sx={{
-          // Pure #000000 everywhere — no more scroll-driven fade to white.
-          bgcolor: '#000000',
-          color: 'text.primary',
-          minHeight: '100vh',
-        }}
-      >
-        <ScrollManager />
-        <SeoManager />
-        <Header />
-        <main>
-          <Suspense fallback={<RouteFallback />}>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/sell" element={<SellPage />} />
-              <Route path="/buy" element={<BuyPage />} />
-              <Route path="/buy/:slug" element={<BuyProjectPage />} />
-              <Route path="/maison-shirdel" element={<MaisonShirdelPage />} />
-              <Route path="/invest" element={<InvestPage />} />
-              <Route path="/investment" element={<InvestmentPage />} />
-              <Route path="/investment/legal" element={<InvestmentLegalPage />} />
-              <Route path="/car-import" element={<CarImportPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="*" element={<LandingPage />} />
-            </Routes>
-          </Suspense>
-        </main>
-        <SiteFooter />
-        <CookieBanner />
-        <ChatWidget />
-      </Box>
-    </BrowserRouter>
+    <Routes>
+      <Route path="" element={<LandingPage />} />
+      <Route path="sell" element={<SellPage />} />
+      <Route path="buy" element={<BuyPage />} />
+      <Route path="buy/:slug" element={<BuyProjectPage />} />
+      <Route path="maison-shirdel" element={<MaisonShirdelPage />} />
+      <Route path="invest" element={<InvestPage />} />
+      <Route path="investment" element={<InvestmentPage />} />
+      <Route path="investment/legal" element={<InvestmentLegalPage />} />
+      <Route path="car-import" element={<CarImportPage />} />
+      <Route path="insights" element={<InsightsPage />} />
+      <Route path="insights/:slug" element={<InsightDetailPage />} />
+      <Route path="insights-admin" element={<InsightsAdminPage />} />
+      <Route path="about" element={<AboutPage />} />
+      {/* Unknown URLs (legacy Webflow, random crawls) render a real 404 — NOT
+          the homepage — so they aren't indexed as homepage duplicates.
+          SeoManager emits noindex for these paths. */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  )
+}
+
+export default function App() {
+  // BrowserRouter now lives in main.jsx (so I18nProvider can read the URL).
+  return (
+    <Box
+      id="app-root"
+      sx={{
+        // Pure #000000 everywhere — no more scroll-driven fade to white.
+        bgcolor: '#000000',
+        color: 'text.primary',
+        minHeight: '100vh',
+      }}
+    >
+      <ScrollManager />
+      <SeoManager />
+      <AnalyticsManager />
+      <Header />
+      <main>
+        <Suspense fallback={<RouteFallback />}>
+          {/* Localized URL prefixes (ar/ru/fa). English is prefix-less under /*. */}
+          <Routes>
+            <Route path="/ar/*" element={<PageRoutes />} />
+            <Route path="/ru/*" element={<PageRoutes />} />
+            <Route path="/fa/*" element={<PageRoutes />} />
+            <Route path="/*" element={<PageRoutes />} />
+          </Routes>
+        </Suspense>
+      </main>
+      <SiteFooter />
+      <CookieBanner />
+      <ChatWidget />
+    </Box>
   )
 }

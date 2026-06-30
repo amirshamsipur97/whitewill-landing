@@ -10,7 +10,8 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { LocalizedLink as RouterLink, useLocalizedNavigate as useNavigate } from '../lib/localize.js'
 import {
   Box,
   Container,

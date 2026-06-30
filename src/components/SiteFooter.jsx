@@ -18,11 +18,10 @@
  */
 
 import { Box, Container, Typography, Stack, IconButton, Divider, Link as MuiLink } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import { LocalizedLink as RouterLink } from '../lib/localize.js'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
-import TelegramIcon from '@mui/icons-material/Telegram'
 import InstagramIcon from '@mui/icons-material/Instagram'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import YouTubeIcon from '@mui/icons-material/YouTube'
 import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
 import LocalPhoneRoundedIcon from '@mui/icons-material/LocalPhoneRounded'
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded'
@@ -51,10 +50,9 @@ const LEGAL_LINKS = [
 ]
 
 const SOCIALS = [
-  { Icon: WhatsAppIcon, href: 'https://wa.me/96876633000', label: 'WhatsApp' },
-  { Icon: TelegramIcon, href: 'https://t.me/', label: 'Telegram' },
-  { Icon: InstagramIcon, href: 'https://instagram.com/', label: 'Instagram' },
-  { Icon: LinkedInIcon, href: 'https://linkedin.com/', label: 'LinkedIn' },
+  { Icon: YouTubeIcon, href: 'https://www.youtube.com/@Irfan_Investment', label: 'YouTube' },
+  { Icon: InstagramIcon, href: 'https://www.instagram.com/irfan_investment', label: 'Instagram' },
+  { Icon: WhatsAppIcon, href: 'https://wa.me/message/L22KC3L6RYINE1', label: 'WhatsApp' },
 ]
 
 // ── Single branch card ─────────────────────────────────────────────────
@@ -234,8 +232,10 @@ export default function SiteFooter() {
               developments across Oman and emerging investment destinations.
             </Typography>
 
-            {/* Social icons */}
-            <Stack direction="row" spacing={1}>
+            {/* Social icons — YouTube · Instagram · WhatsApp. useFlexGap so the
+                gap is a symmetric CSS `gap` (uniform in RTL too); plain Stack
+                spacing uses one-sided margins that collapse under direction:rtl. */}
+            <Stack direction="row" spacing={2} useFlexGap>
               {SOCIALS.map(({ Icon, href, label }) => (
                 <IconButton
                   key={label}
@@ -246,13 +246,14 @@ export default function SiteFooter() {
                   sx={{
                     border: '1px solid rgba(255,255,255,0.14)',
                     color: 'rgba(255,255,255,0.78)',
-                    width: 38,
-                    height: 38,
+                    width: 52,
+                    height: 52,
+                    flexShrink: 0,
                     transition: 'all 180ms ease',
                     '&:hover': { color: '#fff', borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.05)' },
                   }}
                 >
-                  <Icon sx={{ fontSize: 17 }} />
+                  <Icon sx={{ fontSize: 26 }} />
                 </IconButton>
               ))}
             </Stack>

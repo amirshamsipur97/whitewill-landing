@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { LocalizedLink as RouterLink, useLocalizedNavigate } from '../lib/localize.js'
 import { gsap } from 'gsap'
 import {
   AppBar,
@@ -18,12 +18,14 @@ import {
   ListItemText,
   Divider,
   ListItemIcon,
+  Tooltip,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import LanguageIcon from '@mui/icons-material/Language'
 import PhoneIcon from '@mui/icons-material/PhoneInTalk'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import CheckIcon from '@mui/icons-material/Check'
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
 import { useI18n, LANGS } from '../i18n.jsx'
 
 /**
@@ -75,7 +77,7 @@ function VerticalDivider() {
 
 export default function Header() {
   const { t, lang, setLang } = useI18n()
-  const navigate = useNavigate()
+  const navigate = useLocalizedNavigate()
   const [langAnchor, setLangAnchor] = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const headerRef = useRef(null)
@@ -120,6 +122,8 @@ export default function Header() {
     { label: t.nav.invest, to: '/invest' },
     // These pages exist only in the Persian site.
     ...(lang === 'fa' ? [{ label: t.nav.investment, to: '/investment' }, { label: t.nav.carImport, to: '/car-import' }] : []),
+    // Blog/Insights sits right before "About us" in every language.
+    { label: t.nav.insights, to: '/insights' },
     { label: t.nav.about, to: '/about' },
   ]
 
@@ -173,14 +177,15 @@ export default function Header() {
           />
         </Box>
 
-        {/* Nav links — Figma uses 50px gap between items, hidden < lg */}
+        {/* Nav links — tighter gap on laptops (lg/~13") so the row never
+            overflows; full 50px on wide (xl) screens per the Figma spec. */}
         <Stack
           direction="row"
           sx={{
             display: { xs: 'none', lg: 'flex' },
             alignItems: 'center',
-            gap: '50px',
-            ml: 2,
+            gap: { lg: '22px', xl: '50px' },
+            ml: { lg: 1.5, xl: 2 },
           }}
         >
           {navLinks.map((item) => (
@@ -206,100 +211,130 @@ export default function Header() {
         {/* Pushes everything after to the right */}
         <Box sx={{ flexGrow: 1 }} />
 
-        {/* Divider before phone block (lg+) */}
-        <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
-          <VerticalDivider />
-        </Box>
-
-        {/* Phone + Online badge */}
+        {/* ── Right utility cluster: phone · location · language ──────────
+            One flex row with even spacing and flexShrink:0, so the items keep
+            a fixed, clean gap and never crowd or overlap as the viewport
+            narrows. Vertical dividers separate the groups. */}
         <Stack
           direction="row"
-          spacing={1.25}
-          sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center' }}
+          spacing={{ lg: 1.5, xl: 2.5 }}
+          sx={{ alignItems: 'center', flexShrink: 0 }}
         >
-          <PhoneIcon sx={{ fontSize: 18, color: '#fff' }} />
-          <Box
-            component="a"
-            dir="ltr"
-            href={`tel:${t.phone.replace(/[^+\d]/g, '')}`}
+          {/* Phone + Online badge (lg+) */}
+          <Stack
+            direction="row"
+            spacing={1.25}
+            sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', flexShrink: 0 }}
+          >
+            <PhoneIcon sx={{ fontSize: 18, color: '#fff' }} />
+            <Box
+              component="a"
+              dir="ltr"
+              href={`tel:${t.phone.replace(/[^+\d]/g, '')}`}
+              sx={{
+                ...NAV_FONT,
+                color: '#fff',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                unicodeBidi: 'isolate',
+                '&:hover': { opacity: 0.85 },
+              }}
+            >
+              {t.phone}
+            </Box>
+            <Box
+              sx={{
+                border: `1px solid ${ONLINE_GREEN}`,
+                borderRadius: '6px',
+                height: 18,
+                px: 1,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography
+                sx={{
+                  color: ONLINE_GREEN,
+                  fontSize: 11,
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                {t.online}
+              </Typography>
+            </Box>
+          </Stack>
+
+          {/* Divider (lg+) */}
+          <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+            <VerticalDivider />
+          </Box>
+
+          {/* Address — full text only on xl (room to breathe). On laptops (lg,
+              ~13") the multi-line address used to wrap/stack into a tall column,
+              so there we collapse it to one location icon with the full address
+              in a tooltip on hover. */}
+          <Box sx={{ display: { xs: 'none', xl: 'block' }, maxWidth: 260 }}>
+            <Typography sx={{ ...ADDRESS_FONT, whiteSpace: 'pre-line' }}>
+              {t.address}
+            </Typography>
+          </Box>
+          <Tooltip
+            arrow
+            title={
+              <Box sx={{ whiteSpace: 'pre-line', fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif', fontSize: 12, lineHeight: 1.5, p: 0.25 }}>
+                {t.address}
+              </Box>
+            }
+          >
+            <IconButton
+              aria-label={typeof t.address === 'string' ? t.address.replace(/\n/g, ', ') : 'Office address'}
+              disableRipple
+              sx={{
+                display: { xs: 'none', lg: 'inline-flex', xl: 'none' },
+                color: 'rgba(255,255,255,0.85)',
+                p: 0.5,
+                flexShrink: 0,
+                '&:hover': { color: '#fff', bgcolor: 'transparent' },
+              }}
+            >
+              <PlaceOutlinedIcon sx={{ fontSize: 20 }} />
+            </IconButton>
+          </Tooltip>
+
+          {/* Divider before language (lg+) */}
+          <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+            <VerticalDivider />
+          </Box>
+
+          {/* Language switcher */}
+          <Button
+            color="inherit"
+            startIcon={<LanguageIcon sx={{ fontSize: 18 }} />}
+            endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 18 }} />}
+            onClick={(e) => setLangAnchor(e.currentTarget)}
             sx={{
               ...NAV_FONT,
               color: '#fff',
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-              unicodeBidi: 'isolate',
-              '&:hover': { opacity: 0.85 },
-            }}
-          >
-            {t.phone}
-          </Box>
-          <Box
-            sx={{
-              border: `1px solid ${ONLINE_GREEN}`,
-              borderRadius: '6px',
-              height: 18,
+              textTransform: 'none',
               px: 1,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              minWidth: 0,
+              flexShrink: 0,
+              '& .MuiButton-startIcon': { mr: 0.75 },
+              '& .MuiButton-endIcon': { ml: 0.25 },
             }}
           >
-            <Typography
-              sx={{
-                color: ONLINE_GREEN,
-                fontSize: 11,
-                fontWeight: 500,
-                lineHeight: 1,
-                fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
-                letterSpacing: '0.5px',
-              }}
-            >
-              {t.online}
-            </Typography>
-          </Box>
+            <Box component="span" sx={{ mr: 0.5, fontSize: 14 }}>
+              {current.flag}
+            </Box>
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              {current.label.split(' ')[0]}
+            </Box>
+          </Button>
         </Stack>
-
-        {/* Divider between phone and address (lg+) */}
-        <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
-          <VerticalDivider />
-        </Box>
-
-        {/* Address — pre-line so '\n' in the string becomes a real line break */}
-        <Box
-          sx={{
-            display: { xs: 'none', lg: 'block' },
-            maxWidth: 260,
-          }}
-        >
-          <Typography sx={{ ...ADDRESS_FONT, whiteSpace: 'pre-line' }}>
-            {t.address}
-          </Typography>
-        </Box>
-
-        {/* Language switcher */}
-        <Button
-          color="inherit"
-          startIcon={<LanguageIcon sx={{ fontSize: 18 }} />}
-          endIcon={<KeyboardArrowDownIcon sx={{ fontSize: 18 }} />}
-          onClick={(e) => setLangAnchor(e.currentTarget)}
-          sx={{
-            ...NAV_FONT,
-            color: '#fff',
-            textTransform: 'none',
-            ml: { xs: 0, lg: 2 },
-            px: 1.5,
-            minWidth: 0,
-            '& .MuiButton-startIcon': { mr: 0.75 },
-            '& .MuiButton-endIcon': { ml: 0.5 },
-          }}
-        >
-          <Box component="span" sx={{ mr: 0.5, fontSize: 14 }}>
-            {current.flag}
-          </Box>
-          <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-            {current.label.split(' ')[0]}
-          </Box>
-        </Button>
         <Menu
           anchorEl={langAnchor}
           open={Boolean(langAnchor)}

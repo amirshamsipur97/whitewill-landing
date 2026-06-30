@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { LocalizedLink as RouterLink } from '../lib/localize.js'
 import {
   Box,
   Container,

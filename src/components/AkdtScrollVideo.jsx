@@ -216,7 +216,12 @@ export default function AkdtScrollVideo() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+    // Rebuild the timeline when text direction resolves/changes. The saved
+    // language is restored from localStorage AFTER first paint, so on mount
+    // isRTL is still false; without this dep the panel keeps the LTR slide-in
+    // direction even on the Arabic/Persian site. ctx.revert() cleans up the
+    // previous build before the RTL one is created.
+  }, [isRTL])
 
   return (
     <Box

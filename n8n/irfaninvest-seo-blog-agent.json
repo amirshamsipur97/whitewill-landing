@@ -1,0 +1,809 @@
+{
+  "name": "Irfan Investment — SEO Blog Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "schedule_trigger",
+      "name": "Weekly trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1",
+              "name": "supabaseUrl",
+              "type": "string",
+              "value": "https://owgvrxipqlusepozlujv.supabase.co"
+            },
+            {
+              "id": "c2",
+              "name": "supabaseAnonKey",
+              "type": "string",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93Z3ZyeGlwcWx1c2Vwb3psdWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTYxMjQsImV4cCI6MjA5MjM3MjEyNH0.vZK4z9p9pUF1rZ8LHadFReBcEcwidwy9ZdEXnSmK4Fs"
+            },
+            {
+              "id": "c3",
+              "name": "adminPassword",
+              "type": "string",
+              "value": "__SET_INSIGHTS_ADMIN_PASSWORD__"
+            },
+            {
+              "id": "c4",
+              "name": "anthropicKey",
+              "type": "string",
+              "value": "__SET_ANTHROPIC_API_KEY__"
+            },
+            {
+              "id": "c5",
+              "name": "model",
+              "type": "string",
+              "value": "claude-sonnet-4-5-20250929"
+            },
+            {
+              "id": "c6",
+              "name": "langs",
+              "type": "string",
+              "value": "en,ru,ar,fa"
+            },
+            {
+              "id": "c7",
+              "name": "pexelsKey",
+              "type": "string",
+              "value": "__SET_PEXELS_API_KEY__"
+            },
+            {
+              "id": "c8",
+              "name": "openaiKey",
+              "type": "string",
+              "value": "__SET_OPENAI_API_KEY__"
+            },
+            {
+              "id": "c9",
+              "name": "openaiModel",
+              "type": "string",
+              "value": "gpt-4o-mini"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "config",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Config').first().json.supabaseUrl }}/rest/v1/ai_knowledge?select=page,topic,content",
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Config').first().json.supabaseAnonKey }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.supabaseAnonKey }}"
+            }
+          ]
+        }
+      },
+      "id": "get_site_topics",
+      "name": "Get site topics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ok: true } }];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "collapse_topics",
+      "name": "Collapse topics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Config').first().json.supabaseUrl }}/rest/v1/insights?select=slug",
+        "options": {},
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Config').first().json.supabaseAnonKey }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.supabaseAnonKey }}"
+            }
+          ]
+        }
+      },
+      "id": "get_existing_slugs",
+      "name": "Get existing slugs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const topics = $('Get site topics').all().map(i => i.json.topic).filter(Boolean);\nconst uniqTopics = [...new Set(topics)];\nconst baseEn = ['invest in oman real estate','company registration in oman','oman residency by investment','buy apartment oman','import car from oman to iran','business setup oman','oman property for foreigners'];\nconst baseFa = ['سرمایه گذاری در عمان','ثبت شرکت در عمان','خرید ملک در عمان','اقامت از طریق سرمایه گذاری عمان','واردات خودرو از عمان به ایران','افتتاح حساب بانکی در عمان'];\nconst seeds = [];\nbaseEn.forEach(q => seeds.push({ q, hl: 'en' }));\nbaseFa.forEach(q => seeds.push({ q, hl: 'fa' }));\nuniqTopics.slice(0, 6).forEach(q => seeds.push({ q, hl: 'fa' }));\nreturn seeds.map(s => ({ json: s }));",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "build_seeds",
+      "name": "Build seeds",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://suggestqueries.google.com/complete/search?client=chrome&hl={{ $json.hl }}&q={{ encodeURIComponent($json.q) }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "google_autocomplete",
+      "name": "Google autocomplete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst kw = new Set();\nfor (const it of items) {\n  let raw = it.json.data !== undefined ? it.json.data : it.json;\n  let arr = raw;\n  if (typeof raw === 'string') { try { arr = JSON.parse(raw); } catch (e) { arr = []; } }\n  const sugg = Array.isArray(arr) && Array.isArray(arr[1]) ? arr[1] : [];\n  sugg.forEach(s => kw.add(String(s).trim()));\n}\nconst rows = $('Get site topics').all().map(i => i.json);\nconst topics = [...new Set(rows.map(r => r.topic).filter(Boolean))];\nconst brandContext = rows.map(r => r.content).filter(Boolean).join('\\n\\n').slice(0, 12000);\nconst existingSlugs = [...new Set($('Get existing slugs').all().map(i => i.json.slug).filter(Boolean))];\nreturn [{ json: { keywords: [...kw].slice(0, 150), topics, existingSlugs, brandContext } }];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "aggregate_keywords",
+      "name": "Aggregate keywords",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const c = $('Config').first().json;\nconst d = $input.first().json;\nconst sys = 'You are an SEO content strategist for Irfan Investment Group, a premium real-estate and business-setup advisory in Oman (real estate, company registration, corporate banking & financing, investment, car import from Oman to Iran). Use the web_search tool to research what is CURRENTLY trending and ranking for these topics and to collect up-to-date facts, figures, regulations and dates. Then choose ONE high-opportunity blog topic that matches the brand and does NOT duplicate already-published articles.';\nconst user = 'SITE TOPICS:\\n' + d.topics.join(', ') + '\\n\\nTRENDING KEYWORD CANDIDATES (Google autocomplete):\\n' + d.keywords.join(', ') + '\\n\\nALREADY PUBLISHED SLUGS (avoid overlap):\\n' + (d.existingSlugs.join(', ') || '(none)') + '\\n\\nAfter researching with web_search, return ONLY valid JSON, no prose, no code fences:\\n{\"topic\":\"short topic title\",\"slug\":\"kebab-case-latin-slug\",\"category\":\"one of: Investment, Real Estate, Company Registration, Banking, Car Import, Guide\",\"primaryKeyword\":\"main keyword\",\"secondaryKeywords\":[\"kw1\",\"kw2\",\"kw3\",\"kw4\",\"kw5\"],\"searchIntent\":\"informational|commercial|transactional\",\"researchNotes\":[\"8-12 concrete factual bullets you found via web_search, include any current numbers, dates, rules, sources\"],\"outline\":[\"H2 1\",\"H2 2\",\"H2 3\",\"H2 4\"]}';\nreturn [{ json: { body: { model: c.model, max_tokens: 2500, system: sys, tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }], messages: [{ role: 'user', content: user }] } } }];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "prep_topic_request",
+      "name": "Prep topic request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Config').first().json.anthropicKey }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {}
+      },
+      "id": "anthropic_select_topic",
+      "name": "Anthropic select topic",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1740,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 20000
+    },
+    {
+      "parameters": {
+        "jsCode": "const resp = $input.first().json;\nlet txt = Array.isArray(resp.content) ? resp.content.filter(c => c.type === 'text').map(c => c.text).join('\\n') : '';\nlet clean = txt.replace(/```json/g, '').replace(/```/g, '').trim();\nconst s = clean.indexOf('{'); const e = clean.lastIndexOf('}');\nif (s !== -1 && e !== -1) clean = clean.slice(s, e + 1);\nlet sel;\ntry { sel = JSON.parse(clean); } catch (err) { throw new Error('Topic JSON parse failed: ' + clean.slice(0, 400)); }\nconst existing = ($('Aggregate keywords').first().json.existingSlugs) || [];\nif (existing.includes(sel.slug)) sel.slug = sel.slug + '-2026';\nconst q = String(sel.primaryKeyword || sel.topic || 'oman real estate');\nreturn [{ json: { sel, imageQuery: q } }];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "parse_selection",
+      "name": "Parse selection",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.pexels.com/v1/search?orientation=landscape&per_page=1&query={{ encodeURIComponent($json.imageQuery) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Config').first().json.pexelsKey }}"
+            }
+          ]
+        }
+      },
+      "id": "pick_cover_image",
+      "name": "Pick cover image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2140,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const c = $('Config').first().json;\nconst sel = $('Parse selection').first().json.sel;\nconst agg = $('Aggregate keywords').first().json;\nconst px = $input.first().json;\nlet cover = '/peninsula.jpg';\ntry { const p = (px.photos || [])[0]; if (p && p.src) cover = p.src.landscape || p.src.large2x || p.src.large || p.src.original || cover; } catch (e) {}\nconst langs = String(c.langs || 'en').split(',').map(s => s.trim()).filter(Boolean);\nconst brand = (agg.brandContext || '').slice(0, 2000);\nconst notes = Array.isArray(sel.researchNotes) ? sel.researchNotes.join('\\n- ') : '';\nconst outline = Array.isArray(sel.outline) ? sel.outline.join('; ') : '';\nreturn langs.map(lang => ({ json: {\n  lang, slug: sel.slug, topic: sel.topic, category: sel.category,\n  primaryKeyword: sel.primaryKeyword, secondaryKeywords: sel.secondaryKeywords || [],\n  searchIntent: sel.searchIntent || '', coverImage: cover, brandContext: brand,\n  researchNotes: notes, outline\n} }));",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "fan_out_languages",
+      "name": "Fan out languages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const c = $('Config').first().json;\nconst langName = { en: 'English', ru: 'Russian', ar: 'Arabic', fa: 'Persian (Farsi)' };\nreturn $input.all().map(it => {\n  const d = it.json;\n  const ln = langName[d.lang] || d.lang;\n  const rtl = (d.lang === 'ar' || d.lang === 'fa') ? ' Write natural ' + ln + ' for a right-to-left audience; no Latin filler text.' : '';\n  const sys = 'You are an expert multilingual SEO copywriter for Irfan Investment Group (premium real estate and business setup in Oman). Ground brand claims in the SITE SOURCE MATERIAL and incorporate the RESEARCH NOTES (current facts from web research); do not contradict them or invent specific prices or legal guarantees. Write an original, genuinely helpful, SEO-optimized article. SEO rules: put the primary keyword in the title, the first 100 words, at least one H2, and use it naturally 4-8 times; clear H2/H3 hierarchy; short paragraphs and bullet lists; include a \"## FAQ\" section with 3-5 question-style H3s answering real search queries; add 1-2 internal links as Markdown to relevant pages (/invest, /investment, /investment/legal, /car-import, or /insights); finish with a soft CTA to contact a consultant. Target 1200-1600 words. Write entirely in ' + ln + '.' + rtl;\n  const user = 'TOPIC: ' + d.topic + '\\nPRIMARY KEYWORD: ' + d.primaryKeyword + '\\nSECONDARY KEYWORDS: ' + (d.secondaryKeywords || []).join(', ') + '\\nSEARCH INTENT: ' + d.searchIntent + '\\nSUGGESTED OUTLINE: ' + (d.outline || '') + '\\n\\nRESEARCH NOTES (current facts from web search - use them, keep accurate):\\n- ' + (d.researchNotes || '(none)') + '\\n\\nSITE SOURCE MATERIAL (the firm\\'s own content - use for brand facts/services):\\n' + (d.brandContext || '(none)') + '\\n\\nReturn ONLY valid JSON, no prose, no code fences:\\n{\"title\":\"...\",\"excerpt\":\"<=155 chars meta description containing the primary keyword\",\"body_md\":\"1200-1600 word GitHub-flavored Markdown article with ## H2 and ### H3 headings, short paragraphs, bullet lists, a ## FAQ section, 1-2 internal Markdown links, an intro and a closing CTA\",\"tags\":[\"5-8\",\"keywords\"],\"seo_title\":\"<=60 chars\",\"seo_description\":\"<=155 chars\"}';\n  return { json: { lang: d.lang, slug: d.slug, category: d.category, coverImage: d.coverImage, body: { model: c.model, max_tokens: 4000, system: sys, messages: [{ role: 'user', content: user }] } } };\n});",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "prep_article_request",
+      "name": "Prep article request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2540,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Config').first().json.anthropicKey }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 30000
+            }
+          }
+        }
+      },
+      "id": "anthropic_write_article",
+      "name": "Anthropic write article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 6,
+      "waitBetweenTries": 25000
+    },
+    {
+      "parameters": {
+        "jsCode": "const preps = $('Prep article request').all();\nconst out = [];\n$input.all().forEach((it, i) => {\n  const meta = (preps[i] && preps[i].json) || {};\n  const resp = it.json;\n  let txt = Array.isArray(resp.content) ? resp.content.filter(c => c.type === 'text').map(c => c.text).join('\\n') : '';\n  let clean = txt.replace(/```json/g, '').replace(/```/g, '').trim();\n  const s = clean.indexOf('{'); const e = clean.lastIndexOf('}');\n  if (s !== -1 && e !== -1) clean = clean.slice(s, e + 1);\n  let a;\n  try { a = JSON.parse(clean); } catch (err) { console.log('Skip ' + (meta.lang || '?') + ': invalid/truncated JSON'); return; }\n  if (!a.title || !a.body_md) { console.log('Skip ' + (meta.lang || '?') + ': missing fields'); return; }\n  out.push({ json: { row: {\n    lang: meta.lang, slug: meta.slug, title: a.title, excerpt: a.excerpt || '',\n    body_md: a.body_md, category: meta.category || a.category || 'Guide',\n    tags: a.tags || [], seo_title: a.seo_title || '', seo_description: a.seo_description || '',\n    cover_image: meta.coverImage || '/peninsula.jpg', published: false\n  } } });\n});\nif (out.length === 0) throw new Error('All languages failed to parse - check Anthropic output / max_tokens');\nreturn out;",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "parse_article",
+      "name": "Parse article",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2940,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const c = $('Config').first().json;\nconst sel = $('Parse selection').first().json.sel;\nconst langName = { en: 'English', ru: 'Russian', ar: 'Arabic', fa: 'Persian (Farsi)' };\nreturn $input.all().map(it => {\n  const row = it.json.row;\n  const ln = langName[row.lang] || row.lang;\n  const sys = 'You are a senior multilingual SEO editor. Improve the given article for on-page SEO and keyword optimization WITHOUT changing its language (' + ln + ') or core meaning. Ensure the primary keyword appears in the title, the first 100 words, at least one H2, and naturally 4-8 times; strengthen secondary/semantic keywords; tighten the meta title (<=60 chars) and meta description (<=155 chars, must contain the primary keyword); keep clear H2/H3 structure, the FAQ section, and any internal Markdown links; fix awkward phrasing and improve readability. Also propose the best 2-4 word ENGLISH image search query that matches the article so the cover photo fits the text.';\n  const user = 'PRIMARY KEYWORD: ' + (sel.primaryKeyword || '') + '\\nSECONDARY KEYWORDS: ' + ((sel.secondaryKeywords || []).join(', ')) + '\\nLANGUAGE: ' + ln + '\\n\\nARTICLE TITLE: ' + row.title + '\\nCURRENT META TITLE: ' + (row.seo_title || '') + '\\nCURRENT META DESC: ' + (row.seo_description || '') + '\\n\\nARTICLE MARKDOWN:\\n' + row.body_md + '\\n\\nReturn ONLY a JSON object: {\"title\":\"...\",\"excerpt\":\"<=155 chars\",\"body_md\":\"improved full Markdown article\",\"tags\":[\"5-8 keywords\"],\"seo_title\":\"<=60\",\"seo_description\":\"<=155\",\"image_query\":\"english 2-4 words\",\"seo_score\":0-100,\"notes\":\"one short line\"}';\n  const body = { model: c.openaiModel || 'gpt-4o-mini', messages: [{ role: 'system', content: sys }, { role: 'user', content: user }], response_format: { type: 'json_object' }, max_tokens: 5000, temperature: 0.4 };\n  return { json: { meta: row, body } };\n});",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "prep_seo_review",
+      "name": "Prep SEO review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3140,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.openaiKey }}"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 8000
+            }
+          }
+        }
+      },
+      "id": "openai_seo_editor",
+      "name": "OpenAI SEO editor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3340,
+        200
+      ],
+      "retryOnFail": true,
+      "maxTries": 4,
+      "waitBetweenTries": 15000
+    },
+    {
+      "parameters": {
+        "jsCode": "const preps = $('Prep SEO review').all();\nconst out = [];\n$input.all().forEach((it, i) => {\n  const meta = (preps[i] && preps[i].json.meta) || {};\n  const resp = it.json;\n  let txt = '';\n  try { txt = resp.choices[0].message.content || ''; } catch (e) {}\n  let a = null;\n  try { a = JSON.parse(txt); } catch (e) { console.log('SEO editor JSON parse failed for ' + (meta.lang || '?') + ' - keeping original'); }\n  const row = Object.assign({}, meta);\n  if (a) {\n    if (a.title) row.title = a.title;\n    if (a.excerpt) row.excerpt = a.excerpt;\n    if (a.body_md) row.body_md = a.body_md;\n    if (Array.isArray(a.tags) && a.tags.length) row.tags = a.tags;\n    if (a.seo_title) row.seo_title = a.seo_title;\n    if (a.seo_description) row.seo_description = a.seo_description;\n  }\n  out.push({ json: { row, imageQuery: (a && a.image_query) || '', seoScore: (a && a.seo_score) || null } });\n});\nreturn out;",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "apply_seo_review",
+      "name": "Apply SEO review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3540,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.pexels.com/v1/search?orientation=landscape&per_page=1&query={{ encodeURIComponent($json.imageQuery || 'oman business') }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Config').first().json.pexelsKey }}"
+            }
+          ]
+        }
+      },
+      "id": "refetch_cover_image",
+      "name": "Refetch cover image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3740,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const reviews = $('Apply SEO review').all();\nconst out = [];\n$input.all().forEach((it, i) => {\n  const rev = (reviews[i] && reviews[i].json) || {};\n  const row = Object.assign({}, rev.row || {});\n  const px = it.json;\n  try {\n    const p = (px.photos || [])[0];\n    if (p && p.src && rev.imageQuery) row.cover_image = p.src.landscape || p.src.large2x || p.src.large || row.cover_image;\n  } catch (e) {}\n  out.push({ json: { row } });\n});\nreturn out;",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "finalize_row",
+      "name": "Finalize row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3940,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').first().json.supabaseUrl }}/functions/v1/insights-admin",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Config').first().json.supabaseAnonKey }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Config').first().json.supabaseAnonKey }}"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ action: 'upsert', password: $('Config').first().json.adminPassword, row: $json.row }) }}",
+        "options": {}
+      },
+      "id": "save_draft_to_blog",
+      "name": "Save draft to blog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4140,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "done",
+      "name": "Drafts ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4340,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Weekly trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get site topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get site topics": {
+      "main": [
+        [
+          {
+            "node": "Collapse topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collapse topics": {
+      "main": [
+        [
+          {
+            "node": "Get existing slugs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get existing slugs": {
+      "main": [
+        [
+          {
+            "node": "Build seeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build seeds": {
+      "main": [
+        [
+          {
+            "node": "Google autocomplete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google autocomplete": {
+      "main": [
+        [
+          {
+            "node": "Aggregate keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate keywords": {
+      "main": [
+        [
+          {
+            "node": "Prep topic request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prep topic request": {
+      "main": [
+        [
+          {
+            "node": "Anthropic select topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic select topic": {
+      "main": [
+        [
+          {
+            "node": "Parse selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse selection": {
+      "main": [
+        [
+          {
+            "node": "Pick cover image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick cover image": {
+      "main": [
+        [
+          {
+            "node": "Fan out languages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fan out languages": {
+      "main": [
+        [
+          {
+            "node": "Prep article request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prep article request": {
+      "main": [
+        [
+          {
+            "node": "Anthropic write article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic write article": {
+      "main": [
+        [
+          {
+            "node": "Parse article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse article": {
+      "main": [
+        [
+          {
+            "node": "Prep SEO review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prep SEO review": {
+      "main": [
+        [
+          {
+            "node": "OpenAI SEO editor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI SEO editor": {
+      "main": [
+        [
+          {
+            "node": "Apply SEO review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply SEO review": {
+      "main": [
+        [
+          {
+            "node": "Refetch cover image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Refetch cover image": {
+      "main": [
+        [
+          {
+            "node": "Finalize row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize row": {
+      "main": [
+        [
+          {
+            "node": "Save draft to blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save draft to blog": {
+      "main": [
+        [
+          {
+            "node": "Drafts ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateId": "irfaninvest-seo-blog-agent"
+  }
+}

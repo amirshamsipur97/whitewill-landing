@@ -1,5 +1,21 @@
 {
+  "redirects": [
+    { "source": "/our-team", "destination": "/about", "permanent": true },
+    { "source": "/team", "destination": "/about", "permanent": true },
+    { "source": "/about-us", "destination": "/about", "permanent": true },
+    { "source": "/contact", "destination": "/about", "permanent": true },
+    { "source": "/properties", "destination": "/buy", "permanent": true },
+    { "source": "/projects", "destination": "/buy", "permanent": true },
+    { "source": "/blog", "destination": "/insights", "permanent": true },
+    { "source": "/news", "destination": "/insights", "permanent": true },
+    { "source": "/ru/about-us", "destination": "/ru/about", "permanent": true },
+    { "source": "/ru/oman", "destination": "/ru/buy", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/((?!assets|images|video|icons|favicon|robots|sitemap).*)", "destination": "/index.html" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/uae/:path*", "destination": "/api/gone" },
+    { "source": "/omans/:path*", "destination": "/api/gone" },
+    { "source": "/cdn-cgi/:path*", "destination": "/api/gone" },
+    { "source": "/((?!api|assets|images|video|icons|favicon|robots|sitemap).*)", "destination": "/index.html" }
   ]
 }

@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import faDict from './i18n.fa.js'
 
 const STORAGE_KEY = 'ww_lang'
@@ -17,10 +18,11 @@ const dict = {
       project: 'Project', projects: 'Projects',
       maison: 'Maison Shirdel',
       invest: 'Company Registration',
+      insights: 'Insights',
       about: 'About us',
     },
     address: 'Unit 617, 6th floor, office 1991\nAl Ghubrah St, Muscat, Sultanate of Oman',
-    phone: '+968 766 33000',
+    phone: '+968 766 44000',
     online: 'Online',
     hero: {
       badge: 'Irfan Investment team — spring 2026',
@@ -530,10 +532,11 @@ const dict = {
       project: 'Проект', projects: 'Проекты',
       maison: 'Maison Shirdel',
       invest: 'Регистрация компании',
+      insights: 'Аналитика',
       about: 'О нас',
     },
     address: 'Юнит 617, 6-й этаж, офис 1991\nул. Аль-Губра, Маскат, Султанат Оман',
-    phone: '+968 766 33000',
+    phone: '+968 766 44000',
     online: 'Онлайн',
     hero: {
       badge: 'Команда Irfan Investment · Весна 2026',
@@ -1043,10 +1046,11 @@ const dict = {
       project: 'مشروع', projects: 'مشاريع',
       maison: 'Maison Shirdel',
       invest: 'تأسيس الشركات',
+      insights: 'بلاگ',
       about: 'عنّا',
     },
     address: 'وحدة 617، الطابق السادس، مكتب 1991\nشارع الغبرة، مسقط، سلطنة عُمان',
-    phone: '+968 766 33000',
+    phone: '+968 766 44000',
     online: 'متصل',
     hero: {
       badge: 'فريق Irfan Investment — ربيع 2026',
@@ -1539,29 +1543,37 @@ const I18nContext = createContext(null)
 const RTL = new Set(['ar', 'fa'])
 const isValidLang = (code) => LANGS.some((l) => l.code === code)
 
+// Phase 2: language is derived from the URL prefix (/ar, /ru, /fa; en = none),
+// so each language is a distinct, crawlable URL. The first path segment is the
+// source of truth; localStorage only remembers the last choice for the bare /.
+function langFromPathname(pathname) {
+  const m = (pathname || '/').match(/^\/(ar|ru|fa)(?=\/|$)/)
+  return m ? m[1] : 'en'
+}
+
 export function I18nProvider({ children }) {
-  const [lang, setLangState] = useState('en')
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const lang = langFromPathname(pathname)
 
-  useEffect(() => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
-    if (saved && isValidLang(saved)) setLangState(saved)
-  }, [])
-
-  const setLang = (code) => {
-    setLangState(code)
-    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEY, code)
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = code
-      document.documentElement.dir = RTL.has(code) ? 'rtl' : 'ltr'
-    }
-  }
-
+  // Keep <html lang>/<dir> in sync with the URL-derived language.
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = lang
       document.documentElement.dir = RTL.has(lang) ? 'rtl' : 'ltr'
     }
+    if (typeof window !== 'undefined') {
+      try { localStorage.setItem(STORAGE_KEY, lang) } catch { /* ignore */ }
+    }
   }, [lang])
+
+  // Switching language navigates to the same logical page under the new prefix.
+  const setLang = (code) => {
+    if (!isValidLang(code)) return
+    const logical = pathname.replace(/^\/(ar|ru|fa)(?=\/|$)/, '') || '/'
+    const next = code === 'en' ? logical : (logical === '/' ? `/${code}` : `/${code}${logical}`)
+    navigate(next)
+  }
 
   return (
     <I18nContext.Provider value={{ lang, setLang, t: dict[lang] || dict.en }}>

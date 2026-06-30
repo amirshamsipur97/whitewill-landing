@@ -4,16 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google Analytics 4 (GA4) — global gtag, loads on every route. This is
-         a Vite SPA, so the tag lives here in index.html (the single HTML
-         document) rather than a Next.js layout. GA4 enhanced measurement
-         tracks SPA route changes via the History API automatically. -->
+    <!-- Google tag (gtag.js) — one shared library, two destinations:
+           • GA4 Analytics : G-P2PTCKJKYK  (send_page_view:false → manual SPA
+             page_views from src/analytics.js, so each page is recorded with its
+             own title + content group + language)
+           • Google Ads    : AW-1774372667 (Google tag GT-M3KMFWHL). Required so
+             Google Ads can DETECT the tag + run conversion tracking. Without
+             this config line the Ads tag is absent → "Tag stopped sending data".
+         gtag's config() includes the Conversion Linker automatically. -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P2PTCKJKYK"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-P2PTCKJKYK');
+      gtag('config', 'G-P2PTCKJKYK', { send_page_view: false });
+      gtag('config', 'AW-1774372667');
     </script>
 
     <!-- Resource hints — open TCP/TLS sockets to the third parties we hit
@@ -64,6 +69,7 @@
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="ar_OM" />
     <meta property="og:locale:alternate" content="ru_RU" />
+    <meta property="og:locale:alternate" content="fa_IR" />
 
     <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -76,14 +82,46 @@
     {
       "@context": "https://schema.org",
       "@type": "RealEstateAgent",
+      "@id": "https://www.irfaninvest.com/#organization",
       "name": "Irfan Investment Group",
       "url": "https://www.irfaninvest.com/",
       "logo": "https://www.irfaninvest.com/logo.svg",
       "image": "https://www.irfaninvest.com/peninsula.jpg",
-      "description": "A premium real estate brokerage in Oman, connecting global capital with curated developments across Oman and emerging investment destinations.",
-      "areaServed": { "@type": "Country", "name": "Oman" },
-      "address": { "@type": "PostalAddress", "addressCountry": "OM", "addressRegion": "Muscat" },
-      "knowsLanguage": ["en", "ar", "ru"]
+      "description": "A premium real estate brokerage and investment advisory in Oman — property, company registration, banking & financing, and investor residency.",
+      "telephone": "+968 766 44000",
+      "priceRange": "$$$",
+      "areaServed": [
+        { "@type": "Country", "name": "Oman" },
+        { "@type": "Country", "name": "Iran" },
+        { "@type": "Country", "name": "Russia" }
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Unit 617, 6th floor, office 1991, Al Ghubrah St",
+        "addressLocality": "Muscat",
+        "addressCountry": "OM"
+      },
+      "knowsLanguage": ["en", "ar", "ru", "fa"],
+      "sameAs": [
+        "https://www.youtube.com/@Irfan_Investment",
+        "https://www.instagram.com/irfan_investment"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://www.irfaninvest.com/#website",
+      "url": "https://www.irfaninvest.com/",
+      "name": "Irfan Investment Group",
+      "publisher": { "@id": "https://www.irfaninvest.com/#organization" },
+      "inLanguage": ["en", "ru", "ar", "fa"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.irfaninvest.com/insights?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
     }
     </script>
     <!-- ─────────────────────────────────────────────────────────────────
@@ -167,15 +205,21 @@
         // Localize the tagline from the persisted language (matches i18n's
         // 'ww_lang' key) so RTL/Arabic and Russian visitors see their copy.
         try {
-          var lang = localStorage.getItem('ww_lang') || 'en';
+          // Language is URL-driven now (/ar, /ru, /fa; en = none). Fall back to
+          // the persisted choice only for the bare "/".
+          var seg = (location.pathname.match(/^\/(ar|ru|fa)(?=\/|$)/) || [])[1];
+          var lang = seg || localStorage.getItem('ww_lang') || 'en';
           var taglines = {
             en: 'Irfan Investment Group is a strategic investment division focused on business growth and international opportunities.',
             ru: 'Irfan Investment Group — стратегическое инвестиционное подразделение, ориентированное на рост бизнеса и международные возможности.',
-            ar: 'مجموعة عرفان الاستثمارية هي ذراعٌ استثماري استراتيجي يركّز على نمو الأعمال والفرص الدولية.'
+            ar: 'مجموعة عرفان الاستثمارية هي ذراعٌ استثماري استراتيجي يركّز على نمو الأعمال والفرص الدولية.',
+            fa: 'مجموعه سرمایه‌گذاری عرفان، بازوی راهبردیِ سرمایه‌گذاری با تمرکز بر رشد کسب‌وکار و فرصت‌های بین‌المللی.'
           };
+          document.documentElement.lang = lang;
           var tEl = document.getElementById('app-splash-tagline');
           if (tEl && taglines[lang]) tEl.textContent = taglines[lang];
-          if (lang === 'ar') {
+          if (lang === 'ar' || lang === 'fa') {
+            document.documentElement.dir = 'rtl';
             var sp = document.getElementById('app-splash');
             if (sp) { sp.dir = 'rtl'; }
             if (tEl) tEl.style.textTransform = 'none';

@@ -7,10 +7,11 @@ export default {
     invest: "ثبت شرکت",
     investment: "سرمایه‌گذاری",
     carImport: "واردات خودرو",
+    insights: "بلاگ",
     about: "درباره ما",
   },
   address: "واحد 617، طبقه ششم، دفتر 1991\nخیابان الغبرة، مسقط، سلطنت عمان",
-  phone: "+968 766 33000",
+  phone: "+968 766 44000",
   online: "آنلاین",
   hero: {
     badge: "تیم Irfan Investment، بهار 2026",

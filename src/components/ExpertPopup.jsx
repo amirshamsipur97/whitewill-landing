@@ -155,7 +155,7 @@ export default function ExpertPopup() {
             >
               <Tooltip title={t.expertPopup.whatsapp}>
                 <IconButton
-                  href="https://wa.me/96876644000"
+                  href="https://wa.me/message/L22KC3L6RYINE1"
                   target="_blank"
                   rel="noreferrer"
                   size="small"

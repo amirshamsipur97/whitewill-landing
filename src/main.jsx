@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider, CssBaseline } from '@mui/material'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -116,11 +117,13 @@ if (typeof window !== 'undefined') window.__lenis = lenis
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <I18nProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </I18nProvider>
+    <BrowserRouter>
+      <I18nProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </I18nProvider>
+    </BrowserRouter>
   </StrictMode>,
 )

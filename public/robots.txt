@@ -2,6 +2,12 @@
 User-agent: *
 Allow: /
 
-# Block nothing extra; this is a public marketing site.
+# Keep the password-gated admin tool and internal API endpoints out of the index.
+Disallow: /insights-admin
+Disallow: /api/
+
+# NOTE: legacy Webflow paths (/uae/*, /omans/*, /ru/*, /our-team, …) are
+# intentionally NOT disallowed — they 301 or 410 at the edge, and Google must
+# be able to crawl them to process those signals and drop them from the index.
 
 Sitemap: https://www.irfaninvest.com/sitemap.xml

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { trackLead } from './analytics.js'
 
 const url = import.meta.env.VITE_SUPABASE_URL
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -73,7 +74,67 @@ export async function submitForm(payload) {
     const text = await res.text().catch(() => '')
     throw new Error(`Form submit failed (${res.status}): ${text}`)
   }
+
+  // Lead generation — every form on the site routes through here, so this is
+  // the single place we fire the GA4 `generate_lead` event (+ optional Google
+  // Ads conversion). Wrapped so an analytics hiccup never breaks the submit.
+  try {
+    trackLead({ source: payload.source, language: payload.language })
+  } catch { /* ignore analytics errors */ }
+
   return res.json()
+}
+
+// ── Insights / blog ────────────────────────────────────────────────
+// Public reads go straight through the anon client; RLS exposes only
+// rows where published = true. Writes go through the insights-admin
+// edge function (see insightsAdmin below).
+
+const INSIGHT_LIST_COLS =
+  'id, slug, lang, title, excerpt, category, tags, reading_minutes, cover_image, author, published_at'
+
+/** Published articles for a language, newest first. */
+export async function fetchInsights({ lang = 'en', limit = 24, offset = 0 } = {}) {
+  const { data, error } = await supabase
+    .from('insights')
+    .select(INSIGHT_LIST_COLS)
+    .eq('lang', lang)
+    .eq('published', true)
+    .order('published_at', { ascending: false })
+    .range(offset, offset + limit - 1)
+
+  if (error) throw error
+  return data ?? []
+}
+
+/** One published article by slug + language. Returns null if not found. */
+export async function fetchInsightBySlug(slug, lang) {
+  let q = supabase.from('insights').select('*').eq('slug', slug).eq('published', true)
+  if (lang) q = q.eq('lang', lang)
+  const { data, error } = await q.order('published_at', { ascending: false }).limit(1).maybeSingle()
+  if (error) throw error
+  return data ?? null
+}
+
+/**
+ * Call the password-gated insights-admin edge function.
+ * @param {string} action  'auth' | 'list' | 'get' | 'upsert' | 'delete'
+ * @param {string} password
+ * @param {object} [extra]  e.g. { id } or { row }
+ */
+export async function insightsAdmin(action, password, extra = {}) {
+  const res = await fetch(`${url}/functions/v1/insights-admin`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({ action, password, ...extra }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`)
+  return data
 }
 
 export async function fetchProperties({ limit = 50 } = {}) {

@@ -1,17 +1,20 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { ALL_LANGS, langFromPath, stripLang, localizePath } from './lib/localize.js'
 
 /**
  * SeoManager — per-route <head> metadata for the SPA.
  *
- * The static index.html ships sensible homepage defaults (title, description,
- * canonical, Open Graph, Twitter, JSON-LD) that non-JS social scrapers read.
- * Once React mounts, this component rewrites the route-specific tags on every
- * navigation so JS-rendering crawlers (Googlebot) index each page with its
- * own title/description/canonical instead of the homepage defaults.
+ * index.html ships homepage defaults for non-JS scrapers. On every client
+ * navigation this rewrites title/description/canonical/OG/Twitter/robots so
+ * each route is indexed on its own terms.
  *
- * It mutates the live document head directly (no extra dependency like
- * react-helmet) — small, dependency-free, and enough for basic SEO.
+ * CRITICAL (post-Webflow migration): unknown URLs (legacy /uae/*, /omans/*,
+ * /ru/*, random crawls) must NOT inherit the homepage meta — that produced
+ * "Duplicate, Google chose different canonical" across 100+ junk URLs. So
+ * unknown paths get `noindex` + a self-canonical, and the app renders a real
+ * 404 page for them. Legacy paths with a real new home are 301-redirected at
+ * the edge (vercel.json); truly-dead ones return 410 (api/gone.js).
  */
 
 const SITE = 'https://www.irfaninvest.com'
@@ -38,23 +41,27 @@ const ROUTES = {
   },
   '/invest': {
     title: 'Company Registration & Investment in Oman | Irfan Investment Group',
-    desc: 'Company formation & business setup in Oman with up to 100% foreign ownership — LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax (15% corporate, 5% VAT). Updated 2026 legal & regulatory framework.',
+    desc: 'Company formation & business setup in Oman with up to 100% foreign ownership — LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax. Updated 2026 framework.',
   },
   '/investment': {
     title: 'بانکداری، تامین مالی و سرمایه‌گذاری در عمان | Irfan Investment Group',
-    desc: 'افتتاح حساب بانکی شرکتی، وام کسب‌وکار و خرید ملک، تامین مالی شرکت‌ها، اقامت سرمایه‌گذاری و مشاوره سرمایه‌گذاری در عمان. خدمات بانکداری شرکتی و انتقال پول بین‌المللی.',
+    desc: 'افتتاح حساب بانکی شرکتی، وام کسب‌وکار و خرید ملک، تامین مالی شرکت‌ها، اقامت سرمایه‌گذاری و مشاوره سرمایه‌گذاری در عمان.',
   },
   '/investment/legal': {
     title: 'الزامات قانونی دریافت وام و تامین مالی در عمان | Irfan Investment Group',
-    desc: 'راهنمای کامل الزامات قانونی، بانکی و انطباقی دریافت تسهیلات در عمان: مقررات بانک مرکزی عمان، KYC، AML، UBO، منبع سرمایه، مدارک و شرایط دریافت وام کسب‌وکار و خرید ملک.',
+    desc: 'راهنمای کامل الزامات قانونی، بانکی و انطباقی دریافت تسهیلات در عمان: بانک مرکزی عمان، KYC، AML، UBO، منبع سرمایه و مدارک.',
   },
   '/car-import': {
     title: 'واردات خودرو از عمان به ایران | Irfan Investment Group',
-    desc: 'خدمات واردات خودرو از عمان به ایران؛ انتخاب و خرید خودرو، ترخیص گمرکی، حمل و ترانزیت، بیمه و تحویل، همراه با مشاوره کامل.',
+    desc: 'خدمات واردات خودرو از عمان به ایران؛ انتخاب و خرید خودرو، ترخیص گمرکی، حمل و ترانزیت، بیمه و تحویل.',
   },
   '/about': {
     title: 'About Irfan Investment Group',
     desc: 'Irfan Investment Group is a strategic investment division focused on business growth and international real estate opportunities.',
+  },
+  '/insights': {
+    title: 'Insights — Real Estate & Investment in Oman | Irfan Investment Group',
+    desc: 'Guides, market analysis and updates on real estate, investment, company formation and doing business in Oman.',
   },
 }
 
@@ -62,20 +69,35 @@ function titleCase(s) {
   return s.replace(/[-_]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+// Returns { title, desc, index }. Input is the LOGICAL path (language prefix
+// already stripped). `index:false` → emit noindex (junk / 404 / admin), so it
+// never competes with real pages for indexing.
 function resolve(pathname) {
-  if (ROUTES[pathname]) return ROUTES[pathname]
-  const m = pathname.match(/^\/buy\/([^/]+)/)
+  if (ROUTES[pathname]) return { ...ROUTES[pathname], index: true }
+
+  // Blog articles — generic until InsightDetailPage writes precise tags.
+  if (/^\/insights\/[^/]+\/?$/.test(pathname)) return { ...ROUTES['/insights'], index: true }
+
+  // Project pages.
+  const m = pathname.match(/^\/buy\/([^/]+)\/?$/)
   if (m) {
     const name = titleCase(decodeURIComponent(m[1]))
     return {
       title: `${name} — Property for Sale in Oman | Irfan Investment Group`,
       desc: `Explore ${name}, a curated development in Oman offered by Irfan Investment Group — view available units, pricing and details.`,
+      index: true,
     }
   }
-  return ROUTES['/']
+
+  // Admin tool — never index.
+  if (pathname.startsWith('/insights-admin')) {
+    return { title: 'Admin — Irfan Investment Group', desc: '', index: false }
+  }
+
+  // Anything else (legacy Webflow URL, random crawl, real 404) → noindex.
+  return { title: 'Page not found | Irfan Investment Group', desc: 'The page you requested could not be found.', index: false }
 }
 
-// Upsert a <meta> tag identified by an attribute/value pair.
 function setMeta(attr, value, content) {
   let el = document.head.querySelector(`meta[${attr}="${value}"]`)
   if (!el) {
@@ -96,21 +118,54 @@ function setCanonical(href) {
   el.setAttribute('href', href)
 }
 
+const OG_LOCALE = { en: 'en_US', ar: 'ar_OM', ru: 'ru_RU', fa: 'fa_IR' }
+
+// Manage the set of <link rel="alternate" hreflang> tags for the 4 language
+// variants of a logical path, plus x-default (English). Tagged with
+// data-hreflang so we can clear stale ones on every navigation.
+// Exported so InsightDetailPage can refresh alternates for the article URL.
+export function setAlternates(logicalPath) {
+  document.head.querySelectorAll('link[data-hreflang]').forEach((el) => el.remove())
+  if (!logicalPath) return
+  const add = (hreflang, href) => {
+    const el = document.createElement('link')
+    el.setAttribute('rel', 'alternate')
+    el.setAttribute('hreflang', hreflang)
+    el.setAttribute('href', href)
+    el.setAttribute('data-hreflang', '1')
+    document.head.appendChild(el)
+  }
+  for (const l of ALL_LANGS) add(l, SITE + localizePath(logicalPath, l))
+  add('x-default', SITE + localizePath(logicalPath, 'en'))
+}
+
 export default function SeoManager() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    const { title, desc } = resolve(pathname)
-    const url = SITE + (pathname === '/' ? '/' : pathname)
+    const lang = langFromPath(pathname)
+    const logical = stripLang(pathname)
+    const { title, desc, index } = resolve(logical)
+    const selfPath = localizePath(logical === '/' ? '/' : logical.replace(/\/$/, ''), lang)
+    const url = SITE + selfPath
 
     document.title = title
     setMeta('name', 'description', desc)
+    setMeta(
+      'name',
+      'robots',
+      index ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, follow',
+    )
     setMeta('property', 'og:title', title)
     setMeta('property', 'og:description', desc)
     setMeta('property', 'og:url', url)
+    setMeta('property', 'og:locale', OG_LOCALE[lang] || 'en_US')
     setMeta('name', 'twitter:title', title)
     setMeta('name', 'twitter:description', desc)
+    // Self-referential canonical for every page.
     setCanonical(url)
+    // hreflang only for indexable pages; clear it on noindex/404/admin.
+    setAlternates(index ? (logical === '/' ? '/' : logical.replace(/\/$/, '')) : null)
   }, [pathname])
 
   return null

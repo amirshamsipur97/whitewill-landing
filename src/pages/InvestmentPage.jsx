@@ -8,7 +8,7 @@
  */
 
 import { Box, Container, Typography, Stack, Button } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import { LocalizedLink as RouterLink } from '../lib/localize.js'
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined'
 import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined'
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined'
