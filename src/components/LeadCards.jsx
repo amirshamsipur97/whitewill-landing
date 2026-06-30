@@ -17,7 +17,7 @@ import {
   MenuItem,
 } from '@mui/material'
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward'
-import { sellImg, rentImg } from '../assets'
+import { rentImg } from '../assets'
 import { useI18n } from '../i18n.jsx'
 import { submitForm } from '../supabase'
 
@@ -25,7 +25,6 @@ export default function LeadCards() {
   const { t, lang } = useI18n()
   const navigate = useNavigate()
   const CARDS = [
-    { key: 'sell', title: t.leadCards.sell, img: sellImg, navTo: '/sell' },
     { key: 'rent', title: t.leadCards.rent, img: rentImg },
   ]
   const [openKey, setOpenKey] = useState(null)
@@ -40,7 +39,7 @@ export default function LeadCards() {
     setSubmitting(true)
     try {
       await submitForm({
-        source: openKey === 'sell' ? 'sell_landing' : 'rent_landing',
+        source: 'rent_landing',
         full_name: form.name,
         phone: form.phone,
         property_interest: form.type,

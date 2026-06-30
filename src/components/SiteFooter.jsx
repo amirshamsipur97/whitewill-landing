@@ -3,7 +3,7 @@
  *
  * Layout (md+):
  *   ┌──────────────────────────────────────────────────────────────────┐
- *   │  [LOGO]                                  Sitemap | Buy / Sell /  │
+ *   │  [LOGO]                                  Sitemap | Buy /         │
  *   │  Maison Shirdel one-liner               About / Project / Maison │
  *   │  [social icons row]                                              │
  *   ├──────────────────────────────────────────────────────────────────┤
@@ -37,7 +37,6 @@ const OLIVE_BRIGHT = '#8c8d25'
 // English fallback; brand wordmarks (Maison Shirdel) carry no key and stay.
 const PAGE_LINKS = [
   { label: 'Buy', to: '/buy', navKey: 'buy' },
-  { label: 'Sell', to: '/sell', navKey: 'sell' },
   { label: 'Project', to: '/', navKey: 'project' },
   { label: 'Maison Shirdel', to: '/maison-shirdel' },
   { label: 'About us', to: '/about', navKey: 'about' },

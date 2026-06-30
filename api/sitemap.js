@@ -16,8 +16,8 @@ const PREFIX = { en: '', ar: '/ar', ru: '/ru', fa: '/fa' }
 const STATIC = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
   { path: '/buy', priority: '0.9', changefreq: 'weekly' },
-  { path: '/sell', priority: '0.8', changefreq: 'monthly' },
   { path: '/invest', priority: '0.8', changefreq: 'monthly' },
+  { path: '/schools', priority: '0.8', changefreq: 'monthly' },
   { path: '/investment', priority: '0.7', changefreq: 'monthly' },
   { path: '/investment/legal', priority: '0.6', changefreq: 'monthly' },
   { path: '/car-import', priority: '0.7', changefreq: 'monthly' },

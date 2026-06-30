@@ -3,9 +3,6 @@
 export const heroBg =
   'https://images.unsplash.com/photo-1542317854-cdb59c4ed4f0?auto=format&fit=crop&w=2000&q=80'
 
-export const sellImg =
-  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80'
-
 export const rentImg =
   'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=80'
 

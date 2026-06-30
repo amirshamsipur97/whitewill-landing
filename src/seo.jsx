@@ -31,10 +31,6 @@ const ROUTES = {
     title: 'Buy Property in Oman | Irfan Investment Group',
     desc: 'Browse curated properties and developments for sale across Oman — apartments, villas and luxury residences from leading developers.',
   },
-  '/sell': {
-    title: 'Sell Your Property in Oman | Irfan Investment Group',
-    desc: 'Sell your property in Oman with Irfan Investment Group — expert valuation, global reach and a premium brokerage experience.',
-  },
   '/maison-shirdel': {
     title: 'Maison Shirdel — Luxury Residences in Oman | Irfan Investment',
     desc: 'Discover Maison Shirdel, a collection of luxury residences curated by Irfan Investment Group in Oman.',
@@ -63,6 +59,27 @@ const ROUTES = {
     title: 'Insights — Real Estate & Investment in Oman | Irfan Investment Group',
     desc: 'Guides, market analysis and updates on real estate, investment, company formation and doing business in Oman.',
   },
+  // International Schools — localized per language (title/desc are objects).
+  '/schools': {
+    title: {
+      en: 'International Schools in Oman | Complete Guide for Expat Families',
+      ru: 'Международные школы в Омане | Полный гид для семей экспатов',
+      ar: 'المدارس الدولية في عُمان | دليل كامل للعائلات الوافدة',
+      fa: 'مدارس بین‌المللی عمان | راهنمای کامل برای خانواده‌های مهاجر',
+    },
+    desc: {
+      en: 'International schools in Muscat and Oman — British, Cambridge, IB and American curricula, fees and admissions. Irfan Investment helps your family relocate, invest and settle in Oman.',
+      ru: 'Международные школы Маската и Омана: британская, кембриджская, IB и американская программы, стоимость и поступление. Irfan Investment помогает вашей семье переехать, инвестировать и обустроиться.',
+      ar: 'المدارس الدولية في مسقط وعُمان: المناهج البريطانية وكامبريدج والبكالوريا الدولية والأمريكية، والرسوم والقبول. تساعد Irfan Investment عائلتك على الانتقال والاستثمار والاستقرار.',
+      fa: 'مدارس بین‌المللی مسقط و عمان؛ برنامه‌های بریتانیایی، کمبریج، IB و آمریکایی، شهریه و پذیرش. Irfan Investment به خانواده شما برای مهاجرت، سرمایه‌گذاری و اسکان کمک می‌کند.',
+    },
+  },
+}
+
+// A ROUTES value may carry localized strings ({en,ru,ar,fa}) or a plain
+// string. Resolve to the active language, falling back to English.
+function pick(v, lang) {
+  return v && typeof v === 'object' ? v[lang] || v.en : v
 }
 
 function titleCase(s) {
@@ -72,8 +89,11 @@ function titleCase(s) {
 // Returns { title, desc, index }. Input is the LOGICAL path (language prefix
 // already stripped). `index:false` → emit noindex (junk / 404 / admin), so it
 // never competes with real pages for indexing.
-function resolve(pathname) {
-  if (ROUTES[pathname]) return { ...ROUTES[pathname], index: true }
+function resolve(pathname, lang = 'en') {
+  if (ROUTES[pathname]) {
+    const r = ROUTES[pathname]
+    return { title: pick(r.title, lang), desc: pick(r.desc, lang), index: true }
+  }
 
   // Blog articles — generic until InsightDetailPage writes precise tags.
   if (/^\/insights\/[^/]+\/?$/.test(pathname)) return { ...ROUTES['/insights'], index: true }
@@ -145,7 +165,7 @@ export default function SeoManager() {
   useEffect(() => {
     const lang = langFromPath(pathname)
     const logical = stripLang(pathname)
-    const { title, desc, index } = resolve(logical)
+    const { title, desc, index } = resolve(logical, lang)
     const selfPath = localizePath(logical === '/' ? '/' : logical.replace(/\/$/, ''), lang)
     const url = SITE + selfPath
 

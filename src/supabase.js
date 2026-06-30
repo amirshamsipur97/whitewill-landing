@@ -12,7 +12,7 @@ export const supabase = createClient(url, key)
  * Google Apps Script webhook (Google Sheet) if configured.
  *
  * @param {object} payload
- * @param {string} payload.source - e.g. "sell_landing" | "rent_landing" | "feedback" | "partner"
+ * @param {string} payload.source - e.g. "rent_landing" | "feedback" | "partner"
  * @param {string} [payload.full_name]
  * @param {string} [payload.email]
  * @param {string} [payload.phone]

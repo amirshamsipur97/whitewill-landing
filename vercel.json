@@ -6,6 +6,7 @@
     { "source": "/contact", "destination": "/about", "permanent": true },
     { "source": "/properties", "destination": "/buy", "permanent": true },
     { "source": "/projects", "destination": "/buy", "permanent": true },
+    { "source": "/sell", "destination": "/", "permanent": true },
     { "source": "/blog", "destination": "/insights", "permanent": true },
     { "source": "/news", "destination": "/insights", "permanent": true },
     { "source": "/ru/about-us", "destination": "/ru/about", "permanent": true },

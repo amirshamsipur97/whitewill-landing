@@ -116,13 +116,14 @@ export default function Header() {
 
   const navLinks = [
     { label: t.nav.buy, to: '/buy' },
-    { label: t.nav.sell, to: '/sell' },
     { label: t.nav.project, to: '/' },
     { label: t.nav.maison, to: '/maison-shirdel' },
     { label: t.nav.invest, to: '/invest' },
     // These pages exist only in the Persian site.
     ...(lang === 'fa' ? [{ label: t.nav.investment, to: '/investment' }, { label: t.nav.carImport, to: '/car-import' }] : []),
-    // Blog/Insights sits right before "About us" in every language.
+    // International Schools (Education & Family Relocation hub) sits right
+    // before Insights in every language.
+    { label: t.nav.schools, to: '/schools' },
     { label: t.nav.insights, to: '/insights' },
     { label: t.nav.about, to: '/about' },
   ]

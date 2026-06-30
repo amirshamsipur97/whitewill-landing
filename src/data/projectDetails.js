@@ -54,14 +54,37 @@ const D = {
     priceFrom: 'OMR 95,000',
     handover: 'Ready & off-plan',
   },
-  'Muscat Bay (Zen/Luma)': {
-    tagline: 'New phases at Muscat Bay — Zen & Luma',
+  'Zen Residences': {
+    tagline: 'Studios, apartments & lofts · Muscat Bay',
     description:
-      'Modern hillside apartments and villas inside the gated Muscat Bay community — direct beach access, dual marinas and a Jumeirah hotel as neighbour.',
-    units: ['Apartment', 'Townhouse'],
-    bedrooms: '1 – 4',
-    priceFrom: 'OMR 135,000',
-    handover: '2026',
+      'A new launch by Zen Development and Investment inside the gated Muscat Bay community at Bandar Jissah — studios, apartments and double-height lofts above a private bay, with a five-star Jumeirah resort, marina and beach as neighbours.',
+    units: ['Apartment'],
+    bedrooms: '2 – 3',
+    priceFrom: 'OMR 138,000',
+    handover: '2026 – 2027',
+    features: ['seaView', 'beachAccess', 'infinityPool', 'fiveStarHotel', 'fineDining', 'spa', 'gym', 'landscapedGardens', 'concierge', 'freehold'],
+    sections: [
+      {
+        title: 'The development',
+        body: 'Zen Residences is a new community by Zen Development and Investment within Muscat Bay, a gated coastal destination set in a private bay at Bandar Jissah just east of the capital. Launched in 2024, it brings studios, apartments and striking double-height lofts to terraced grounds a short walk from the beach and marina.',
+      },
+      {
+        title: 'Location & connectivity',
+        body: 'Bandar Jissah sits around 20 minutes from central Muscat and roughly 35 minutes from Muscat International Airport along a scenic headland road. The five-star Jumeirah Muscat Bay resort, private beach, marina and restaurants are all inside the community.',
+      },
+      {
+        title: 'Residences & design',
+        body: 'Homes range from studios and one- to three-bedroom apartments to double-height lofts, several with a maid’s room. Current availability spans 2-bedroom apartments and 2- to 3-bedroom lofts of about 128 to 171 sqm with garden or pool views, finished in a calm, contemporary style.',
+      },
+      {
+        title: 'Lifestyle & amenities',
+        body: 'Residents enjoy an infinity pool, a Zen garden with a yoga platform, a gym and workout area, mini-golf, a children’s playground, a BBQ area and a scenic jogging track — alongside Muscat Bay’s private beach, padel and watersports, dining and the Jumeirah hotel.',
+      },
+      {
+        title: 'Investment & ownership',
+        body: 'Muscat Bay is a designated Integrated Tourism Complex, so homes are sold freehold to all nationalities with residency eligibility. Off-plan prices start from OMR 138,000 (excluding VAT) on a staged 10 / 70 / 20 payment plan. Contact us for the live availability list.',
+      },
+    ],
   },
   'Muscat Bay Ready': {
     tagline: 'Move-in-ready inventory · Muscat Bay',
@@ -329,9 +352,16 @@ const AR_OVERLAY = {
     tagline: 'ملاذ جبلي وبحري — على بُعد 45 دقيقة من مسقط',
     description: 'مدينة مارينا متكاملة من Muriya — شقق وتاون هاوس وفلل تحيط بملعب غولف عالمي وشاطئ وفندق Sifawy البوتيكي.',
   },
-  'Muscat Bay (Zen/Luma)': {
-    tagline: 'مراحل جديدة في خليج مسقط — Zen و Luma',
-    description: 'شقق وفلل عصرية على التلال داخل مجتمع خليج مسقط المسوّر — وصول مباشر للشاطئ، مارينا مزدوجة، وفندق جميرا كجار.',
+  'Zen Residences': {
+    tagline: 'استوديوهات وشقق ولوفت · خليج مسقط',
+    description: 'مشروع جديد من Zen Development and Investment داخل مجتمع خليج مسقط المسوّر في بندر الجصة — استوديوهات وشقق ولوفت بسقف مزدوج فوق خليج خاص، بجوار منتجع جميرا الخمس نجوم والمارينا والشاطئ.',
+    sections: [
+      { title: 'عن المشروع', body: 'Zen Residences مجتمع جديد من Zen Development and Investment داخل خليج مسقط، وجهة ساحلية مسوّرة في خليج خاص ببندر الجصة شرق العاصمة. أُطلق في 2024، ويقدّم استوديوهات وشققاً ولوفت لافتة بسقف مزدوج على أرضٍ مدرّجة على بُعد خطوات من الشاطئ والمارينا.' },
+      { title: 'الموقع والوصول', body: 'تبعد بندر الجصة نحو 20 دقيقة عن وسط مسقط وقرابة 35 دقيقة عن مطار مسقط الدولي عبر طريق ساحلي خلاب. منتجع جميرا خليج مسقط الخمس نجوم والشاطئ الخاص والمارينا والمطاعم جميعها داخل المجتمع.' },
+      { title: 'الوحدات والتصميم', body: 'تتنوع المنازل من استوديوهات وشقق بغرفة إلى ثلاث غرف نوم إلى لوفت بسقف مزدوج، عدد منها بغرفة خادمة. يشمل المتاح حالياً شققاً بغرفتي نوم ولوفت بغرفتين إلى ثلاث غرف بمساحات من نحو 128 إلى 171 م² بإطلالة على الحديقة أو المسبح، بتشطيب هادئ وعصري.' },
+      { title: 'نمط الحياة والمرافق', body: 'يستمتع السكان بمسبح إنفينيتي وحديقة Zen بمنصة يوغا وصالة رياضية ومنطقة تمارين وملعب ميني غولف وملعب أطفال ومنطقة شواء ومضمار جري بإطلالات خلابة — إلى جانب الشاطئ الخاص بخليج مسقط وملاعب البادل والرياضات المائية والمطاعم وفندق جميرا.' },
+      { title: 'الاستثمار والتملك', body: 'خليج مسقط مجمع سياحي متكامل، لذا تُباع المنازل تملكاً حراً لجميع الجنسيات مع أحقية الإقامة. تبدأ أسعار البيع على الخريطة من 138,000 ريال عُماني (غير شامل الضريبة) بخطة سداد 10 / 70 / 20. تواصل معنا للحصول على قائمة التوفر المحدثة.' },
+    ],
   },
   'Muscat Bay Ready': {
     tagline: 'مخزون جاهز للسكن · خليج مسقط',
@@ -489,9 +519,16 @@ const RU_OVERLAY = {
     tagline: 'Горный и яхтенный курорт — 45 минут от Маската',
     description: 'Интегрированная марина-город от Muriya — апартаменты, таунхаусы и виллы вокруг чемпионского гольф-курса, пляжа и бутик-отеля Sifawy.',
   },
-  'Muscat Bay (Zen/Luma)': {
-    tagline: 'Новые фазы Muscat Bay — Zen и Luma',
-    description: 'Современные апартаменты и виллы на склоне внутри закрытого сообщества Muscat Bay — прямой доступ к пляжу, две марины и отель Jumeirah рядом.',
+  'Zen Residences': {
+    tagline: 'Студии, апартаменты и лофты · Muscat Bay',
+    description: 'Новый проект Zen Development and Investment внутри закрытого сообщества Muscat Bay в Бандар-Джисса — студии, апартаменты и двухуровневые лофты над частной бухтой, по соседству с пятизвёздочным курортом Jumeirah, мариной и пляжем.',
+    sections: [
+      { title: 'О проекте', body: 'Zen Residences — новое сообщество от Zen Development and Investment внутри Muscat Bay, закрытого прибрежного направления в частной бухте Бандар-Джисса к востоку от столицы. Запущенное в 2024 году, оно предлагает студии, апартаменты и эффектные двухуровневые лофты на террасированной территории в нескольких шагах от пляжа и марины.' },
+      { title: 'Расположение и транспорт', body: 'Бандар-Джисса находится примерно в 20 минутах от центра Маската и около 35 минут от международного аэропорта Маската по живописной прибрежной дороге. Пятизвёздочный курорт Jumeirah Muscat Bay, частный пляж, марина и рестораны расположены внутри сообщества.' },
+      { title: 'Резиденции и дизайн', body: 'Дома варьируются от студий и апартаментов с 1–3 спальнями до двухуровневых лофтов, часть с комнатой для персонала. В текущем наличии — апартаменты с 2 спальнями и лофты с 2–3 спальнями площадью примерно от 128 до 171 кв. м с видом на сад или бассейн, в спокойном современном стиле.' },
+      { title: 'Образ жизни и удобства', body: 'Резидентам доступны инфинити-бассейн, сад Zen с площадкой для йоги, тренажёрный зал и зона тренировок, мини-гольф, детская площадка, зона барбекю и живописная беговая дорожка — наряду с частным пляжем Muscat Bay, паделом и водными видами спорта, ресторанами и отелем Jumeirah.' },
+      { title: 'Инвестиции и собственность', body: 'Muscat Bay — designated Integrated Tourism Complex, поэтому дома продаются в полную собственность (фрихолд) гражданам всех стран с правом на резидентство. Цены на стадии строительства начинаются от 138 000 OMR (без НДС) по поэтапному плану оплаты 10 / 70 / 20. Свяжитесь с нами для актуального списка наличия.' },
+    ],
   },
   'Muscat Bay Ready': {
     tagline: 'Готовая к заселению недвижимость · Muscat Bay',
@@ -515,13 +552,33 @@ const RU_OVERLAY = {
   },
 }
 
+// Persian (fa) overlay. Added with Zen Residences; other projects fall back
+// to the English base until their fa copy is written.
+const FA_OVERLAY = {
+  'Zen Residences': {
+    tagline: 'استودیو، آپارتمان و لافت · خلیج مسقط',
+    description: 'پروژه‌ای جدید از Zen Development and Investment داخل مجتمع محصور خلیج مسقط در بندر جصه؛ استودیو، آپارتمان و لافت‌های دوطبقه بر فراز خلیجی خصوصی، در همسایگی اقامتگاه پنج‌ستاره جمیرا، مارینا و ساحل.',
+    sections: [
+      { title: 'درباره پروژه', body: 'Zen Residences مجتمعی جدید از Zen Development and Investment در خلیج مسقط است؛ مقصدی ساحلی و محصور در خلیجی خصوصی در بندر جصه، شرق پایتخت. این پروژه که در سال ۲۰۲۴ رونمایی شد، استودیو، آپارتمان و لافت‌های چشمگیر دوطبقه را روی زمینی تراس‌بندی‌شده در چند قدمی ساحل و مارینا ارائه می‌دهد.' },
+      { title: 'موقعیت و دسترسی', body: 'بندر جصه حدود ۲۰ دقیقه تا مرکز مسقط و نزدیک ۳۵ دقیقه تا فرودگاه بین‌المللی مسقط از مسیر ساحلی زیبا فاصله دارد. اقامتگاه پنج‌ستاره جمیرا خلیج مسقط، ساحل خصوصی، مارینا و رستوران‌ها همگی داخل مجتمع هستند.' },
+      { title: 'واحدها و طراحی', body: 'خانه‌ها از استودیو و آپارتمان‌های یک تا سه‌خوابه تا لافت‌های دوطبقه را شامل می‌شوند، چند مورد با اتاق خدمتکار. موجودی فعلی شامل آپارتمان‌های دوخوابه و لافت‌های دو تا سه‌خوابه با مساحت حدود ۱۲۸ تا ۱۷۱ مترمربع و چشم‌انداز باغ یا استخر است، با طراحی آرام و مدرن.' },
+      { title: 'سبک زندگی و امکانات', body: 'ساکنان از استخر اینفینیتی، باغ Zen با سکوی یوگا، سالن ورزش و فضای تمرین، مینی‌گلف، زمین بازی کودکان، فضای باربیکیو و مسیر دو با چشم‌انداز زیبا بهره‌مند می‌شوند؛ در کنار ساحل خصوصی خلیج مسقط، پدل و ورزش‌های آبی، رستوران‌ها و هتل جمیرا.' },
+      { title: 'سرمایه‌گذاری و مالکیت', body: 'خلیج مسقط یک مجتمع گردشگری یکپارچه است، بنابراین خانه‌ها به‌صورت مالکیت کامل (فری‌هولد) به همه ملیت‌ها با امکان اقامت فروخته می‌شوند. قیمت‌های پیش‌فروش از ۱۳۸٬۰۰۰ ریال عمان (بدون مالیات بر ارزش افزوده) با طرح پرداخت مرحله‌ای ۱۰ / ۷۰ / ۲۰ آغاز می‌شود. برای فهرست به‌روز موجودی با ما تماس بگیرید.' },
+    ],
+  },
+}
+
 // Merge defaults + active-locale overrides. Numeric/structural fields
 // stay shared; only tagline + description (and any future copy fields)
 // pull from the overlay. Fallback chain: locale → English default.
 export function getProjectDetails(name, lang = 'en') {
   const base = D[name]
   if (!base) return null
-  const overlay = lang === 'ar' ? AR_OVERLAY[name] : lang === 'ru' ? RU_OVERLAY[name] : null
+  const overlay =
+    lang === 'ar' ? AR_OVERLAY[name]
+    : lang === 'ru' ? RU_OVERLAY[name]
+    : lang === 'fa' ? FA_OVERLAY[name]
+    : null
   return overlay ? { ...base, ...overlay } : base
 }
 

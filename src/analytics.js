@@ -9,7 +9,7 @@
  * Every page_view we send carries:
  *   - page_title    : "<localized page name> | <LANG>"  (so the GA4 default
  *                     "Views by Page title" report shows the page AND language)
- *   - content_group : page category (Buy, Sell, Blog, Investment, …) — fills
+ *   - content_group : page category (Buy, Blog, Investment, …) — fills
  *                     GA4's built-in "Content group" dimension, no setup needed
  *   - site_language : 'en' | 'ru' | 'ar' | 'fa'  (custom dimension)
  *   - page_path / page_location
@@ -40,7 +40,6 @@ function gtag(...args) {
 const PAGES = {
   '/':                  { group: 'Home',        names: { en: 'Home', ru: 'Главная', ar: 'الرئيسية', fa: 'خانه' } },
   '/buy':               { group: 'Buy',         names: { en: 'Buy Property', ru: 'Купить', ar: 'شراء', fa: 'خرید ملک' } },
-  '/sell':              { group: 'Sell',        names: { en: 'Sell Property', ru: 'Продать', ar: 'بيع', fa: 'فروش ملک' } },
   '/maison-shirdel':    { group: 'Maison Shirdel', names: { en: 'Maison Shirdel', ru: 'Maison Shirdel', ar: 'Maison Shirdel', fa: 'Maison Shirdel' } },
   '/invest':            { group: 'Company Registration', names: { en: 'Company Registration', ru: 'Регистрация компании', ar: 'تأسيس الشركات', fa: 'ثبت شرکت' } },
   '/investment':        { group: 'Investment',  names: { en: 'Investment & Banking', ru: 'Инвестиции', ar: 'الاستثمار', fa: 'سرمایه‌گذاری' } },

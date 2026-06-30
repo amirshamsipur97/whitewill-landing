@@ -127,7 +127,6 @@ import ChatWidget from './components/chat/ChatWidget'
 // who only browses the landing never downloads the BuyProject or About
 // bundles. PropertyMap (Mapbox, ~1MB) was already split above and stays
 // split here too.
-const SellPage = lazy(() => import('./pages/SellPage'))
 const BuyPage = lazy(() => import('./pages/BuyPage'))
 const BuyProjectPage = lazy(() => import('./pages/BuyProjectPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
@@ -136,6 +135,7 @@ const InvestPage = lazy(() => import('./pages/InvestPage'))
 const InvestmentPage = lazy(() => import('./pages/InvestmentPage'))
 const InvestmentLegalPage = lazy(() => import('./pages/InvestmentLegalPage'))
 const CarImportPage = lazy(() => import('./pages/CarImportPage'))
+const SchoolsPage = lazy(() => import('./pages/SchoolsPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const InsightsPage = lazy(() => import('./pages/InsightsPage'))
 const InsightDetailPage = lazy(() => import('./pages/InsightDetailPage'))
@@ -201,7 +201,6 @@ function PageRoutes() {
   return (
     <Routes>
       <Route path="" element={<LandingPage />} />
-      <Route path="sell" element={<SellPage />} />
       <Route path="buy" element={<BuyPage />} />
       <Route path="buy/:slug" element={<BuyProjectPage />} />
       <Route path="maison-shirdel" element={<MaisonShirdelPage />} />
@@ -209,6 +208,7 @@ function PageRoutes() {
       <Route path="investment" element={<InvestmentPage />} />
       <Route path="investment/legal" element={<InvestmentLegalPage />} />
       <Route path="car-import" element={<CarImportPage />} />
+      <Route path="schools" element={<SchoolsPage />} />
       <Route path="insights" element={<InsightsPage />} />
       <Route path="insights/:slug" element={<InsightDetailPage />} />
       <Route path="insights-admin" element={<InsightsAdminPage />} />

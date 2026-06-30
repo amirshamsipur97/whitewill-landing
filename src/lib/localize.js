@@ -5,7 +5,7 @@
  * (`/ar/buy`, `/ru/buy`, `/fa/buy`). The first path segment is the source of
  * truth for the active language.
  */
-import { createElement } from 'react'
+import { createElement, forwardRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 export const PREFIX_LANGS = ['ar', 'ru', 'fa'] // en is prefix-less
@@ -43,9 +43,12 @@ export function useLocalizedNavigate() {
  * prefix is applied automatically so links stay within the active language.
  * Pass `raw` to opt out (e.g. external or already-absolute localized paths).
  */
-export function LocalizedLink({ to, raw = false, ...rest }) {
+export const LocalizedLink = forwardRef(function LocalizedLink({ to, raw = false, ...rest }, ref) {
   const { pathname } = useLocation()
   const lang = langFromPath(pathname)
   const href = raw ? to : localizePath(to, lang)
-  return createElement(Link, { to: href, ...rest })
-}
+  // Forward the ref to the underlying react-router Link so MUI components
+  // (Box/Button with `component={LocalizedLink}`) can attach refs without
+  // the "Function components cannot be given refs" warning.
+  return createElement(Link, { to: href, ref, ...rest })
+})
