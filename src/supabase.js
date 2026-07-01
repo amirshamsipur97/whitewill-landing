@@ -246,3 +246,21 @@ export async function fetchProjects() {
     longitude: Number(p.longitude),
   }))
 }
+
+/**
+ * Featured international schools for the /schools page — location pins,
+ * official website links and logos. Public read-only table `schools`.
+ */
+export async function fetchSchools() {
+  const { data, error } = await supabase
+    .from('schools')
+    .select('id, name, slug, website, curriculum, area, city, latitude, longitude, logo, sort_order')
+    .order('sort_order', { ascending: true })
+
+  if (error) throw error
+  return (data ?? []).map((s) => ({
+    ...s,
+    latitude: s.latitude == null ? null : Number(s.latitude),
+    longitude: s.longitude == null ? null : Number(s.longitude),
+  }))
+}

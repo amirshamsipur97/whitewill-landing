@@ -15,11 +15,12 @@
  * variants stay in lockstep. Per-page JSON-LD (WebPage + Breadcrumb + Service +
  * EducationalOrganization + FAQ) is injected on mount and cleaned up on unmount.
  */
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, lazy, Suspense } from 'react'
 import { Box, Container, Typography, Button, Stack } from '@mui/material'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
+import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined'
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
@@ -27,12 +28,38 @@ import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined'
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
 import { useI18n } from '../i18n.jsx'
 import { LocalizedLink as RouterLink } from '../lib/localize.js'
+import { fetchSchools } from '../supabase'
 import {
   FONT, OLIVE, OLIVE_BRIGHT, HAIR, HAIR_SOFT,
   SectionHeading, Chips, DocGrid, FaqAccordion,
 } from '../components/invest/ui'
 import ContactCTA from '../components/ContactCTA'
 import SCHOOLS from '../data/schoolsContent'
+
+// Mapbox is heavy (~1MB) — load the schools map lazily.
+const SchoolsMap = lazy(() => import('../components/SchoolsMap'))
+
+// Normalise a school name (any language keeps the Latin brand) to a key so
+// featured cards can be matched to their Supabase row (logo, website, coords).
+function schoolKey(name = '') {
+  const n = name.toLowerCase()
+  if (/jabal|ma.?rifa/.test(n)) return 'jabal'
+  if (/cheltenham/.test(n)) return 'cheltenham'
+  // ABA ("American British Academy") must be tested before the plain
+  // "british" rule, otherwise it collides with The British School Muscat.
+  if (/\baba\b|american british/.test(n)) return 'aba'
+  if (/british/.test(n)) return 'british'
+  if (/downe/.test(n)) return 'downe'
+  return null
+}
+
+// Short "visit official website" + map heading copy, kept local to the page.
+const WEB = {
+  en: { visit: 'Official website', mapEyebrow: 'ON THE MAP', mapTitle: 'Where the schools are', mapBody: 'Explore the location of each school across Muscat, just as you would browse our property map, then let us plan your home and commute around your choice.' },
+  ru: { visit: 'Официальный сайт', mapEyebrow: 'НА КАРТЕ', mapTitle: 'Где находятся школы', mapBody: 'Изучите расположение каждой школы в Маскате — так же, как на нашей карте недвижимости — а мы спланируем жильё и дорогу вокруг вашего выбора.' },
+  ar: { visit: 'الموقع الرسمي', mapEyebrow: 'على الخريطة', mapTitle: 'أين تقع المدارس', mapBody: 'استكشف موقع كل مدرسة في مسقط، تماماً كما تتصفّح خريطة عقاراتنا، ثم دعنا نخطّط لسكنك وطريق تنقّلك حول اختيارك.' },
+  fa: { visit: 'وب‌سایت رسمی', mapEyebrow: 'روی نقشه', mapTitle: 'مدارس کجا هستند', mapBody: 'موقعیت هر مدرسه را در مسقط ببینید، درست مثل مرور نقشهٔ املاک ما، سپس بگذارید خانه و مسیر رفت‌وآمد را حول انتخاب شما برنامه‌ریزی کنیم.' },
+}
 
 const SITE = 'https://www.irfaninvest.com'
 const HERO_IMG = '/images/schools/hero-education.jpg' // education hero (Figma material)
@@ -85,7 +112,18 @@ export default function SchoolsPage() {
   const isRTL = lang === 'ar' || lang === 'fa'
   const dir = isRTL ? 'rtl' : 'ltr'
   const LF = LIFESTYLE[lang] || LIFESTYLE.en
+  const W = WEB[lang] || WEB.en
   const rootRef = useRef(null)
+
+  // Featured-school location/website/logo data (Supabase `schools` table).
+  const [schools, setSchools] = useState([])
+  useEffect(() => {
+    let alive = true
+    fetchSchools().then((rows) => { if (alive) setSchools(rows) }).catch(() => {})
+    return () => { alive = false }
+  }, [])
+  const schoolByKey = {}
+  for (const s of schools) { const k = schoolKey(s.name); if (k) schoolByKey[k] = s }
 
   const scrollToContact = () =>
     document.getElementById('schools-contact')?.scrollIntoView({ behavior: 'smooth' })
@@ -306,11 +344,16 @@ export default function SchoolsPage() {
         </Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2.5, md: 3 } }}>
           {(S.featured.cards || []).map((c) => {
-            const logo = /jabal|ma.?rifa/i.test(c.name) ? JABAL_LOGO : null
+            const meta = schoolByKey[schoolKey(c.name)]
+            const logo = meta?.logo || (/jabal|ma.?rifa/i.test(c.name) ? JABAL_LOGO : null)
+            const website = meta?.website || null
             return (
             <Box key={c.name} sx={{ ...cardSx, p: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              {/* Image / logo band */}
-              <Box sx={{ position: 'relative', aspectRatio: '16 / 10', bgcolor: logo ? '#f5f5f0' : 'rgba(140,141,37,0.08)', display: 'grid', placeItems: 'center', borderBottom: HAIR }}>
+              {/* Logo band — links to the school's official website when known */}
+              <Box
+                {...(website ? { component: 'a', href: website, target: '_blank', rel: 'noopener noreferrer' } : {})}
+                sx={{ position: 'relative', aspectRatio: '16 / 10', bgcolor: logo ? '#f5f5f0' : 'rgba(140,141,37,0.08)', display: 'grid', placeItems: 'center', borderBottom: HAIR, textDecoration: 'none' }}
+              >
                 {logo
                   ? <Box component="img" src={logo} alt={`${c.name} logo`} loading="lazy" sx={{ maxWidth: '62%', maxHeight: '70%', objectFit: 'contain' }} />
                   : <SchoolOutlinedIcon sx={{ fontSize: 46, color: 'rgba(140,141,37,0.5)' }} />}
@@ -331,9 +374,17 @@ export default function SchoolsPage() {
                   </Box>
                 </Stack>
                 <Typography sx={{ fontFamily: FONT, fontSize: 13.5, color: 'rgba(255,255,255,0.66)', lineHeight: 1.7, mb: 1.6 }}>{c.highlight}</Typography>
-                <Box sx={{ mt: 'auto', pt: 1.5, borderTop: HAIR_SOFT }}>
-                  <Typography sx={{ fontFamily: FONT, fontSize: 12.5, color: 'rgba(255,255,255,0.5)' }}>{S.featured.feeLabel}</Typography>
-                  <Typography dir="ltr" sx={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: '#fff', textAlign: isRTL ? 'right' : 'left' }}>{c.fees}</Typography>
+                <Box sx={{ mt: 'auto', pt: 1.5, borderTop: HAIR_SOFT, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 1 }}>
+                  <Box>
+                    <Typography sx={{ fontFamily: FONT, fontSize: 12.5, color: 'rgba(255,255,255,0.5)' }}>{S.featured.feeLabel}</Typography>
+                    <Typography dir="ltr" sx={{ fontFamily: FONT, fontSize: 15, fontWeight: 600, color: '#fff', textAlign: isRTL ? 'right' : 'left' }}>{c.fees}</Typography>
+                  </Box>
+                  {website && (
+                    <Box component="a" href={website} target="_blank" rel="noopener noreferrer"
+                      sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.6, flexShrink: 0, color: OLIVE_BRIGHT, textDecoration: 'none', fontFamily: FONT, fontSize: 12.5, fontWeight: 600, '&:hover': { color: '#fff' } }}>
+                      {W.visit}<OpenInNewRoundedIcon sx={{ fontSize: 14 }} />
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -351,6 +402,21 @@ export default function SchoolsPage() {
           </Button>
         </Box>
       </Section>
+
+      {/* ── Schools map — pins for each featured school (Supabase `schools`) ── */}
+      {schools.some((s) => s.latitude != null) && (
+        <Section band>
+          <SectionHeading eyebrow={W.mapEyebrow} title={W.mapTitle} />
+          <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 16.5 }, color: 'rgba(255,255,255,0.78)', lineHeight: 1.9, maxWidth: 860, mb: { xs: 3, md: 4 } }}>
+            {W.mapBody}
+          </Typography>
+          <Box sx={{ height: { xs: 380, md: 480 }, borderRadius: '16px', overflow: 'hidden', border: HAIR }}>
+            <Suspense fallback={<Box sx={{ width: '100%', height: '100%', bgcolor: 'rgba(255,255,255,0.03)' }} />}>
+              <SchoolsMap schools={schools} visitLabel={W.visit} />
+            </Suspense>
+          </Box>
+        </Section>
+      )}
 
       {/* ── Section 5 — Estimated tuition fees ─────────────────────────── */}
       <Section band>
