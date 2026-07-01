@@ -575,7 +575,7 @@ export default function ProjectInquiryModal({ open, project, unit, onClose }) {
                     inputMode={step.input.type === 'tel' ? 'tel' : undefined}
                     value={currentValue}
                     onChange={(e) => setField(step.key, e.target.value)}
-                    placeholder={step.input.placeholder}
+                    placeholder={step.input.type === 'tel' ? '91 234 567' : step.input.placeholder}
                     sx={FIELD_SX}
                   />
                   <Box
