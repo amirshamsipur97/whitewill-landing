@@ -352,11 +352,11 @@ export default function SchoolsPage() {
               {/* Logo band — links to the school's official website when known */}
               <Box
                 {...(website ? { component: 'a', href: website, target: '_blank', rel: 'noopener noreferrer' } : {})}
-                sx={{ position: 'relative', aspectRatio: '16 / 10', bgcolor: logo ? '#f5f5f0' : 'rgba(140,141,37,0.08)', display: 'grid', placeItems: 'center', borderBottom: HAIR, textDecoration: 'none' }}
+                sx={{ position: 'relative', aspectRatio: '16 / 10', bgcolor: logo ? '#ffffff' : '#f0efe9', display: 'grid', placeItems: 'center', p: { xs: 1.75, md: 2.25 }, borderBottom: HAIR, textDecoration: 'none' }}
               >
                 {logo
-                  ? <Box component="img" src={logo} alt={`${c.name} logo`} loading="lazy" sx={{ maxWidth: '62%', maxHeight: '70%', objectFit: 'contain' }} />
-                  : <SchoolOutlinedIcon sx={{ fontSize: 46, color: 'rgba(140,141,37,0.5)' }} />}
+                  ? <Box component="img" src={logo} alt={`${c.name} logo`} loading="lazy" sx={{ maxWidth: '90%', maxHeight: '86%', objectFit: 'contain' }} />
+                  : <SchoolOutlinedIcon sx={{ fontSize: 48, color: '#1D1D1D' }} />}
                 <Box sx={{ position: 'absolute', top: 12, insetInlineEnd: 12, px: 1.4, py: 0.5, borderRadius: '999px', bgcolor: 'rgba(0,0,0,0.55)', border: HAIR }}>
                   <Typography sx={{ fontFamily: FONT, fontSize: 11.5, color: OLIVE_BRIGHT }}>{c.curriculum}</Typography>
                 </Box>
