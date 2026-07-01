@@ -35,7 +35,17 @@ import ContactCTA from '../components/ContactCTA'
 import SCHOOLS from '../data/schoolsContent'
 
 const SITE = 'https://www.irfaninvest.com'
-const HERO_IMG = '/peninsula.jpg' // shared premium hero plate used across service pages
+const HERO_IMG = '/images/schools/hero-education.jpg' // education hero (Figma material)
+const LIFESTYLE_IMG = '/images/schools/muscat-lifestyle.jpg' // Muscat landmark band
+const JABAL_LOGO = '/images/schools/jabal-al-marifa-logo.png'
+
+// "Living in Muscat" band copy (short, kept local to the page).
+const LIFESTYLE = {
+  en: { eyebrow: 'LIVING IN MUSCAT', title: 'A city your family will love', body: 'Beyond the classroom, Muscat gives families a safe, welcoming home: beaches and mountains, parks and marinas, modern healthcare and a warm international community, all minutes from the leading schools.' },
+  ru: { eyebrow: 'ЖИЗНЬ В МАСКАТЕ', title: 'Город, который полюбит ваша семья', body: 'За пределами класса Маскат дарит семьям безопасный и гостеприимный дом: пляжи и горы, парки и марины, современное здравоохранение и тёплое международное сообщество, в нескольких минутах от ведущих школ.' },
+  ar: { eyebrow: 'الحياة في مسقط', title: 'مدينة ستحبها عائلتك', body: 'إلى جانب الدراسة، تمنح مسقط العائلات بيتاً آمناً ومرحّباً: شواطئ وجبال، حدائق ومارينا، رعاية صحية حديثة ومجتمع دولي ودود، على بُعد دقائق من أبرز المدارس.' },
+  fa: { eyebrow: 'زندگی در مسقط', title: 'شهری که خانواده‌تان دوستش خواهد داشت', body: 'فراتر از کلاس درس، مسقط برای خانواده‌ها خانه‌ای امن و مهمان‌نواز فراهم می‌کند؛ ساحل و کوه، پارک و مارینا، خدمات درمانی مدرن و جامعه‌ای بین‌المللی و گرم، تنها چند دقیقه تا بهترین مدارس.' },
+}
 
 // Section wrapper: consistent rhythm + optional hairline-bordered band.
 function Section({ children, band = false, id }) {
@@ -74,6 +84,7 @@ export default function SchoolsPage() {
   const S = SCHOOLS[lang] || SCHOOLS.en
   const isRTL = lang === 'ar' || lang === 'fa'
   const dir = isRTL ? 'rtl' : 'ltr'
+  const LF = LIFESTYLE[lang] || LIFESTYLE.en
   const rootRef = useRef(null)
 
   const scrollToContact = () =>
@@ -294,11 +305,15 @@ export default function SchoolsPage() {
           {S.featured.intro}
         </Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: 'repeat(3, 1fr)' }, gap: { xs: 2.5, md: 3 } }}>
-          {(S.featured.cards || []).map((c) => (
+          {(S.featured.cards || []).map((c) => {
+            const logo = /jabal|ma.?rifa/i.test(c.name) ? JABAL_LOGO : null
+            return (
             <Box key={c.name} sx={{ ...cardSx, p: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              {/* Image placeholder band */}
-              <Box sx={{ position: 'relative', aspectRatio: '16 / 10', bgcolor: 'rgba(140,141,37,0.08)', display: 'grid', placeItems: 'center', borderBottom: HAIR }}>
-                <SchoolOutlinedIcon sx={{ fontSize: 46, color: 'rgba(140,141,37,0.5)' }} />
+              {/* Image / logo band */}
+              <Box sx={{ position: 'relative', aspectRatio: '16 / 10', bgcolor: logo ? '#f5f5f0' : 'rgba(140,141,37,0.08)', display: 'grid', placeItems: 'center', borderBottom: HAIR }}>
+                {logo
+                  ? <Box component="img" src={logo} alt={`${c.name} logo`} loading="lazy" sx={{ maxWidth: '62%', maxHeight: '70%', objectFit: 'contain' }} />
+                  : <SchoolOutlinedIcon sx={{ fontSize: 46, color: 'rgba(140,141,37,0.5)' }} />}
                 <Box sx={{ position: 'absolute', top: 12, insetInlineEnd: 12, px: 1.4, py: 0.5, borderRadius: '999px', bgcolor: 'rgba(0,0,0,0.55)', border: HAIR }}>
                   <Typography sx={{ fontFamily: FONT, fontSize: 11.5, color: OLIVE_BRIGHT }}>{c.curriculum}</Typography>
                 </Box>
@@ -322,7 +337,8 @@ export default function SchoolsPage() {
                 </Box>
               </Box>
             </Box>
-          ))}
+            )
+          })}
         </Box>
         <Box sx={{ mt: 3 }}>
           <Button
@@ -384,6 +400,17 @@ export default function SchoolsPage() {
         <Typography sx={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.5)', mb: 1.8 }}>{S.admissions.docsTitle}</Typography>
         <DocGrid items={S.admissions.docs || []} icon={CheckCircleOutlineRoundedIcon} cols={3} />
       </Section>
+
+      {/* ── Living in Muscat — full-width image band (Figma material) ───── */}
+      <Box component="section" data-reveal sx={{ position: 'relative', minHeight: { xs: 360, md: 460 }, display: 'flex', alignItems: 'flex-end', overflow: 'hidden' }}>
+        <Box component="img" src={LIFESTYLE_IMG} alt={LF.title} loading="lazy" sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.5)' }} />
+        <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%)' }} />
+        <Container maxWidth="xl" sx={{ position: 'relative', py: { xs: 5, md: 7 } }}>
+          <Typography sx={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, letterSpacing: '0.18em', color: OLIVE_BRIGHT, mb: 1.5 }}>{LF.eyebrow}</Typography>
+          <Typography component="h2" sx={{ fontFamily: FONT, fontWeight: 300, fontSize: { xs: 26, md: 42 }, lineHeight: 1.2, color: '#fff', maxWidth: 760, mb: 1.5 }}>{LF.title}</Typography>
+          <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 16.5 }, color: 'rgba(255,255,255,0.85)', maxWidth: 680, lineHeight: 1.8 }}>{LF.body}</Typography>
+        </Container>
+      </Box>
 
       {/* ── Section 7 — Family relocation services ─────────────────────── */}
       <Section band>
