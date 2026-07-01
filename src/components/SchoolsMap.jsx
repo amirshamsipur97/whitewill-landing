@@ -2,7 +2,12 @@
  * SchoolsMap — a compact Mapbox map plotting the featured international
  * schools (same visual language as the property PropertyMap: dark style,
  * olive pins). Data comes from the Supabase `schools` table via the parent.
- * Each pin popup links out to the school's official website.
+ *
+ * Hover a pin to reveal a card with the school's summary + a link to its
+ * official website. IMPORTANT: Mapbox positions each marker element with a
+ * CSS `transform: translate(...)`. Applying a hover `scale()` to that SAME
+ * element wipes the translate and the pin jumps to the map's top-left corner.
+ * So the hover scale is applied to an INNER dot element, never the marker.
  */
 import { useEffect, useRef } from 'react'
 import mapboxgl from 'mapbox-gl'
@@ -11,9 +16,26 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 const OLIVE_BRIGHT = '#8c8d25'
 
+function esc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
+function popupHtml(s, visitLabel) {
+  const site = s.website
+    ? `<a href="${esc(s.website)}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;color:${OLIVE_BRIGHT};text-decoration:none;font-weight:600;font-size:12.5px">${esc(visitLabel)} &#8599;</a>`
+    : ''
+  return (
+    `<div style="font-family:system-ui,-apple-system,sans-serif;min-width:170px;max-width:230px">
+       <div style="font-weight:700;color:#111;font-size:14px;line-height:1.3;margin-bottom:3px">${esc(s.name)}</div>
+       ${s.area ? `<div style="font-size:12px;color:#555;margin-bottom:2px">${esc(s.area)}</div>` : ''}
+       ${s.curriculum ? `<div style="font-size:12px;color:#8c8d25">${esc(s.curriculum)}</div>` : ''}
+       ${site}
+     </div>`
+  )
+}
+
 export default function SchoolsMap({ schools = [], visitLabel = 'Visit website' }) {
   const containerRef = useRef(null)
-  const mapRef = useRef(null)
 
   useEffect(() => {
     const pins = schools.filter((s) => s.latitude != null && s.longitude != null)
@@ -28,28 +50,40 @@ export default function SchoolsMap({ schools = [], visitLabel = 'Visit website' 
       cooperativeGestures: true,
       attributionControl: false,
     })
-    mapRef.current = map
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
 
     const bounds = new mapboxgl.LngLatBounds()
+
     pins.forEach((s) => {
+      // Outer element: Mapbox owns its transform (positioning). Do NOT restyle it.
       const el = document.createElement('div')
-      el.style.cssText =
-        'width:16px;height:16px;border-radius:50%;background:' + OLIVE_BRIGHT +
-        ';border:2px solid #fff;box-shadow:0 0 0 4px rgba(140,141,37,0.25);cursor:pointer;transition:transform .15s'
-      el.onmouseenter = () => { el.style.transform = 'scale(1.3)' }
-      el.onmouseleave = () => { el.style.transform = 'scale(1)' }
-      const site = s.website
-        ? `<a href="${s.website}" target="_blank" rel="noopener noreferrer" style="color:${OLIVE_BRIGHT};text-decoration:none;font-weight:600">${visitLabel} &#8599;</a>`
-        : ''
-      const popup = new mapboxgl.Popup({ offset: 18, closeButton: false }).setHTML(
-        `<div style="font-family:system-ui,sans-serif;min-width:150px">
-           <div style="font-weight:700;color:#111;margin-bottom:2px">${s.name}</div>
-           <div style="font-size:12px;color:#555;margin-bottom:6px">${s.area || ''}</div>
-           ${site}
-         </div>`,
-      )
-      new mapboxgl.Marker(el).setLngLat([s.longitude, s.latitude]).setPopup(popup).addTo(map)
+      el.style.cssText = 'width:18px;height:18px;cursor:pointer'
+      // Inner dot: safe to scale on hover.
+      const dot = document.createElement('div')
+      dot.style.cssText =
+        'width:16px;height:16px;margin:1px;border-radius:50%;background:' + OLIVE_BRIGHT +
+        ';border:2px solid #fff;box-shadow:0 0 0 4px rgba(140,141,37,0.25);transition:transform .15s ease;transform-origin:center'
+      el.appendChild(dot)
+
+      const popup = new mapboxgl.Popup({ offset: 16, closeButton: false, closeOnClick: false })
+        .setLngLat([s.longitude, s.latitude])
+        .setHTML(popupHtml(s, visitLabel))
+
+      let hideTimer
+      const show = () => { clearTimeout(hideTimer); dot.style.transform = 'scale(1.35)'; if (!popup.isOpen()) popup.addTo(map) }
+      const scheduleHide = () => { hideTimer = setTimeout(() => { dot.style.transform = 'scale(1)'; popup.remove() }, 260) }
+
+      el.addEventListener('mouseenter', show)
+      el.addEventListener('mouseleave', scheduleHide)
+      // Keep the popup open while the pointer is over it, so its link is clickable.
+      popup.on('open', () => {
+        const pe = popup.getElement()
+        if (!pe) return
+        pe.addEventListener('mouseenter', () => clearTimeout(hideTimer))
+        pe.addEventListener('mouseleave', scheduleHide)
+      })
+
+      new mapboxgl.Marker(el).setLngLat([s.longitude, s.latitude]).addTo(map)
       bounds.extend([s.longitude, s.latitude])
     })
 
