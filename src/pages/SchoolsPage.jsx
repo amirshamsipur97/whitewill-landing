@@ -358,8 +358,8 @@ export default function SchoolsPage() {
                 {logo
                   ? <Box component="img" src={logo} alt={`${c.name} logo`} loading="lazy" sx={{ maxWidth: '90%', maxHeight: '86%', objectFit: 'contain' }} />
                   : <SchoolOutlinedIcon sx={{ fontSize: 48, color: '#1D1D1D' }} />}
-                <Box sx={{ position: 'absolute', top: 12, insetInlineEnd: 12, px: 1.4, py: 0.5, borderRadius: '999px', bgcolor: 'rgba(0,0,0,0.55)', border: HAIR }}>
-                  <Typography sx={{ fontFamily: FONT, fontSize: 11.5, color: OLIVE_BRIGHT }}>{c.curriculum}</Typography>
+                <Box sx={{ position: 'absolute', top: 12, insetInlineEnd: 12, px: 1.4, py: 0.5, borderRadius: '999px', bgcolor: 'rgba(255,255,255,0.92)', border: '1px solid rgba(0,0,0,0.12)' }}>
+                  <Typography sx={{ fontFamily: FONT, fontSize: 11.5, fontWeight: 600, color: '#121212' }}>{c.curriculum}</Typography>
                 </Box>
               </Box>
               <Box sx={{ p: { xs: 2.5, md: 3 }, display: 'flex', flexDirection: 'column', flex: 1 }}>
