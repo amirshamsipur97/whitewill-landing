@@ -20,6 +20,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward'
 import { rentImg } from '../assets'
 import { useI18n } from '../i18n.jsx'
 import { submitForm } from '../supabase'
+import { COUNTRY_CODES, DEFAULT_DIAL_CODE, countryForDialCode } from '../data/countryCodes.js'
 
 export default function LeadCards() {
   const { t, lang } = useI18n()
@@ -30,7 +31,7 @@ export default function LeadCards() {
   const [openKey, setOpenKey] = useState(null)
   const [snack, setSnack] = useState({ open: false, severity: 'success', msg: '' })
   const [submitting, setSubmitting] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '', type: 'apartment', notes: '' })
+  const [form, setForm] = useState({ name: '', phone: '', type: 'apartment', notes: '', dial_code: DEFAULT_DIAL_CODE })
 
   const card = CARDS.find((c) => c.key === openKey)
 
@@ -41,7 +42,9 @@ export default function LeadCards() {
       await submitForm({
         source: 'rent_landing',
         full_name: form.name,
-        phone: form.phone,
+        phone: form.phone.trim() ? `${form.dial_code} ${form.phone.trim()}` : form.phone,
+        phone_country_code: form.dial_code,
+        country: countryForDialCode(form.dial_code),
         property_interest: form.type,
         message: form.notes || null,
         language: lang,
@@ -132,15 +135,27 @@ export default function LeadCards() {
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               sx={{ mb: 2 }}
             />
-            <TextField
-              fullWidth
-              required
-              label={t.leadDialog.phone}
-              type="tel"
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              sx={{ mb: 2 }}
-            />
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+              <TextField
+                select
+                label="Code"
+                value={form.dial_code}
+                onChange={(e) => setForm({ ...form, dial_code: e.target.value })}
+                sx={{ width: 130, flexShrink: 0 }}
+              >
+                {COUNTRY_CODES.map((cc) => (
+                  <MenuItem key={cc.code + cc.label} value={cc.code}>{cc.flag} {cc.code}</MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                fullWidth
+                required
+                label={t.leadDialog.phone}
+                type="tel"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
+            </Box>
             <TextField
               fullWidth
               select

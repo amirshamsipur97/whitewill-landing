@@ -5,6 +5,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import { gsap } from 'gsap'
 import { useI18n } from '../i18n.jsx'
 import { submitForm } from '../supabase'
+import { COUNTRY_CODES, DEFAULT_DIAL_CODE, countryForDialCode } from '../data/countryCodes.js'
 
 // ───────────────────────── shared atoms ─────────────────────────
 const OLIVE = '#7c7856'
@@ -232,7 +233,9 @@ export default function ProjectInquiryModal({ open, project, unit, onClose }) {
         source: `project_inquiry_${slug}${hasUnit ? '_unit' : ''}`,
         full_name: form.name?.trim(),
         email: form.email?.trim(),
-        phone: form.phone?.trim(),
+        phone: form.phone?.trim() ? `${form.dial_code || DEFAULT_DIAL_CODE} ${form.phone.trim()}` : form.phone?.trim(),
+        phone_country_code: form.dial_code || DEFAULT_DIAL_CODE,
+        country: countryForDialCode(form.dial_code || DEFAULT_DIAL_CODE),
         property_interest: inferredType,
         // Top-level budget is mapped to `leads.budget` in Supabase AND
         // forwarded as `budget` to the Apps Script — so populate it
@@ -551,10 +554,25 @@ export default function ProjectInquiryModal({ open, project, unit, onClose }) {
                   onSubmit={(e) => { e.preventDefault(); if (canAdvance) advance() }}
                   sx={{ display: 'flex', gap: 1 }}
                 >
+                  {step.input.type === 'tel' && (
+                    <Box
+                      component="select"
+                      aria-label="Country code"
+                      value={form.dial_code || DEFAULT_DIAL_CODE}
+                      onChange={(e) => setField('dial_code', e.target.value)}
+                      dir="ltr"
+                      sx={{ ...FIELD_SX, flex: '0 0 110px', width: 110, appearance: 'none', cursor: 'pointer', '& option': { color: '#000' } }}
+                    >
+                      {COUNTRY_CODES.map((cc) => (
+                        <option key={cc.code + cc.label} value={cc.code}>{cc.flag} {cc.code}</option>
+                      ))}
+                    </Box>
+                  )}
                   <Box
                     component="input"
                     autoFocus
                     type={step.input.type}
+                    inputMode={step.input.type === 'tel' ? 'tel' : undefined}
                     value={currentValue}
                     onChange={(e) => setField(step.key, e.target.value)}
                     placeholder={step.input.placeholder}

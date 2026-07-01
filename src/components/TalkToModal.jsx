@@ -11,31 +11,11 @@ import CloseIcon from '@mui/icons-material/Close'
 import { gsap } from 'gsap'
 import { useI18n } from '../i18n.jsx'
 import { submitForm } from '../supabase'
+import { COUNTRY_CODES, countryForDialCode } from '../data/countryCodes.js'
 
 // ───────────────────────── static data ─────────────────────────
 
-// Commonly relevant dialing codes for Oman/UAE/GCC + global majors.
-// Keep this list short — long lists hurt mobile UX.
-const COUNTRY_CODES = [
-  { code: '+968', flag: '🇴🇲', label: 'Oman' },
-  { code: '+971', flag: '🇦🇪', label: 'UAE' },
-  { code: '+966', flag: '🇸🇦', label: 'Saudi Arabia' },
-  { code: '+974', flag: '🇶🇦', label: 'Qatar' },
-  { code: '+973', flag: '🇧🇭', label: 'Bahrain' },
-  { code: '+965', flag: '🇰🇼', label: 'Kuwait' },
-  { code: '+7',   flag: '🇷🇺', label: 'Russia' },
-  { code: '+44',  flag: '🇬🇧', label: 'United Kingdom' },
-  { code: '+1',   flag: '🇺🇸', label: 'United States' },
-  { code: '+91',  flag: '🇮🇳', label: 'India' },
-  { code: '+92',  flag: '🇵🇰', label: 'Pakistan' },
-  { code: '+98',  flag: '🇮🇷', label: 'Iran' },
-  { code: '+90',  flag: '🇹🇷', label: 'Türkiye' },
-  { code: '+49',  flag: '🇩🇪', label: 'Germany' },
-  { code: '+33',  flag: '🇫🇷', label: 'France' },
-  { code: '+34',  flag: '🇪🇸', label: 'Spain' },
-  { code: '+39',  flag: '🇮🇹', label: 'Italy' },
-  { code: '+86',  flag: '🇨🇳', label: 'China' },
-]
+// (dial codes now come from the shared ../data/countryCodes module)
 
 const NATIONALITIES = [
   'Omani', 'Emirati', 'Saudi', 'Qatari', 'Bahraini', 'Kuwaiti',
@@ -184,6 +164,8 @@ export default function TalkToModal({ open, onClose, agent }) {
         full_name: form.name.trim(),
         email: form.email.trim(),
         phone: `${form.countryCode} ${form.phone}`.trim(),
+        phone_country_code: form.countryCode,
+        country: countryForDialCode(form.countryCode),
         property_interest: form.propertyType || null,
         preferred_location: form.location || null,
         message: form.specialRequests || null,

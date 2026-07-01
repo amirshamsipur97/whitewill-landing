@@ -21,6 +21,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { submitForm } from '../supabase'
 import { useI18n } from '../i18n.jsx'
+import { COUNTRY_CODES, DEFAULT_DIAL_CODE, countryForDialCode } from '../data/countryCodes.js'
 
 const OLIVE = '#7c7856'
 const OLIVE_BRIGHT = '#8c8d25'
@@ -41,7 +42,7 @@ export default function ContactCTA({
   const localizedEyebrow = eyebrow ?? c.eyebrow
   const localizedTitle = title ?? c.title
   const localizedSubtitle = subtitle ?? c.subtitle
-  const [form, setForm] = useState({ full_name: '', email: '', phone: '', message: '' })
+  const [form, setForm] = useState({ full_name: '', email: '', phone: '', message: '', dial_code: DEFAULT_DIAL_CODE })
   const [submitting, setSubmitting] = useState(false)
   const [snack, setSnack] = useState({ open: false, ok: false, msg: '' })
 
@@ -86,16 +87,19 @@ export default function ContactCTA({
     }
     setSubmitting(true)
     try {
+      const phoneVal = form.phone.trim() ? `${form.dial_code} ${form.phone.trim()}` : null
       await submitForm({
         source,
         full_name: form.full_name,
         email: form.email,
-        phone: form.phone || null,
+        phone: phoneVal,
+        phone_country_code: form.dial_code,
+        country: countryForDialCode(form.dial_code),
         message: form.message || null,
         page_url: typeof window !== 'undefined' ? window.location.href : null,
       })
       setSnack({ open: true, ok: true, msg: c.successMsg })
-      setForm({ full_name: '', email: '', phone: '', message: '' })
+      setForm({ full_name: '', email: '', phone: '', message: '', dial_code: DEFAULT_DIAL_CODE })
     } catch {
       setSnack({ open: true, ok: false, msg: c.errorMsg })
     } finally {
@@ -181,9 +185,26 @@ export default function ContactCTA({
           {[
             { k: 'full_name', label: c.placeholderName, required: true, col: { xs: '1 / -1', md: 'auto' } },
             { k: 'email', label: c.placeholderEmail, type: 'email', required: true, col: { xs: '1 / -1', md: 'auto' } },
-            { k: 'phone', label: c.placeholderPhone, col: '1 / -1' },
+            { k: 'phone', label: c.placeholderPhone, col: '1 / -1', phoneField: true },
             { k: 'message', label: c.placeholderMessage, textarea: true, col: '1 / -1' },
-          ].map((f) => (
+          ].map((f) => {
+            const inputSx = {
+              width: '100%',
+              bgcolor: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '10px',
+              color: '#fff',
+              fontFamily: '"Arsenal SC", "Inter", sans-serif',
+              fontSize: 15,
+              px: 2,
+              py: 1.5,
+              outline: 'none',
+              resize: f.textarea ? 'vertical' : undefined,
+              transition: 'border-color 200ms ease, background-color 200ms ease',
+              '&:focus': { borderColor: OLIVE_BRIGHT, bgcolor: 'rgba(255,255,255,0.06)' },
+              '&::placeholder': { color: 'rgba(255,255,255,0.3)' },
+            }
+            return (
             <Box key={f.k} sx={{ gridColumn: f.col }}>
               <Typography
                 sx={{
@@ -198,31 +219,45 @@ export default function ContactCTA({
                 {f.label}
                 {f.required && <Box component="span" sx={{ color: OLIVE_BRIGHT, ml: 0.5 }}>*</Box>}
               </Typography>
-              <Box
-                component={f.textarea ? 'textarea' : 'input'}
-                type={f.type || 'text'}
-                value={form[f.k]}
-                onChange={update(f.k)}
-                rows={f.textarea ? 4 : undefined}
-                sx={{
-                  width: '100%',
-                  bgcolor: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  borderRadius: '10px',
-                  color: '#fff',
-                  fontFamily: '"Arsenal SC", "Inter", sans-serif',
-                  fontSize: 15,
-                  px: 2,
-                  py: 1.5,
-                  outline: 'none',
-                  resize: f.textarea ? 'vertical' : undefined,
-                  transition: 'border-color 200ms ease, background-color 200ms ease',
-                  '&:focus': { borderColor: OLIVE_BRIGHT, bgcolor: 'rgba(255,255,255,0.06)' },
-                  '&::placeholder': { color: 'rgba(255,255,255,0.3)' },
-                }}
-              />
+              {f.phoneField ? (
+                <Box sx={{ display: 'grid', gridTemplateColumns: '116px 1fr', gap: 1 }} dir="ltr">
+                  <Box
+                    component="select"
+                    aria-label="Country code"
+                    value={form.dial_code}
+                    onChange={update('dial_code')}
+                    sx={{
+                      ...inputSx,
+                      px: 1.2,
+                      appearance: 'none',
+                      cursor: 'pointer',
+                      backgroundImage:
+                        "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='white' d='M6 8L0 0h12z' opacity='0.5'/></svg>\")",
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 10px center',
+                      pr: 3,
+                      '& option': { color: '#000' },
+                    }}
+                  >
+                    {COUNTRY_CODES.map((cc) => (
+                      <option key={cc.code + cc.label} value={cc.code}>{cc.flag} {cc.code}</option>
+                    ))}
+                  </Box>
+                  <Box component="input" type="tel" inputMode="tel" value={form.phone} onChange={update('phone')} placeholder={f.label} sx={inputSx} />
+                </Box>
+              ) : (
+                <Box
+                  component={f.textarea ? 'textarea' : 'input'}
+                  type={f.type || 'text'}
+                  value={form[f.k]}
+                  onChange={update(f.k)}
+                  rows={f.textarea ? 4 : undefined}
+                  sx={inputSx}
+                />
+              )}
             </Box>
-          ))}
+            )
+          })}
 
           {/* On RTL the form's "end" is the LEFT side, but the
               ArrowForward icon must visually still point in the
