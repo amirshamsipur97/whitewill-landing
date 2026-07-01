@@ -29,6 +29,15 @@ const STATIC = [
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
+// MUST match src/pages/BuyPage.jsx slugify so sitemap URLs equal the real routes.
+function slugify(name) {
+  return String(name || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[^\w\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+}
 function loc(lang, path) {
   const pre = PREFIX[lang] || ''
   return path === '/' ? SITE + (pre || '/') : SITE + pre + path
@@ -63,7 +72,31 @@ export default async function handler(req, res) {
     /* still serve static routes */
   }
 
-  const logical = [...STATIC.map((s) => ({ ...s, lastmod: today })), ...articlePaths]
+  // Project detail pages (/buy/:slug) — only projects that have at least one
+  // available unit (content-rich, worth indexing). Slug must match the route.
+  let projectPaths = []
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/projects?select=name,project_units!inner(id)&project_units.availability_status=eq.available`,
+      { headers: { apikey: ANON, Authorization: `Bearer ${ANON}` } },
+    )
+    const rows = (await r.json()) || []
+    const seen = new Set()
+    for (const p of rows) {
+      const slug = slugify(p.name)
+      if (!slug || seen.has(slug)) continue
+      seen.add(slug)
+      projectPaths.push({ path: `/buy/${slug}`, lastmod: today, priority: '0.8', changefreq: 'weekly' })
+    }
+  } catch {
+    /* still serve static + article routes */
+  }
+
+  const logical = [
+    ...STATIC.map((s) => ({ ...s, lastmod: today })),
+    ...projectPaths,
+    ...articlePaths,
+  ]
 
   const urls = []
   for (const p of logical) {
