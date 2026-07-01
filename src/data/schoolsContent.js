@@ -74,6 +74,7 @@ const en = {
       { name: 'Cheltenham Muscat', curriculum: 'British / IGCSE & A-Levels', location: 'Al Mouj Muscat', locality: 'Muscat', ages: 'KG1 to Grade 12', highlight: 'A British-curriculum school in the Al Mouj waterfront community, popular with families living in the west of Muscat.', fees: '~OMR 3,899 to 8,111 / year' },
       { name: 'The American British Academy (ABA)', curriculum: 'IB / American', location: 'Al Ghubra, Muscat', locality: 'Muscat', ages: 'Pre-K to Grade 12', highlight: 'An established international school offering the IB programme with an American-style structure, drawing a diverse expatriate community.', fees: '~OMR 3,790 to 10,210 / year' },
       { name: 'Downe House Muscat', curriculum: 'British (Cambridge), girls', location: 'Al Bandar, west Muscat', locality: 'Muscat', ages: 'Grade 1 to Grade 12', highlight: 'The Oman campus of a leading British girls’ school, with a modern purpose-built campus and Cambridge IGCSE and A-Level pathways.', fees: '~OMR 3,470 to 7,500 / year' },
+      { name: 'Muscat International School by Amity', curriculum: 'British / IGCSE & A-Levels', location: 'Qurum, Al Shati', locality: 'Muscat', ages: 'Ages 3 to 18', highlight: 'A long-established British-curriculum school in Qurum, the first in Oman to offer IGCSE and A-Levels, now part of the Amity education group.', fees: '~OMR 3,680 to 7,500 / year' },
     ],
   },
   fees: {
@@ -227,6 +228,7 @@ const ru = {
       { name: 'Cheltenham Muscat', curriculum: 'Британская / IGCSE и A-Levels', location: 'Al Mouj Muscat', locality: 'Маскат', ages: 'KG1 до 12 класса', highlight: 'Школа британской программы в прибрежном районе Al Mouj, популярная среди семей на западе Маската.', fees: '~OMR 3,899 до 8,111 / год' },
       { name: 'The American British Academy (ABA)', curriculum: 'IB / Американская', location: 'Al Ghubra, Маскат', locality: 'Маскат', ages: 'Pre-K до 12 класса', highlight: 'Устоявшаяся международная школа с программой IB и структурой американского типа, объединяющая разнообразное сообщество экспатов.', fees: '~OMR 3,790 до 10,210 / год' },
       { name: 'Downe House Muscat', curriculum: 'Британская (Cambridge), для девочек', location: 'Al Bandar, запад Маската', locality: 'Маскат', ages: '1 до 12 класса', highlight: 'Оманский кампус ведущей британской школы для девочек с современным кампусом и программами Cambridge IGCSE и A-Level.', fees: '~OMR 3,470 до 7,500 / год' },
+      { name: 'Muscat International School by Amity', curriculum: 'Британская / IGCSE и A-Levels', location: 'Курум, Аль-Шати', locality: 'Маскат', ages: 'Возраст 3 до 18', highlight: 'Давно основанная школа британской программы в Куруме, первая в Омане, предложившая IGCSE и A-Levels, теперь входит в образовательную группу Amity.', fees: '~OMR 3,680 до 7,500 / год' },
     ],
   },
   fees: {
@@ -380,6 +382,7 @@ const ar = {
       { name: 'Cheltenham Muscat', curriculum: 'بريطاني / IGCSE و A-Levels', location: 'الموج مسقط', locality: 'مسقط', ages: 'KG1 حتى الصف 12', highlight: 'مدرسة بمنهج بريطاني في مجتمع الموج الساحلي، محبّبة لدى العائلات في غرب مسقط.', fees: '~OMR 3,899 إلى 8,111 / سنة' },
       { name: 'The American British Academy (ABA)', curriculum: 'IB / أمريكي', location: 'الغبرة، مسقط', locality: 'مسقط', ages: 'ما قبل الروضة حتى الصف 12', highlight: 'مدرسة دولية راسخة تقدّم برنامج IB بهيكل أمريكي، وتجمع مجتمعاً وافداً متنوعاً.', fees: '~OMR 3,790 إلى 10,210 / سنة' },
       { name: 'Downe House Muscat', curriculum: 'بريطاني (كامبريدج)، للبنات', location: 'البندر، غرب مسقط', locality: 'مسقط', ages: 'الصف 1 حتى الصف 12', highlight: 'الحرم العُماني لمدرسة بريطانية رائدة للبنات، بحرم حديث مخصّص ومسارات Cambridge IGCSE و A-Level.', fees: '~OMR 3,470 إلى 7,500 / سنة' },
+      { name: 'Muscat International School by Amity', curriculum: 'بريطاني / IGCSE و A-Levels', location: 'القرم، الشاطئ', locality: 'مسقط', ages: 'الأعمار 3 إلى 18', highlight: 'مدرسة عريقة بمنهج بريطاني في القرم، وأول من قدّم IGCSE و A-Levels في عُمان، وهي الآن ضمن مجموعة Amity التعليمية.', fees: '~OMR 3,680 إلى 7,500 / سنة' },
     ],
   },
   fees: {
@@ -533,6 +536,7 @@ const fa = {
       { name: 'Cheltenham Muscat', curriculum: 'بریتانیایی / IGCSE و A-Levels', location: 'الموج مسقط', locality: 'مسقط', ages: 'KG1 تا پایه ۱۲', highlight: 'مدرسه‌ای با برنامه بریتانیایی در مجتمع ساحلی الموج که میان خانواده‌های ساکن غرب مسقط محبوب است.', fees: 'حدود ۳٬۸۹۹ تا ۸٬۱۱۱ ریال عمان در سال' },
       { name: 'The American British Academy (ABA)', curriculum: 'IB / آمریکایی', location: 'الغبره، مسقط', locality: 'مسقط', ages: 'پیش‌دبستان تا پایه ۱۲', highlight: 'مدرسه بین‌المللی جاافتاده که برنامه IB را با ساختاری به سبک آمریکایی ارائه می‌دهد و جامعه‌ای متنوع از مهاجران را گرد هم می‌آورد.', fees: 'حدود ۳٬۷۹۰ تا ۱۰٬۲۱۰ ریال عمان در سال' },
       { name: 'Downe House Muscat', curriculum: 'بریتانیایی (کمبریج)، دخترانه', location: 'البندر، غرب مسقط', locality: 'مسقط', ages: 'پایه ۱ تا پایه ۱۲', highlight: 'پردیس عمانِ یک مدرسه دخترانه بریتانیایی برجسته با پردیسی مدرن و مسیرهای Cambridge IGCSE و A-Level.', fees: 'حدود ۳٬۴۷۰ تا ۷٬۵۰۰ ریال عمان در سال' },
+      { name: 'Muscat International School by Amity', curriculum: 'بریتانیایی / IGCSE و A-Levels', location: 'قرم، الشاطئ', locality: 'مسقط', ages: 'سنین ۳ تا ۱۸', highlight: 'مدرسه‌ای دیرینه با برنامهٔ بریتانیایی در قرم، نخستین مدرسه در عمان که IGCSE و A-Levels را ارائه داد و اکنون بخشی از گروه آموزشی Amity است.', fees: 'حدود ۳٬۶۸۰ تا ۷٬۵۰۰ ریال عمان در سال' },
     ],
   },
   fees: {

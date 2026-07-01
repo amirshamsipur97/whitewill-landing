@@ -50,6 +50,7 @@ function schoolKey(name = '') {
   if (/\baba\b|american british/.test(n)) return 'aba'
   if (/british/.test(n)) return 'british'
   if (/downe/.test(n)) return 'downe'
+  if (/amity/.test(n)) return 'amity'
   return null
 }
 
