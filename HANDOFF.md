@@ -1,6 +1,6 @@
 # Irfan Investment (whitewill-landing) — Session Handoff
 
-_Last updated: 2026-06-30. Consolidated reference for continuing work in a new session._
+_Last updated: 2026-07-02. Consolidated reference for continuing work in a new session._
 
 ---
 
@@ -76,3 +76,27 @@ Full details persist in auto-memory (loads every session) — see `MEMORY.md` in
 `whitewill-project-refs`, `whitewill-insights-blog`, `irfaninvest-advisory-pages`,
 `whitewill-deploy-workflow`, `whitewill-invest-i18n`, `whitewill-react-gsap-gotchas`,
 `whitewill-business-rules`, `irfaninvest-growth-stack`.
+
+
+---
+
+## 2026-07-02 session — SEO overhaul, lead popup, daily blog agent, Vapi auto-call
+
+### Shipped (all live on irfaninvest.com)
+- **4-lang SEO**: every route in `src/seo.jsx` now has localized {en,ru,ar,fa} title+description targeting buy-property-in-Oman keywords. Fixed critical bug (fa-only titles on /investment, /investment/legal, /car-import shown to ALL langs). Dynamic /buy/:slug titles + blog fallback localized. `index.html` static homepage meta updated ("Buy Property & Invest in Oman").
+- **JSON-LD**: `BuyProjectPage.jsx` emits RealEstateListing (AggregateOffer from live unit `price_omr`) + BreadcrumbList per project.
+- **Perf**: removed unused deps (three/animejs/framer-motion), vendor manualChunks in `vite.config.js` → entry 996K→317K (gzip 94K).
+- **Lead popup** (`src/components/LeadPopup.jsx` + `src/data/dialCodes.js` + `public/images/popup/`): Figma-exact (node 630-20014 v3). Auto-opens 3s on landing, re-opens every 20s until submitted (session flag `irfan_popup_lead_done`). Site-wide purple launcher (#351D93, bottom-left, chat-pill metrics, Figma icon rotates 45° via GSAP). First/Last name + flag dial selector (161 countries, GCC first) + phone → `submitForm()` → leads table + Google Sheet + GA4 `generate_lead` → redirect /buy. Scroll locked while open (`window.__lenis.stop()` + overflow hidden); dial list = body portal (transformed card would clip fixed elements). Mobile-optimized.
+- **Chat pill label** now "Start AI Assistant" / «شروع دستیار هوشمند» / etc (i18n.jsx + i18n.fa.js).
+
+### n8n (analytics-test.app.n8n.cloud)
+- **`KjDPPqA7lRm0U2M2` "Daily SEO Blog Agent (Fable 5)" — ACTIVE, DAILY** (05:00): web-research topic pick (web_search_20260209) → 4-lang articles on `claude-fable-5` (fallback opus-4-8) → AUTO-PUBLISH to insights. Verified run 2026-07-02 (4 langs, 8.5 min). OpenAI editor node disabled (key never set). ⚠️ Anthropic key is plaintext in Config node.
+- **`GBgpcthXcl5MbwZw` "New Lead Auto Call (Vapi)" — ACTIVE**: polls Form Property Database sheet every 2 min → new rows (dedupe + cutoff 2026-07-02) → Vapi call from assistant Sam (+17754512951) → logs to irfanapp. Guards: max 5/run, valid-phone ≥11 chars, fresh<45min OR local 10-21h.
+- **`M2Yct119lYGxAuGu` main workflow**: published the stale draft (active version was crashing "Interested?" on every call-ended webhook). Analytics branch verified post-publish.
+
+### Open items / next session
+1. **Google Ads conversion label**: create Lead conversion action in Google Ads → set `VITE_GOOGLE_ADS_LEAD_LABEL` env in Vercel → redeploy. Everything else is wired (`trackLead()` fires generate_lead; Ads tag AW-1774372667 + Conversion Linker installed).
+2. **Live end-to-end Vapi test** with a real number (popup → sheet → auto-call within ~2-4 min). Watch the sheet Phone column for `#ERROR!` (values starting with `+` parse as formulas — if real leads break, fix Apps Script to prefix with apostrophe).
+3. Rotate the Anthropic API key exposed in n8n Config (and the Supabase anon key/admin password are also in that node).
+4. Big workflow still has Google Sheets OAuth broken on "Save * to Client Sheet" nodes (credential `cJSsSNhyRDc1s6sR` tokenless) — user must reconnect in n8n UI.
+5. WhatsApp confirmation nodes still on Twilio sandbox (fail silently).
