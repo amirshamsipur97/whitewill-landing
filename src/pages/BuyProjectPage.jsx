@@ -314,6 +314,56 @@ export default function BuyProjectPage() {
     return () => { cancelled = true }
   }, [project?.id])
 
+  // Structured data for search engines: the project as a real-estate listing
+  // plus a breadcrumb trail. Rebuilt when the project/units/language change,
+  // removed on unmount so other routes don't inherit it.
+  useEffect(() => {
+    if (!project) return
+    const prices = units
+      .map((u) => Number(u.price_omr))
+      .filter((n) => Number.isFinite(n) && n > 0)
+    const url = `https://www.irfaninvest.com${lang === 'en' ? '' : `/${lang}`}/buy/${slugify(project.name)}`
+    const listing = {
+      '@context': 'https://schema.org',
+      '@type': 'RealEstateListing',
+      name: project.name,
+      url,
+      image: `https://www.irfaninvest.com${coverFor(project).primary}`,
+      address: { '@type': 'PostalAddress', addressCountry: 'OM', addressLocality: project.city || 'Muscat' },
+      ...(prices.length
+        ? {
+            offers: {
+              '@type': 'AggregateOffer',
+              priceCurrency: 'OMR',
+              lowPrice: Math.min(...prices),
+              highPrice: Math.max(...prices),
+              offerCount: units.length,
+              availability: 'https://schema.org/InStock',
+            },
+          }
+        : {}),
+      provider: { '@type': 'RealEstateAgent', name: 'Irfan Investment Group', url: 'https://www.irfaninvest.com' },
+    }
+    const breadcrumbs = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.irfaninvest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Buy', item: 'https://www.irfaninvest.com/buy' },
+        { '@type': 'ListItem', position: 3, name: project.name, item: url },
+      ],
+    }
+    const tags = [listing, breadcrumbs].map((data) => {
+      const el = document.createElement('script')
+      el.type = 'application/ld+json'
+      el.setAttribute('data-project-jsonld', '1')
+      el.textContent = JSON.stringify(data)
+      document.head.appendChild(el)
+      return el
+    })
+    return () => tags.forEach((el) => el.remove())
+  }, [project, units, lang])
+
   if (loading) {
     return (
       <Box sx={{ bgcolor: '#000', minHeight: '100vh', pt: 8 }}>
