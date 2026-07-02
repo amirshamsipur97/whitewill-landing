@@ -359,7 +359,7 @@ export default {
     license: "Irfan Investment Real Estate SPC, License Nr. 1582266",
     disclaimer: "همه اطلاعات پیشنهاد عمومی به شمار نمی‌رود.",
   },
-  chatPill: { label: "بیایید با هم کار کنیم" },
+  chatPill: { label: "شروع دستیار هوشمند" },
   contactCta: {
     eyebrow: "با ما در تماس باشید",
     title: "سرمایه‌گذاری بعدی خود را با ما برنامه‌ریزی کنید.",

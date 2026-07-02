@@ -394,7 +394,7 @@ const dict = {
       license: 'Irfan Investment Real Estate SPC, License Nr. 1582266',
       disclaimer: 'All information provided on the website is not a public offer. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.',
     },
-    chatPill: { label: "Let's work together" },
+    chatPill: { label: 'Start AI Assistant' },
     contactCta: {
       eyebrow: 'Talk to us',
       title: 'Plan your next investment with us.',
@@ -885,7 +885,7 @@ const dict = {
       license: 'Irfan Investment Real Estate SPC, лицензия № 1582266',
       disclaimer: 'Информация на сайте не является публичной офертой. Сайт защищён reCAPTCHA — применяются Политика конфиденциальности и Условия использования Google.',
     },
-    chatPill: { label: 'Давайте сотрудничать' },
+    chatPill: { label: 'Запустить AI-ассистента' },
     contactCta: {
       eyebrow: 'Связаться с нами',
       title: 'Спланируйте следующую инвестицию вместе с нами.',
@@ -1351,7 +1351,7 @@ const dict = {
       license: 'Irfan Investment Real Estate SPC، رخصة رقم 1582266',
       disclaimer: 'جميع المعلومات ليست عرضًا عامًا.',
     },
-    chatPill: { label: 'لنعمل معاً' },
+    chatPill: { label: 'ابدأ المساعد الذكي' },
     contactCta: {
       eyebrow: 'تواصل معنا',
       title: 'خطّط لاستثمارك القادم معنا.',
