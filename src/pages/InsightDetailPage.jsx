@@ -11,7 +11,7 @@ import { Box, Container, Typography, Skeleton } from '@mui/material'
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import { useI18n } from '../i18n.jsx'
-import { fetchInsightBySlug } from '../supabase.js'
+import { fetchInsightBySlug, fetchInsights } from '../supabase.js'
 import Markdown from '../components/insights/Markdown.jsx'
 import { FONT, OLIVE_BRIGHT, HAIR } from '../components/invest/ui.jsx'
 import { INSIGHTS_UI, formatDate, RTL_LANGS } from './insights/strings.js'
@@ -135,6 +135,21 @@ export default function InsightDetailPage() {
   const rtl = RTL_LANGS.has(lang)
   const [article, setArticle] = useState(null)
   const [status, setStatus] = useState('loading') // loading | ok | notfound
+  const [related, setRelated] = useState([])
+
+  // Latest same-language articles for the "More insights" strip — internal
+  // links between articles spread crawl equity and keep readers on the blog.
+  useEffect(() => {
+    let alive = true
+    setRelated([])
+    fetchInsights({ lang, limit: 6 })
+      .then((rows) => {
+        if (!alive) return
+        setRelated((rows || []).filter((r) => r.slug !== slug).slice(0, 3))
+      })
+      .catch(() => {})
+    return () => { alive = false }
+  }, [slug, lang])
 
   useEffect(() => {
     let alive = true
@@ -257,6 +272,46 @@ export default function InsightDetailPage() {
                 <Typography sx={{ fontFamily: FONT, fontSize: 12.5, color: 'rgba(255,255,255,0.65)' }}>#{tag}</Typography>
               </Box>
             ))}
+          </Box>
+        )}
+
+        {/* Related articles — same language, newest first */}
+        {related.length > 0 && (
+          <Box sx={{ maxWidth: 760, mx: 'auto', mt: 7, pt: 5, borderTop: HAIR }}>
+            <Typography component="h2" sx={{ fontFamily: FONT, fontWeight: 300, fontSize: { xs: 22, md: 28 }, mb: 3 }}>
+              {ui.moreReading}
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2 }}>
+              {related.map((r) => (
+                <Box
+                  key={r.id}
+                  component={RouterLink}
+                  to={`/insights/${r.slug}`}
+                  sx={{
+                    display: 'flex', flexDirection: 'column', textDecoration: 'none',
+                    borderRadius: '14px', border: HAIR, overflow: 'hidden',
+                    bgcolor: 'rgba(255,255,255,0.02)',
+                    transition: 'border-color .2s, transform .2s',
+                    '&:hover': { borderColor: 'rgba(140,141,37,0.5)', transform: 'translateY(-3px)' },
+                  }}
+                >
+                  {r.cover_image && (
+                    <Box component="img" src={r.cover_image} alt={r.title} loading="lazy"
+                      sx={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block' }} />
+                  )}
+                  <Box sx={{ p: 1.8, display: 'flex', flexDirection: 'column', gap: 0.8, flex: 1 }}>
+                    {r.published_at && (
+                      <Typography sx={{ fontFamily: FONT, fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>
+                        {formatDate(r.published_at, lang)}
+                      </Typography>
+                    )}
+                    <Typography component="h3" sx={{ fontFamily: FONT, fontWeight: 500, fontSize: 14.5, lineHeight: 1.45, color: '#fff', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {r.title}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
           </Box>
         )}
 

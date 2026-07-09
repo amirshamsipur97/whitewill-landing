@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useLayoutEffect } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { gsap } from 'gsap'
@@ -148,6 +148,29 @@ function RouteFallback() {
   return <Box sx={{ minHeight: '70vh', bgcolor: '#000' }} />
 }
 
+// Mounts children only once the wrapper nears the viewport. Used for the
+// Mapbox section: the lazy import used to fire on first render anyway,
+// pulling ~500 KB of map JS into the critical load. Now the chunk download
+// starts a bit over one viewport before the user reaches the map.
+function DeferredMount({ children, minHeight }) {
+  const ref = useRef(null)
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || show) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setShow(true)
+        io.disconnect()
+      }
+    }, { rootMargin: '200% 0px' })
+    io.observe(el)
+    return () => io.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return <Box ref={ref} sx={show ? undefined : { minHeight }}>{show ? children : null}</Box>
+}
+
 function LandingPage() {
   // Heavy scroll-pinned sections (DiscoverProperties +620vh,
   // AthurayaCity +900vh, AkdtScrollVideo +1100vh + 21-second video scrub,
@@ -163,31 +186,54 @@ function LandingPage() {
     <>
       <ScrollVideoHero />
       <div id="after-video-hero" />
-      <AboutFounder />
-      <LogosMarquee />
-      {!isMobile && <DiscoverProperties />}
-      {!isMobile && <AthurayaCity />}
-      <GlobalPresence />
-      {!isMobile && <AkdtScrollVideo />}
-      {!isMobile && <HearFromTheTeam />}
+      {/* The hero pins for 500vh, so even AboutFounder sits five viewports
+          below the first paint — deferring it keeps its DOM, GSAP work and
+          the founder portrait out of the critical load. */}
+      <DeferredMount minHeight="120vh"><AboutFounder /></DeferredMount>
+      <DeferredMount minHeight="40vh"><LogosMarquee /></DeferredMount>
+      {/* Every below-fold section is DeferredMount-ed: the hero pins for
+          500vh, so none of these can be seen at load — mounting them there
+          only burned main-thread time (GSAP timelines, char splits, pins)
+          inside the Lighthouse TBT window. Placeholder heights approximate
+          each section's pinned scroll length; the swap happens ~2 viewports
+          before arrival, below the visible screen. */}
+      {!isMobile && (
+        <DeferredMount minHeight="720vh"><DiscoverProperties /></DeferredMount>
+      )}
+      {!isMobile && (
+        <DeferredMount minHeight="1000vh"><AthurayaCity /></DeferredMount>
+      )}
+      <DeferredMount minHeight="120vh"><GlobalPresence /></DeferredMount>
+      {!isMobile && (
+        <DeferredMount minHeight="1200vh"><AkdtScrollVideo /></DeferredMount>
+      )}
+      {!isMobile && (
+        <DeferredMount minHeight="110vh"><HearFromTheTeam /></DeferredMount>
+      )}
       {/* PropertyMap is a lazy chunk. The fallback height MUST approximate
           the loaded section's actual height — otherwise the page jumps
           when the chunk swaps in. ~1080 px md, ~1600 px xs. */}
-      <Suspense
-        fallback={
-          <Box
-            sx={{
-              minHeight: { xs: 1600, md: 1080 },
-              py: { xs: 4, md: 6 },
-            }}
-          />
-        }
-      >
-        <PropertyMap />
-      </Suspense>
-      <WaterfrontResidences />
-      {!isMobile && <HorizontalCarousel />}
-      <ContactCTA source="landing_contact" />
+      <DeferredMount minHeight={{ xs: 1600, md: 1080 }}>
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                minHeight: { xs: 1600, md: 1080 },
+                py: { xs: 4, md: 6 },
+              }}
+            />
+          }
+        >
+          <PropertyMap />
+        </Suspense>
+      </DeferredMount>
+      <DeferredMount minHeight="130vh"><WaterfrontResidences /></DeferredMount>
+      {!isMobile && (
+        <DeferredMount minHeight="750vh"><HorizontalCarousel /></DeferredMount>
+      )}
+      <DeferredMount minHeight="120vh">
+        <ContactCTA source="landing_contact" />
+      </DeferredMount>
       {/* Floating "back to top" — hidden until the user scrolls past one
           viewport-height, then materialises centred at the bottom. */}
       <BackToTop />
@@ -224,6 +270,9 @@ function PageRoutes() {
 
 export default function App() {
   // BrowserRouter now lives in main.jsx (so I18nProvider can read the URL).
+  // The admin panel stays free of visitor-facing launchers (chat + lead popup).
+  const { pathname } = useLocation()
+  const isAdmin = pathname.includes('/insights-admin')
   return (
     <Box
       id="app-root"
@@ -249,12 +298,15 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <SiteFooter />
+      {/* The footer's 4-office grid is a big DOM subtree that no route shows
+          above the fold — mounting it lazily trims initial style/layout work
+          on every page. */}
+      <DeferredMount minHeight="90vh"><SiteFooter /></DeferredMount>
       <CookieBanner />
-      <ChatWidget />
+      {!isAdmin && <ChatWidget />}
       {/* Site-wide purple lead launcher + popup (auto-opens on the landing
           page only; the pill mirrors the chat pill's size at bottom-left). */}
-      <LeadPopup />
+      {!isAdmin && <LeadPopup />}
     </Box>
   )
 }

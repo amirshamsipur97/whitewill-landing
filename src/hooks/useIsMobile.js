@@ -4,16 +4,22 @@ import { useEffect, useState } from 'react'
  * useIsMobile — true when the viewport is below the given breakpoint
  * (default 900px, matching MUI's `md`).
  *
- * SSR-safe: defaults to `false` on first paint so the desktop layout
- * renders during hydration. After mount we read window.matchMedia and
- * update; React re-renders with the correct value within a single tick.
+ * Initialized synchronously from matchMedia — this app is pure CSR (no
+ * hydration), so the very first render must already know the real viewport.
+ * The old `useState(false)` default made phones mount every desktop-only
+ * landing section for one tick, kicking off ~40 MB of video downloads
+ * before the unmount.
  *
  * We subscribe to matchMedia change events so a desktop user who shrinks
  * their window or rotates a tablet gets the alternate layout without a
  * reload.
  */
 export function useIsMobile(maxWidthPx = 899) {
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia(`(max-width: ${maxWidthPx}px)`).matches
+      : false,
+  )
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return

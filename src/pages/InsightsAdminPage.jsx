@@ -332,7 +332,20 @@ export default function InsightsAdminPage() {
     setAuthed(false); setPw(''); setRows(null)
   }
 
-  const grouped = useMemo(() => rows || [], [rows])
+  const [langTab, setLangTab] = useState('all')
+
+  const langCounts = useMemo(() => {
+    const c = { all: (rows || []).length, en: 0, ru: 0, ar: 0, fa: 0 }
+    for (const r of rows || []) if (c[r.lang] !== undefined) c[r.lang] += 1
+    return c
+  }, [rows])
+
+  const grouped = useMemo(() => {
+    const list = (rows || []).filter((r) => langTab === 'all' || r.lang === langTab)
+    return [...list].sort((a, b) =>
+      new Date(b.published_at || b.updated_at || 0) - new Date(a.published_at || a.updated_at || 0))
+  }, [rows, langTab])
+
   const draftCount = useMemo(() => (rows || []).filter((r) => !r.published).length, [rows])
 
   if (!authed) {
@@ -365,6 +378,34 @@ export default function InsightsAdminPage() {
               </Stack>
             </Stack>
             {err && <Alert severity="error" sx={{ mb: 2, borderRadius: '10px' }}>{err}</Alert>}
+
+            {/* Language tabs */}
+            <Stack direction="row" spacing={1} sx={{ mb: 3, flexWrap: 'wrap', rowGap: 1 }}>
+              {[
+                { key: 'all', label: 'All' },
+                { key: 'en', label: 'English' },
+                { key: 'ru', label: 'Русский' },
+                { key: 'ar', label: 'العربية' },
+                { key: 'fa', label: 'فارسی' },
+              ].map((t) => {
+                const active = langTab === t.key
+                return (
+                  <Button key={t.key} onClick={() => setLangTab(t.key)}
+                    sx={{ fontFamily: FONT, fontWeight: 700, textTransform: 'none', fontSize: 13.5,
+                      px: 2, py: 0.7, borderRadius: '10px', minWidth: 0,
+                      color: active ? '#c8c95a' : 'rgba(255,255,255,0.6)',
+                      border: active ? '1px solid rgba(140,141,37,0.55)' : HAIR,
+                      bgcolor: active ? 'rgba(140,141,37,0.16)' : 'transparent',
+                      '&:hover': { bgcolor: 'rgba(140,141,37,0.10)', borderColor: 'rgba(140,141,37,0.4)' } }}>
+                    {t.label}
+                    <Box component="span" sx={{ ml: 0.8, fontSize: 11.5, fontWeight: 700,
+                      color: active ? 'rgba(200,201,90,0.8)' : 'rgba(255,255,255,0.35)' }}>
+                      {langCounts[t.key] ?? 0}
+                    </Box>
+                  </Button>
+                )
+              })}
+            </Stack>
 
             {rows === null ? (
               <Box sx={{ py: 10, textAlign: 'center' }}><CircularProgress sx={{ color: OLIVE_BRIGHT }} /></Box>

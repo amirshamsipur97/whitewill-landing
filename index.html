@@ -8,17 +8,35 @@
            • GA4 Analytics : G-P2PTCKJKYK  (send_page_view:false → manual SPA
              page_views from src/analytics.js, so each page is recorded with its
              own title + content group + language)
-           • Google Ads    : AW-1774372667 (Google tag GT-M3KMFWHL). Required so
+           • Google Ads    : AW-17743726667 (Google tag GT-M3KMFWHL). Required so
              Google Ads can DETECT the tag + run conversion tracking. Without
              this config line the Ads tag is absent → "Tag stopped sending data".
          gtag's config() includes the Conversion Linker automatically. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P2PTCKJKYK"></script>
+    <!-- gtag loads AFTER window.load (+1.5s) so its ~300 ms of JS eval never
+         competes with the first paint. The inline gtag() stub below keeps
+         queuing every early event into dataLayer; Google's script flushes the
+         queue when it arrives, so page_view / conversion attribution is
+         unchanged — leads convert minutes later, not in the first second. -->
+    <script>
+      (function () {
+        function loadGtag() {
+          setTimeout(function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=G-P2PTCKJKYK';
+            document.head.appendChild(s);
+          }, 1500);
+        }
+        if (document.readyState === 'complete') loadGtag();
+        else window.addEventListener('load', loadGtag);
+      })();
+    </script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-P2PTCKJKYK', { send_page_view: false });
-      gtag('config', 'AW-1774372667');
+      gtag('config', 'AW-17743726667');
     </script>
 
     <!-- Resource hints — open TCP/TLS sockets to the third parties we hit
@@ -30,14 +48,20 @@
     <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
     <link rel="preconnect" href="https://events.mapbox.com" crossorigin>
     <link rel="dns-prefetch" href="https://owgvrxipqlusepozlujv.supabase.co">
-    <!-- Hero video preload — the hero is the first paint, so start fetching
-         its (faststart) MP4 in parallel with the JS bundle. `media` makes the
-         browser pick exactly one source: the lighter mobile clip on phones,
-         the full clip on larger screens. This is what lets us drop the poster
-         image yet still have the first frame land fast (no empty hero). -->
-    <link rel="preload" as="video" type="video/mp4" href="/video/hero-mobile.mp4" media="(max-width: 768px)">
-    <link rel="preload" as="video" type="video/mp4" href="/video/hero.mp4" media="(min-width: 769px)">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Hero first-paint preload. The hero is a small looping drone video
+         (mobile 0.7 MB / desktop 1.5 MB); its first-frame POSTER is the LCP
+         element, so the poster preloads at high priority per viewport and
+         the tiny MP4 streams right behind it. -->
+    <link rel="preload" as="image" href="/images/hero-poster-mobile.jpg" media="(max-width: 768px)" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/hero-poster.jpg" media="(min-width: 769px)" fetchpriority="high">
+    <!-- No video preload on purpose: the MP4s would race the LCP poster for
+         bandwidth. autoplay starts their fetch right after render at media
+         priority, and the poster is the identical first frame meanwhile. -->
+    <!-- Google Fonts CSS loads async (media=print swap trick) so it never
+         blocks the first render; font-display:swap keeps text visible with
+         the fallback face until each font arrives. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
     <meta name="theme-color" content="#000000">
     <title>Irfan Investment Group — Buy Property & Invest in Oman</title>
     <meta name="description" content="Premium real estate brokerage in Oman. Buy apartments, villas and off-plan property in Muscat with freehold ownership and Oman residency for foreign investors." />
@@ -229,7 +253,10 @@
         var splash = document.getElementById('app-splash');
         if (!splash) return;
         var now = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
-        var MIN = 2300, MAX = 3000, start = now(), done = false;
+        // Ads landing traffic: every splash millisecond delays the first
+        // usable paint, so the brand moment is now short — 900ms minimum,
+        // hard-capped at 1500ms even on slow loads.
+        var MIN = 500, MAX = 1200, start = now(), done = false;
 
         function hide() {
           if (done) return; done = true;

@@ -54,6 +54,7 @@ import { fetchProjects, fetchProjectUnits } from '../supabase'
 import { getProjectDetails } from '../data/projectDetails.js'
 import ProjectInquiryModal from '../components/ProjectInquiryModal'
 import { slugify } from './BuyPage.jsx'
+import { galleryFor, coverForSlug } from '../projectGallery.js'
 
 const OLIVE = '#7c7856'
 const OLIVE_BRIGHT = '#8c8d25'
@@ -95,6 +96,14 @@ const FEATURES_HEADING = {
   en: 'Features & amenities',
   ar: 'المزايا والمرافق',
   ru: 'Особенности и удобства',
+  fa: 'امکانات و ویژگی‌ها',
+}
+
+const GALLERY_HEADING = {
+  en: 'Gallery',
+  ar: 'المعرض',
+  ru: 'Галерея',
+  fa: 'گالری تصاویر',
 }
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
@@ -117,7 +126,9 @@ function coverFor(project) {
   // Deterministic fallback by id so each project keeps a stable cover.
   const idx = (Number(project.id) || project.name.charCodeAt(0)) % PLACEHOLDER_POOL.length
   return {
-    primary: `/images/projects/${slug}.jpg`,
+    // Bundled gallery cover (src/assets/projects/<slug>/) wins over the
+    // legacy /public drop-in path; placeholder stays as onError fallback.
+    primary: coverForSlug(slug) || `/images/projects/${slug}.jpg`,
     fallback: PLACEHOLDER_POOL[idx],
   }
 }
@@ -679,6 +690,50 @@ export default function BuyProjectPage() {
             </Stack>
           </Box>
         </Box>
+
+        {/* ── Gallery (all bundled images beyond the hero cover) ───── */}
+        {galleryFor(slugify(project.name)).length > 1 && (
+          <Box sx={{ mb: { xs: 6, md: 9 }, pt: { xs: 1, md: 2 }, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <Typography
+              component="h2"
+              sx={{
+                fontFamily: '"Arsenal SC", "Inter", sans-serif',
+                fontWeight: 300,
+                fontSize: { xs: 24, md: 30 },
+                letterSpacing: '-0.01em',
+                mt: { xs: 4, md: 5 },
+                mb: { xs: 3, md: 4 },
+              }}
+            >
+              {GALLERY_HEADING[lang] || GALLERY_HEADING.en}
+            </Typography>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                gap: { xs: 2, md: 3 },
+              }}
+            >
+              {galleryFor(slugify(project.name)).slice(1).map((src, i) => (
+                <Box
+                  key={src}
+                  component="img"
+                  src={src}
+                  alt={`${project.name} ${i + 2}`}
+                  loading="lazy"
+                  sx={{
+                    width: '100%',
+                    aspectRatio: '16 / 10',
+                    objectFit: 'cover',
+                    borderRadius: '16px',
+                    display: 'block',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+        )}
 
         {/* ── Features & amenities (icon grid, Figma 378-17112) ────── */}
         {Array.isArray(details?.features) && details.features.length > 0 && (

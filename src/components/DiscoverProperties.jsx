@@ -162,6 +162,22 @@ export default function DiscoverProperties() {
   }, [])
 
   useEffect(() => {
+    // The scrub video is huge; preload="none" keeps it out of the initial
+    // page load entirely. Start fetching two viewports before the section
+    // arrives so the scrub is buffered by the time the user reaches it.
+    const v = videoRef.current
+    if (!v) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        try { v.load() } catch {}
+        io.disconnect()
+      }
+    }, { rootMargin: '200% 0px' })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
       // ─── 1. CHARACTER COLOR REVEAL (pre-pin) ────────────────────────────
       // Initial colour set on the inline style as a Tailwind-friendly hex.
@@ -619,7 +635,7 @@ export default function DiscoverProperties() {
             src="/video/muscat-greater.mp4"
             muted
             playsInline
-            preload="auto"
+            preload="none"
             // Poster falls back to the old still while the video buffers
             // so there's no black frame on first paint.
             poster="/peninsula.jpg"

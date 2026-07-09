@@ -1,6 +1,6 @@
 # Irfan Investment (whitewill-landing) — Session Handoff
 
-_Last updated: 2026-07-02. Consolidated reference for continuing work in a new session._
+_Last updated: 2026-07-09._ Consolidated reference for continuing work in a new session._
 
 ---
 
@@ -100,3 +100,28 @@ Full details persist in auto-memory (loads every session) — see `MEMORY.md` in
 3. Rotate the Anthropic API key exposed in n8n Config (and the Supabase anon key/admin password are also in that node).
 4. Big workflow still has Google Sheets OAuth broken on "Save * to Client Sheet" nodes (credential `cJSsSNhyRDc1s6sR` tokenless) — user must reconnect in n8n UI.
 5. WhatsApp confirmation nodes still on Twilio sandbox (fail silently).
+
+---
+
+## Session log 2026-07-03 → 2026-07-09 (perf + ads + SEO sprint)
+
+### Site / performance (all deployed)
+- **PageSpeed: mobile 58→85, desktop 47→98.** The big levers: `useIsMobile` now reads matchMedia synchronously (phones were mounting desktop-only sections for one tick → ~40MB video downloads); ALL below-fold landing sections are wrapped in `DeferredMount` (App.jsx, IO rootMargin 200%) incl. AboutFounder/Logos/GlobalPresence/Waterfront/ContactCTA/SiteFooter/PropertyMap; main CSS is **inlined into index.html at build** by root-level `inline-css.mjs` (chained in `npm run build`; NOTE `.vercelignore` excludes `scripts/` — that's why the file lives at repo root); Google Fonts CSS async; gtag injected at window.load+1.5s (dataLayer stub queues events — conversion tracking intact); splash MIN/MAX 500/1200ms; heavy images recompressed (originals in session scratchpad img-backup).
+- **Hero = 10s LOOPING Mutrah drone video** (5s+5s from Desktop/Video/Mutrah Drone_1/2.mp4, built with npm `ffmpeg-static`): `public/video/hero-loop.mp4` 1920×1080 CRF22 (5.9MB) + `hero-loop-mobile.mp4` 1280×720 (2.1MB) + first-frame posters `public/images/hero-poster{,-mobile}.jpg`. ScrollVideoHero: autoplay/muted/loop, NO scrub; GSAP text stages on fixed pacing. A poster `<img>` sits permanently UNDER the video — Safari's backdrop-filter (LeadPopup) can't sample video and went black without it. Old hero.mp4/hero-mobile.mp4 kept (AboutPage uses them).
+- **Buy galleries:** 14 projects have real photos in `src/assets/projects/<slug>/N.jpg` (see whitewill-add-project-workflow memory). Remaining placeholders: TSCY, Aida, Sarooj Villas, Muscat Bay Ready, Shops(Pearl-Ready), Plumeria, Maysan.
+
+### Blog / SEO agent (n8n `KjDPPqA7lRm0U2M2`, ACTIVE, daily 05:00 UTC)
+- Hardened: forced tool_use (`emit_article`) → schema-valid JSON; completeness loop (`Fetch saved langs`→`Find missing langs`→re-queue, max 2 retries then LOUD fail); `wrongLanguage()` script check (fa keyword once dragged the ar article into Persian — fixed + data repaired); em-dash ban; "current year 2026" rule.
+- **Outage post-mortems:** Jul 6-7 = n8n exec quota exhausted (2-min Vapi poll ≈21.6k/mo); user upgraded to **Pro (10k/mo)** and Vapi poll is now cron `*/4 6-17 * * *` + `*/30` overnight (≈6.2k/mo; whole account ≈7.7k). Jul 9 = **Anthropic API credits ran out**; user topped up $19.42 (~10 days) — recommend auto-reload. Manual re-run recipe: `execute_workflow` MCP on KjDPPqA7lRm0U2M2, mode manual.
+- SEO shipped: related-articles strip on article pages, ItemList JSON-LD on /insights, Insights footer link, **build-time prerender** (`prerender-insights.mjs` → 54 static article pages with full meta/content; new articles get prerendered on next deploy). GSC verified `sc-domain:irfaninvest.com`: only 12 indexed / 59 discovered-not-indexed / 42 duplicate-wrong-canonical (SPA shell problem — prerender is the fix, watch GSC over next weeks).
+- Admin panel `/insights-admin` (password in edge fn `insights-admin`): language tabs + date sort; visitor launchers hidden on admin route.
+
+### Google Ads (account 855-960-9654)
+- **C1 "AE | EN | Oman Property & Investment" (24001281094), ACTIVE, learning until ~Jul 17 — DO NOT TOUCH.** 7-day: 552 impr / 70 clicks / CTR 12.7% / $167 / 4 conv @ ~$42. Panel "shows no numbers" gotcha = date-range picker stuck on an old custom range.
+- **Old campaign autopsy (23646910314 "UAE | Property | Lead Gen", paused):** its 39.4K impressions were **98.3% Display Network**, search CPC $8.04, CTR 0.59%, broad match, landing `/property/investment` now 404. Its 11 conv ≈ same CPA. Lesson: never enable Display expansion in search campaigns.
+- **Semrush MCP is CONNECTED** (mcp 465e59d3…, uses API units). Country research saved in `marketing/semrush/05-gcc-europe-expansion.md`: **Oman = 10x AE volume** (invest in oman 2,400/mo; oman investor visa 320 @ $0.20), UK best in Europe (golden visa 90), Germany = Persian diaspora (خرید ملک در عمان 70/mo), in/pk cheap volume. Master strategy in `06-master-ads-strategy.md` (portfolio C1 AE / C2 OM / C3 UK / C4 FA-DE).
+- **NEXT ACTION (user approved, wizard was interrupted): build C2 "OM | EN" Search campaign** — clone C1 structure; geo Oman presence; Maximize Conversions; budget **$15/day, publish ENABLED (user explicitly said do NOT pause)**; ad groups: Invest in Oman / Investor Visa & Residency / Buy Property & Real Estate (+ apartments-for-sale-in-muscat tight group); attach shared negative list + campaign-level sovereign-fund negatives (investment authority/fund, oia, future fund); reuse C1 RSA copy adapted. Then: fix 404 redirect `/property/investment→/buy` in vercel.json; after Jul 17 add sovereign-fund negatives to C1; then C3 UK, C4 FA.
+
+### Misc
+- Client quotation prompt (EN→FA, site $2k + dashboard $2k + CRM $3-4k market) delivered in chat 2026-07-07 — user runs it through OpenAI.
+- Persian RTL: Claude Code renderer can't do RTL (issues #38005/#45652/#30100); chat style = pure-Persian rules (memory persian-rtl-writing-style); long Persian deliverables → Artifacts (proven RTL).

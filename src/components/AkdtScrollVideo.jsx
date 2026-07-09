@@ -63,6 +63,22 @@ export default function AkdtScrollVideo() {
   }
 
   useEffect(() => {
+    // The scrub video is huge; preload="none" keeps it out of the initial
+    // page load entirely. Start fetching two viewports before the section
+    // arrives so the scrub is buffered by the time the user reaches it.
+    const v = videoRef.current
+    if (!v) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        try { v.load() } catch {}
+        io.disconnect()
+      }
+    }, { rootMargin: '200% 0px' })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
       const video = videoRef.current
       if (!video) return
@@ -269,7 +285,7 @@ export default function AkdtScrollVideo() {
             src="/video/akdt-dmp.mp4"
             muted
             playsInline
-            preload="auto"
+            preload="none"
             sx={{
               position: 'absolute',
               inset: 0,

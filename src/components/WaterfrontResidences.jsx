@@ -132,18 +132,24 @@ export default function WaterfrontResidences() {
   const goNext = () => setActive((i) => (i + 1) % total)
   const goTo   = (i) => setActive(((i % total) + total) % total)
 
-  // Eager-preload the hero photo so it's decoded by the time the section
-  // scrolls into view. Without this, the browser defers the background-image
-  // fetch until the section is near the viewport — fast scrollers see a flash
-  // of empty container, which reads as an image "jump".
+  // Warm the section photo without competing with the critical first paint:
+  // a LOW-priority preload issued once the browser goes idle. The old
+  // fetchPriority=high preload made this ~200 KB image race the hero/LCP.
   useEffect(() => {
-    const link = document.createElement('link')
-    link.rel = 'preload'
-    link.as = 'image'
-    link.href = '/images/waterfront-bg-v2.jpg'
-    link.fetchPriority = 'high'
-    document.head.appendChild(link)
-    return () => { link.remove() }
+    let link
+    const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1200))
+    const handle = idle(() => {
+      link = document.createElement('link')
+      link.rel = 'preload'
+      link.as = 'image'
+      link.href = '/images/waterfront-bg-v2.jpg'
+      link.fetchPriority = 'low'
+      document.head.appendChild(link)
+    })
+    return () => {
+      if (window.cancelIdleCallback && typeof handle === 'number') window.cancelIdleCallback(handle)
+      if (link) link.remove()
+    }
   }, [])
 
   // Scroll-driven shrink/round as the section exits the viewport.

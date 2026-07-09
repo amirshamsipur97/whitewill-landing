@@ -105,6 +105,30 @@ export default function InsightsPage() {
     return () => { alive = false }
   }, [lang])
 
+  // ItemList JSON-LD — tells crawlers this page is the canonical list of the
+  // blog's articles and hands them the ordered URLs.
+  useEffect(() => {
+    const ID = 'insights-list-jsonld'
+    document.getElementById(ID)?.remove()
+    if (!articles || articles.length === 0) return
+    const prefix = lang === 'en' ? '' : `/${lang}`
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.id = ID
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: articles.slice(0, 20).map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: a.title,
+        url: `https://www.irfaninvest.com${prefix}/insights/${a.slug}`,
+      })),
+    })
+    document.head.appendChild(script)
+    return () => document.getElementById(ID)?.remove()
+  }, [articles, lang])
+
   const loading = articles === null
 
   return (

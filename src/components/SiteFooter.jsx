@@ -39,6 +39,9 @@ const PAGE_LINKS = [
   { label: 'Buy', to: '/buy', navKey: 'buy' },
   { label: 'Project', to: '/', navKey: 'project' },
   { label: 'Maison Shirdel', to: '/maison-shirdel' },
+  // The blog drives most organic entries — a footer link on every page keeps
+  // it one crawl hop from anywhere on the site.
+  { label: 'Insights', to: '/insights', navKey: 'insights' },
   { label: 'About us', to: '/about', navKey: 'about' },
 ]
 

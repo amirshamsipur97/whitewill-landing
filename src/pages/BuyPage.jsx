@@ -35,6 +35,7 @@ import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
 import { getProjectDetails } from '../data/projectDetails.js'
 import BuyFiltersModal, { DEFAULT_FILTERS, unitPasses, countMatchingProjects } from '../components/BuyFiltersModal.jsx'
+import { coverForSlug } from '../projectGallery.js'
 
 // ── brand tokens ────────────────────────────────────────────────────────
 const OLIVE = '#7c7856'
@@ -57,11 +58,13 @@ const PLACEHOLDER_POOL = [
 ]
 
 function coverFor(project, index) {
-  // Try a project-specific image first (drop-in convention), else round-robin.
+  // Bundled gallery cover first (src/assets/projects/<slug>/ — see
+  // projectGallery.js), then the legacy /public drop-in path, else the
+  // round-robin placeholder via onError below.
   const slug = slugify(project.name)
+  const bundled = coverForSlug(slug)
   const specific = `/images/projects/${slug}.jpg`
-  // Browsers won't error if missing; we leave fallback to onError below.
-  return { primary: specific, fallback: PLACEHOLDER_POOL[index % PLACEHOLDER_POOL.length] }
+  return { primary: bundled || specific, fallback: PLACEHOLDER_POOL[index % PLACEHOLDER_POOL.length] }
 }
 
 export function slugify(name) {

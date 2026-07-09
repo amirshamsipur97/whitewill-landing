@@ -20,7 +20,7 @@
  */
 
 export const GA_ID = 'G-P2PTCKJKYK'          // GA4 Measurement ID
-export const ADS_ID = 'AW-1774372667'        // Google Ads tag (Google tag GT-M3KMFWHL)
+export const ADS_ID = 'AW-17743726667'       // Google Ads tag (Google tag GT-M3KMFWHL)
 
 // Google Ads conversion ACTION label for the lead conversion. The Ads tag above
 // is always installed (index.html) so Ads can detect it; this label is only

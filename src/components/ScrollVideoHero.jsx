@@ -26,9 +26,19 @@ gsap.registerPlugin(ScrollTrigger)
 const SCROLL_HEIGHT_VH = 500       // total scroll travel through the hero
 const SCRUB_LAG = 1.0              // seconds of smoothing on scroll (0 = instant)
 
-function pickVideoSrc() {
-  if (typeof window === 'undefined') return '/video/hero.mp4'
-  return window.innerWidth <= 768 ? '/video/hero-mobile.mp4' : '/video/hero.mp4'
+// The hero is a 10-second LOOPING drone video (5 s Mutrah clip 1 + 5 s clip 2),
+// re-encoded to the same 3:4 portrait format the old hero used. It autoplays
+// muted (no scroll-scrub) while GSAP drives the text stages from scroll.
+// Sizes are tiny (desktop 1.5 MB / mobile 0.7 MB) and each has a first-frame
+// poster so LCP is still an instant image paint.
+function pickImageMode() {
+  if (typeof window === 'undefined') return false
+  return window.innerWidth <= 768
+}
+
+const HERO_LOOP = {
+  desktop: { src: '/video/hero-loop.mp4', poster: '/images/hero-poster.jpg' },
+  mobile: { src: '/video/hero-loop-mobile.mp4', poster: '/images/hero-poster-mobile.jpg' },
 }
 
 export default function ScrollVideoHero() {
@@ -43,7 +53,7 @@ export default function ScrollVideoHero() {
   const ctaRef = useRef(null)
   const logoRef = useRef(null)
   const [videoReady, setVideoReady] = useState(false)
-  const [videoSrc] = useState(pickVideoSrc)
+  const [imageMode] = useState(pickImageMode)
   const isRTL = lang === 'ar' || lang === 'fa'
 
   useEffect(() => {
@@ -56,72 +66,32 @@ export default function ScrollVideoHero() {
   useEffect(() => {
     const wrap = wrapRef.current
     const video = videoRef.current
-    if (!wrap || !video) return
+    if (!wrap) return
 
     let tl
     let metadataReady = false
 
-    // ── iOS Safari unlock ────────────────────────────────────────────
-    // On iOS Safari a <video> that has never been played stays on its
-    // poster (or a black frame). Setting `currentTime` to drive scrub
-    // animation BEFORE the element has been activated by `.play()` may
-    // be silently ignored — the user sees a black hero forever.
-    //
-    // Fix: kick off `.play()` once muted/playsInline are confirmed, then
-    // immediately pause. The video is now "primed": seeking via
-    // currentTime renders frames normally, and there's no audible /
-    // visible playback to interfere with the scroll-scrub story.
-    //
-    // We do this once, when metadata has loaded enough that play() is
-    // valid (readyState >= 2 = HAVE_CURRENT_DATA).
-    const primeForScrub = async () => {
-      try {
-        video.muted = true
-        video.playsInline = true
-        // iOS Safari often ignores preload="auto" and defers loading until a
-        // gesture, so canplay may never fire. Nudge the load if we still
-        // don't have frame data.
-        if (video.readyState < 2) { try { video.load() } catch {} }
-        const p = video.play()
-        if (p && typeof p.then === 'function') await p
-        video.pause()
-        // Force a frame paint. iOS won't repaint when you set the SAME
-        // currentTime it's already on, so seek to a tiny non-zero offset —
-        // this guarantees the decoded frame replaces the poster.
-        video.currentTime = 0.05
-      } catch {
-        // play() was rejected (iOS Low-Power Mode, or no user gesture yet).
-        // CRITICAL: we must NOT bail here — that's what left the poster
-        // (peninsula.jpg) showing forever on mobile, so the hero looked like
-        // a static image. Seeking does NOT require play() permission, so we
-        // force a decode+paint of frame 0 directly. The real scrub then takes
-        // over the moment the user scrolls.
-        try { video.currentTime = 0.05 } catch {}
-      }
+    // ── Autoplay kick + iOS safety net ───────────────────────────────
+    // The loop video autoplays muted. iOS Low-Power Mode (and some Android
+    // data savers) reject autoplay until a real user gesture, so the first
+    // touch/scroll retries play(). Until then the first-frame poster shows,
+    // which is visually identical to a paused frame 0.
+    const tryPlay = () => {
+      if (!video) return
+      video.muted = true
+      video.playsInline = true
+      const p = video.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
     }
-    if (video.readyState >= 2) primeForScrub()
-    else {
-      video.addEventListener('canplay', primeForScrub, { once: true })
-      video.addEventListener('loadeddata', primeForScrub, { once: true })
-    }
-
-    // iOS unlocks media playback only after a real user gesture. Our hero is
-    // the first thing on the page, so the user's first touch/scroll is the
-    // perfect moment to (re)prime the video — this is the most reliable iOS
-    // unlock and the final safety net against the "stuck on poster" bug.
-    const gestureUnlock = () => { primeForScrub() }
+    const gestureUnlock = () => { tryPlay() }
     const gestureOpts = { once: true, passive: true }
+    tryPlay()
     window.addEventListener('touchstart', gestureUnlock, gestureOpts)
     window.addEventListener('pointerdown', gestureUnlock, gestureOpts)
     window.addEventListener('scroll', gestureUnlock, gestureOpts)
 
     const buildTimeline = () => {
       if (tl) tl.kill()
-      const duration = video.duration || 12
-
-      // Wrap proxy: GSAP animates this object's `time` from 0..duration
-      // and we mirror it onto video.currentTime each tick.
-      const proxy = { time: 0 }
       const steps = [step1Ref.current, step2Ref.current, step3Ref.current, step4Ref.current]
 
       // Set initial visual state. All text steps start hidden except #1.
@@ -143,24 +113,8 @@ export default function ScrollVideoHero() {
         defaults: { ease: 'power2.inOut' },
       })
 
-      // Video scrub — proxy.time goes from 0 → duration over the whole scroll
-      tl.to(proxy, {
-        time: duration - 0.05,
-        ease: 'none',
-        onUpdate: () => {
-          // Only seek when buffered & diff is meaningful → no decoder thrash.
-          const t = proxy.time
-          const sr = video.seekable
-          for (let i = 0; i < sr.length; i++) {
-            if (t >= sr.start(i) && t <= sr.end(i)) {
-              if (Math.abs(t - video.currentTime) > 0.04) {
-                try { video.currentTime = t } catch {}
-              }
-              return
-            }
-          }
-        },
-      }, 0)
+      // No video scrub anymore: the loop video plays by itself. Scroll only
+      // drives the text/logo stages below.
 
       // Scroll hint fades out in the first 8% of scroll
       tl.to(hintRef.current, { opacity: 0, duration: 0.08 }, 0)
@@ -231,16 +185,10 @@ export default function ScrollVideoHero() {
       ScrollTrigger.refresh()
     }
 
-    const onMetadata = () => {
-      if (metadataReady) return
-      metadataReady = true
-      setVideoReady(true)
-      buildTimeline()
-    }
-
-    video.addEventListener('loadedmetadata', onMetadata)
-    video.addEventListener('loadeddata', onMetadata)
-    if (video.readyState >= 1) onMetadata()
+    // The timeline no longer depends on video metadata — build immediately.
+    metadataReady = true
+    setVideoReady(true)
+    buildTimeline()
 
     // Rebuild timeline on resize (handles orientation changes)
     const onResize = () => {
@@ -249,10 +197,6 @@ export default function ScrollVideoHero() {
     window.addEventListener('resize', onResize)
 
     return () => {
-      video.removeEventListener('loadedmetadata', onMetadata)
-      video.removeEventListener('loadeddata', onMetadata)
-      video.removeEventListener('canplay', primeForScrub)
-      video.removeEventListener('loadeddata', primeForScrub)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('touchstart', gestureUnlock)
       window.removeEventListener('pointerdown', gestureUnlock)
@@ -306,32 +250,38 @@ export default function ScrollVideoHero() {
           borderRadius: 0,
         }}
       >
-        {/* Video — mobile uses the lighter hero-mobile.mp4; desktop
-            uses hero.mp4 (see pickVideoSrc).
+        {/* Static first-frame layer UNDER the video. Safari's backdrop-filter
+            (the lead popup's blurred overlay) cannot sample video frames and
+            renders the hero pitch black behind the popup; with this image
+            beneath, the blur falls back to the same frame instead. It also
+            doubles as an instant paint before the video buffers. */}
+        <Box
+          component="img"
+          src={imageMode ? HERO_LOOP.mobile.poster : HERO_LOOP.desktop.poster}
+          alt=""
+          aria-hidden
+          decoding="async"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            filter: 'brightness(0.78) contrast(1.05)',
+          }}
+        />
 
-            CRITICAL: this is a SEEK-DRIVEN scrub video, NOT a playback
-            video. It must NOT carry `autoPlay`. With autoplay on
-            Safari the element plays forward on its own (the scrub
-            `onUpdate` only seeks when the user scrolls), runs ~1s past
-            the intro, and lands on a dark transition frame — the hero
-            "goes black after a second". The established unlock is
-            `primeForScrub` (play→pause→currentTime=0 on canplay),
-            which renders frame 0 and leaves the element seekable.
-
-            No `poster` by request: instead of painting a placeholder
-            image during the load delay, we lean on (a) the solid #000
-            wrap background — so the gap is a clean cinematic black, never
-            a white flash — and (b) progressive load. The MP4s are
-            faststart (moov atom first), so the very first frame's bytes
-            arrive first and `primeForScrub` seeks to 0.05 to paint it the
-            instant data is available. A <link rel="preload"> hint in
-            index.html also kicks the download off in parallel with the
-            bundle, so the frame lands fast. */}
+        {/* 10-second Mutrah drone LOOP (5 s + 5 s). Autoplays muted + loops;
+            the first-frame poster paints instantly so LCP never waits on
+            video bytes. Mobile gets the smaller 720p encode (~2 MB). */}
         <Box
           component="video"
           ref={videoRef}
-          src={videoSrc}
+          src={imageMode ? HERO_LOOP.mobile.src : HERO_LOOP.desktop.src}
+          poster={imageMode ? HERO_LOOP.mobile.poster : HERO_LOOP.desktop.poster}
+          autoPlay
           muted
+          loop
           playsInline
           preload="auto"
           onLoadedData={() => setVideoReady(true)}

@@ -57,8 +57,20 @@ function TeamCard({ name, role, cta, videoSrc, onCtaClick }) {
       v.addEventListener('loadeddata', primeFirstFrame, { once: true })
     }
 
+    // The clips total ~8 MB: with preload="none" they cost nothing at page
+    // load, and this observer starts the fetch one viewport before the
+    // section scrolls in, so hover-to-play still feels instant.
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        try { v.load() } catch {}
+        io.disconnect()
+      }
+    }, { rootMargin: '100% 0px' })
+    io.observe(v)
+
     return () => {
       cancelled = true
+      io.disconnect()
       v.removeEventListener('loadeddata', primeFirstFrame)
     }
   }, [])
@@ -110,7 +122,7 @@ function TeamCard({ name, role, cta, videoSrc, onCtaClick }) {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
           aria-hidden
           style={{
             position: 'absolute',
