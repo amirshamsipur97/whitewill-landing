@@ -35,7 +35,41 @@ import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
 import { getProjectDetails } from '../data/projectDetails.js'
 import BuyFiltersModal, { DEFAULT_FILTERS, unitPasses, countMatchingProjects } from '../components/BuyFiltersModal.jsx'
-import { coverForSlug } from '../projectGallery.js'
+import { coverForSlug, galleryFor } from '../projectGallery.js'
+import { OPEN_EVENT as SALALAH_OPEN_EVENT } from '../components/SalalahPopup.jsx'
+import { LocalizedLink } from '../lib/localize.js'
+
+// ── Salalah featured banner (above the listings; SEO copy in the DOM) ──
+const SALALAH_BANNER = {
+  en: {
+    badge: 'Featured · Khareef Season',
+    title: 'Hawana Salalah — Freehold Villas & Chalets for Sale in Salalah, Oman',
+    sub: 'From OMR 98,000 · up to 10.6% rental returns · new Lubana Island lagoon villas · freehold with Omani residency eligibility for all nationalities.',
+    ctaView: 'Explore Hawana Salalah',
+    ctaLeads: 'Get the price list',
+  },
+  ru: {
+    badge: 'Проект недели · Сезон харифа',
+    title: 'Hawana Salalah — виллы и шале фрихолд в Салале, Оман',
+    sub: 'От 98 000 OMR · доходность до 10,6% · новые виллы у лагуны Lubana Island · фрихолд с правом на резидентство Омана для всех национальностей.',
+    ctaView: 'Смотреть Hawana Salalah',
+    ctaLeads: 'Получить прайс-лист',
+  },
+  ar: {
+    badge: 'مشروع مميز · موسم الخريف',
+    title: 'هوانا صلالة: فلل وشاليهات تملّك حر للبيع في صلالة، عُمان',
+    sub: 'من 98,000 ر.ع · عائد إيجاري حتى 10.6% · فلل جزيرة لبانة الجديدة على البحيرة · تملّك حر مع أهلية الإقامة العُمانية لجميع الجنسيات.',
+    ctaView: 'استكشف هوانا صلالة',
+    ctaLeads: 'احصل على قائمة الأسعار',
+  },
+  fa: {
+    badge: 'پروژه ویژه · موسم خریف',
+    title: 'هوانا صلاله؛ فروش ویلا و شاله فری‌هولد در سلاله عمان',
+    sub: 'از ۹۸٬۰۰۰ ریال عمان · بازده اجاره تا ۱۰.۶٪ · ویلاهای لاگونی جدید جزیره لوبانا · مالکیت کامل با امکان اقامت عمان برای همه ملیت‌ها.',
+    ctaView: 'مشاهده هوانا صلاله',
+    ctaLeads: 'دریافت لیست قیمت',
+  },
+}
 
 // ── brand tokens ────────────────────────────────────────────────────────
 const OLIVE = '#7c7856'
@@ -95,12 +129,34 @@ function fmtOmr(n) {
 }
 
 // ── card component ─────────────────────────────────────────────────────
+// ── Salalah special releases row (branded Figma covers, one row of 3) ──
+const SALALAH_RELEASES = [
+  { key: 'Amazi', name: 'Lubana Island', location: 'Amazi · Hawana Salalah', gallerySlug: 'amazi', from: '98,000', to: '/buy/hawana-salalah?release=Amazi' },
+  { key: 'Muscat Bay', name: 'Muscat Bay', location: 'Zen Residences · Muscat Bay', gallerySlug: 'muscat-bay', from: '138,000', by: 'Zen Development and Investment', to: '/buy/zen-residences' },
+  { key: 'Olive Farms', name: 'Olive Farms', location: 'Raya · Jebel Sifah', gallerySlug: 'olive-farms', from: '77,250', to: '/buy/jebel-sifah?release=Olive%20Farms' },
+]
+const RELEASES_L = {
+  en: { title: 'Special Releases', from: 'From OMR {p}', onRequest: 'Prices on request', by: 'Muriya (Orascom Development)' },
+  ru: { title: 'Специальные релизы', from: 'От {p} OMR', onRequest: 'Цены по запросу', by: 'Muriya (Orascom Development)' },
+  ar: { title: 'إصدارات مميزة', from: 'من {p} ر.ع', onRequest: 'الأسعار عند الطلب', by: 'موريّا (أوراسكوم)' },
+  fa: { title: 'عرضه‌های ویژه', from: 'از {p} ریال عمان', onRequest: 'قیمت‌ها با درخواست', by: 'موریا (اوراسکوم)' },
+}
+
+// Localized "special" tag for featured (Salalah) cards.
+const FEATURED_TAG = {
+  en: '✦ Special · Salalah',
+  ru: '✦ Спецпроект · Салала',
+  ar: '✦ مميز · صلالة',
+  fa: '✦ ویژه · صلاله',
+}
+
 function ProjectCard({ project, units, index, t, lang }) {
   const details = getProjectDetails(project.name, lang)
   const cover = coverFor(project, index)
   const minPrice = priceFrom(units)
   const isItc = !!project.area?.is_itc
   const slug = slugify(project.name)
+  const isFeatured = !!details?.featured
 
   // Locations and developer line.
   const location = [project.area?.name, project.area?.city].filter(Boolean).join(', ')
@@ -118,12 +174,13 @@ function ProjectCard({ project, units, index, t, lang }) {
         borderRadius: '14px',
         overflow: 'hidden',
         bgcolor: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: isFeatured ? '1px solid rgba(20,184,166,0.55)' : '1px solid rgba(255,255,255,0.06)',
+        animation: isFeatured ? 'irfanGlowPulse 2.8s ease-in-out infinite' : 'none',
         transition: 'transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1), border-color 220ms ease, box-shadow 320ms ease',
         '&:hover': {
           transform: 'translateY(-4px)',
-          borderColor: 'rgba(255,255,255,0.18)',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
+          borderColor: isFeatured ? 'rgba(45,212,191,0.9)' : 'rgba(255,255,255,0.18)',
+          boxShadow: isFeatured ? '0 0 34px rgba(20,184,166,0.8), 0 24px 60px rgba(0,0,0,0.5)' : '0 24px 60px rgba(0,0,0,0.5)',
         },
         '&:hover .pc-img': { transform: 'scale(1.05)' },
         '&:hover .pc-arrow': { opacity: 1, transform: 'translate(0,0)' },
@@ -158,6 +215,29 @@ function ProjectCard({ project, units, index, t, lang }) {
             transition: 'transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1)',
           }}
         />
+
+        {/* Featured sparkle tag (Salalah special) */}
+        {isFeatured && (
+          <Chip
+            label={FEATURED_TAG[lang] || FEATURED_TAG.en}
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 56,
+              zIndex: 2,
+              fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.05em',
+              color: '#fff',
+              bgcolor: 'rgba(14,142,133,0.9)',
+              border: '1px solid rgba(45,212,191,0.8)',
+              backdropFilter: 'blur(8px)',
+              animation: 'irfanSparkle 2s ease-in-out infinite',
+            }}
+          />
+        )}
 
         {/* Top-left status badge */}
         {units.length > 0 && (
@@ -410,7 +490,12 @@ export default function BuyPage() {
 
     return projects.filter((p) => {
       if (q) {
-        const hay = [p.name, p.area?.name, p.area?.city, p.area?.governorate, p.developer?.name]
+        // Unit layout_type is included so sub-projects encoded there
+        // (e.g. "Lubana Island · 3-Bed Villa") are searchable too.
+        const hay = [
+          p.name, p.area?.name, p.area?.city, p.area?.governorate, p.developer?.name,
+          ...(unitsByProject.get(p.id) || []).map((u) => u.layout_type),
+        ]
           .filter(Boolean).join(' ').toLowerCase()
         if (!hay.includes(q)) return false
       }
@@ -470,6 +555,16 @@ export default function BuyPage() {
         pb: { xs: 10, md: 14 },
       }}
     >
+      <style>{`
+        @keyframes irfanGlowPulse {
+          0%, 100% { box-shadow: 0 0 12px rgba(20,184,166,0.30), 0 0 0 1px rgba(20,184,166,0.35); }
+          50% { box-shadow: 0 0 28px rgba(20,184,166,0.72), 0 0 0 1px rgba(45,212,191,0.85); }
+        }
+        @keyframes irfanSparkle {
+          0%, 100% { opacity: 0.88; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.07); }
+        }
+      `}</style>
       <Container maxWidth="xl">
         {/* ── Hero ─────────────────────────────────────────────────── */}
         <Box sx={{ mb: { xs: 4, md: 6 } }}>
@@ -511,6 +606,202 @@ export default function BuyPage() {
             {t.buyPage.subtitle}
           </Typography>
         </Box>
+
+        {/* ── Salalah featured banner — seen BEFORE the listings ─────── */}
+        {(() => {
+          const bt = SALALAH_BANNER[lang] || SALALAH_BANNER.en
+          const bannerImg = galleryFor('hawana-salalah')[1] || coverForSlug('hawana-salalah')
+          const bannerRtl = lang === 'fa' || lang === 'ar'
+          return (
+            <Box
+              component="aside"
+              dir={bannerRtl ? 'rtl' : 'ltr'}
+              sx={{
+                position: 'relative',
+                mb: { xs: 4, md: 5 },
+                borderRadius: '18px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.12)',
+                minHeight: { xs: 300, md: 240 },
+                display: 'flex',
+                alignItems: 'flex-end',
+              }}
+            >
+              <Box
+                component="img"
+                src={bannerImg}
+                alt="Lubana Island lagoon villas at Hawana Salalah, Oman"
+                sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <Box
+                aria-hidden="true"
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: bannerRtl
+                    ? 'linear-gradient(270deg, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.55) 46%, rgba(0,0,0,0.12) 100%)'
+                    : 'linear-gradient(90deg, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.55) 46%, rgba(0,0,0,0.12) 100%)',
+                }}
+              />
+              <Box sx={{ position: 'relative', p: { xs: 2.5, md: 4 }, maxWidth: 760 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-block',
+                    bgcolor: '#0E8E85',
+                    color: '#fff',
+                    borderRadius: '999px',
+                    px: 1.6,
+                    py: 0.55,
+                    fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif',
+                    fontWeight: 700,
+                    fontSize: 11.5,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    mb: 1.4,
+                  }}
+                >
+                  {bt.badge}
+                </Box>
+                <Typography
+                  component="h2"
+                  sx={{
+                    fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif',
+                    fontWeight: 700,
+                    fontSize: { xs: 19, sm: 23, md: 27 },
+                    lineHeight: 1.22,
+                    mb: 1,
+                  }}
+                >
+                  {bt.title}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontFamily: '"Inter", "Peyda", sans-serif',
+                    fontSize: { xs: 13, md: 14.5 },
+                    color: 'rgba(255,255,255,0.82)',
+                    lineHeight: 1.6,
+                    mb: 2,
+                  }}
+                >
+                  {bt.sub}
+                </Typography>
+                <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
+                  <Box
+                    component={LocalizedLink}
+                    to="/buy/hawana-salalah"
+                    sx={{
+                      bgcolor: '#fff',
+                      color: '#000',
+                      borderRadius: '999px',
+                      px: 2.4,
+                      py: 1,
+                      fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif',
+                      fontWeight: 700,
+                      fontSize: 13.5,
+                      textDecoration: 'none',
+                      transition: 'opacity .2s',
+                      '&:hover': { opacity: 0.85 },
+                    }}
+                  >
+                    {bt.ctaView}
+                  </Box>
+                  <Box
+                    component="button"
+                    type="button"
+                    onClick={() => window.dispatchEvent(new Event(SALALAH_OPEN_EVENT))}
+                    sx={{
+                      bgcolor: 'transparent',
+                      color: '#fff',
+                      border: '1px solid rgba(255,255,255,0.55)',
+                      borderRadius: '999px',
+                      px: 2.4,
+                      py: 1,
+                      cursor: 'pointer',
+                      fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif',
+                      fontWeight: 700,
+                      fontSize: 13.5,
+                      transition: 'background .2s',
+                      '&:hover': { bgcolor: 'rgba(255,255,255,0.12)' },
+                    }}
+                  >
+                    {bt.ctaLeads}
+                  </Box>
+                </Stack>
+              </Box>
+            </Box>
+          )
+        })()}
+
+        {/* ── Salalah special releases — one row of 3 branded covers ── */}
+        {(() => {
+          const rl = RELEASES_L[lang] || RELEASES_L.en
+          return (
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              <Typography
+                sx={{
+                  fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif',
+                  fontWeight: 700,
+                  fontSize: { xs: 17, md: 20 },
+                  mb: 2,
+                }}
+              >
+                <Box component="span" sx={{ color: '#2dd4bf', mr: 1 }}>✦</Box>
+                {rl.title}
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2.5 }}>
+                {SALALAH_RELEASES.map((rel) => {
+                  const img = galleryFor(rel.gallerySlug)[0]
+                  return (
+                    <Box
+                      key={rel.key}
+                      component={RouterLink}
+                      to={rel.to || `/buy/hawana-salalah?release=${encodeURIComponent(rel.key)}`}
+                      sx={{
+                        display: 'block',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        borderRadius: '14px',
+                        overflow: 'hidden',
+                        bgcolor: 'rgba(255,255,255,0.02)',
+                        border: '1px solid rgba(20,184,166,0.35)',
+                        transition: 'transform 300ms cubic-bezier(0.22,0.61,0.36,1), border-color .2s, box-shadow .3s',
+                        '&:hover': {
+                          transform: 'translateY(-4px)',
+                          borderColor: 'rgba(45,212,191,0.85)',
+                          boxShadow: '0 0 26px rgba(20,184,166,0.5)',
+                        },
+                        '&:hover .rel-img': { transform: 'scale(1.04)' },
+                      }}
+                    >
+                      <Box sx={{ position: 'relative', width: '100%', aspectRatio: '16 / 10', overflow: 'hidden', bgcolor: '#111' }}>
+                        <Box
+                          component="img"
+                          className="rel-img"
+                          src={img}
+                          alt={`${rel.name} — ${rel.location}`}
+                          loading="lazy"
+                          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 500ms cubic-bezier(0.22,0.61,0.36,1)' }}
+                        />
+                      </Box>
+                      <Box sx={{ p: 2 }}>
+                        <Typography sx={{ fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif', fontWeight: 700, fontSize: 16.5, color: '#fff' }}>
+                          {rel.name}
+                        </Typography>
+                        <Typography sx={{ fontFamily: '"Inter", "Peyda", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.55)', mb: 0.8 }}>
+                          {rel.location} · {rel.by || rl.by}
+                        </Typography>
+                        <Typography sx={{ fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif', fontWeight: 700, fontSize: 13.5, color: '#c9a24b' }}>
+                          {rel.from ? rl.from.replace('{p}', rel.from) : rl.onRequest}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )
+                })}
+              </Box>
+            </Box>
+          )
+        })()}
 
         {/* ── Filter bar — single Filters button + active-chip summary ─ */}
         <Stack

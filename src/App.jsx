@@ -119,7 +119,7 @@ const PropertyMap = lazy(() => import('./components/PropertyMap'))
 import WaterfrontResidences from './components/WaterfrontResidences'
 import HorizontalCarousel from './components/HorizontalCarousel'
 import ContactCTA from './components/ContactCTA'
-import LeadPopup from './components/LeadPopup'
+import SalalahPopup from './components/SalalahPopup.jsx'
 import SiteFooter from './components/SiteFooter'
 import BackToTop from './components/BackToTop'
 import CookieBanner from './components/CookieBanner'
@@ -306,7 +306,7 @@ export default function App() {
       {!isAdmin && <ChatWidget />}
       {/* Site-wide purple lead launcher + popup (auto-opens on the landing
           page only; the pill mirrors the chat pill's size at bottom-left). */}
-      {!isAdmin && <LeadPopup />}
+      {!isAdmin && <SalalahPopup />}
     </Box>
   )
 }

@@ -48,11 +48,37 @@ const D = {
   'Jebel Sifah': {
     tagline: 'Mountain & marina escape — 45 min from Muscat',
     description:
-      'An integrated marina town by Muriya — apartments, townhouses and villas wrapped around a championship golf course, beach, and Sifawy Boutique Hotel.',
-    units: ['Apartment', 'Townhouse', 'Villa'],
-    bedrooms: '1 – 5',
-    priceFrom: 'OMR 95,000',
+      'An integrated marina town by Muriya — apartments, townhouses and villas wrapped around a championship golf course, beach, and Sifawy Boutique Hotel. Now selling in the new Raya district: Solaris golf-view studios and apartments, and Olive Farms freehold farm houses.',
+    units: ['Studio', 'Apartment', 'Farm House', 'Townhouse', 'Villa'],
+    bedrooms: 'Studio – 5',
+    priceFrom: 'OMR 35,625',
     handover: 'Ready & off-plan',
+    subProjects: [
+      {
+        key: 'Solaris',
+        name: 'Solaris · Raya',
+        gallerySlug: 'solaris',
+        location: 'Raya · Jebel Sifah',
+        blurb: {
+          en: 'Golf-view studios and apartments in Raya at Jebel Sifah — studios from OMR 35,625 (38 m²) and 2-bed apartments from OMR 81,035, off-plan with 10% down and a ~2-year plan, delivery from Q4 2027.',
+          ru: 'Студии и апартаменты с видом на гольф в Рая, Джебель-Сифа — студии от 35 625 OMR (38 м²), 2-спальные от 81 035 OMR; офф-план: 10% взнос, план ~2 года, передача с Q4 2027.',
+          ar: 'استوديوهات وشقق بإطلالة على الغولف في رايا بجبل صيفة: استوديوهات من 35,625 ر.ع (38 م²) وشقق بغرفتين من 81,035 ر.ع، على الخارطة بدفعة أولى 10% وخطة نحو سنتين، والتسليم من الربع الأخير 2027.',
+          fa: 'استودیو و آپارتمان با منظره گلف در رایا در جبل سیفه؛ استودیو از ۳۵٬۶۲۵ ریال عمان (۳۸ متر) و دوخوابه از ۸۱٬۰۳۵ ریال. پیش‌فروش با ۱۰٪ پیش‌پرداخت و طرح حدود دوساله، تحویل از پایان ۲۰۲۷.',
+        },
+      },
+      {
+        key: 'Olive Farms',
+        name: 'Olive Farms · Raya',
+        gallerySlug: 'olive-farms',
+        location: 'Raya · Jebel Sifah',
+        blurb: {
+          en: 'Freehold farm houses in Raya at Jebel Sifah — 1 to 3 bedrooms on 260–350 m² plots with private gardens, from OMR 77,250. Off-plan, 10% down + 7.5% quarterly over 3 years.',
+          ru: 'Фермерские дома (фрихолд) в Рая, Джебель-Сифа — 1–3 спальни на участках 260–350 м² с садом, от 77 250 OMR. Офф-план: 10% взнос + 7,5% ежеквартально, 3 года.',
+          ar: 'بيوت مزارع تملّك حر في رايا بجبل صيفة: من غرفة إلى ثلاث غرف على قطع 260 إلى 350 م² بحدائق خاصة، من 77,250 ر.ع. على الخارطة: 10% دفعة أولى ثم 7.5% كل ثلاثة أشهر لثلاث سنوات.',
+          fa: 'خانه‌مزرعه‌های فری‌هولد در رایا در جبل سیفه؛ یک تا سه‌خوابه روی زمین ۲۶۰ تا ۳۵۰ متری با باغ اختصاصی، از ۷۷٬۲۵۰ ریال عمان. پیش‌فروش با ۱۰٪ پیش‌پرداخت و ۷.۵٪ فصلی در سه سال.',
+        },
+      },
+    ],
   },
   'Zen Residences': {
     tagline: 'Studios, apartments & lofts · Muscat Bay',
@@ -280,13 +306,58 @@ const D = {
     handover: 'Ready',
   },
   'Hawana Salalah': {
-    tagline: 'Resort residences · Salalah',
+    tagline: 'Waterfront resort community · Salalah',
     description:
-      'An integrated tourist destination by Muriya — apartments, townhouses and villas inside a 6-million-m² master plan with marina, beaches and three hotels.',
-    units: ['Apartment', 'Townhouse', 'Villa'],
-    bedrooms: '1 – 4',
-    priceFrom: 'OMR 85,000',
+      'Oman\'s largest resort destination by Muriya — freehold chalets, twin villas and standalone villas across 6 million m² of lagoons, marina and white-sand beach on the Dhofar coast.',
+    units: ['Chalet', 'Twin Villa', 'Villa'],
+    bedrooms: '1 – 3',
+    priceFrom: 'OMR 98,000',
     handover: 'Ready & off-plan',
+    featured: true,
+    features: ['waterfront', 'beachAccess', 'marina', 'privatePool', 'fiveStarHotel', 'spa', 'landscapedGardens', 'freehold'],
+    // Muriya portfolio sub-projects shown as selectable releases on the page.
+    // `key` must match project_units.subproject; `gallerySlug` maps to
+    // src/assets/projects/<gallerySlug>/ (falls back to the main gallery).
+    subProjects: [
+      {
+        key: 'Amazi',
+        name: 'Amazi · Lubana Island',
+        gallerySlug: 'amazi',
+        location: 'Hawana Salalah · Salalah',
+        blurb: {
+          en: 'The waterfront heart of Hawana Salalah — lagoon chalets, twin villas and the new Lubana Island villas, freehold with residency eligibility.',
+          ru: 'Прибрежное сердце Hawana Salalah — шале у лагун, твин-виллы и новые виллы Lubana Island, фрихолд с правом на резидентство.',
+          ar: 'قلب هوانا صلالة على الواجهة المائية: شاليهات البحيرات والفلل التوأم وفلل جزيرة لبانة الجديدة، تملّك حر مع أهلية الإقامة.',
+          fa: 'قلب رو به آب هوانا صلاله؛ شاله‌های لاگونی، ویلاهای دوقلو و ویلاهای جدید جزیره لوبانا، فری‌هولد با امکان اقامت.',
+        },
+      },
+    ],
+    sections: [
+      {
+        title: 'The destination',
+        body: 'Hawana Salalah is Oman\'s largest integrated tourism destination, master-developed by Muriya (Orascom Development) on the Dhofar coast. Across roughly 6 million m² it gathers a 170-berth marina, seven kilometres of white-sand beach, swimmable lagoons, five hotels and a water park — with freehold homes woven between them.',
+      },
+      {
+        title: 'Lubana Island',
+        body: 'Lubana Island is the newest residential release at Hawana Salalah — an island neighbourhood in the Amazi district set directly on the lagoons, by Muriya (Orascom Development). The current offer is 3-bedroom lagoon-view villas: single-storey villas of 145 m² built-up with 413 m² gardens on plots of ~558 m² from OMR 170,500, and G+1 villas of 170 m² built-up plus a study room, with 454 m² gardens on plots of 580 m², from OMR 268,600 (prices before 5% VAT). Off-plan with a 3-year developer payment plan — 10% down, then 7.5% quarterly — and delivery three years from contract.',
+      },
+      {
+        title: 'Homes & starting prices',
+        body: 'Current availability spans four formats: 1-bedroom waterfront chalets from OMR 98,000 with projected rental returns up to 10.6%, 2-bedroom beachfront chalets from OMR 129,000, 2-bedroom twin villas with private gardens from OMR 160,000, and 3-bedroom standalone villas from OMR 260,000 — with flexible developer payment plans on off-plan releases and ready units for immediate handover.',
+      },
+      {
+        title: 'Two high seasons',
+        body: 'Salalah is the only Gulf destination with two distinct tourist seasons: the khareef monsoon (June–September) draws hundreds of thousands of GCC visitors escaping the summer heat, while mild winters bring European charter tourism. For owners this means an unusually long rental calendar — a holiday home here earns in summer and winter alike, which is why projected yields run well above regional averages.',
+      },
+      {
+        title: 'Location & access',
+        body: 'The community sits on Taqah Road, about 15 minutes from Salalah city centre and 20 minutes from Salalah International Airport — connected year-round to Muscat and, especially during khareef, directly to Dubai, Sharjah, Abu Dhabi, Riyadh, Jeddah, Dammam, Doha and Kuwait.',
+      },
+      {
+        title: 'Freehold & investor visa',
+        body: 'Hawana Salalah is a designated Integrated Tourism Complex (ITC): homes are sold freehold to all nationalities, ownership qualifies buyers to apply for Omani residency, and there is no income tax or annual property tax. Book a free consultation for the current inventory list across Hawana and Lubana Island.',
+      },
+    ],
   },
   'Plumeria (Sohar)': {
     tagline: 'Beachfront community · Sohar',
@@ -488,8 +559,34 @@ const AR_OVERLAY = {
     description: 'مساحات تجزئة جاهزة بحركة عالية ومواقف وفيرة وعروض مرنة للمشغّلين الجدد والمؤسسين.',
   },
   'Hawana Salalah': {
-    tagline: 'حياة المنتجع · صلالة',
-    description: 'مجتمع مارينا حائز على جوائز في الجنوب — شقق وفلل بقربها فنادق وخدمات نادي شاطئي على مدار العام.',
+    tagline: 'مجتمع منتجعي على الواجهة البحرية · صلالة',
+    description: 'أكبر وجهة منتجعية في عُمان من تطوير موريّا: شاليهات وفلل تملّك حر وسط بحيرات ومارينا وشاطئ رملي أبيض على ساحل ظفار.',
+    sections: [
+      {
+        title: 'الوجهة',
+        body: 'هوانا صلالة أكبر وجهة سياحية متكاملة في عُمان، بتطوير رئيسي من موريّا (أوراسكوم) على ساحل ظفار. تمتد على نحو 6 ملايين متر مربع وتضم مارينا بسعة 170 مرسى، وسبعة كيلومترات من الشاطئ الأبيض، وبحيرات صالحة للسباحة، وخمسة فنادق ومدينة مائية، وتتوزع بينها منازل تملّك حر.',
+      },
+      {
+        title: 'جزيرة لبانة (Lubana Island)',
+        body: 'جزيرة لبانة هي أحدث إطلاق سكني في هوانا صلالة: حيّ جزيري في منطقة أمازي يقع مباشرة على البحيرات، من تطوير موريّا (أوراسكوم). العرض الحالي فلل بثلاث غرف نوم بإطلالة على البحيرة: فلل بطابق أرضي بمساحة بناء 145 م² وحديقة 413 م² على قطعة نحو 558 م² من 170,500 ر.ع، وفلل أرضي وأول بمساحة بناء 170 م² مع غرفة مكتب وحديقة 454 م² على قطعة 580 م² من 268,600 ر.ع (الأسعار قبل ضريبة القيمة المضافة 5%). بيع على الخارطة بخطة دفع من المطوّر لثلاث سنوات: 10% دفعة أولى ثم 7.5% كل ثلاثة أشهر، والتسليم بعد ثلاث سنوات من العقد.',
+      },
+      {
+        title: 'المنازل وأسعار البداية',
+        body: 'تشمل الوحدات المتاحة أربعة أنماط: شاليهات بغرفة نوم واحدة على الواجهة المائية من 98,000 ر.ع بعائد إيجاري متوقع يصل إلى 10.6%، وشاليهات بغرفتين على الشاطئ من 129,000 ر.ع، وفلل توأم بغرفتين مع حدائق خاصة من 160,000 ر.ع، وفلل مستقلة بثلاث غرف من 260,000 ر.ع، مع خطط دفع مرنة من المطوّر ووحدات جاهزة للتسليم الفوري.',
+      },
+      {
+        title: 'موسمان ذروة في السنة',
+        body: 'صلالة هي الوجهة الخليجية الوحيدة بموسمين سياحيين متمايزين: موسم الخريف (يونيو إلى سبتمبر) يجذب مئات الآلاف من زوار الخليج هرباً من حرارة الصيف، بينما يجلب الشتاء المعتدل سياحة أوروبية. للملّاك يعني ذلك تقويماً إيجارياً طويلاً بشكل استثنائي، فبيت العطلات هنا يعمل صيفاً وشتاءً، ولهذا تتجاوز العوائد المتوقعة متوسطات المنطقة.',
+      },
+      {
+        title: 'الموقع والوصول',
+        body: 'يقع المجتمع على طريق طاقة، على بعد نحو 15 دقيقة من وسط صلالة و20 دقيقة من مطار صلالة الدولي المرتبط بمسقط على مدار العام، وبرحلات مباشرة في موسم الخريف من دبي والشارقة وأبوظبي والرياض وجدة والدمام والدوحة والكويت.',
+      },
+      {
+        title: 'التملّك الحر وإقامة المستثمر',
+        body: 'هوانا صلالة مجمع سياحي متكامل (ITC) معتمد: تُباع المنازل تملّكاً حراً لجميع الجنسيات، ويؤهل التملّك للتقدم بطلب الإقامة العُمانية، بلا ضريبة دخل ولا ضريبة عقارية سنوية. احجز استشارة مجانية للحصول على قائمة الوحدات الحالية في هوانا وجزيرة لبانة.',
+      },
+    ],
   },
   'Plumeria (Sohar)': {
     tagline: 'حياة حضرية · صحار',
@@ -542,6 +639,18 @@ const RU_OVERLAY = {
     tagline: 'Резиденции St. Regis · Маскат',
     description: 'Брендированные резиденции с полным сервисом St. Regis — служба батлера, частные бассейны и фирменное гостеприимство бренда на побережье.',
   },
+  'Hawana Salalah': {
+    tagline: 'Курортное сообщество на воде · Салала',
+    description: 'Крупнейший курорт Омана от Muriya — шале, твин-виллы и отдельные виллы в полную собственность среди лагун, марины и белопесчаного пляжа на побережье Дофара.',
+    sections: [
+      { title: 'О курорте', body: 'Hawana Salalah — крупнейшее интегрированное туристическое направление Омана, мастер-девелопер Muriya (Orascom Development). На территории около 6 млн м² — марина на 170 стоянок, семь километров белопесчаного пляжа, лагуны для купания, пять отелей и аквапарк, а между ними — дома в полную собственность (фрихолд).' },
+      { title: 'Остров Лубана (Lubana Island)', body: 'Lubana Island — новейший жилой релиз Hawana Salalah: островной квартал в районе Амази прямо на лагунах, девелопер Muriya (Orascom Development). В текущем предложении — виллы с 3 спальнями и видом на лагуну: одноэтажные виллы 145 м² застройки с садом 413 м² на участках ~558 м² от 170 500 OMR и виллы G+1 площадью 170 м² с кабинетом и садом 454 м² на участках 580 м² от 268 600 OMR (цены до НДС 5%). Продажа офф-план с 3-летним планом оплаты от застройщика: 10% первый взнос, далее по 7,5% ежеквартально; передача через три года с даты контракта.' },
+      { title: 'Дома и стартовые цены', body: 'Доступны четыре формата: шале с 1 спальней у воды от 98 000 OMR с прогнозируемой доходностью до 10,6%, шале с 2 спальнями у пляжа от 129 000 OMR, твин-виллы с 2 спальнями и частным садом от 160 000 OMR и отдельные виллы с 3 спальнями от 260 000 OMR — с гибкими планами оплаты от застройщика и готовыми юнитами к немедленной передаче.' },
+      { title: 'Два высоких сезона', body: 'Салала — единственное направление Залива с двумя выраженными туристическими сезонами: муссон харифа (июнь–сентябрь) привозит сотни тысяч гостей из стран Залива, спасающихся от жары, а мягкая зима — европейских туристов. Для владельца это необычно длинный арендный календарь: дом для отдыха здесь зарабатывает и летом, и зимой, поэтому прогнозируемая доходность выше средней по региону.' },
+      { title: 'Расположение и доступ', body: 'Сообщество расположено на дороге Така, примерно в 15 минутах от центра Салалы и в 20 минутах от международного аэропорта Салалы — круглый год есть рейсы в Маскат, а в сезон харифа прямые рейсы из Дубая, Шарджи, Абу-Даби, Эр-Рияда, Джидды, Даммама, Дохи и Кувейта.' },
+      { title: 'Фрихолд и виза инвестора', body: 'Hawana Salalah — сертифицированный Integrated Tourism Complex (ITC): дома продаются в полную собственность гражданам всех стран, покупка даёт право подать на резидентство Омана, налога на доход и ежегодного налога на недвижимость нет. Запишитесь на бесплатную консультацию за актуальным списком юнитов в Хаване и на острове Лубана.' },
+    ],
+  },
   'Vistal': {
     tagline: 'Резиденции у воды · Al Mouj',
     description: 'Малоэтажное жилое сообщество в Al Mouj — 1- и 2-комнатные апартаменты плюс пляжные дуплексы с видами на море, бассейн и поле для гольфа.',
@@ -564,6 +673,18 @@ const FA_OVERLAY = {
       { title: 'واحدها و طراحی', body: 'خانه‌ها از استودیو و آپارتمان‌های یک تا سه‌خوابه تا لافت‌های دوطبقه را شامل می‌شوند، چند مورد با اتاق خدمتکار. موجودی فعلی شامل آپارتمان‌های دوخوابه و لافت‌های دو تا سه‌خوابه با مساحت حدود ۱۲۸ تا ۱۷۱ مترمربع و چشم‌انداز باغ یا استخر است، با طراحی آرام و مدرن.' },
       { title: 'سبک زندگی و امکانات', body: 'ساکنان از استخر اینفینیتی، باغ Zen با سکوی یوگا، سالن ورزش و فضای تمرین، مینی‌گلف، زمین بازی کودکان، فضای باربیکیو و مسیر دو با چشم‌انداز زیبا بهره‌مند می‌شوند؛ در کنار ساحل خصوصی خلیج مسقط، پدل و ورزش‌های آبی، رستوران‌ها و هتل جمیرا.' },
       { title: 'سرمایه‌گذاری و مالکیت', body: 'خلیج مسقط یک مجتمع گردشگری یکپارچه است، بنابراین خانه‌ها به‌صورت مالکیت کامل (فری‌هولد) به همه ملیت‌ها با امکان اقامت فروخته می‌شوند. قیمت‌های پیش‌فروش از ۱۳۸٬۰۰۰ ریال عمان (بدون مالیات بر ارزش افزوده) با طرح پرداخت مرحله‌ای ۱۰ / ۷۰ / ۲۰ آغاز می‌شود. برای فهرست به‌روز موجودی با ما تماس بگیرید.' },
+    ],
+  },
+  'Hawana Salalah': {
+    tagline: 'مجتمع تفریحی رو به آب · صلاله',
+    description: 'بزرگ‌ترین مقصد تفریحی عمان از موریا؛ شاله، ویلای دوقلو و ویلای مستقل با مالکیت کامل، میان لاگون‌ها، مارینا و ساحل شنی سفید در کرانه ظفار.',
+    sections: [
+      { title: 'درباره مقصد', body: 'هوانا صلاله بزرگ‌ترین مقصد گردشگری یکپارچه عمان است که موریا (اوراسکوم) آن را در ساحل ظفار توسعه داده است. در حدود ۶ میلیون مترمربع، مارینایی با ۱۷۰ اسکله، هفت کیلومتر ساحل شنی سفید، لاگون‌های قابل شنا، پنج هتل و یک پارک آبی را در خود جای داده و خانه‌های فری‌هولد میان همین امکانات قرار گرفته‌اند.' },
+      { title: 'جزیره لوبانا (Lubana Island)', body: 'جزیره لوبانا جدیدترین عرضه مسکونی هوانا صلاله است؛ محله‌ای جزیره‌ای در ناحیه اَمازی، درست روی لاگون‌ها و ساخته موریا (اوراسکوم). عرضه فعلی ویلاهای سه‌خوابه با منظره لاگون است: ویلای یک‌طبقه با ۱۴۵ مترمربع بنا، باغ ۴۱۳ متری روی زمین حدود ۵۵۸ متر از ۱۷۰٬۵۰۰ ریال عمان، و ویلای دوطبقه (همکف + اول) با ۱۷۰ مترمربع بنا به‌همراه اتاق کار، باغ ۴۵۴ متری روی زمین ۵۸۰ متر از ۲۶۸٬۶۰۰ ریال عمان (قیمت‌ها بدون ۵٪ مالیات ارزش افزوده). فروش پیش‌ساخت با طرح پرداخت سه‌ساله سازنده: ۱۰٪ پیش‌پرداخت و سپس هر سه ماه ۷.۵٪؛ تحویل سه سال پس از قرارداد.' },
+      { title: 'خانه‌ها و قیمت شروع', body: 'موجودی فعلی چهار نوع واحد دارد: شاله یک‌خوابه رو به آب از ۹۸٬۰۰۰ ریال عمان با بازده اجاره پیش‌بینی‌شده تا ۱۰.۶ درصد، شاله دوخوابه کنار ساحل از ۱۲۹٬۰۰۰ ریال، ویلای دوقلوی دوخوابه با باغ اختصاصی از ۱۶۰٬۰۰۰ ریال و ویلای مستقل سه‌خوابه از ۲۶۰٬۰۰۰ ریال؛ با طرح پرداخت منعطف سازنده برای واحدهای پیش‌فروش و واحدهای آماده تحویل فوری.' },
+      { title: 'دو فصل پیک در سال', body: 'صلاله تنها مقصد خلیج با دو فصل گردشگری مجزاست: موسم خریف (ژوئن تا سپتامبر) صدها هزار گردشگر خلیجی را که از گرمای تابستان فرار می‌کنند جذب می‌کند و زمستان معتدل هم گردشگران اروپایی را می‌آورد. برای مالک یعنی تقویم اجاره‌ای غیرمعمول طولانی؛ خانه تعطیلات در اینجا هم تابستان درآمد دارد هم زمستان، و برای همین بازده پیش‌بینی‌شده بالاتر از میانگین منطقه است.' },
+      { title: 'موقعیت و دسترسی', body: 'این مجتمع در جاده طاقه قرار دارد؛ حدود ۱۵ دقیقه تا مرکز شهر صلاله و ۲۰ دقیقه تا فرودگاه بین‌المللی صلاله که در تمام سال به مسقط و در موسم خریف با پروازهای مستقیم به دبی، شارجه، ابوظبی، ریاض، جده، دمام، دوحه و کویت متصل است.' },
+      { title: 'فری‌هولد و ویزای سرمایه‌گذار', body: 'هوانا صلاله یک مجتمع گردشگری یکپارچه (ITC) مصوب است: خانه‌ها به همه ملیت‌ها با مالکیت کامل فروخته می‌شوند، خرید ملک امکان درخواست اقامت عمان را فراهم می‌کند و نه مالیات بر درآمد دارد نه مالیات سالانه ملک. برای فهرست به‌روز واحدهای هوانا و جزیره لوبانا مشاوره رایگان رزرو کنید.' },
     ],
   },
 }

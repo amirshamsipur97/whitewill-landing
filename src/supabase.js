@@ -198,7 +198,7 @@ export async function fetchProjectUnits(projectId) {
     .select(`
       id, unit_no, floor_label, unit_type, layout_type, bedrooms, view,
       internal_area_sqm, balcony_area_sqm, total_garden_sqm, total_area_sqm,
-      price_omr, price_per_sqm_omr, availability_status
+      price_omr, price_per_sqm_omr, availability_status, subproject
     `)
     .eq('project_id', projectId)
     .eq('availability_status', 'available')

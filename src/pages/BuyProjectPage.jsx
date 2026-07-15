@@ -121,6 +121,66 @@ const PLACEHOLDER_POOL = [
   '/images/waterfront-bg-v2.jpg',
 ]
 
+// Optional looping video hero per project (files in public/video/). The cover
+// image stays permanently mounted underneath as the instant LCP paint and
+// iOS/fallback layer; the video fades in only once it is actually playing.
+// preload="none" + lazy src assignment keep PageSpeed untouched, and
+// reduced-motion / data-saver visitors never download a byte of it.
+const HERO_VIDEO = {
+  'hawana-salalah': { desktop: '/video/hawana-hero.mp4', mobile: '/video/hawana-hero-mobile.mp4' },
+}
+
+function HeroLoopVideo({ sources }) {
+  const ref = useRef(null)
+  const [playing, setPlaying] = useState(false)
+
+  useEffect(() => {
+    const video = ref.current
+    if (!video) return
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    if (navigator.connection?.saveData) return
+    let started = false
+    const start = () => {
+      if (started) return
+      started = true
+      const mobile = window.matchMedia?.('(max-width: 900px)').matches
+      video.src = mobile ? sources.mobile : sources.desktop
+      video.play().catch(() => { /* autoplay blocked → cover image stays */ })
+    }
+    const io = new IntersectionObserver(
+      (entries) => { if (entries.some((e) => e.isIntersecting)) { start(); io.disconnect() } },
+      { rootMargin: '200px' },
+    )
+    io.observe(video)
+    return () => io.disconnect()
+  }, [sources])
+
+  return (
+    <Box
+      component="video"
+      ref={ref}
+      muted
+      loop
+      playsInline
+      preload="none"
+      disablePictureInPicture
+      aria-hidden="true"
+      tabIndex={-1}
+      onPlaying={() => setPlaying(true)}
+      sx={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        opacity: playing ? 1 : 0,
+        transition: 'opacity 700ms ease',
+        pointerEvents: 'none',
+      }}
+    />
+  )
+}
+
 function coverFor(project) {
   const slug = slugify(project.name)
   // Deterministic fallback by id so each project keeps a stable cover.
@@ -291,6 +351,10 @@ export default function BuyProjectPage() {
   // filter state for inventory section
   const [bedFilter, setBedFilter] = useState('any')
   const [viewFilter, setViewFilter] = useState('any')
+  // ?release=<key> (from the /buy Salalah releases row) preselects a sub-project.
+  const [subFilter, setSubFilter] = useState(() => {
+    try { return new URLSearchParams(window.location.search).get('release') } catch { return null }
+  })
   const [sortBy, setSortBy] = useState('price-asc')
 
   const [inquiryUnit, setInquiryUnit] = useState(null)
@@ -414,9 +478,15 @@ export default function BuyProjectPage() {
   const stats = statsFor(units)
   const hasInventory = units.length > 0
 
+  // Sub-projects (Muriya portfolio pages): by default the inventory shows
+  // ALL releases; selecting a card filters, selecting it again clears.
+  const subProjects = details?.subProjects || null
+  const activeSub = subProjects ? subFilter : null
+
   // Filter + sort
   const filteredUnits = units
     .filter((u) => {
+      if (activeSub && (u.subproject || '') !== activeSub) return false
       if (bedFilter !== 'any' && String(u.bedrooms) !== bedFilter) return false
       if (viewFilter !== 'any' && u.view !== viewFilter) return false
       return true
@@ -463,6 +533,9 @@ export default function BuyProjectPage() {
             objectFit: 'cover',
           }}
         />
+        {HERO_VIDEO[slugify(project.name)] && (
+          <HeroLoopVideo sources={HERO_VIDEO[slugify(project.name)]} />
+        )}
         {/* Vignette */}
         <Box
           sx={{
@@ -782,6 +855,90 @@ export default function BuyProjectPage() {
             </Box>
           </Box>
         )}
+
+        {/* ── Sub-projects / releases (Muriya portfolio pages) ────── */}
+        {subProjects && (() => {
+          // Heading adapts to how many releases the project currently sells.
+          const N_TITLE = {
+            en: { 1: 'The current release', 2: 'Two releases, one portfolio', 3: 'Three releases, one portfolio' },
+            ru: { 1: 'Текущий релиз', 2: 'Два релиза — один портфель', 3: 'Три релиза — один портфель' },
+            ar: { 1: 'الإصدار الحالي', 2: 'إصداران في محفظة واحدة', 3: 'ثلاثة إصدارات في محفظة واحدة' },
+            fa: { 1: 'عرضه فعلی', 2: 'دو عرضه در یک مجموعه', 3: 'سه عرضه در یک مجموعه' },
+          }
+          const SUB_L = {
+            en: { eyebrow: 'Communities', unitsFrom: '{n} homes · from OMR {p}', onRequest: 'Floor plans & prices on request' },
+            ru: { eyebrow: 'Районы', unitsFrom: '{n} лотов · от {p} OMR', onRequest: 'Планировки и цены по запросу' },
+            ar: { eyebrow: 'المجتمعات', unitsFrom: '{n} وحدات · من {p} ر.ع', onRequest: 'المخططات والأسعار عند الطلب' },
+            fa: { eyebrow: 'ریزپروژه‌ها', unitsFrom: '{n} واحد · از {p} ریال عمان', onRequest: 'پلان‌ها و قیمت‌ها با درخواست' },
+          }
+          const L = SUB_L[lang] || SUB_L.en
+          const nTitles = N_TITLE[lang] || N_TITLE.en
+          L.title = nTitles[subProjects.length] || nTitles[3]
+          const mainSlug = slugify(project.name)
+          return (
+            <Box sx={{ mb: { xs: 7, md: 9 } }}>
+              <Typography sx={{ fontFamily: '"Arsenal SC", "Inter", sans-serif', fontSize: 11, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.18em', textTransform: 'uppercase', mb: 1 }}>
+                {L.eyebrow}
+              </Typography>
+              <Typography sx={{ fontFamily: '"Arsenal SC", "Inter", sans-serif', fontSize: { xs: 26, md: 34 }, fontWeight: 300, letterSpacing: '-0.01em', mb: 3 }}>
+                {L.title}
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: `repeat(${Math.min(subProjects.length, 3)}, 1fr)` }, gap: 2.5 }}>
+                {subProjects.map((sub) => {
+                  const subUnits = units.filter((u) => (u.subproject || '') === sub.key)
+                  const minP = subUnits.length
+                    ? Math.min(...subUnits.map((u) => Number(u.price_omr) || Infinity))
+                    : null
+                  const img = galleryFor(sub.gallerySlug)[0] || galleryFor(mainSlug)[0]
+                  const selected = activeSub === sub.key
+                  return (
+                    <Box
+                      key={sub.key}
+                      component="button"
+                      type="button"
+                      onClick={() => setSubFilter(selected ? null : sub.key)}
+                      sx={{
+                        textAlign: 'start',
+                        cursor: 'pointer',
+                        borderRadius: '14px',
+                        overflow: 'hidden',
+                        p: 0,
+                        bgcolor: 'rgba(255,255,255,0.02)',
+                        border: selected ? '1px solid rgba(45,212,191,0.85)' : '1px solid rgba(255,255,255,0.1)',
+                        boxShadow: selected ? '0 0 22px rgba(20,184,166,0.45)' : 'none',
+                        transition: 'border-color .25s, box-shadow .25s, transform .25s',
+                        '&:hover': { transform: 'translateY(-3px)', borderColor: 'rgba(45,212,191,0.6)' },
+                      }}
+                    >
+                      {img && (
+                        <Box sx={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', overflow: 'hidden', bgcolor: '#111' }}>
+                          <Box component="img" src={img} alt={sub.name} loading="lazy"
+                            sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </Box>
+                      )}
+                      <Box sx={{ p: 2.2 }}>
+                        <Typography sx={{ fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif', fontWeight: 700, fontSize: 18, color: '#fff', mb: 0.4 }}>
+                          {sub.name}
+                        </Typography>
+                        <Typography sx={{ fontFamily: '"Inter", "Peyda", sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.55)', mb: 1 }}>
+                          {sub.location}
+                        </Typography>
+                        <Typography sx={{ fontFamily: '"Inter", "Peyda", sans-serif', fontSize: 13, lineHeight: 1.55, color: 'rgba(255,255,255,0.75)', mb: 1.4 }}>
+                          {sub.blurb?.[lang] || sub.blurb?.en}
+                        </Typography>
+                        <Typography sx={{ fontFamily: '"Arsenal SC", "Peyda", "Inter", sans-serif', fontWeight: 700, fontSize: 13.5, color: selected ? '#2dd4bf' : 'rgba(255,255,255,0.85)' }}>
+                          {subUnits.length && minP != null && Number.isFinite(minP)
+                            ? L.unitsFrom.replace('{n}', subUnits.length).replace('{p}', minP.toLocaleString())
+                            : L.onRequest}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )
+                })}
+              </Box>
+            </Box>
+          )
+        })()}
 
         {/* ── Inventory section (only if there are live units) ────── */}
         {hasInventory ? (

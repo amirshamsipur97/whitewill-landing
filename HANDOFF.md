@@ -1,6 +1,6 @@
 # Irfan Investment (whitewill-landing) — Session Handoff
 
-_Last updated: 2026-07-09._ Consolidated reference for continuing work in a new session._
+_Last updated: 2026-07-15._ Consolidated reference for continuing work in a new session._
 
 ---
 
@@ -125,3 +125,51 @@ Full details persist in auto-memory (loads every session) — see `MEMORY.md` in
 ### Misc
 - Client quotation prompt (EN→FA, site $2k + dashboard $2k + CRM $3-4k market) delivered in chat 2026-07-07 — user runs it through OpenAI.
 - Persian RTL: Claude Code renderer can't do RTL (issues #38005/#45652/#30100); chat style = pure-Persian rules (memory persian-rtl-writing-style); long Persian deliverables → Artifacts (proven RTL).
+
+---
+
+## §S. 2026-07-09→13 — Ads/SEO session: Salalah maneuver end-to-end
+
+**Focus pivot:** site edits frozen except Ads/SEO. Operational DB = Google Sheet "Keywords-Ads"
+(1cfCJvGMKq0fJpqe-TIna1WXbgcDjuONl1Uxib5c5YFc, 14 tabs) written via n8n workflow `abqoC37RIHWcaXDN`
+"Sheet Writer" (webhook {sheet, rows[]}; creates tab if missing).
+
+**Research (docs 07-11 in marketing/semrush/):** 4 competitor audits (vistaoman, alwalaaoman,
+solomonoman, yourkanz) + mira-international + whitewill aida subdomain teardown. Verdicts: om db
+volumes bid-grade; nobody in the niche executes SEO well; subfolders not subdomains; Salalah =
+biggest untapped pocket (khareef: 1.07M visitors, 77% by land, UAE #1 / SA #2 sources).
+Geo ranking: Oman(C2) >> UK+US golden visa(C3) > FA diaspora(C4) > RU-speakers abroad(C5 — Google
+can't serve inside Russia). Semrush MCP died mid-session (free quota); trial sprint planned ~Jul 20.
+
+**Site shipped (all deployed + verified):**
+- RU geo auto-redirect: api/geo.js + first-visit logic in i18n.jsx (GEO_LANG map, extendable).
+- /buy/hawana-salalah rebuilt: Supabase project id=19, 13 real units in 3 sub-projects via new
+  project_units.subproject col (Amazi 6 from 98K incl Lubana LB-210/213; Olive Farms 3 FARM HOUSES
+  from 77,250; Solaris 4 from 35,625 — all official Muriya sales offers), 6 sections ×4 langs,
+  13-photo gallery, map pin 17.030139,54.310083, sub-project selector (default ALL, ?release= preselects),
+  video hero (S1.mp4 → hawana-hero{,-mobile}.mp4, PSI-safe lazy pattern in BuyProjectPage HERO_VIDEO).
+- /buy: Salalah SEO banner + "✦ Salalah Special Releases" row (3 branded Figma covers → gallery
+  folders amazi/solaris/olive-farms) + glowing featured card (projectDetails featured:true) +
+  dedicated SalalahPopup (bigger images, khareef offer chips, source=popup_salalah, event
+  irfan:open-salalah-popup) + Buy search now matches unit layout_type ("lubana" works).
+- ⚠️ Vercel edge cache served 40h-stale HTML — when prod looks stale check age/x-vercel-cache
+  headers, fix with `vercel deploy --prod --yes --force`.
+
+**Ads state:** C1 frozen till ~Jul 17 (surgery list in sheet Insights; best converter 'oman
+investment' is QS-throttled). Account stats since launch: 105 clicks / 8 conv / 7.62% CR — funnel
+healthy, volume low; 81% mobile, male 25-44. **C6 | AE+SA | Salalah wizard IN PROGRESS** —
+"without guidance" selected, next = pick SEARCH type; bidding revised to Maximize Clicks
+w/ $0.80 CPC cap (max-visits goal), switch to MaxConv after ~15-20 leads. Full spec in sheet tab
+"C6 Salalah Build Sheet" + AR keyword bank (11 rows, 2026-07-11) + AR tourism negatives
+(incl للايجار no-hamza). C2 Oman build sheet also ready ("C2 Build Sheet" tab).
+
+**Costs (sheet tab "Costs"):** infra ≈ $115 fixed (Vercel 20 + Supabase Pro 25 + n8n Pro ~66 +
+domain + Vapi number) + $25-90 variable APIs; ads separate (C1 $775/mo, C2 +$450 planned).
+
+## 2026-07-13 → 07-15 sessions — C6 Salalah ads campaign + Sifah data correction + popup overhaul
+- **Google Ads C6 "C6 | AE+SA | Salalah Waterfront Homes | Search" PUBLISHED (Jul 13, campaignId 24025469441, acct 855-960-9654):** Max Clicks + $0.80 CPC cap, $20/day, 10 cities presence-only (5 AE + 5 SA), EN+AR, Search partners/Display/AI Max OFF. AG1 18 EN keywords; AG2 | AR Salalah (10 AR keywords, AR RSA, /ar/ landing). 30 tourism+sovereign negatives applied campaign-level. Conversion goal = Submit lead forms. Learning ~5 days from Jul 13. ⚠️ Payment method issue (~$142) was blocking serving — user settling.
+- **DATA CORRECTION: Solaris AND Olive Farms are at Raya · JEBEL SIFAH, not Salalah.** All 7 units moved to project id=2 in Supabase; subproject blocks moved to 'Jebel Sifah' in projectDetails.js (subProjects — capital P, page reads that key); Sifah page now a 2-release hub (count-aware heading, filter cards, map pin already correct); Hawana = pure Amazi/Lubana, 6 units, min OMR 98,000.
+- **SalalahPopup = the ONLY popup site-wide** (LeadPopup deleted; launcher pill "Investment plan" opens it; mounts on all routes incl. landing). Geo-currency by IP via /api/geo: OM→OMR 98,000/9,800 · AE→AED 936,000/93,600 · SA→SAR 955,800/95,600 · RU→≈23/2,3 млн RUB · else $254,900/$25,490 USD. Down payment bolded at sentence start. Slides = 3 hawana photos + 4 new Amazi interious renders (files 14-17).
+- **/buy "Special Releases" row (renamed from Salalah Special Releases): 3 mixed-destination cards** — Lubana Island→hawana?release=Amazi · Muscat Bay (new cover, Figma 770-22307)→/buy/zen-residences · Olive Farms (fresh cover 770-22342)→/buy/jebel-sifah?release=Olive%20Farms. Lubana cover upgraded to 1524×1088 (Figma 856-22759 @4x).
+- **SEO round:** dedicated 4-lang meta for /buy/hawana-salalah (from OMR 98,000); vercel.json 301s: /property/*, /oman-property/* → /buy; /salalah → /buy/hawana-salalah (+/ar). n8n blog agent (KjDPPqA7lRm0U2M2) biased to Salalah topics + Salalah Pexels imagery + mandatory internal link to /buy/hawana-salalah (revert ~Sep 15).
+- **NEXT SESSION = ADS FIXES ONLY** — see memory `irfaninvest-ads-campaign` "TOMORROW'S C6 FIX LIST" (billing check → stale Solaris headline/sitelinks → AR fixes → asset completion → day-3 search terms → master negatives attach → rename AG1 → CPC cap decision).

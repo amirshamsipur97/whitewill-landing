@@ -149,6 +149,23 @@ const ROUTES = {
       fa: 'راهنماها، تحلیل بازار و به‌روزرسانی‌ها درباره املاک، سرمایه‌گذاری، ثبت شرکت و کسب‌وکار در عمان.',
     },
   },
+  // Salalah flagship landing — hand-tuned meta targeting the Salalah keyword
+  // cluster (salalah house, villa in salalah, hawana salalah property, buy
+  // property in salalah). Must stay ahead of the generic /buy/:slug template.
+  '/buy/hawana-salalah': {
+    title: {
+      en: 'Hawana Salalah — Villas & Houses for Sale in Salalah, Oman | Freehold',
+      ru: 'Хавана Салала — виллы и дома на продажу в Салале, Оман | Фрихолд',
+      ar: 'هوانا صلالة — فلل وشاليهات للبيع في صلالة | تملك حر وإقامة',
+      fa: 'هوانا صلاله — ویلا و خانه برای فروش در صلاله عمان | مالکیت آزاد',
+    },
+    desc: {
+      en: 'Buy property in Salalah: freehold waterfront chalets and villas at Hawana Salalah from OMR 98,000. Two rental seasons, Omani residency eligibility, 3-year payment plans. New Lubana Island release.',
+      ru: 'Купите недвижимость в Салале: шале у воды и виллы во фрихолде в Hawana Salalah от 98 000 OMR. Два арендных сезона, право на резидентство Омана, рассрочка до 3 лет.',
+      ar: 'اشترِ عقاراً في صلالة: شاليهات وفلل بتملك حر في هوانا صلالة من 98,000 ر.ع. موسمان إيجاريان، أهلية إقامة المستثمر، وخطط دفع 3 سنوات. إصدار جزيرة لوبانا الجديد.',
+      fa: 'خرید ملک در صلاله: شاله‌های رو به آب و ویلا با مالکیت آزاد در هوانا صلاله از ۹۸٬۰۰۰ ریال عمانی. دو فصل اجاره در سال، واجد شرایط اقامت عمان و طرح پرداخت ۳ ساله.',
+    },
+  },
   // International Schools — localized per language (title/desc are objects).
   '/schools': {
     title: {

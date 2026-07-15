@@ -1482,10 +1482,44 @@ function langFromPathname(pathname) {
   return m ? m[1] : 'en'
 }
 
+// Captured ONCE at module load, BEFORE the provider's effect writes the current
+// language into localStorage: was this browser ever here before?
+const IS_FIRST_VISIT = (() => {
+  try { return !localStorage.getItem(STORAGE_KEY) } catch { return false }
+})()
+
+// Geo → preferred language for first-time visitors landing on the bare EN URL.
+// Country codes come from Vercel's x-vercel-ip-country via /api/geo.
+const GEO_LANG = { RU: 'ru' }
+
 export function I18nProvider({ children }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const lang = langFromPathname(pathname)
+
+  // First visit + prefix-less (EN) URL → ask the server for the visitor's
+  // country and switch to the matching localized URL. Runs once per session;
+  // returning visitors and manual language choices are never overridden.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !IS_FIRST_VISIT) return
+    if (langFromPathname(window.location.pathname) !== 'en') return
+    try {
+      if (sessionStorage.getItem('ww_geo_done')) return
+      sessionStorage.setItem('ww_geo_done', '1')
+    } catch { return }
+    fetch('/api/geo')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const target = data && GEO_LANG[data.country]
+        if (!target) return
+        const current = window.location.pathname
+        if (langFromPathname(current) !== 'en') return
+        const next = current === '/' ? `/${target}` : `/${target}${current}`
+        navigate(next + window.location.search, { replace: true })
+      })
+      .catch(() => { /* geo unavailable → stay on EN */ })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Keep <html lang>/<dir> in sync with the URL-derived language.
   useEffect(() => {
