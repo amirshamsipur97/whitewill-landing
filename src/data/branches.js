@@ -22,7 +22,7 @@ export const BRANCHES = [
     country: 'Iran',
     label: 'Regional office',
     address: 'فرمانیه، مجتمع پارک سنتر\nطبقه ۶ واحد ۶۰۱',
-    phone: '+98 21 0000 0000',
+    phone: '+98 912 042 4687',
     email: 'tehran@irfaninvest.com',
   },
   {

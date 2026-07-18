@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node inline-css.mjs && node prerender-insights.mjs",
+    "build": "vite build && node inline-css.mjs && node prerender-insights.mjs && node prerender-routes.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
