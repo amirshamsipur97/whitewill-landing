@@ -122,13 +122,32 @@ const D = {
     handover: 'Ready',
   },
   'Hay Al Wafa': {
-    tagline: 'Family neighbourhood · Al Mouj',
+    tagline: 'Furnished 2-bedroom apartments · Sultan Haitham City',
     description:
-      'The newest residential phase at Al Mouj Muscat — contemporary villas grouped around shaded pocket parks within walking distance of the marina and Pulse playground.',
-    units: ['Villa'],
-    bedrooms: '3 – 5',
-    priceFrom: 'OMR 245,000',
-    handover: '2026 – 2027',
+      'Fully furnished two-bedroom apartments by Al Abrar Real Estate in Hay Al Wafa, one of the first residential neighbourhoods of Sultan Haitham City, with pool, boulevard or side views.',
+    units: ['Apartment'],
+    bedrooms: '2',
+    priceFrom: 'OMR 92,088',
+    handover: '2026',
+    features: ['pool', 'centralPark', 'retailDining', 'gym', 'cyclingPaths', 'schools', 'parking', 'smartHome'],
+    sections: [
+      {
+        title: 'The development',
+        body: 'Hay Al Wafa is one of the first residential neighbourhoods of Sultan Haitham City, developed by Al Abrar Real Estate. The current release offers fully furnished two-bedroom apartments in Buildings 59 and 61, low-rise blocks arranged around the neighbourhood swimming pool and tree-lined boulevard.',
+      },
+      {
+        title: 'Location & connectivity',
+        body: 'Sultan Haitham City in Seeb is Oman\'s flagship new smart urban district, with direct expressway links to central Muscat and Muscat International Airport. Schools, clinics, mosques, parks and retail are all planned within walking distance across the wider city.',
+      },
+      {
+        title: 'Residences & design',
+        body: 'Two efficient two-bedroom layouts of about 127 to 128 sqm built-up area (158 to 161 sqm gross) across floors one to five. Every apartment is handed over fully furnished, with a pool, boulevard or side aspect depending on the unit.',
+      },
+      {
+        title: 'Investment & ownership',
+        body: 'Handover prices start from OMR 92,088 with furniture included, and extended 60-month payment options are available at adjusted pricing. Contact us for the live availability list and eligibility details.',
+      },
+    ],
   },
   'Wadi Zaha': {
     tagline: 'Wadi-front community · Sultan Haitham City',
@@ -439,8 +458,14 @@ const AR_OVERLAY = {
     description: 'قائمة منتقاة من الفلل والشقق المكتملة داخل خليج مسقط — مفاتيح بالأيدي، تملك حر، مع عضوية كاملة للنادي الشاطئي.',
   },
   'Hay Al Wafa': {
-    tagline: 'حي عائلي ذو طابع — مسقط الكبرى',
-    description: 'تطوير سكني هادئ بأسعار في المتناول وحدائق مجتمعية ووصول سهل لمراكز مسقط التجارية والمدنية.',
+    tagline: 'شقق مفروشة بغرفتي نوم · مدينة السلطان هيثم',
+    description: 'شقق بغرفتي نوم مفروشة بالكامل من العبرار العقارية في حي الوفاء، أحد أوائل الأحياء السكنية في مدينة السلطان هيثم، بإطلالات على المسبح أو الجادة أو جانبية.',
+    sections: [
+      { title: 'عن المشروع', body: 'حي الوفاء من أوائل الأحياء السكنية في مدينة السلطان هيثم، من تطوير شركة العبرار العقارية. يضم الطرح الحالي شققاً مفروشة بالكامل بغرفتي نوم في المبنيين 59 و61، وهي مبانٍ منخفضة الارتفاع تلتف حول مسبح الحي والجادة المشجّرة.' },
+      { title: 'الموقع والوصول', body: 'مدينة السلطان هيثم في السيب هي المدينة الذكية الرائدة في عُمان، بروابط مباشرة عبر الطريق السريع إلى وسط مسقط ومطار مسقط الدولي. المدارس والعيادات والمساجد والحدائق والتجزئة كلها مخطّطة على مسافة قريبة داخل المدينة.' },
+      { title: 'الوحدات والتصميم', body: 'تصميمان عمليان بغرفتي نوم بمساحة بناء نحو 127 إلى 128 م² (158 إلى 161 م² إجمالية) موزعة على الطوابق من الأول إلى الخامس. تُسلَّم كل شقة مفروشة بالكامل، بإطلالة على المسبح أو الجادة أو جانبية بحسب الوحدة.' },
+      { title: 'الاستثمار والتملّك', body: 'تبدأ أسعار التسليم من 92,088 ر.ع شاملة الأثاث، مع خيارات سداد ممتدة حتى 60 شهراً بأسعار معدّلة. تواصل معنا للحصول على قائمة التوفر المحدثة وتفاصيل الأهلية.' },
+    ],
   },
   'Wadi Zaha': {
     tagline: 'إقامات راقية مع إطلالات على الجبال',
@@ -659,6 +684,16 @@ const RU_OVERLAY = {
     tagline: 'Резиденции премиум-класса с видом на горы',
     description: 'Смесь апартаментов и таунхаусов с продуманными деталями дизайна, видом на драматичное вади и в нескольких минутах от Маската.',
   },
+  'Hay Al Wafa': {
+    tagline: 'Меблированные апартаменты с 2 спальнями · Sultan Haitham City',
+    description: 'Полностью меблированные апартаменты с 2 спальнями от Al Abrar Real Estate в Hay Al Wafa, одном из первых жилых кварталов Sultan Haitham City, с видом на бассейн, бульвар или боковым видом.',
+    sections: [
+      { title: 'О проекте', body: 'Hay Al Wafa — один из первых жилых кварталов Sultan Haitham City, девелопер Al Abrar Real Estate. Текущий релиз включает полностью меблированные апартаменты с 2 спальнями в корпусах 59 и 61, малоэтажных зданиях вокруг квартального бассейна и зелёного бульвара.' },
+      { title: 'Расположение и транспорт', body: 'Sultan Haitham City в Сибе — флагманский умный городской район Омана с прямыми скоростными трассами до центра Маската и международного аэропорта Маската. Школы, клиники, мечети, парки и магазины запланированы в пешей доступности по всему городу.' },
+      { title: 'Резиденции и дизайн', body: 'Две практичные планировки с 2 спальнями площадью около 127–128 кв. м застройки (158–161 кв. м брутто) на этажах с первого по пятый. Каждая квартира передаётся полностью меблированной, с видом на бассейн, бульвар или боковым видом в зависимости от юнита.' },
+      { title: 'Инвестиции и собственность', body: 'Цены при передаче начинаются от 92 088 OMR с учётом мебели; доступна рассрочка до 60 месяцев по скорректированным ценам. Свяжитесь с нами для актуального списка наличия и условий покупки.' },
+    ],
+  },
 }
 
 // Persian (fa) overlay. Added with Zen Residences; other projects fall back
@@ -685,6 +720,16 @@ const FA_OVERLAY = {
       { title: 'دو فصل پیک در سال', body: 'صلاله تنها مقصد خلیج با دو فصل گردشگری مجزاست: موسم خریف (ژوئن تا سپتامبر) صدها هزار گردشگر خلیجی را که از گرمای تابستان فرار می‌کنند جذب می‌کند و زمستان معتدل هم گردشگران اروپایی را می‌آورد. برای مالک یعنی تقویم اجاره‌ای غیرمعمول طولانی؛ خانه تعطیلات در اینجا هم تابستان درآمد دارد هم زمستان، و برای همین بازده پیش‌بینی‌شده بالاتر از میانگین منطقه است.' },
       { title: 'موقعیت و دسترسی', body: 'این مجتمع در جاده طاقه قرار دارد؛ حدود ۱۵ دقیقه تا مرکز شهر صلاله و ۲۰ دقیقه تا فرودگاه بین‌المللی صلاله که در تمام سال به مسقط و در موسم خریف با پروازهای مستقیم به دبی، شارجه، ابوظبی، ریاض، جده، دمام، دوحه و کویت متصل است.' },
       { title: 'فری‌هولد و ویزای سرمایه‌گذار', body: 'هوانا صلاله یک مجتمع گردشگری یکپارچه (ITC) مصوب است: خانه‌ها به همه ملیت‌ها با مالکیت کامل فروخته می‌شوند، خرید ملک امکان درخواست اقامت عمان را فراهم می‌کند و نه مالیات بر درآمد دارد نه مالیات سالانه ملک. برای فهرست به‌روز واحدهای هوانا و جزیره لوبانا مشاوره رایگان رزرو کنید.' },
+    ],
+  },
+  'Hay Al Wafa': {
+    tagline: 'آپارتمان‌های دوخوابه مبله · شهر سلطان هیثم',
+    description: 'آپارتمان‌های دوخوابه کاملاً مبله از Al Abrar Real Estate در حی الوفاء، یکی از نخستین محله‌های مسکونی شهر سلطان هیثم، با چشم‌انداز استخر، بلوار یا نمای جانبی.',
+    sections: [
+      { title: 'درباره پروژه', body: 'حی الوفاء یکی از نخستین محله‌های مسکونی شهر سلطان هیثم است که Al Abrar Real Estate آن را توسعه داده است. عرضه فعلی شامل آپارتمان‌های دوخوابه کاملاً مبله در ساختمان‌های ۵۹ و ۶۱ است؛ بلوک‌های کم‌ارتفاعی که دور استخر محله و بلوار درخت‌کاری‌شده چیده شده‌اند.' },
+      { title: 'موقعیت و دسترسی', body: 'شهر سلطان هیثم در السیب، شهر هوشمند پیشتاز عمان است؛ با اتصال مستقیم بزرگراهی به مرکز مسقط و فرودگاه بین‌المللی مسقط. مدرسه، درمانگاه، مسجد، پارک و مراکز خرید همگی در فاصله پیاده‌روی در سطح شهر برنامه‌ریزی شده‌اند.' },
+      { title: 'واحدها و طراحی', body: 'دو تیپ کارآمد دوخوابه با زیربنای حدود ۱۲۷ تا ۱۲۸ مترمربع (۱۵۸ تا ۱۶۱ مترمربع ناخالص) در طبقات یک تا پنج. هر آپارتمان کاملاً مبله تحویل می‌شود و بسته به واحد، چشم‌انداز استخر، بلوار یا نمای جانبی دارد.' },
+      { title: 'سرمایه‌گذاری و مالکیت', body: 'قیمت تحویل از ۹۲٬۰۸۸ ریال عمان شامل مبلمان آغاز می‌شود و گزینه پرداخت اقساطی تا ۶۰ ماه با قیمت تعدیل‌شده نیز در دسترس است. برای فهرست به‌روز موجودی و شرایط خرید با ما تماس بگیرید.' },
     ],
   },
 }
