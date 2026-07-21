@@ -386,9 +386,9 @@ function BranchesSection() {
               lineHeight: 1.6,
             }}
           >
-            From our headquarters in Muscat, our team operates across active
-            branches in Tehran, Moscow, and Hong Kong — connecting buyers,
-            developers, and capital across continents.
+            From our headquarters in Muscat, our team operates an active branch
+            in Tehran and a dedicated Russian-speaking desk — connecting buyers,
+            developers, and capital across borders.
           </Typography>
         </Box>
 
@@ -398,14 +398,14 @@ function BranchesSection() {
             gridTemplateColumns: {
               xs: '1fr',
               sm: 'repeat(2, 1fr)',
-              md: 'repeat(4, 1fr)',
+              md: 'repeat(3, 1fr)',
             },
             gap: { xs: 2.5, md: 3 },
           }}
         >
           {BRANCHES.map((b, i) => (
             <Box
-              key={b.city}
+              key={b.code}
               ref={(el) => (cardsRef.current[i] = el)}
               sx={{
                 position: 'relative',

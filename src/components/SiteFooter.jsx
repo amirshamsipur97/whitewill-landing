@@ -359,7 +359,7 @@ export default function SiteFooter() {
           dir="ltr"
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
             gap: { xs: 3, md: 4 },
             mb: { xs: 5, md: 7 },
           }}
