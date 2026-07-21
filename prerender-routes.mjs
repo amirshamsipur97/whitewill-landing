@@ -16,6 +16,7 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { ROUTES, projectMeta } from './src/seoRoutes.mjs'
+import { BUY_SEO, buyFaqJsonLd } from './src/buySeoContent.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const LANGS = ['en', 'ru', 'ar', 'fa']
@@ -68,9 +69,29 @@ function pageFor(route, lang) {
   // Minimal real content for the crawler's first fetch; React wipes it on mount.
   html = html.replace(
     /<div id="root"><\/div>/,
-    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title)}</h1><p>${esc(desc)}</p></div></div>`,
+    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title)}</h1><p>${esc(desc)}</p>${route === '/buy' ? buySeoHtml(lang) : ''}</div></div>`,
   )
+  // FAQPage JSON-LD on /buy (same id the SPA reuses → hydration replaces it).
+  if (route === '/buy') {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="buy-faq-jsonld">${JSON.stringify(buyFaqJsonLd(lang))}</script>\n  </head>`,
+    )
+  }
   return html
+}
+
+// Crawlable "buy property in Oman" copy + FAQ + guide links for the static
+// /buy pages — mirrors the SEO block BuyPage.jsx renders below the grid.
+function buySeoHtml(lang) {
+  const c = BUY_SEO[lang] || BUY_SEO.en
+  const prefix = langPrefix(lang)
+  const paras = c.paras.map((p) => `<p>${esc(p)}</p>`).join('')
+  const faq = c.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
+  const links = c.links
+    .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+  return `<h2>${esc(c.heading)}</h2>${paras}${faq}<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
 }
 
 // /buy/:slug project pages — same selection as api/sitemap.js (projects with

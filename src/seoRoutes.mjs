@@ -5,10 +5,10 @@
 export const ROUTES = {
   '/': {
     title: {
-      en: 'Irfan Investment Group — Buy Property & Invest in Oman',
+      en: 'Buy Property in Oman & Invest | Irfan Investment Group',
       ru: 'Irfan Investment Group — купить недвижимость в Омане',
       ar: 'Irfan Investment Group — شراء العقارات والاستثمار في عُمان',
-      fa: 'Irfan Investment Group — خرید ملک و سرمایه‌گذاری در عمان',
+      fa: 'خرید ملک در عمان و سرمایه‌گذاری | گروه سرمایه‌گذاری ایرفان',
     },
     desc: {
       en: 'Premium real estate brokerage in Oman. Buy apartments, villas and off-plan property in Muscat with freehold ownership and Oman residency for foreign investors.',
@@ -19,13 +19,13 @@ export const ROUTES = {
   },
   '/buy': {
     title: {
-      en: 'Buy Property in Oman — Apartments & Villas for Sale | Irfan Investment',
+      en: 'Buy Property in Oman 2026 — Apartments & Villas from OMR 35,625 | Irfan',
       ru: 'Купить недвижимость в Омане — квартиры и виллы | Irfan Investment',
       ar: 'شراء عقار في عُمان — شقق وفلل للبيع | Irfan Investment',
-      fa: 'خرید ملک در عمان — آپارتمان و ویلا برای فروش | Irfan Investment',
+      fa: 'خرید ملک در عمان ۲۰۲۶ | لیست آپارتمان و ویلا با قیمت | ایرفان',
     },
     desc: {
-      en: 'Browse curated property for sale in Oman — apartments, villas and luxury residences in Muscat and Salalah from leading developers, with freehold ownership for foreigners.',
+      en: 'Browse freehold apartments, villas and chalets for sale in Muscat, Salalah and Jebel Sifah. Live prices from OMR 35,625, full unit inventory and Oman investor residency with your purchase.',
       ru: 'Подборка недвижимости на продажу в Омане: квартиры, виллы и элитные резиденции в Маскате и Салале от ведущих застройщиков, с правом собственности для иностранцев.',
       ar: 'تصفح عقارات مختارة للبيع في عُمان — شقق وفلل ومساكن فاخرة في مسقط وصلالة من كبار المطورين، بتملك حر للأجانب.',
       fa: 'مجموعه‌ای منتخب از املاک برای فروش در عمان — آپارتمان، ویلا و اقامتگاه‌های لوکس در مسقط و صلاله از معتبرترین سازندگان، با مالکیت آزاد برای خارجی‌ها.',
@@ -159,6 +159,20 @@ export const ROUTES = {
       ru: 'Международные школы Маската и Омана: британская, кембриджская, IB и американская программы, стоимость и поступление. Irfan Investment помогает вашей семье переехать, инвестировать и обустроиться.',
       ar: 'المدارس الدولية في مسقط وعُمان: المناهج البريطانية وكامبريدج والبكالوريا الدولية والأمريكية، والرسوم والقبول. تساعد Irfan Investment عائلتك على الانتقال والاستثمار والاستقرار.',
       fa: 'مدارس بین‌المللی مسقط و عمان؛ برنامه‌های بریتانیایی، کمبریج، IB و آمریکایی، شهریه و پذیرش. Irfan Investment به خانواده شما برای مهاجرت، سرمایه‌گذاری و اسکان کمک می‌کند.',
+    },
+  },
+  '/privacy': {
+    title: {
+      en: 'Privacy Policy | Irfan Investment Group',
+      ru: 'Политика конфиденциальности | Irfan Investment Group',
+      ar: 'سياسة الخصوصية | Irfan Investment Group',
+      fa: 'سیاست حریم خصوصی | Irfan Investment Group',
+    },
+    desc: {
+      en: 'How Irfan Investment Group collects, uses and protects your personal data across www.irfaninvest.com, including analytics and advertising tools.',
+      ru: 'Как Irfan Investment Group собирает, использует и защищает ваши персональные данные на www.irfaninvest.com.',
+      ar: 'كيف تجمع Irfan Investment Group بياناتك الشخصية وتستخدمها وتحميها على www.irfaninvest.com.',
+      fa: 'نحوه جمع‌آوری، استفاده و حفاظت از داده‌های شخصی شما در وب‌سایت Irfan Investment Group.',
     },
   },
 }

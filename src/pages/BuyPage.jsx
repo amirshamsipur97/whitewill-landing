@@ -38,6 +38,7 @@ import BuyFiltersModal, { DEFAULT_FILTERS, unitPasses, countMatchingProjects } f
 import { coverForSlug, galleryFor } from '../projectGallery.js'
 import { OPEN_EVENT as SALALAH_OPEN_EVENT } from '../components/SalalahPopup.jsx'
 import { LocalizedLink } from '../lib/localize.js'
+import { BUY_SEO, buyFaqJsonLd } from '../buySeoContent.mjs'
 
 // ── Salalah featured banner (above the listings; SEO copy in the DOM) ──
 const SALALAH_BANNER = {
@@ -451,6 +452,19 @@ export default function BuyPage() {
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState(DEFAULT_FILTERS)
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  // FAQPage JSON-LD for the SEO block below the grid. The prerendered
+  // static /buy pages emit the identical payload (id kept in sync so
+  // hydration replaces rather than duplicates it).
+  useEffect(() => {
+    const el = document.createElement('script')
+    el.type = 'application/ld+json'
+    el.id = 'buy-faq-jsonld'
+    el.textContent = JSON.stringify(buyFaqJsonLd(lang))
+    document.getElementById('buy-faq-jsonld')?.remove()
+    document.head.appendChild(el)
+    return () => el.remove()
+  }, [lang])
 
   useEffect(() => {
     let cancelled = false
@@ -956,6 +970,66 @@ export default function BuyPage() {
             ))}
           </Box>
         )}
+
+        {/* ── Crawlable SEO block: "buy property in Oman" copy + FAQ ──
+            Real localized text content on the listing page (cards alone
+            carry almost no indexable text). Mirrored into the prerendered
+            static /buy pages by prerender-routes.mjs. */}
+        {(() => {
+          const c = BUY_SEO[lang] || BUY_SEO.en
+          const rtl = lang === 'fa' || lang === 'ar'
+          return (
+            <Box
+              component="section"
+              dir={rtl ? 'rtl' : 'ltr'}
+              sx={{
+                mt: { xs: 8, md: 12 },
+                pt: { xs: 5, md: 7 },
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+                maxWidth: 860,
+                mx: 'auto',
+                textAlign: rtl ? 'right' : 'left',
+              }}
+            >
+              <Typography component="h2" sx={{ fontSize: { xs: 24, md: 30 }, fontWeight: 600, mb: 2.5, color: '#fff' }}>
+                {c.heading}
+              </Typography>
+              {c.paras.map((p, i) => (
+                <Typography key={i} sx={{ fontSize: 15.5, lineHeight: 1.85, color: 'rgba(255,255,255,0.72)', mb: 2 }}>
+                  {p}
+                </Typography>
+              ))}
+              <Box sx={{ mt: 4 }}>
+                {c.faq.map((f, i) => (
+                  <Box key={i} sx={{ mb: 2.5 }}>
+                    <Typography component="h3" sx={{ fontSize: 16.5, fontWeight: 600, color: '#fff', mb: 0.75 }}>
+                      {f.q}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14.5, lineHeight: 1.8, color: 'rgba(255,255,255,0.65)' }}>
+                      {f.a}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+              <Typography component="h3" sx={{ fontSize: 16.5, fontWeight: 600, color: '#fff', mt: 4, mb: 1 }}>
+                {c.linksHeading}
+              </Typography>
+              <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
+                {c.links.map((l) => (
+                  <Box component="li" key={l.href} sx={{ mb: 0.75 }}>
+                    <Typography
+                      component={LocalizedLink}
+                      to={l.href}
+                      sx={{ fontSize: 14.5, color: '#8c8d25', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      {l.label}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )
+        })()}
       </Container>
 
       <BuyFiltersModal
