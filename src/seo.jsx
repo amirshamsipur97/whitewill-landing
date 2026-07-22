@@ -62,6 +62,17 @@ function resolve(pathname, lang = 'en') {
     return { title: 'Admin — Irfan Investment Group', desc: '', index: false }
   }
 
+  // Paid-ads landing pages (/lp/*) — real title for the browser tab and
+  // Meta's link preview, but noindex so they never compete with /buy in
+  // organic search.
+  if (pathname.startsWith('/lp/')) {
+    return {
+      title: 'Freehold Homes in Oman | Irfan Investment Group',
+      desc: 'Beachfront apartments and chalets from OMR 35,625 with a 99-year freehold title and Oman residency visa.',
+      index: false,
+    }
+  }
+
   // Anything else (legacy Webflow URL, random crawl, real 404) → noindex.
   return { title: 'Page not found | Irfan Investment Group', desc: 'The page you requested could not be found.', index: false }
 }

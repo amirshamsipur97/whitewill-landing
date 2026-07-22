@@ -9,6 +9,11 @@ import './index.css'
 import App from './App.jsx'
 import theme from './theme.js'
 import { I18nProvider } from './i18n.jsx'
+import { captureAttribution } from './lib/attribution.js'
+
+// Snapshot ad-click attribution at the earliest possible moment — before React
+// mounts and before any client-side navigation strips the landing query string.
+captureAttribution()
 
 // ── Defensive DOM patches ─────────────────────────────────────────────────
 // GSAP ScrollTrigger wraps pinned elements in a generated "pin spacer" div.

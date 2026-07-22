@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { trackLead } from './analytics.js'
+import { getAttribution } from './lib/attribution.js'
 
 const url = import.meta.env.VITE_SUPABASE_URL
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -25,6 +26,14 @@ export const supabase = createClient(url, key)
  * @param {object} [payload.extra]
  */
 export async function submitForm(payload) {
+  // Campaign attribution. `getAttribution()` returns the first-touch UTM tags +
+  // click ids captured on the landing pageview and persisted in sessionStorage,
+  // so a form submitted from a deep SPA page (where the URL no longer carries
+  // the query string) still records the campaign that produced the lead.
+  // utm_source/medium/campaign map to leads columns; gclid/fbclid/etc. ride in
+  // raw_data (the edge function spreads the whole body into it). Live URL params
+  // still override, covering a direct submit on a freshly tagged URL.
+  const attribution = getAttribution()
   const utmFromQuery = (() => {
     if (typeof window === 'undefined') return {}
     const sp = new URLSearchParams(window.location.search)
@@ -54,6 +63,7 @@ export async function submitForm(payload) {
   }
 
   const body = {
+    ...attribution,
     ...utmFromQuery,
     page_url: typeof window !== 'undefined' ? window.location.href : undefined,
     ...payload,

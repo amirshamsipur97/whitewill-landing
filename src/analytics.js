@@ -19,6 +19,8 @@
  * configured via env — a matching Ads `conversion` event.
  */
 
+import { captureAttribution } from './lib/attribution.js'
+
 export const GA_ID = 'G-P2PTCKJKYK'          // GA4 Measurement ID
 export const ADS_ID = 'AW-17743726667'       // Google Ads tag (Google tag GT-M3KMFWHL)
 
@@ -32,6 +34,15 @@ export const ADS_LEAD_LABEL = import.meta.env.VITE_GOOGLE_ADS_LEAD_LABEL || ''
 function gtag(...args) {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
     window.gtag(...args)
+  }
+}
+
+// Meta (Facebook) Pixel — stub + loader live in index.html, gated on
+// window.__META_PIXEL_ID. When the ID is unset, fbq is undefined and every
+// call here is a silent no-op, so this file needs no separate flag.
+function fbq(...args) {
+  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+    window.fbq(...args)
   }
 }
 
@@ -77,6 +88,9 @@ export function resolvePage(pathname, lang) {
 
 /** Manual SPA page_view. Call on every route or language change. */
 export function trackPageView({ path, lang }) {
+  // Snapshot campaign attribution while the landing URL still carries its query
+  // string (first touch wins, so later navs never clobber it).
+  captureAttribution()
   const p = path || (typeof window !== 'undefined' ? window.location.pathname : '/')
   const { title, group } = resolvePage(p, lang)
   const L = (lang || 'en').toUpperCase()
@@ -87,6 +101,8 @@ export function trackPageView({ path, lang }) {
     content_group: group,
     site_language: lang || 'en',
   })
+  // Meta Pixel SPA PageView (the base snippet only fires on the first load).
+  fbq('track', 'PageView')
 }
 
 /**
@@ -112,4 +128,28 @@ export function trackLead({ source, language, value = 0, currency = 'OMR' } = {}
       currency,
     })
   }
+  // Meta Pixel standard Lead event — the conversion Meta ad campaigns
+  // optimize against. Same lead taxonomy as GA4 via content_name.
+  fbq('track', 'Lead', {
+    content_name: source || 'website',
+    value,
+    currency,
+  })
+}
+
+/**
+ * Meta-ads landing funnel events (used by /lp/oman only).
+ * `trackQuizStart` fires when the visitor answers the first quiz question —
+ * Meta's InitiateCheckout gives the campaign a mid-funnel optimization
+ * signal between PageView and Lead. `trackContactClick` marks the WhatsApp
+ * tap as a standard Contact event (also mirrored to GA4).
+ */
+export function trackQuizStart({ language } = {}) {
+  gtag('event', 'quiz_start', { site_language: language || 'en' })
+  fbq('track', 'InitiateCheckout', { content_name: 'meta_lp_quiz' })
+}
+
+export function trackContactClick({ channel = 'whatsapp', language } = {}) {
+  gtag('event', 'contact_click', { channel, site_language: language || 'en' })
+  fbq('track', 'Contact', { content_name: channel })
 }

@@ -138,6 +138,8 @@ const InvestmentLegalPage = lazy(() => import('./pages/InvestmentLegalPage'))
 const CarImportPage = lazy(() => import('./pages/CarImportPage'))
 const SchoolsPage = lazy(() => import('./pages/SchoolsPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const MetaLandingPage = lazy(() => import('./pages/MetaLandingPage'))
 const InsightsPage = lazy(() => import('./pages/InsightsPage'))
 const InsightDetailPage = lazy(() => import('./pages/InsightDetailPage'))
 const InsightsAdminPage = lazy(() => import('./pages/InsightsAdminPage'))
@@ -260,6 +262,10 @@ function PageRoutes() {
       <Route path="insights/:slug" element={<InsightDetailPage />} />
       <Route path="insights-admin" element={<InsightsAdminPage />} />
       <Route path="about" element={<AboutPage />} />
+      <Route path="privacy" element={<PrivacyPage />} />
+      {/* Meta-ads landing (quiz funnel). Deliberately NOT in seo.jsx, so
+          SeoManager emits noindex; App hides site chrome on /lp/*. */}
+      <Route path="lp/oman" element={<MetaLandingPage />} />
       {/* Unknown URLs (legacy Webflow, random crawls) render a real 404 — NOT
           the homepage — so they aren't indexed as homepage duplicates.
           SeoManager emits noindex for these paths. */}
@@ -273,6 +279,9 @@ export default function App() {
   // The admin panel stays free of visitor-facing launchers (chat + lead popup).
   const { pathname } = useLocation()
   const isAdmin = pathname.includes('/insights-admin')
+  // Ads landing pages (/lp/*) render without the site chrome — every extra
+  // nav link is an exit path for paid traffic.
+  const isLp = pathname.includes('/lp/')
   return (
     <Box
       id="app-root"
@@ -286,7 +295,7 @@ export default function App() {
       <ScrollManager />
       <SeoManager />
       <AnalyticsManager />
-      <Header />
+      {!isLp && <Header />}
       <main>
         <Suspense fallback={<RouteFallback />}>
           {/* Localized URL prefixes (ar/ru/fa). English is prefix-less under /*. */}
@@ -301,12 +310,12 @@ export default function App() {
       {/* The footer's 4-office grid is a big DOM subtree that no route shows
           above the fold — mounting it lazily trims initial style/layout work
           on every page. */}
-      <DeferredMount minHeight="90vh"><SiteFooter /></DeferredMount>
+      {!isLp && <DeferredMount minHeight="90vh"><SiteFooter /></DeferredMount>}
       <CookieBanner />
-      {!isAdmin && <ChatWidget />}
+      {!isAdmin && !isLp && <ChatWidget />}
       {/* Site-wide purple lead launcher + popup (auto-opens on the landing
           page only; the pill mirrors the chat pill's size at bottom-left). */}
-      {!isAdmin && <SalalahPopup />}
+      {!isAdmin && !isLp && <SalalahPopup />}
     </Box>
   )
 }
