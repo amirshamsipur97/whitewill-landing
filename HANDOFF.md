@@ -173,3 +173,25 @@ domain + Vapi number) + $25-90 variable APIs; ads separate (C1 $775/mo, C2 +$450
 - **/buy "Special Releases" row (renamed from Salalah Special Releases): 3 mixed-destination cards** — Lubana Island→hawana?release=Amazi · Muscat Bay (new cover, Figma 770-22307)→/buy/zen-residences · Olive Farms (fresh cover 770-22342)→/buy/jebel-sifah?release=Olive%20Farms. Lubana cover upgraded to 1524×1088 (Figma 856-22759 @4x).
 - **SEO round:** dedicated 4-lang meta for /buy/hawana-salalah (from OMR 98,000); vercel.json 301s: /property/*, /oman-property/* → /buy; /salalah → /buy/hawana-salalah (+/ar). n8n blog agent (KjDPPqA7lRm0U2M2) biased to Salalah topics + Salalah Pexels imagery + mandatory internal link to /buy/hawana-salalah (revert ~Sep 15).
 - **NEXT SESSION = ADS FIXES ONLY** — see memory `irfaninvest-ads-campaign` "TOMORROW'S C6 FIX LIST" (billing check → stale Solaris headline/sitelinks → AR fixes → asset completion → day-3 search terms → master negatives attach → rename AG1 → CPC cap decision).
+
+## 2026-07-20 → 07-21 sessions — Hay Al Wafa launch, fa-SEO push, C8 Persian campaign
+
+**Site (all deployed + committed through `fc8b4f2`, pushed):**
+- **Hay Al Wafa LIVE:** 36×2BHK units in Supabase (project_id=6, prices = "Handover Non-Eligible incl furniture" 92,088–99,543 OMR, OREX ignored/expired), pin moved to plus code M34P+3V (23.65519/58.08719), 4-lang projectDetails rewritten (old copy was WRONG "villas·Al Mouj"). unit_no stays internal-only.
+- **Blog covers deduped:** 13 slugs re-assigned to own gallery (muscat-1..10, salalah-1..3) via SQL; 0 duplicate covers across 31 slugs; prod redeployed so og:image is fresh.
+- **"buy property in oman"/«خرید ملک در عمان» push:** keyword-first home+/buy titles, shared `src/buySeoContent.mjs` → crawlable 4-lang copy+FAQ (+FAQPage JSON-LD id=buy-faq-jsonld) on /buy, mirrored into prerender-routes.mjs static pages.
+- **fa i18n COMPLETE:** FA_OVERLAY for ALL 22 projects (5 with full sections) + fa labels on all 26 FEATURE_META chips. No English fallback left on /fa project pages.
+- **Footer trust:** Russia branch → "Russian-speaking desk · Muscat" (WhatsApp +968 7758 4941, RU-language address line); Hong Kong branch DELETED; grids 4→3; About prose updated. GlobalPresencePanel (landing Figma section) still mentions HK/Moscow — untouched by design.
+- **Favicon fixed for Google:** favicon-48/96/192.png + multi-size favicon.ico + apple-touch-icon (source: images/irfan-logo-circle.png). SVG-only was causing the generic globe in Search/Ads. Needs Google recrawl (~days); user should Request Indexing of / in GSC.
+- fa popup copy fixed: «صلاله» spelling (was سلاله ×4) + «صاحب خانه‌ای» grammar.
+
+**Google Ads — C8 Persian campaign LIVE (id 24053228816):**
+- Search-only, Oman + **Presence-only**, langs fa+en+ar, goal Submit lead forms (⚠️ inherits the 2-action double-count), AI Max OFF, "using only your keywords".
+- AG1 "Ad group 1": 16 phrase fa kws (core خرید ملک/خانه/آپارتمان + مسقط). AG2 "AG2 | Prices | قیمت ملک": 8 price kws, 15 keyword-exact headlines + DKI {KeyWord:قیمت ملک در عمان}, 4 descs. Ad strength stuck "Poor" on «Include popular keywords» = fa low-volume limitation, NOT fixable, does NOT affect auction (real CTR 13-14%).
+- 22 campaign-level phrase negatives (رایگان/کاریابی/تور/تحصیل/سفارت/اجاره/عکس/قاچاق...).
+- Day-1 burn: $40.38 = 3 clicks @ $13.46 CPC (MaxConv no-data overbidding) → bidding SWITCHED to **Target Impression Share / Absolute top / 90% / max CPC $5**, budget 40→**$50/day**. Serving paused end of day-1 (budget exhausted + strategy propagating); expect rank-1 from next morning with $1-5 clicks.
+- Ad Preview (Tools→Troubleshooting) said "no keywords matched" during the outage — keywords ARE Eligible («خرید ملک در عمان» 14 impr/14.29% CTR). Re-test next day; if still not showing → real problem.
+- User was mid-entry: 8 fa campaign-level sitelinks (data in chat/xlsx) to displace account-level English ones; callouts + structured snippet (انواع) pending; Business logo asset + advertiser verification pending.
+- **Database file:** `../oman-fa-google-ads-database-2026-07-21.xlsx` (8 RTL sheets: 232 kws, SERP analysis incl. competitor GBP named «خرید ملک در عمان» = homelist's WhatsApp, 72 RSA lines, launch settings). AG3 اقامت / AG4 صلاله packages ready to paste from it.
+
+**Next session TODOs:** ① re-test Ad Preview (Muscat/Persian) → confirm absolute-top serving ② finish sitelinks/callouts/snippet + Business logo if user didn't ③ build AG3+AG4 from xlsx ④ day-3 search terms + budget rightsizing (drop to $30-40 if IS≥90%) ⑤ Anthropic credits still EMPTY → top up, then n8n execute_workflow KjDPPqA7lRm0U2M2 (production mode) to backfill blog 07-20/21/22 ⑥ Google Business Profile for Muscat office (biggest SERP gap) ⑦ fa article «قیمت خانه در عمان به پول ایران» ⑧ conversion double-count + UTM fixes still pending account-wide.
