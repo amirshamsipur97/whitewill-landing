@@ -21,6 +21,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { gsap } from 'gsap'
 import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
 import KingBedRoundedIcon from '@mui/icons-material/KingBedRounded'
 import SquareFootRoundedIcon from '@mui/icons-material/SquareFootRounded'
@@ -44,16 +45,16 @@ import { slugify } from './BuyPage.jsx'
 import { LocalizedLink } from '../lib/localize.js'
 import { FONT, OLIVE_BRIGHT } from '../components/invest/ui.jsx'
 
-// ── light "milky paper" palette (sharp corners, warm hairlines) ───────────
-const PAPER = '#F6F1E7'      // page background (milky cream)
-const SURFACE = '#FFFFFF'    // cards + filter surfaces
-const INK = '#1c1b17'        // primary text / primary button
-const SUB = '#5f5b50'        // secondary text
-const FAINT = '#948f7e'      // muted labels
-const LINE = '#E5DDCC'       // hairline rule
-const LINE_2 = '#D2C7AF'     // stronger rule / hover
-const CHIP = '#F1E8D3'       // filter chip fill (soft cream/gold)
-const CHIP_LINE = '#E3D4AC'  // filter chip border
+// ── uniform dark palette (matches the hero; whole /project page is dark) ───
+const PAPER = '#0b0b0c'      // page background (dark, matches hero)
+const SURFACE = '#151517'    // cards + controls
+const INK = '#f4f2ec'        // primary text (near-white)
+const SUB = 'rgba(244,242,236,0.62)'   // secondary text
+const FAINT = 'rgba(244,242,236,0.42)' // muted labels
+const LINE = 'rgba(255,255,255,0.10)'  // hairline rule
+const LINE_2 = 'rgba(255,255,255,0.20)'// stronger rule / hover
+const CHIP = 'rgba(255,255,255,0.05)'
+const CHIP_LINE = 'rgba(255,255,255,0.12)'
 const ACCENT = OLIVE_BRIGHT  // #8c8d25 — price / accents
 const PURPLE = '#351D93'     // Investment-Plan brand purple — interactive hovers
 const PURPLE_HI = '#472bb0'  // brighter purple for pressed/hover fill
@@ -220,7 +221,7 @@ const CSS = `
 .pfx-btn:hover{background:${PURPLE};box-shadow:0 8px 22px rgba(53,29,147,.32)}
 .pfx-card{display:flex;background:${SURFACE};border:1px solid ${LINE};overflow:hidden;transition:box-shadow .25s,border-color .25s}
 .pfx-card:hover{border-color:${PURPLE};box-shadow:0 14px 38px rgba(53,29,147,.13)}
-.pfx-media{position:relative;flex:0 0 42%;max-width:430px;aspect-ratio:4/3;background:#efeadf;overflow:hidden;display:block}
+.pfx-media{position:relative;flex:0 0 42%;max-width:430px;aspect-ratio:4/3;background:#1b1b1d;overflow:hidden;display:block}
 .pfx-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
 .pfx-card:hover .pfx-media img{transform:scale(1.04)}
 .pfx-body{flex:1 1 auto;padding:22px 26px 20px;display:flex;flex-direction:column;min-width:0}
@@ -233,7 +234,7 @@ const CSS = `
 .pfx-sortsel:hover{border-color:${PURPLE}}
 .pfx-sortsel select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
 @keyframes pfxShimmer{0%{background-position:-500px 0}100%{background-position:500px 0}}
-.pfx-skel{background-color:#e9e2d2;background-image:linear-gradient(90deg,rgba(233,226,210,0) 0,rgba(255,255,255,.6) 50%,rgba(233,226,210,0) 100%);background-size:500px 100%;background-repeat:no-repeat;animation:pfxShimmer 1.25s ease-in-out infinite}
+.pfx-skel{background-color:#1e1e21;background-image:linear-gradient(90deg,rgba(30,30,33,0) 0,rgba(255,255,255,.07) 50%,rgba(30,30,33,0) 100%);background-size:500px 100%;background-repeat:no-repeat;animation:pfxShimmer 1.25s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.pfx-skel{animation:none}}
 @media(max-width:768px){
   .pfx-wrap{padding:0 14px}
@@ -281,7 +282,9 @@ const CSS = `
   .pfh-fchip{min-width:62%;flex:0 0 auto}
 }
 /* ── AI reply as an iOS-style notification card (Figma 955-28582) ── */
-.pfx-msg{position:relative;display:flex;gap:12px;max-width:600px;background:#fff;border-radius:16px;padding:15px 18px;box-shadow:0 4px 40px #EEEEEE,0 4px 8px rgba(66,71,76,.05),0 0 0 .5px rgba(66,71,76,.28);font-family:-apple-system,"SF Pro Text","Peyda",${FONT}}
+.pfx-msg{position:relative;display:flex;gap:12px;max-width:640px;margin:0 auto;background:#fff;border-radius:16px;padding:15px 18px;box-shadow:0 8px 50px rgba(0,0,0,.5),0 0 0 .5px rgba(255,255,255,.06);font-family:-apple-system,"SF Pro Text","Peyda",${FONT}}
+.pfx-cursor{display:inline-block;width:2px;height:1em;background:rgba(60,60,67,.7);margin-inline-start:2px;vertical-align:-2px;animation:pfxBlink .8s steps(1) infinite}
+@keyframes pfxBlink{50%{opacity:0}}
 .pfx-msg-dot{width:10px;height:10px;border-radius:50%;background:#007AFF;margin-top:6px;flex-shrink:0}
 .pfx-msg-body{flex:1;min-width:0}
 .pfx-msg-top{display:flex;align-items:center;gap:8px}
@@ -463,6 +466,8 @@ export default function SearchPage() {
   const [aiSubject, setAiSubject] = useState('')                // the query, shown as the card subject
   const [aiTime, setAiTime] = useState('')                      // arrival time on the card
   const [aiBusy, setAiBusy] = useState(false)
+  const [typed, setTyped] = useState('')                        // typewriter output
+  const msgRef = useRef(null)
   const type = params.get('type') || 'Any'
   const beds = params.get('beds') || 'any'
   const price = params.get('price') || 'any'
@@ -564,6 +569,25 @@ export default function SearchPage() {
     if (q0) runAiSearch(q0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // GSAP: slide the AI card in, then typewrite the reply text.
+  useEffect(() => {
+    if (!aiReply) { setTyped(''); return }
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (msgRef.current) gsap.fromTo(msgRef.current, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
+    if (reduce) { setTyped(aiReply); return }
+    setTyped('')
+    const obj = { n: 0 }
+    const tw = gsap.to(obj, {
+      n: aiReply.length,
+      duration: Math.min(2.6, Math.max(0.7, aiReply.length * 0.016)),
+      ease: 'none',
+      delay: 0.22,
+      onUpdate: () => setTyped(aiReply.slice(0, Math.round(obj.n))),
+      onComplete: () => setTyped(aiReply),
+    })
+    return () => tw.kill()
+  }, [aiReply])
 
   const results = useMemo(() => {
     const priceMax = PRICE_VALUES.find((o) => o.v === price)?.max ?? Infinity
@@ -713,7 +737,7 @@ export default function SearchPage() {
       {/* ── AI reply as an iOS-style notification card (Figma 955-28582) ── */}
       {aiReply && (
         <section className="pfx-wrap" style={{ padding: '22px 20px 0' }}>
-          <div className="pfx-msg" dir={rtl ? 'rtl' : 'ltr'}>
+          <div ref={msgRef} className="pfx-msg" dir={rtl ? 'rtl' : 'ltr'}>
             <span className="pfx-msg-dot" />
             <div className="pfx-msg-body">
               <div className="pfx-msg-top">
@@ -726,7 +750,7 @@ export default function SearchPage() {
                 </span>
               </div>
               {aiSubject && <div className="pfx-msg-subject">{aiSubject}</div>}
-              <p className="pfx-msg-preview">{aiReply}</p>
+              <p className="pfx-msg-preview">{typed}{typed.length < aiReply.length && <span className="pfx-cursor" />}</p>
             </div>
           </div>
         </section>
