@@ -19,7 +19,7 @@
  * unit_no is internal-only (business rule) → cards show a generated public
  * ref `IRF-<id>`, never the raw unit_no.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
 import KingBedRoundedIcon from '@mui/icons-material/KingBedRounded'
@@ -205,6 +205,9 @@ const CSS = `
 .pfx-cta-ghost:hover{border-color:${INK}}
 .pfx-sortsel{position:relative;display:inline-flex;align-items:center;gap:6px;background:${SURFACE};border:1px solid ${LINE};padding:9px 12px;cursor:pointer}
 .pfx-sortsel select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+@keyframes pfxShimmer{0%{background-position:-500px 0}100%{background-position:500px 0}}
+.pfx-skel{background-color:#e9e2d2;background-image:linear-gradient(90deg,rgba(233,226,210,0) 0,rgba(255,255,255,.6) 50%,rgba(233,226,210,0) 100%);background-size:500px 100%;background-repeat:no-repeat;animation:pfxShimmer 1.25s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.pfx-skel{animation:none}}
 @media(max-width:768px){
   .pfx-wrap{padding:0 14px}
   .pfx-bar{flex-direction:column}
@@ -218,6 +221,30 @@ const CSS = `
   .pfx-body{padding:18px 18px 18px}
 }
 `
+
+// Placeholder card shown while the live query re-filters (the grey "buffer").
+function SkeletonCard() {
+  return (
+    <article className="pfx-card" aria-hidden="true">
+      <div className="pfx-media pfx-skel" />
+      <div className="pfx-body">
+        <div className="pfx-skel" style={{ height: 11, width: '36%' }} />
+        <div className="pfx-skel" style={{ height: 20, width: '64%', marginTop: 11 }} />
+        <div className="pfx-skel" style={{ height: 13, width: '28%', marginTop: 12 }} />
+        <div className="pfx-skel" style={{ height: 26, width: '44%', marginTop: 14 }} />
+        <div style={{ display: 'flex', gap: 14, marginTop: 15, paddingTop: 14, borderTop: `1px solid ${LINE}` }}>
+          <div className="pfx-skel" style={{ height: 12, width: 56 }} />
+          <div className="pfx-skel" style={{ height: 12, width: 72 }} />
+          <div className="pfx-skel" style={{ height: 12, width: 56 }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 'auto', paddingTop: 18 }}>
+          <div className="pfx-skel" style={{ height: 44, width: 104 }} />
+          <div className="pfx-skel" style={{ height: 44, width: 150 }} />
+        </div>
+      </div>
+    </article>
+  )
+}
 
 // ── one listing card (image left, details right → stacked on mobile) ──────
 function UnitCard({ item, t, rtl, lang }) {
@@ -338,6 +365,8 @@ export default function SearchPage() {
   const t = STR[lang] || STR.en
   const rtl = lang === 'fa' || lang === 'ar'
   const [params, setParams] = useSearchParams()
+  const paramsRef = useRef(params)
+  paramsRef.current = params
 
   const [projects, setProjects] = useState([])
   const [units, setUnits] = useState([])
@@ -345,13 +374,14 @@ export default function SearchPage() {
 
   const L = LABELS[lang] || LABELS.en
   const C = CHIP_LABELS[lang] || CHIP_LABELS.en
-  const [q, setQ] = useState(params.get('q') || '')
+  const [q, setQ] = useState(params.get('q') || '')       // live input value
+  const [liveQ, setLiveQ] = useState(params.get('q') || '') // debounced needle
+  const [pending, setPending] = useState(false)             // re-filtering now?
   const type = params.get('type') || 'Any'
   const beds = params.get('beds') || 'any'
   const price = params.get('price') || 'any'
   const area = params.get('area') || 'any'
   const sort = params.get('sort') || 'price_asc'
-  const committedQ = params.get('q') || ''
 
   useEffect(() => {
     // title/meta owned by seo.jsx (ROUTES['/project']); just load data here.
@@ -392,11 +422,39 @@ export default function SearchPage() {
     setParams(next, { replace: true })
   }
 
-  const commitSearch = () => setParam('q', q.trim() || null, '')
+  // Write the query to the URL (shareable) off the freshest params.
+  const writeQ = (value) => {
+    const next = new URLSearchParams(paramsRef.current)
+    const v = value.trim()
+    if (v) next.set('q', v)
+    else next.delete('q')
+    setParams(next, { replace: true })
+  }
+
+  // Live search: as the user types, flash the skeleton "buffer" then debounce
+  // the needle into the filter + URL ~300ms after they stop typing.
+  useEffect(() => {
+    if (q === liveQ) return
+    setPending(true)
+    const id = setTimeout(() => {
+      setLiveQ(q)
+      writeQ(q)
+      setPending(false)
+    }, 300)
+    return () => clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q])
+
+  // Enter / Search button → flush immediately (skip the debounce wait).
+  const commitSearch = () => {
+    setLiveQ(q)
+    writeQ(q)
+    setPending(false)
+  }
 
   const results = useMemo(() => {
     const priceMax = PRICE_VALUES.find((o) => o.v === price)?.max ?? Infinity
-    const needle = committedQ.trim().toLowerCase()
+    const needle = liveQ.trim().toLowerCase()
     const enriched = units
       .map((u) => ({ unit: u, project: projById[u.project_id] }))
       .filter((it) => it.project) // drop units whose project lacks coords/data
@@ -444,8 +502,9 @@ export default function SearchPage() {
       g.photoCount = gal.length
     }
     return grouped
-  }, [units, projById, type, beds, price, area, sort, committedQ])
+  }, [units, projById, type, beds, price, area, sort, liveQ])
 
+  const busy = loading || pending // show the skeleton buffer
   const typeVal = L.type[TYPE_OPTIONS.indexOf(type)] || L.type[0]
   const bedsVal = L.beds[BEDS_VALUES.indexOf(beds)] || L.beds[0]
   const priceVal = L.price[PRICE_VALUES.findIndex((o) => o.v === price)] || L.price[0]
@@ -514,7 +573,7 @@ export default function SearchPage() {
         </nav>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, paddingBottom: 4 }}>
           <span style={{ fontFamily: FONT, fontSize: 15, color: INK, fontWeight: 600 }}>
-            {loading ? '…' : t.count.replace('{n}', localizeDigits(results.length, lang))}
+            {busy ? '…' : t.count.replace('{n}', localizeDigits(results.length, lang))}
           </span>
           <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: SUB, fontFamily: FONT, fontSize: 13 }}>
             {t.sortBy}
@@ -531,11 +590,9 @@ export default function SearchPage() {
 
       {/* ── listing cards ── */}
       <section className="pfx-wrap" style={{ padding: '18px 20px 88px' }}>
-        {loading ? (
+        {busy ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} style={{ background: SURFACE, border: `1px solid ${LINE}`, height: 230, animation: 'pulse 1.5s ease-in-out infinite' }} />
-            ))}
+            {Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : results.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: SUB, fontFamily: FONT }}>
