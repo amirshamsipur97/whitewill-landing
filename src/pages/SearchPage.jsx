@@ -329,7 +329,7 @@ function UnitCard({ item, t, rtl, lang }) {
   const typeWord = (TYPE_WORDS[lang] || TYPE_WORDS.en)[type] || type
   const area = [project.area?.name || project.location, project.area?.city].filter(Boolean).join(', ')
   const sqm = unit.total_area_sqm || unit.internal_area_sqm
-  const to = `/buy/${slugify(project.name)}?unit=${unit.id}`
+  const to = `/property/${unit.id}`
   const [imgErr, setImgErr] = useState(false)
   const src = imgErr || !cover ? poolFor(unit.id) : cover
 

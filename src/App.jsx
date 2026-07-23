@@ -131,6 +131,7 @@ import ChatWidget from './components/chat/ChatWidget'
 const BuyPage = lazy(() => import('./pages/BuyPage'))
 const BuyProjectPage = lazy(() => import('./pages/BuyProjectPage'))
 const SearchPage = lazy(() => import('./pages/SearchPage'))
+const PropertyPage = lazy(() => import('./pages/PropertyPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MaisonShirdelPage = lazy(() => import('./pages/MaisonShirdelPage'))
 const InvestPage = lazy(() => import('./pages/InvestPage'))
@@ -254,6 +255,7 @@ function PageRoutes() {
       <Route path="buy" element={<BuyPage />} />
       <Route path="buy/:slug" element={<BuyProjectPage />} />
       <Route path="project" element={<SearchPage />} />
+      <Route path="property/:id" element={<PropertyPage />} />
       <Route path="maison-shirdel" element={<MaisonShirdelPage />} />
       <Route path="invest" element={<InvestPage />} />
       <Route path="investment" element={<InvestmentPage />} />
