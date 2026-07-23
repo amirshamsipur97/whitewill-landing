@@ -36,7 +36,6 @@ import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined'
 import StraightenRoundedIcon from '@mui/icons-material/StraightenRounded'
 import KingBedOutlinedIcon from '@mui/icons-material/KingBedOutlined'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
-import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
@@ -151,10 +150,10 @@ const SIZE_LABELS = {
 }
 
 const STR = {
-  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities, every one priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property, like “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy — showing keyword matches instead.' },
-  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана, все с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость, напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят — показаны совпадения по словам.' },
-  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان، كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول — نعرض تطابقات الكلمات.' },
-  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن، مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است — نتایج کلیدواژه‌ای نمایش داده شد.' },
+  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities, every one priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property, like “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy, showing keyword matches instead.', aiSender: 'Irfan Assistant' },
+  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана, все с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость, напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят, показаны совпадения по словам.', aiSender: 'Ассистент Irfan' },
+  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان، كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول، نعرض تطابقات الكلمات.', aiSender: 'مساعد عرفان' },
+  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن، مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است، نتایج کلیدواژه‌ای نمایش داده شد.', aiSender: 'دستیار عرفان' },
 }
 
 // Localised unit-type words (project names themselves stay English brand nouns).
@@ -281,6 +280,17 @@ const CSS = `
   .pfh-filters::-webkit-scrollbar{display:none}
   .pfh-fchip{min-width:62%;flex:0 0 auto}
 }
+/* ── AI reply as an iOS-style notification card (Figma 955-28582) ── */
+.pfx-msg{position:relative;display:flex;gap:12px;max-width:600px;background:#fff;border-radius:16px;padding:15px 18px;box-shadow:0 4px 40px #EEEEEE,0 4px 8px rgba(66,71,76,.05),0 0 0 .5px rgba(66,71,76,.28);font-family:-apple-system,"SF Pro Text","Peyda",${FONT}}
+.pfx-msg-dot{width:10px;height:10px;border-radius:50%;background:#007AFF;margin-top:6px;flex-shrink:0}
+.pfx-msg-body{flex:1;min-width:0}
+.pfx-msg-top{display:flex;align-items:center;gap:8px}
+.pfx-msg-sender{font-weight:600;font-size:17px;letter-spacing:-.4px;color:#000}
+.pfx-msg-time{font-size:15px;letter-spacing:-.24px;color:rgba(60,60,67,.6);white-space:nowrap}
+.pfx-msg-x{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:none;color:rgba(60,60,67,.3);cursor:pointer;padding:0;margin:0;flex-shrink:0;line-height:0}
+.pfx-msg-x:hover{color:rgba(60,60,67,.55)}
+.pfx-msg-subject{margin-top:2px;font-size:15px;letter-spacing:-.24px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:capitalize}
+.pfx-msg-preview{margin:3px 0 0;font-size:15px;line-height:1.35;letter-spacing:-.24px;color:rgba(60,60,67,.6);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 `
 
 // Placeholder card shown while the live query re-filters (the grey "buffer").
@@ -450,6 +460,8 @@ export default function SearchPage() {
   const [aiQuery, setAiQuery] = useState(params.get('q') || '') // AI search box
   const [aiFilter, setAiFilter] = useState(null)                // parsed constraints
   const [aiReply, setAiReply] = useState('')                    // assistant message
+  const [aiSubject, setAiSubject] = useState('')                // the query, shown as the card subject
+  const [aiTime, setAiTime] = useState('')                      // arrival time on the card
   const [aiBusy, setAiBusy] = useState(false)
   const type = params.get('type') || 'Any'
   const beds = params.get('beds') || 'any'
@@ -519,6 +531,8 @@ export default function SearchPage() {
     const query = (text ?? aiQuery).trim()
     if (!query || aiBusy) return
     setAiBusy(true)
+    setAiSubject(query)
+    try { setAiTime(new Date().toLocaleTimeString({ fa: 'fa-IR', ar: 'ar', ru: 'ru-RU', en: 'en-US' }[lang] || 'en-US', { hour: 'numeric', minute: '2-digit' })) } catch { setAiTime('') }
     // AI result stands alone → clear manual dropdowns, keep ?q shareable.
     const next = new URLSearchParams()
     next.set('q', query)
@@ -658,7 +672,7 @@ export default function SearchPage() {
                 aria-label={t.aiPlaceholder}
               />
               <button type="submit" className="pfh-find" disabled={aiBusy}>
-                {aiBusy ? <span className="pfh-spin" /> : <AutoAwesomeRoundedIcon sx={{ fontSize: 18 }} />}
+                {aiBusy && <span className="pfh-spin" />}
                 {aiBusy ? t.aiThinking : t.find}
               </button>
             </form>
@@ -696,15 +710,24 @@ export default function SearchPage() {
         </div>
       </section>
 
-      {/* ── AI assistant reply banner ── */}
+      {/* ── AI reply as an iOS-style notification card (Figma 955-28582) ── */}
       {aiReply && (
-        <section className="pfx-wrap" style={{ padding: '20px 20px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, background: SURFACE, border: `1px solid ${LINE}`, borderInlineStart: `3px solid ${GOLD}`, padding: '14px 16px' }} dir={rtl ? 'rtl' : 'ltr'}>
-            <AutoAwesomeRoundedIcon sx={{ fontSize: 20, color: GOLD, mt: '2px', flexShrink: 0 }} />
-            <p style={{ margin: 0, flex: 1, fontFamily: FONT, fontSize: 14.5, lineHeight: 1.55, color: INK }}>{aiReply}</p>
-            <button type="button" onClick={clearAi} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'transparent', border: 'none', color: SUB, fontFamily: FONT, fontSize: 13, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
-              <CloseRoundedIcon sx={{ fontSize: 16 }} /> {t.aiClear}
-            </button>
+        <section className="pfx-wrap" style={{ padding: '22px 20px 0' }}>
+          <div className="pfx-msg" dir={rtl ? 'rtl' : 'ltr'}>
+            <span className="pfx-msg-dot" />
+            <div className="pfx-msg-body">
+              <div className="pfx-msg-top">
+                <span className="pfx-msg-sender">{t.aiSender}</span>
+                <span style={{ marginInlineStart: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  {aiTime && <span className="pfx-msg-time">{aiTime}</span>}
+                  <button type="button" className="pfx-msg-x" onClick={clearAi} aria-label={t.aiClear}>
+                    <CloseRoundedIcon sx={{ fontSize: 19 }} />
+                  </button>
+                </span>
+              </div>
+              {aiSubject && <div className="pfx-msg-subject">{aiSubject}</div>}
+              <p className="pfx-msg-preview">{aiReply}</p>
+            </div>
           </div>
         </section>
       )}
