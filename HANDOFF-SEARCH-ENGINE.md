@@ -1,7 +1,73 @@
-# Property Search Engine — Session Handoff (2026-07-23)
+# Property Search Engine — Session Handoff (2026-07-23 → 07-24)
 
 Repurposing the site's "Project" nav into a real, unit-level property search
 portal modelled on the LuxuryProperty.com structure the client referenced.
+
+---
+## ⭐ 2026-07-24 session summary (HEAD `d252a8e`, all live on irfaninvest.com)
+
+**`/project` (SearchPage.jsx) is now a UNIFORM DARK page:**
+- Hero = dark frosted-glass panel (Figma `6miTfu9ktj3SlAFCmSSER8` node 953-28313),
+  centered + text-centered, solid-dark bg (no photo). Eyebrow + title + lead,
+  gold "Find Property" button, 5 icon dropdowns: Location / Property Type /
+  Pricing Range / Property Size (sqm buckets) / Bedrooms (Figma's "Build Year"
+  dropped — no year data).
+- **AI natural-language search:** typing a request → Supabase edge fn
+  **`property-search`** (project `owgvrxipqlusepozlujv`, Claude
+  `claude-sonnet-4-5-20250929`, reuses `ANTHROPIC_API_KEY`, `verify_jwt:false`,
+  forbids em-dashes) returns `{reply, filter:{q,type,bedsMin/Max,priceMin/Max,
+  sizeMin/Max,viewKeywords}}`. Frontend applies the filter to loaded units and
+  shows the reply in an **iOS-style notification card** (blue dot + "Irfan
+  Assistant" + time + query-as-subject + reply preview + × dismiss), **centered**,
+  **GSAP typewriter** animation. `viewKeywords` = SOFT sort-boost, NOT a hard
+  filter (beachfront-community units carry lagoon/garden view labels → hard
+  filter emptied results). `?q=` deep-links auto-run on mount.
+- Results cards, breadcrumb, sort, skeletons all dark-themed.
+
+**NEW light property detail page `src/pages/PropertyPage.jsx` at `/property/:id`**
+(id = `project_units.id`; `/project` cards now link here, was `/buy/:slug?unit=`):
+- LIGHT theme (deliberate contrast to the dark listing). Modelled on the client's
+  Bosphorus luxury-listing reference.
+- Sections: SALE badge, title + project **tagline snippet** under it, OMR price +
+  BTC/ETH/USDT equivalents (approx fixed rates, display-only), location, Type/
+  Beds/Size/Ref meta, **gallery MOSAIC** (1 big + 2×2 + view-all → full grid),
+  "About this property" (composed from REAL unit+project fields — no fabricated
+  prose), **"About the development"** (tagline + description + sections from
+  `src/data/projectDetails.js` via `getProjectDetails(project.name, lang)` — same
+  copy as /buy pages, keyed by EXACT project name, has ar/ru/fa overlays),
+  **"Features & amenities"** icon grid (from project `features` keys), Key details,
+  **Mapbox STATIC map** (`light-v11`, olive pin, `VITE_MAPBOX_TOKEN`) → Google
+  Maps, Recommended similar units. 4-lang + RTL + responsive.
+- Shared `FEATURE_META`/`FEATURES_HEADING` extracted to **`src/data/amenities.jsx`**
+  (BuyProjectPage still has its own local copy — minor dup, not refactored).
+- Coverage: only **9 projects have stock** (Yenaier 85, Wadi Zaha 73, Vistal 65,
+  St. Regis 59, Aida 49, Hay Al Wafa 36, Zen 13, Jebel Sifah 7, Hawana Salalah 6);
+  all 9 ARE in projectDetails.js by exact name → tagline/description show for all.
+  Only ~8 projects have `features`/`sections` (Aida is fullest). Missing-content
+  sections auto-hide.
+
+**Other fixes:** Aida cards no longer show Olive Farms/Solaris imagery — the
+fallback `POOL` in SearchPage is restricted to unbranded `muscat-*` (the
+`sifah-*` blog images are branded Jebel Sifah/Olive Farms/Solaris renders).
+Header (`Header.jsx`): office address removed from the top bar + logo given
+`flexShrink:0` so Home never squeezes.
+
+**Data facts:** `projects` = id, name, location, area_id, developer_id, lat/lng
+(NO description/amenities/baths). `project_units` = beds/type/view/areas/price/
+floor/subproject (NO baths/description/year). Rich copy lives only in
+`src/data/projectDetails.js` (frontend) + a separate curated `properties` table.
+
+**⚠️ Env quirks:** (1) Lenis transform-scroll → Browser-pane screenshots go BLACK
+after any programmatic scroll; verify via DOM or pin element `position:fixed`.
+(2) new hook/route/lazy-import needs a FULL reload (stale HMR shows "rendered
+more hooks"/404). (3) crypto rates in PropertyPage are hardcoded approximations.
+
+**🔜 Next ideas:** real per-unit descriptions/amenities/baths (add a
+`project_details` table or expand projectDetails.js for remaining projects);
+gallery lightbox; wire "Request floor plan"/"Contact" to a dedicated form;
+conversational refine on AI search; SEO/prerender for `/property/*`.
+
+---
 
 ## Inventory (the data this powers)
 - **22 projects · 407 units (405 priced)** · 11 areas (6 with stock) · 16 unit types · OMR 35,625–898,521.
