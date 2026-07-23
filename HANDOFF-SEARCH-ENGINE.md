@@ -20,15 +20,20 @@ portal modelled on the LuxuryProperty.com structure the client referenced.
 - **Nav repurposed:** `Header.jsx` + `SiteFooter.jsx` "Project" item `to:'/'` → `to:'/project'`.
 - **Route:** `App.jsx` lazy `SearchPage` + `<Route path="project">`.
 
-## 🔜 NEXT SESSION (Phase 2 — roadmap, in priority order)
-1. **SEO wiring for /project** — add a `/project` branch to `src/seo.jsx` (4-lang title/description targeting "properties for sale in oman", "buy apartment in muscat") + add to `prerender-routes.mjs` / `seoRoutes.mjs` so it prerenders. Currently the page only sets `document.title` client-side.
-2. **Deep-link the unit** — card link is `/buy/:slug`; pass `?unit=<id>` and have `BuyProjectPage` scroll to / highlight that unit row (it already reads `?release=`; extend with `?unit=`).
-3. **Landing/home search entry** — put the search bar (or a CTA) on the landing hero so visitors enter the funnel from `/`.
-4. **Area filter** — add an Area/location dropdown (SHC, Al Mouj, Yiti, Muscat Bay, Sifah, Salalah) beside Type/Beds/Price. Data already there (`project.area?.name` / `project.location`).
-5. **Per-unit detail page (optional, matches reference fully)** — `/project/:ref` with gallery + description + Features & Amenities + inquiry form. Only if the client wants individual property pages; our data is rich at project level, thin at unit level, so Phase-1 (card → project page) is usually enough.
-6. **Dedupe near-identical units** — Jebel Sifah shows 3 identical studios, Yenaier many identical 3-bed villas. Consider grouping "N similar from OMR X" per (project, type, beds, price) to reduce repetition.
-7. **Map view toggle** — reuse `PropertyMap.jsx` for a list/map switch.
-8. **Localize the dropdown option labels** (currently English in all langs) + the `STR` strings are done for hero/breadcrumb/count.
+## ✅ DONE Phase 2 (2026-07-23, shipped)
+1. **SEO wiring** — added `'/project'` to `src/seoRoutes.mjs` ROUTES (4-lang title/desc). Both `seo.jsx` (client) and `prerender-routes.mjs` (build) read ROUTES → `/project` now prerenders in **all 4 langs** with proper `<title>`/meta (verified: `dist/{,,ar/,fa/,ru/}project/index.html`). Removed the redundant client `document.title` from SearchPage.
+2. **Localized dropdown labels** — `LABELS[lang]` index-aligned arrays for type/beds/price/sort/anyArea in en/ru/ar/fa. Verified on `/fa/project` (RTL, all labels Persian).
+3. **Area filter** — Area dropdown derived from projects-with-stock (`project.area?.name || location`), added as `?area=` param. Localized "Any area" / "همه مناطق".
+4. **Deep-link `?unit=<id>`** — search card links now `/buy/:slug?unit=<id>`. `BuyProjectPage` reads it, adds `id="unit-<id>"` to each row and persistently highlights the matching row (olive bg + left border). VERIFIED the param flows to the project page.
+   - ⚠️ **Auto-scroll to the row is NOT wired** — this page runs Lenis *transform*-scroll (`window.__lenis.scroll` decoupled from `window.scrollY`) + GSAP ScrollTrigger pins + DeferredMount, so the inventory row sits ~5000px down and `lenis.scrollTo`/`scrollTo` land in pinned/empty space (black) or get clamped (DeferredMount not mounted). Native `window.scrollTo` also shows black. **Follow-up:** wire a scroll via the site's actual ScrollTrigger scroller-proxy, or lazy-render the inventory higher, then re-enable auto-scroll + also confirm the persist-highlight paints (couldn't visually confirm on dev — row is off-screen and DeferredMount blocks programmatic reach).
+
+## 🔜 NEXT SESSION (Phase 3 — remaining roadmap)
+1. **Landing/home search entry** — put the search bar (or a CTA) on the landing hero so visitors enter the funnel from `/`.
+2. **Fix deep-link auto-scroll + verify highlight** (see ⚠️ above) — the one Phase-2 item that needs the Lenis/ScrollTrigger scroller sorted.
+3. **Per-unit detail page (optional, matches reference fully)** — `/project/:ref` with gallery + description + Features & Amenities + inquiry form. Our data is rich at project level, thin at unit level, so card→project page is usually enough.
+4. **Dedupe near-identical units** — Jebel Sifah shows 3 identical studios, Yenaier many identical 3-bed villas. Group "N similar from OMR X" per (project, type, beds, price).
+5. **Map view toggle** — reuse `PropertyMap.jsx` for a list/map switch.
+6. **Localize card title unit-type** (project names stay English brand nouns) + badge availability status.
 
 ## Gotchas / notes
 - `fetchProjects()` filters `.not('latitude','is',null)` → units in a coord-less project are dropped from results (393 of 405 priced show). Fine for now (empty-area projects have 0 units anyway); if a real project is missing, give it lat/lng.

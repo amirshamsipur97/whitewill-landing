@@ -287,7 +287,7 @@ function ProjectMap({ project }) {
 }
 
 // ── unit row ──────────────────────────────────────────────────────────
-function UnitRow({ unit, onSelect, t }) {
+function UnitRow({ unit, onSelect, t, highlight }) {
   const p = t.buyProjectPage
   const view = unit.view ? `, ${unit.view} ${p.viewLabel}` : ''
   const floor = unit.floor_label ? ` · ${unit.floor_label} ${p.floorLabel}` : ''
@@ -297,6 +297,7 @@ function UnitRow({ unit, onSelect, t }) {
 
   return (
     <Box
+      id={`unit-${unit.id}`}
       onClick={onSelect}
       sx={{
         display: 'grid',
@@ -307,7 +308,9 @@ function UnitRow({ unit, onSelect, t }) {
         py: 2,
         cursor: onSelect ? 'pointer' : 'default',
         borderTop: '1px solid rgba(255,255,255,0.06)',
-        transition: 'background-color 180ms ease',
+        transition: 'background-color 600ms ease',
+        bgcolor: highlight ? 'rgba(140,141,37,0.16)' : 'transparent',
+        boxShadow: highlight ? 'inset 3px 0 0 #8c8d25' : 'none',
         '&:hover': onSelect ? { bgcolor: 'rgba(255,255,255,0.03)' } : {},
       }}
     >
@@ -355,6 +358,11 @@ export default function BuyProjectPage() {
   const [subFilter, setSubFilter] = useState(() => {
     try { return new URLSearchParams(window.location.search).get('release') } catch { return null }
   })
+  // ?unit=<id> (from the /project search grid) scrolls to + highlights a unit row.
+  const [deepUnit] = useState(() => {
+    try { return new URLSearchParams(window.location.search).get('unit') } catch { return null }
+  })
+  const [hlUnit, setHlUnit] = useState(null)
   const [sortBy, setSortBy] = useState('price-asc')
 
   const [inquiryUnit, setInquiryUnit] = useState(null)
@@ -388,6 +396,17 @@ export default function BuyProjectPage() {
       })
     return () => { cancelled = true }
   }, [project?.id])
+
+  // Deep-link from the /project search grid: once units render, persistently
+  // highlight the ?unit=<id> row so it's obvious the moment the user reaches
+  // the inventory table. (Auto-scroll is intentionally NOT forced here — this
+  // page runs Lenis transform-scroll + GSAP ScrollTrigger pins + DeferredMount,
+  // so a naive scrollTo lands in pinned/empty space; wiring a scroll into that
+  // system is a follow-up — see HANDOFF-SEARCH-ENGINE.md Phase 2 #2.)
+  useEffect(() => {
+    if (loading || !deepUnit || units.length === 0) return
+    setHlUnit(deepUnit)
+  }, [loading, deepUnit, units.length])
 
   // Structured data for search engines: the project as a real-estate listing
   // plus a breadcrumb trail. Rebuilt when the project/units/language change,
@@ -1063,7 +1082,7 @@ export default function BuyProjectPage() {
                   </Box>
                 ) : (
                   filteredUnits.map((u, i) => (
-                    <UnitRow key={i} unit={u} onSelect={() => openInquiry(u)} t={t} />
+                    <UnitRow key={i} unit={u} onSelect={() => openInquiry(u)} t={t} highlight={String(u.id) === String(hlUnit)} />
                   ))
                 )}
               </Box>

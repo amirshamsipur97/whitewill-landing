@@ -56,27 +56,46 @@ function typeGroup(raw) {
   return 'Apartment' // Apartment*, Sky Residence, Duplex, other
 }
 
+// Filter *values* stay language-neutral; display labels are localised below.
 const TYPE_OPTIONS = ['Any', 'Apartment', 'Villa', 'Penthouse', 'Townhouse', 'Studio', 'Chalet']
-const BEDS_OPTIONS = [
-  { v: 'any', label: 'Any beds' },
-  { v: '0', label: 'Studio' },
-  { v: '1', label: '1 bed' },
-  { v: '2', label: '2 beds' },
-  { v: '3', label: '3 beds' },
-  { v: '4', label: '4+ beds' },
+const BEDS_VALUES = ['any', '0', '1', '2', '3', '4']
+const PRICE_VALUES = [
+  { v: 'any', max: Infinity }, { v: '100', max: 100000 }, { v: '200', max: 200000 },
+  { v: '400', max: 400000 }, { v: '1000', max: 1000000 },
 ]
-const PRICE_OPTIONS = [
-  { v: 'any', label: 'Any price', max: Infinity },
-  { v: '100', label: 'Under OMR 100k', max: 100000 },
-  { v: '200', label: 'Under OMR 200k', max: 200000 },
-  { v: '400', label: 'Under OMR 400k', max: 400000 },
-  { v: '1000', label: 'Under OMR 1M', max: 1000000 },
-]
-const SORT_OPTIONS = [
-  { v: 'price_asc', label: 'Price (Low to High)' },
-  { v: 'price_desc', label: 'Price (High to Low)' },
-  { v: 'area_desc', label: 'Largest area' },
-]
+const SORT_VALUES = ['price_asc', 'price_desc', 'area_desc']
+
+// Index-aligned localised labels (order matches the *_OPTIONS/VALUES arrays).
+const LABELS = {
+  en: {
+    type: ['Any type', 'Apartment', 'Villa', 'Penthouse', 'Townhouse', 'Studio', 'Chalet'],
+    beds: ['Any beds', 'Studio', '1 bed', '2 beds', '3 beds', '4+ beds'],
+    price: ['Any price', 'Under OMR 100k', 'Under OMR 200k', 'Under OMR 400k', 'Under OMR 1M'],
+    sort: ['Price (Low to High)', 'Price (High to Low)', 'Largest area'],
+    anyArea: 'Any area',
+  },
+  ru: {
+    type: ['Любой тип', 'Квартира', 'Вилла', 'Пентхаус', 'Таунхаус', 'Студия', 'Шале'],
+    beds: ['Любые спальни', 'Студия', '1 спальня', '2 спальни', '3 спальни', '4+ спальни'],
+    price: ['Любая цена', 'До 100 тыс. OMR', 'До 200 тыс. OMR', 'До 400 тыс. OMR', 'До 1 млн OMR'],
+    sort: ['Цена (по возрастанию)', 'Цена (по убыванию)', 'Наибольшая площадь'],
+    anyArea: 'Любой район',
+  },
+  ar: {
+    type: ['كل الأنواع', 'شقة', 'فيلا', 'بنتهاوس', 'تاون هاوس', 'استوديو', 'شاليه'],
+    beds: ['كل الغرف', 'استوديو', 'غرفة واحدة', 'غرفتان', '3 غرف', '4+ غرف'],
+    price: ['أي سعر', 'أقل من 100 ألف ر.ع', 'أقل من 200 ألف ر.ع', 'أقل من 400 ألف ر.ع', 'أقل من مليون ر.ع'],
+    sort: ['السعر (من الأقل)', 'السعر (من الأعلى)', 'الأكبر مساحة'],
+    anyArea: 'كل المناطق',
+  },
+  fa: {
+    type: ['همه انواع', 'آپارتمان', 'ویلا', 'پنت‌هاوس', 'تاون‌هاوس', 'استودیو', 'شاله'],
+    beds: ['همه خواب‌ها', 'استودیو', '۱ خوابه', '۲ خوابه', '۳ خوابه', '۴+ خوابه'],
+    price: ['هر قیمتی', 'زیر ۱۰۰ هزار ریال', 'زیر ۲۰۰ هزار ریال', 'زیر ۴۰۰ هزار ریال', 'زیر ۱ میلیون ریال'],
+    sort: ['قیمت (کم به زیاد)', 'قیمت (زیاد به کم)', 'بزرگ‌ترین متراژ'],
+    anyArea: 'همه مناطق',
+  },
+}
 
 const STR = {
   en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View details', from: 'From', freehold: 'Freehold' },
@@ -109,7 +128,7 @@ function UnitCard({ item, index, t, rtl }) {
 
   return (
     <LocalizedLink
-      to={`/buy/${slugify(project.name)}`}
+      to={`/buy/${slugify(project.name)}?unit=${unit.id}`}
       style={{ textDecoration: 'none', display: 'block' }}
     >
       <article
@@ -181,15 +200,17 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true)
 
   // live (uncommitted) search box; committed to URL on Search / Enter
+  const L = LABELS[lang] || LABELS.en
   const [q, setQ] = useState(params.get('q') || '')
   const type = params.get('type') || 'Any'
   const beds = params.get('beds') || 'any'
   const price = params.get('price') || 'any'
+  const area = params.get('area') || 'any'
   const sort = params.get('sort') || 'price_asc'
   const committedQ = params.get('q') || ''
 
   useEffect(() => {
-    document.title = `${t.heading} | Irfan Investment Group`
+    // title/meta owned by seo.jsx (ROUTES['/project']); just load data here.
     let cancelled = false
     Promise.all([fetchProjects(), fetchAllUnits()])
       .then(([projs, us]) => {
@@ -200,13 +221,25 @@ export default function SearchPage() {
       .catch(() => {})
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [t.heading])
+  }, [])
 
   const projById = useMemo(() => {
     const m = {}
     for (const p of projects) m[p.id] = p
     return m
   }, [projects])
+
+  // Area options derived from projects that actually have priced units.
+  const areaOptions = useMemo(() => {
+    const withStock = new Set(units.filter((u) => Number(u.price_omr) > 0).map((u) => u.project_id))
+    const names = new Set()
+    for (const p of projects) {
+      if (!withStock.has(p.id)) continue
+      const name = p.area?.name || p.location
+      if (name) names.add(name)
+    }
+    return [...names].sort()
+  }, [projects, units])
 
   const setParam = (key, val, dflt) => {
     const next = new URLSearchParams(params)
@@ -218,13 +251,14 @@ export default function SearchPage() {
   const commitSearch = () => setParam('q', q.trim() || null, '')
 
   const results = useMemo(() => {
-    const priceMax = PRICE_OPTIONS.find((o) => o.v === price)?.max ?? Infinity
+    const priceMax = PRICE_VALUES.find((o) => o.v === price)?.max ?? Infinity
     const needle = committedQ.trim().toLowerCase()
     const enriched = units
       .map((u) => ({ unit: u, project: projById[u.project_id] }))
       .filter((it) => it.project) // drop units whose project lacks coords/data
       .filter((it) => {
         const u = it.unit, p = it.project
+        if (area !== 'any' && (p.area?.name || p.location) !== area) return false
         if (type !== 'Any' && typeGroup(u.unit_type) !== type) return false
         if (beds !== 'any') {
           const b = u.bedrooms ?? 0
@@ -244,7 +278,7 @@ export default function SearchPage() {
       return (a.unit.price_omr || 0) - (b.unit.price_omr || 0)
     })
     return enriched
-  }, [units, projById, type, beds, price, sort, committedQ])
+  }, [units, projById, type, beds, price, area, sort, committedQ])
 
   return (
     <main style={{ background: INK, minHeight: '100vh', color: '#fff' }} dir={rtl ? 'rtl' : 'ltr'}>
@@ -267,14 +301,18 @@ export default function SearchPage() {
               />
             </div>
 
+            <select value={area} onChange={(e) => setParam('area', e.target.value, 'any')} style={selStyle} aria-label="Area">
+              <option value="any" style={{ background: '#1a1b16' }}>{L.anyArea}</option>
+              {areaOptions.map((a) => <option key={a} value={a} style={{ background: '#1a1b16' }}>{a}</option>)}
+            </select>
             <select value={type} onChange={(e) => setParam('type', e.target.value, 'Any')} style={selStyle} aria-label="Property type">
-              {TYPE_OPTIONS.map((o) => <option key={o} value={o} style={{ background: '#1a1b16' }}>{o === 'Any' ? 'Any type' : o}</option>)}
+              {TYPE_OPTIONS.map((o, i) => <option key={o} value={o} style={{ background: '#1a1b16' }}>{L.type[i]}</option>)}
             </select>
             <select value={beds} onChange={(e) => setParam('beds', e.target.value, 'any')} style={selStyle} aria-label="Bedrooms">
-              {BEDS_OPTIONS.map((o) => <option key={o.v} value={o.v} style={{ background: '#1a1b16' }}>{o.label}</option>)}
+              {BEDS_VALUES.map((v, i) => <option key={v} value={v} style={{ background: '#1a1b16' }}>{L.beds[i]}</option>)}
             </select>
             <select value={price} onChange={(e) => setParam('price', e.target.value, 'any')} style={selStyle} aria-label="Price">
-              {PRICE_OPTIONS.map((o) => <option key={o.v} value={o.v} style={{ background: '#1a1b16' }}>{o.label}</option>)}
+              {PRICE_VALUES.map((o, i) => <option key={o.v} value={o.v} style={{ background: '#1a1b16' }}>{L.price[i]}</option>)}
             </select>
 
             <button
@@ -302,7 +340,7 @@ export default function SearchPage() {
           <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: MUTED, fontFamily: FONT, fontSize: 13.5 }}>
             {t.sortBy}:
             <select value={sort} onChange={(e) => setParam('sort', e.target.value, 'price_asc')} style={{ ...selStyle, height: 38, minWidth: 170 }}>
-              {SORT_OPTIONS.map((o) => <option key={o.v} value={o.v} style={{ background: '#1a1b16' }}>{o.label}</option>)}
+              {SORT_VALUES.map((v, i) => <option key={v} value={v} style={{ background: '#1a1b16' }}>{L.sort[i]}</option>)}
             </select>
           </label>
         </div>

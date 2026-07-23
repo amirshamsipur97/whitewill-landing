@@ -31,6 +31,20 @@ export const ROUTES = {
       fa: 'مجموعه‌ای منتخب از املاک برای فروش در عمان — آپارتمان، ویلا و اقامتگاه‌های لوکس در مسقط و صلاله از معتبرترین سازندگان، با مالکیت آزاد برای خارجی‌ها.',
     },
   },
+  '/project': {
+    title: {
+      en: 'Properties for Sale in Oman — Search Apartments & Villas | Irfan',
+      ru: 'Недвижимость на продажу в Омане — поиск квартир и вилл | Irfan',
+      ar: 'عقارات للبيع في عُمان — ابحث عن شقق وفلل | Irfan Investment',
+      fa: 'جستجوی ملک در عمان — آپارتمان و ویلا برای فروش | ایرفان',
+    },
+    desc: {
+      en: 'Search 400+ freehold apartments, villas and studios for sale across Muscat, Al Mouj, Muscat Bay, Jebel Sifah, Yiti and Salalah. Filter by type, bedrooms and price. Live developer prices from OMR 35,625 with Oman investor residency.',
+      ru: 'Поиск более 400 объектов недвижимости на продажу в Омане: квартиры, виллы и студии в Маскате, Аль-Мудж, Джебель-Сифа и Салале. Фильтры по типу, спальням и цене. Актуальные цены от 35 625 OMR.',
+      ar: 'ابحث في أكثر من 400 عقار تملّك حر للبيع في عُمان — شقق وفلل واستوديوهات في مسقط والموج وجبل سيفة وصلالة. فلترة حسب النوع والغرف والسعر. أسعار مباشرة من 35,625 ر.ع مع إقامة المستثمر.',
+      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان — آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۳۵٬۶۲۵ ریال عمان با اقامت سرمایه‌گذار.',
+    },
+  },
   '/maison-shirdel': {
     title: {
       en: 'Maison Shirdel — Luxury Residences in Oman | Irfan Investment',
