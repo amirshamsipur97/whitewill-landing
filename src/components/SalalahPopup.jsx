@@ -7,52 +7,46 @@ import { localizePath, stripLang } from '../lib/localize.js'
 import { submitForm } from '../supabase.js'
 import { DIAL_CODES, DEFAULT_DIAL } from '../data/dialCodes.js'
 import { galleryFor } from '../projectGallery.js'
-import interior1 from '../assets/projects/hawana-salalah/14.jpg'
-import interior2 from '../assets/projects/hawana-salalah/15.jpg'
-import interior3 from '../assets/projects/hawana-salalah/16.jpg'
-import interior4 from '../assets/projects/hawana-salalah/17.jpg'
 
 /**
- * SalalahPopup — THE single site-wide lead popup (Salalah-focused).
+ * SalalahPopup — THE single site-wide lead popup (Muscat / Oman-focused).
  *
- * Replaced the generic LeadPopup (2026-07-15): one popup model across the
- * whole site, specialised on the Salalah campaign. Same lead pipeline
- * (first/last name + phone → `submit-form` edge fn → Supabase `leads` +
- * Google Sheet + GA4 `generate_lead`):
+ * (Filename kept for import stability; content is now Muscat/Oman, switched
+ * from Salalah 2026-07-23 to chase the higher-volume "buy apartment in
+ * Muscat" / "buy property in Oman" demand.) One popup model across the
+ * whole site. Same lead pipeline (first/last name + phone → `submit-form`
+ * edge fn → Supabase `leads` + Google Sheet + GA4 `generate_lead`):
  *  - mounted once in App.jsx; auto-opens on the landing page and /buy,
  *    re-opens after 45s until a lead is submitted (session flag);
  *  - a purple "Investment plan" launcher pill (bottom-left, every page)
- *    toggles it — the same launcher users knew from LeadPopup;
- *  - the Buy-page Salalah banner can open it via the
- *    `irfan:open-salalah-popup` window event;
- *  - image panel is LARGER (506px) and mixes 3 Lubana exterior renders
- *    with 4 new interior renders; top strip on mobile;
- *  - a successful lead routes to /buy/hawana-salalah.
+ *    toggles it;
+ *  - opens via the `irfan:open-salalah-popup` window event (name kept so the
+ *    Buy-page banner keeps working);
+ *  - image panel (506px) cycles Muscat Bay (Zen Residences) + Al Mouj
+ *    (Vistal) renders; top strip on mobile;
+ *  - a successful lead routes to /buy (the full Oman list).
  */
 
 const SLIDE_MS = 2600
 const FIRST_MS = 5000
 const REOPEN_MS = 45000
-const DONE_KEY = 'irfan_popup_salalah_done'
+const DONE_KEY = 'irfan_popup_muscat_done'
 export const OPEN_EVENT = 'irfan:open-salalah-popup'
-const NEW_INTERIORS = [interior1, interior2, interior3, interior4]
 
 // ── geo-currency ─────────────────────────────────────────────────────
-// Cheapest available Hawana Salalah unit: Amazi 1-bed waterfront chalet
-// OMR 98,000 (10% down = OMR 9,800). Solaris studios were EXCLUDED
-// 2026-07-15 — Solaris is at Raya · Jebel Sifah, not Salalah.
-// OMR is pegged at 1 = $2.6008, AED (3.6725/$) and SAR (3.75/$) are
-// pegged to USD, so those three are stable. RUB floats — values are
-// marked approximate; refresh ~quarterly (rate used: ~90 ₽/$).
-// Visitor country comes from /api/geo (Vercel edge header, same source as
-// the RU language auto-redirect). Everything except AE/SA/RU sees USD.
+// Cheapest available Muscat apartment: Wadi Zaha, Sultan Haitham City
+// from OMR 48,125 (10% down = OMR 4,813). OMR is pegged at 1 = $2.6008,
+// AED (3.6725/$) and SAR (3.75/$) are pegged to USD, so those three are
+// stable. RUB floats — values are marked approximate; refresh ~quarterly
+// (rate used: ~90 ₽/$). Visitor country comes from /api/geo (Vercel edge
+// header). Everything except AE/SA/RU sees USD.
 const GEO_CURRENCY = {
-  OM: { price: 'OMR 98,000', down: 'OMR 9,800' },
-  AE: { price: 'AED 936,000', down: 'AED 93,600' },
-  SA: { price: 'SAR 955,800', down: 'SAR 95,600' },
-  RU: { price: '≈23 млн RUB', down: '≈2,3 млн RUB' },
+  OM: { price: 'OMR 48,125', down: 'OMR 4,813' },
+  AE: { price: 'AED 459,000', down: 'AED 45,900' },
+  SA: { price: 'SAR 469,000', down: 'SAR 46,900' },
+  RU: { price: '≈11 млн RUB', down: '≈1,1 млн RUB' },
 }
-const DEFAULT_CURRENCY = { price: '$254,900 USD', down: '$25,490 USD' }
+const DEFAULT_CURRENCY = { price: '$125,000 USD', down: '$12,500 USD' }
 
 const PURPLE = '#351D93'
 const TEAL = '#0E8E85'
@@ -69,64 +63,64 @@ const flagUrl = (iso) => `https://flagcdn.com/w40/${iso}.png`
 
 const STRINGS = {
   en: {
-    badge: 'Khareef Season · Limited Release',
-    title: 'Own a Waterfront Home in Salalah',
+    badge: 'Muscat & Oman · Freehold Release',
+    title: 'Own a Freehold Apartment in Muscat',
     subBold: 'Start with only {DOWN} down payment (10%)',
-    sub2: ' and own at Hawana Salalah. Waterfront chalets, twin villas and the new Lubana Island villas, freehold for all nationalities.',
-    chips: ['From {PRICE}', 'Up to 10.6% rental ROI', 'Only 10% down payment', 'Freehold + residency visa'],
-    urgency: 'Khareef demand is at its peak and the current release is limited. Leave your details and get the full Salalah price list + payment plan within 10 minutes.',
+    sub2: ' and own an apartment in Muscat. Al Mouj, Muscat Bay and Sultan Haitham City, freehold for all nationalities with investor residency.',
+    chips: ['From {PRICE}', 'Up to 8% rental yield', 'Only 10% down payment', 'Freehold + residency visa'],
+    urgency: 'Muscat freehold apartments at these prices are limited. Leave your details and get the full Muscat & Oman price list + payment plan within 10 minutes.',
     firstName: 'First name',
     lastName: 'Last name',
     yourNumber: 'Your number',
-    cta: 'Get the Salalah Price List',
+    cta: 'Get the Muscat Price List',
     sending: 'Sending…',
     launcher: 'Investment plan',
     invalid: 'Please enter a valid phone number',
     failed: 'Something went wrong — please try again.',
   },
   ru: {
-    badge: 'Сезон харифа · Лимитированный релиз',
-    title: 'Свой дом у воды в Салале',
+    badge: 'Маскат и Оман · Фрихолд',
+    title: 'Своя квартира в Маскате во фрихолд',
     subBold: 'Первый взнос от {DOWN} (10%)',
-    sub2: ', и вы владеете недвижимостью в Hawana Salalah. Шале у воды, твин-виллы и новые виллы Lubana Island, фрихолд для всех национальностей.',
-    chips: ['От {PRICE}', 'До 10,6% арендной доходности', 'Первый взнос всего 10%', 'Фрихолд + виза резидента'],
-    urgency: 'Спрос сезона харифа на пике, текущий релиз ограничен. Оставьте контакты — пришлём полный прайс-лист и план оплаты в течение 10 минут.',
+    sub2: ', и вы владеете квартирой в Маскате. Al Mouj, Muscat Bay и Sultan Haitham City, фрихолд для всех национальностей с визой резидента.',
+    chips: ['От {PRICE}', 'До 8% арендной доходности', 'Первый взнос всего 10%', 'Фрихолд + виза резидента'],
+    urgency: 'Квартиры во фрихолд в Маскате по таким ценам ограничены. Оставьте контакты — пришлём полный прайс-лист по Маскату и Оману и план оплаты в течение 10 минут.',
     firstName: 'Имя',
     lastName: 'Фамилия',
     yourNumber: 'Ваш номер',
-    cta: 'Получить прайс-лист Салалы',
+    cta: 'Получить прайс-лист Маската',
     sending: 'Отправка…',
     launcher: 'Инвестиционный план',
     invalid: 'Введите корректный номер телефона',
     failed: 'Что-то пошло не так — попробуйте ещё раз.',
   },
   ar: {
-    badge: 'موسم الخريف · إصدار محدود',
-    title: 'تملّك بيتاً على الواجهة المائية في صلالة',
+    badge: 'مسقط وعُمان · تملّك حر',
+    title: 'تملّك شقة في مسقط بتملّك حر',
     subBold: 'ابدأ بدفعة أولى {DOWN} فقط (10%)',
-    sub2: ' وتملّك في هوانا صلالة. شاليهات على الواجهة المائية وفلل توأم وفلل جزيرة لبانة الجديدة، تملّك حر لجميع الجنسيات.',
-    chips: ['من {PRICE}', 'عائد إيجاري حتى 10.6%', 'دفعة أولى 10% فقط', 'تملّك حر + إقامة'],
-    urgency: 'الطلب في موسم الخريف في ذروته والإصدار الحالي محدود. اترك بياناتك واحصل على قائمة أسعار صلالة كاملة وخطة الدفع خلال 10 دقائق.',
+    sub2: ' وتملّك شقة في مسقط. الموج ومسقط باي ومدينة السلطان هيثم، تملّك حر لجميع الجنسيات مع إقامة المستثمر.',
+    chips: ['من {PRICE}', 'عائد إيجاري حتى 8%', 'دفعة أولى 10% فقط', 'تملّك حر + إقامة'],
+    urgency: 'شقق التملّك الحر في مسقط بهذه الأسعار محدودة. اترك بياناتك واحصل على قائمة أسعار مسقط وعُمان كاملة وخطة الدفع خلال 10 دقائق.',
     firstName: 'الاسم الأول',
     lastName: 'اسم العائلة',
     yourNumber: 'رقمك',
-    cta: 'احصل على قائمة أسعار صلالة',
+    cta: 'احصل على قائمة أسعار مسقط',
     sending: 'جارٍ الإرسال…',
     launcher: 'الخطة الاستثمارية',
     invalid: 'يرجى إدخال رقم هاتف صحيح',
     failed: 'حدث خطأ — يرجى المحاولة مرة أخرى.',
   },
   fa: {
-    badge: 'موسم خریف · عرضه محدود',
-    title: 'در صلاله صاحب خانه‌ای رو به آب شوید',
-    subBold: 'با پیش‌پرداخت از {DOWN} (۱۰٪)',
-    sub2: ' در هوانا صلاله مالک شوید. شاله‌های رو به آب، ویلاهای دوقلو و ویلاهای جدید جزیره لوبانا؛ مالکیت کامل برای همه ملیت‌ها.',
-    chips: ['از {PRICE}', 'بازده اجاره تا ۱۰.۶٪', 'فقط ۱۰٪ پیش‌پرداخت', 'فری‌هولد + ویزای اقامت'],
-    urgency: 'تقاضای موسم خریف در اوج است و عرضه فعلی محدود. مشخصات خود را بگذارید تا لیست کامل قیمت صلاله و طرح پرداخت را تا ۱۰ دقیقه دیگر دریافت کنید.',
+    badge: 'مسقط و عمان · فروش فری‌هولد',
+    title: 'در مسقط صاحب آپارتمان فری‌هولد شوید',
+    subBold: 'با پیش‌پرداخت فقط {DOWN} (۱۰٪)',
+    sub2: ' در مسقط صاحب آپارتمان شوید. الموج، مسقط بی و شهر سلطان هیثم؛ مالکیت کامل برای همه ملیت‌ها همراه با اقامت سرمایه‌گذار.',
+    chips: ['از {PRICE}', 'بازده اجاره تا ۸٪', 'فقط ۱۰٪ پیش‌پرداخت', 'فری‌هولد + ویزای اقامت'],
+    urgency: 'آپارتمان‌های فری‌هولد مسقط با این قیمت‌ها محدود است. مشخصات خود را بگذارید تا لیست کامل قیمت مسقط و عمان و طرح پرداخت را تا ۱۰ دقیقه دیگر دریافت کنید.',
     firstName: 'نام',
     lastName: 'نام خانوادگی',
     yourNumber: 'شماره شما',
-    cta: 'دریافت لیست قیمت صلاله',
+    cta: 'دریافت لیست قیمت مسقط',
     sending: 'در حال ارسال…',
     launcher: 'پلن سرمایه‌گذاری',
     invalid: 'لطفاً یک شماره تلفن معتبر وارد کنید',
@@ -150,13 +144,13 @@ function useLeadForm({ lang, t, onDone }) {
     setSending(true)
     try {
       await submitForm({
-        source: 'popup_salalah',
+        source: 'popup_muscat',
         full_name: `${firstName.trim()} ${lastName.trim()}`.trim() || undefined,
         phone: `${sel.code} ${digits}`,
         phone_country_code: sel.code,
         country: sel.label,
         language: lang,
-        message: 'Salalah popup — Hawana/Lubana price list + payment plan request',
+        message: 'Muscat popup — Muscat/Oman apartment price list + payment plan request',
       })
       onDone()
     } catch {
@@ -179,8 +173,8 @@ export default function SalalahPopup() {
   // Pages where the popup auto-opens (launcher works everywhere).
   const onAutoOpenPage = logical === '/' || logical === '/buy'
 
-  // 3 Lubana exterior renders (gallery slots 2-4) + the 4 new interiors.
-  const slides = [...galleryFor('hawana-salalah').slice(1, 4), ...NEW_INTERIORS]
+  // Muscat visuals: Muscat Bay (Zen Residences) + Al Mouj (Vistal) renders.
+  const slides = [...galleryFor('zen-residences'), ...galleryFor('vistal').slice(0, 3)]
 
   const [open, setOpen] = useState(false)
   const [slide, setSlide] = useState(0)
@@ -319,7 +313,7 @@ export default function SalalahPopup() {
     clearTimeout(timerRef.current)
     setOpen(false)
     if (overlayRef.current) gsap.set(overlayRef.current, { display: 'none' })
-    navigate(localizePath('/buy/hawana-salalah', lang))
+    navigate(localizePath('/buy', lang))
   }, [lang, navigate])
 
   const form = useLeadForm({ lang, t, onDone: handleDone })
@@ -386,7 +380,7 @@ export default function SalalahPopup() {
           {/* mobile image strip — the bigger-visual promise holds on phones too */}
           {slides.length > 0 && (
             <div className="relative block h-[185px] w-full shrink-0 overflow-hidden md:hidden">
-              <img src={slides[slide % slides.length]} alt="Lubana Island, Hawana Salalah" className="h-full w-full object-cover" />
+              <img src={slides[slide % slides.length]} alt="Freehold apartments in Muscat, Oman" className="h-full w-full object-cover" />
               <span
                 className="absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-bold uppercase text-white"
                 style={{ background: TEAL, fontFamily: TITLE_FONT, letterSpacing: '0.6px' }}
@@ -594,7 +588,7 @@ export default function SalalahPopup() {
                 <img
                   key={src}
                   src={src}
-                  alt="Lubana Island villas, Hawana Salalah"
+                  alt="Freehold apartments in Muscat, Oman"
                   className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
                   style={{ opacity: i === slide ? 1 : 0 }}
                   loading="lazy"
