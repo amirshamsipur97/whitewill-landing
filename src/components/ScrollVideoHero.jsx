@@ -1,8 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { Box, Typography, Button, Stack } from '@mui/material'
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useI18n } from '../i18n'
+import { useLocalizedNavigate } from '../lib/localize'
+
+// Localised copy for the landing search entry (funnel into /project).
+const HERO_SEARCH = {
+  en: { ph: 'Search properties in Oman…', btn: 'Search' },
+  ru: { ph: 'Поиск недвижимости в Омане…', btn: 'Поиск' },
+  ar: { ph: 'ابحث عن عقارات في عُمان…', btn: 'بحث' },
+  fa: { ph: 'جستجوی املاک در عمان…', btn: 'جستجو' },
+}
+const OLIVE_BRIGHT = '#8c8d25'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -52,9 +63,19 @@ export default function ScrollVideoHero() {
   const hintRef = useRef(null)
   const ctaRef = useRef(null)
   const logoRef = useRef(null)
+  const searchRef = useRef(null)
   const [videoReady, setVideoReady] = useState(false)
   const [imageMode] = useState(pickImageMode)
+  const [heroQ, setHeroQ] = useState('')
   const isRTL = lang === 'ar' || lang === 'fa'
+  const navLocal = useLocalizedNavigate()
+  const hs = HERO_SEARCH[lang] || HERO_SEARCH.en
+
+  const submitHeroSearch = (e) => {
+    e.preventDefault()
+    const q = heroQ.trim()
+    navLocal(q ? `/project?q=${encodeURIComponent(q)}` : '/project')
+  }
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -99,6 +120,9 @@ export default function ScrollVideoHero() {
       gsap.set([steps[1], steps[2], steps[3]], { opacity: 0, y: 30, scale: 0.96, filter: 'blur(6px)' })
       gsap.set(ctaRef.current, { opacity: 0, scale: 0.9, pointerEvents: 'none' })
       gsap.set(hintRef.current, { opacity: 1 })
+      // Landing search bar: visible + interactive at the top of the hero,
+      // fades (autoAlpha → visibility:hidden) as soon as the user scrolls in.
+      gsap.set(searchRef.current, { autoAlpha: 1, y: 0 })
       // Logo starts hidden + slightly small + soft-blurred.
       gsap.set(logoRef.current, { opacity: 0, scale: 0.82, filter: 'blur(8px)' })
 
@@ -118,6 +142,8 @@ export default function ScrollVideoHero() {
 
       // Scroll hint fades out in the first 8% of scroll
       tl.to(hintRef.current, { opacity: 0, duration: 0.08 }, 0)
+      // The landing search bar fades on the same beat as the hint.
+      tl.to(searchRef.current, { autoAlpha: 0, y: -10, duration: 0.08 }, 0)
 
       // 5-stage timeline: 4 text steps + 1 logo reveal at the end.
       // Each stage overlaps its neighbour for a long smooth crossfade.
@@ -481,6 +507,82 @@ export default function ScrollVideoHero() {
               }}
             />
           </Box>
+        </Box>
+
+        {/* Landing search entry — persistent funnel into /project. Sits at the
+            top of the hero (fades on first scroll via the timeline above) and
+            is fully interactive, unlike the pointer-events-none text steps. */}
+        <Box
+          ref={searchRef}
+          component="form"
+          onSubmit={submitHeroSearch}
+          sx={{
+            position: 'absolute',
+            bottom: { xs: 92, md: 108 },
+            left: 0,
+            right: 0,
+            mx: 'auto',
+            width: '100%',
+            maxWidth: { xs: 340, sm: 520, md: 620 },
+            px: { xs: 2.5, md: 0 },
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            zIndex: 3,
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              height: { xs: 50, md: 56 },
+              px: 2,
+              borderRadius: 999,
+              bgcolor: 'rgba(12,13,10,0.55)',
+              border: '1px solid rgba(255,255,255,0.22)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <SearchRoundedIcon sx={{ fontSize: 22, color: 'rgba(255,255,255,0.7)' }} />
+            <Box
+              component="input"
+              value={heroQ}
+              onChange={(e) => setHeroQ(e.target.value)}
+              placeholder={hs.ph}
+              aria-label={hs.ph}
+              sx={{
+                flex: 1,
+                minWidth: 0,
+                bgcolor: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: '#fff',
+                fontSize: { xs: 14.5, md: 16 },
+                fontFamily: 'inherit',
+                '::placeholder': { color: 'rgba(255,255,255,0.6)' },
+              }}
+            />
+          </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              height: { xs: 50, md: 56 },
+              px: { xs: 2.5, md: 3.5 },
+              borderRadius: 999,
+              fontWeight: 700,
+              textTransform: 'none',
+              fontSize: { xs: 14.5, md: 16 },
+              bgcolor: OLIVE_BRIGHT,
+              color: '#0d0e0c',
+              whiteSpace: 'nowrap',
+              '&:hover': { bgcolor: '#9c9d2e' },
+            }}
+          >
+            {hs.btn}
+          </Button>
         </Box>
 
         {/* Scroll hint */}

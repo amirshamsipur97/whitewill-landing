@@ -27,13 +27,23 @@ portal modelled on the LuxuryProperty.com structure the client referenced.
 4. **Deep-link `?unit=<id>`** — search card links now `/buy/:slug?unit=<id>`. `BuyProjectPage` reads it, adds `id="unit-<id>"` to each row and persistently highlights the matching row (olive bg + left border). VERIFIED the param flows to the project page.
    - ⚠️ **Auto-scroll to the row is NOT wired** — this page runs Lenis *transform*-scroll (`window.__lenis.scroll` decoupled from `window.scrollY`) + GSAP ScrollTrigger pins + DeferredMount, so the inventory row sits ~5000px down and `lenis.scrollTo`/`scrollTo` land in pinned/empty space (black) or get clamped (DeferredMount not mounted). Native `window.scrollTo` also shows black. **Follow-up:** wire a scroll via the site's actual ScrollTrigger scroller-proxy, or lazy-render the inventory higher, then re-enable auto-scroll + also confirm the persist-highlight paints (couldn't visually confirm on dev — row is off-screen and DeferredMount blocks programmatic reach).
 
-## 🔜 NEXT SESSION (Phase 3 — remaining roadmap)
-1. **Landing/home search entry** — put the search bar (or a CTA) on the landing hero so visitors enter the funnel from `/`.
-2. **Fix deep-link auto-scroll + verify highlight** (see ⚠️ above) — the one Phase-2 item that needs the Lenis/ScrollTrigger scroller sorted.
+## ✅ DONE Phase 3 (2026-07-23, part 1 — shipped)
+1. **Landing/home search entry** — added a persistent glass search pill + olive Search button to `ScrollVideoHero.jsx`, anchored at the hero bottom. It's a real interactive `<form>` (unlike the pointer-events-none text steps) that fades on first scroll via the GSAP timeline (`autoAlpha`, so it stops catching clicks when hidden). Submit → `useLocalizedNavigate('/project?q=…')`, staying in the active language. VERIFIED: typing "Salalah" on `/` lands on `/project?q=Salalah` → 6 results.
+4. **Dedupe near-identical units** — `results` now collapses each `(project, type, beds, exact price)` set into one card carrying a `count`; card shows a `×N` image badge, a "From" price prefix, and a localized "N similar units available" line. First unit is the representative the card links to. VERIFIED: `?type=Villa` 40 units → 34 grouped cards, Yenaier trio shows `×3`.
+6. **Localize card title unit-type + availability badge** — new `TYPE_WORDS`/`STUDIO_TITLE`/`AVAIL` maps + `unitTitle()`, `localizeStatus()`, `localizeDigits()` helpers. Title, beds, area, count and status all localize (en/ru/ar/fa) with Persian/Arabic-Indic numerals; project names stay English brand nouns. VERIFIED on `/fa/project`: "ویلا ۳ خوابه", "موجود", "×۳", "۳ واحد مشابه موجود است".
+
+## ✅ DONE Phase 3 (2026-07-23, part 2 — UI redesign, verified local, NOT committed)
+**Full editorial "Le Figaro Properties" redesign of `SearchPage.jsx`** (built via ui-ux-pro-max skill). Deliberately **light-mode** on a milky-cream paper bg (`PAPER #F6F1E7`), **sharp corners everywhere (no border-radius)**, warm hairline rules (`LINE #E5DDCC`), brand olive kept only for price/accents, dark ink (`#1c1b17`) primary buttons.
+- **Filter bar** = label/value chips (`FilterChip` overlays a transparent real `<select>` so native/a11y behaviour + the uppercase LOCATION/PROPERTY TYPE/BEDROOMS/BUDGET caption both work). White free-text search + dark "Search" button. Chips localized (`CHIP_LABELS` en/ru/ar/fa).
+- **Horizontal listing cards** (image-left / details-right → stack on mobile) replacing the old grid: FREEHOLD tag, photo-count badge, ×N similar badge, area eyebrow, title, view/floor line, olive price + price/m², spec rule (beds·m²·type), agency+ref, Contact (ghost) + View-the-listing (ink) CTAs.
+- **Responsive** via a component-scoped `<style>` block (`.pfx-*`, 768px breakpoint): bar goes column, chips horizontal-scroll (scrollbar hidden), search+button full-width, card stacks. ⚠️ gotcha fixed: in column mode `flex:1 1 260px` put the basis on the *vertical* axis → search box ballooned; override `.pfx-search{flex:0 0 auto}` at ≤768px.
+- **Image variety (client ask)** — cards now rotate through each project's OWN `galleryFor(slug)` images by a per-project index (Wadi Zaha/Yenaier 4 imgs → 4 distinct covers instead of one shared cover). Projects with no gallery fall back to a hashed pick from a 32-image stock POOL (`/images/blog/*`), varied per unit id. VERIFIED: 8 Yenaier cards → images 1,2,3,4,1,2,3,4 (4 distinct).
+- Verified: desktop en, mobile 375px, RTL `/fa/project` (mirrored bar, Persian digits, localized chips + "فری‌هولد").
+
+## 🔜 NEXT (Phase 3 — remaining)
+2. **Fix deep-link auto-scroll + verify highlight** (see ⚠️ in Phase 2) — the one item that needs the Lenis/ScrollTrigger scroller sorted.
 3. **Per-unit detail page (optional, matches reference fully)** — `/project/:ref` with gallery + description + Features & Amenities + inquiry form. Our data is rich at project level, thin at unit level, so card→project page is usually enough.
-4. **Dedupe near-identical units** — Jebel Sifah shows 3 identical studios, Yenaier many identical 3-bed villas. Group "N similar from OMR X" per (project, type, beds, price).
 5. **Map view toggle** — reuse `PropertyMap.jsx` for a list/map switch.
-6. **Localize card title unit-type** (project names stay English brand nouns) + badge availability status.
 
 ## Gotchas / notes
 - `fetchProjects()` filters `.not('latitude','is',null)` → units in a coord-less project are dropped from results (393 of 405 priced show). Fine for now (empty-area projects have 0 units anyway); if a real project is missing, give it lat/lng.
