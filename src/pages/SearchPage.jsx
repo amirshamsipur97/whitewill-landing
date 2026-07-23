@@ -48,6 +48,8 @@ const LINE_2 = '#D2C7AF'     // stronger rule / hover
 const CHIP = '#F1E8D3'       // filter chip fill (soft cream/gold)
 const CHIP_LINE = '#E3D4AC'  // filter chip border
 const ACCENT = OLIVE_BRIGHT  // #8c8d25 — price / accents
+const PURPLE = '#351D93'     // Investment-Plan brand purple — interactive hovers
+const PURPLE_HI = '#472bb0'  // brighter purple for pressed/hover fill
 
 // Stock fallback pool (real files under public/images/blog) — used only when a
 // project has no bundled gallery. Varied per unit so cards never look cloned.
@@ -126,10 +128,10 @@ const CHIP_LABELS = {
 }
 
 const STR = {
-  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment' },
-  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment' },
-  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار' },
-  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست' },
+  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities — every listing priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from' },
+  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана — с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От' },
+  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان — كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من' },
+  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از' },
 }
 
 // Localised unit-type words (project names themselves stay English brand nouns).
@@ -186,24 +188,27 @@ const CSS = `
 .pfx-search input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:${INK};font-size:15px;font-family:${FONT}}
 .pfx-search input::placeholder{color:${FAINT}}
 .pfx-chips{display:flex;gap:10px;flex:2 1 460px;min-width:0}
-.pfx-chip{position:relative;flex:1 1 0;min-width:128px;background:${CHIP};border:1px solid ${CHIP_LINE};padding:9px 14px;display:flex;flex-direction:column;justify-content:center;gap:2px;cursor:pointer}
+.pfx-chip{position:relative;flex:1 1 0;min-width:128px;background:${CHIP};border:1px solid ${CHIP_LINE};padding:9px 14px;display:flex;flex-direction:column;justify-content:center;gap:2px;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s}
+.pfx-chip:hover{border-color:${PURPLE};box-shadow:0 4px 14px rgba(53,29,147,.14)}
+.pfx-chip:hover .pfx-chip-label{color:${PURPLE}}
 .pfx-chip-label{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:${SUB};font-weight:700;line-height:1}
 .pfx-chip-val{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:14.5px;color:${INK};font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pfx-chip select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;font-size:16px}
-.pfx-btn{height:62px;padding:0 32px;background:${INK};color:${PAPER};border:none;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.02em;font-family:${FONT};transition:background .2s}
-.pfx-btn:hover{background:#000}
+.pfx-btn{height:62px;padding:0 32px;background:${INK};color:${PAPER};border:none;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.02em;font-family:${FONT};transition:background .2s,box-shadow .2s}
+.pfx-btn:hover{background:${PURPLE};box-shadow:0 8px 22px rgba(53,29,147,.32)}
 .pfx-card{display:flex;background:${SURFACE};border:1px solid ${LINE};overflow:hidden;transition:box-shadow .25s,border-color .25s}
-.pfx-card:hover{border-color:${LINE_2};box-shadow:0 12px 34px rgba(43,36,18,.09)}
+.pfx-card:hover{border-color:${PURPLE};box-shadow:0 14px 38px rgba(53,29,147,.13)}
 .pfx-media{position:relative;flex:0 0 42%;max-width:430px;aspect-ratio:4/3;background:#efeadf;overflow:hidden;display:block}
 .pfx-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
 .pfx-card:hover .pfx-media img{transform:scale(1.04)}
 .pfx-body{flex:1 1 auto;padding:22px 26px 20px;display:flex;flex-direction:column;min-width:0}
 .pfx-cta{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:46px;padding:0 22px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;font-family:${FONT};transition:background .2s,color .2s,border-color .2s}
 .pfx-cta-primary{background:${INK};color:${PAPER};border:1px solid ${INK}}
-.pfx-cta-primary:hover{background:#000}
+.pfx-cta-primary:hover{background:${PURPLE};border-color:${PURPLE};box-shadow:0 8px 20px rgba(53,29,147,.3)}
 .pfx-cta-ghost{background:transparent;color:${INK};border:1px solid ${LINE_2}}
-.pfx-cta-ghost:hover{border-color:${INK}}
-.pfx-sortsel{position:relative;display:inline-flex;align-items:center;gap:6px;background:${SURFACE};border:1px solid ${LINE};padding:9px 12px;cursor:pointer}
+.pfx-cta-ghost:hover{border-color:${PURPLE};color:${PURPLE};background:rgba(53,29,147,.05)}
+.pfx-sortsel{position:relative;display:inline-flex;align-items:center;gap:6px;background:${SURFACE};border:1px solid ${LINE};padding:9px 12px;cursor:pointer;transition:border-color .2s}
+.pfx-sortsel:hover{border-color:${PURPLE}}
 .pfx-sortsel select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
 @keyframes pfxShimmer{0%{background-position:-500px 0}100%{background-position:500px 0}}
 .pfx-skel{background-color:#e9e2d2;background-image:linear-gradient(90deg,rgba(233,226,210,0) 0,rgba(255,255,255,.6) 50%,rgba(233,226,210,0) 100%);background-size:500px 100%;background-repeat:no-repeat;animation:pfxShimmer 1.25s ease-in-out infinite}
@@ -415,6 +420,16 @@ export default function SearchPage() {
     return [...names].sort()
   }, [projects, units])
 
+  // Hero strip = the brand catalogue promise. The unit feed only loads
+  // *available* stock (a subset), so the headline counts use the confirmed
+  // full-catalogue facts (407 units / 22 projects / 11 areas) while the entry
+  // price stays live-derived from the loaded inventory (falls back to 35,625).
+  const minPrice = useMemo(() => {
+    const m = units.reduce((min, u) => (Number(u.price_omr) > 0 ? Math.min(min, Number(u.price_omr)) : min), Infinity)
+    return Number.isFinite(m) ? m : 35625
+  }, [units])
+  const CATALOGUE = { props: 400, projects: 22, areas: 11 }
+
   const setParam = (key, val, dflt) => {
     const next = new URLSearchParams(params)
     if (val == null || val === dflt) next.delete(key)
@@ -517,9 +532,34 @@ export default function SearchPage() {
       {/* ── heading + filter bar ── */}
       <section style={{ borderBottom: `1px solid ${LINE}`, padding: '104px 0 26px' }}>
         <div className="pfx-wrap">
-          <h1 style={{ margin: '0 0 20px', fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(27px, 4vw, 44px)', letterSpacing: '-0.01em', color: INK }}>
+          {/* eyebrow — purple accent ties in the Investment-Plan brand */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 14 }}>
+            <span style={{ width: 24, height: 2, background: PURPLE, display: 'inline-block' }} />
+            <span style={{ fontFamily: FONT, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: PURPLE, fontWeight: 700 }}>{t.eyebrow}</span>
+          </div>
+
+          <h1 style={{ margin: 0, fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(27px, 4vw, 44px)', letterSpacing: '-0.01em', color: INK, lineHeight: 1.1 }}>
             {t.heading}
           </h1>
+
+          <p style={{ margin: '13px 0 0', fontFamily: FONT, fontSize: 'clamp(14.5px, 1.5vw, 16.5px)', lineHeight: 1.6, color: SUB, maxWidth: 660 }}>
+            {t.lead}
+          </p>
+
+          {/* live portfolio stats — the "app dashboard" strip */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'stretch', margin: '22px 0 24px', rowGap: 14 }}>
+            {[
+              { num: `${localizeDigits(CATALOGUE.props, lang)}+`, label: t.stProps },
+              { num: localizeDigits(CATALOGUE.projects, lang), label: t.stProjects },
+              { num: localizeDigits(CATALOGUE.areas, lang), label: t.stAreas },
+              { num: fmtOmr(minPrice, lang), label: t.stFrom },
+            ].map((s, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 3, padding: '2px 24px', paddingInlineStart: i === 0 ? 0 : 24, borderInlineStart: i > 0 ? `1px solid ${LINE_2}` : 'none' }}>
+                <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(20px, 2.4vw, 27px)', color: INK, lineHeight: 1.02, letterSpacing: '-0.015em' }}>{s.num}</span>
+                <span style={{ fontFamily: FONT, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: FAINT, fontWeight: 600 }}>{s.label}</span>
+              </div>
+            ))}
+          </div>
 
           <div className="pfx-bar">
             <div className="pfx-search">
