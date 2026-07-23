@@ -30,6 +30,14 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
 import PhotoLibraryRoundedIcon from '@mui/icons-material/PhotoLibraryRounded'
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
+import HomeWorkOutlinedIcon from '@mui/icons-material/HomeWorkOutlined'
+import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined'
+import StraightenRoundedIcon from '@mui/icons-material/StraightenRounded'
+import KingBedOutlinedIcon from '@mui/icons-material/KingBedOutlined'
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
 import { galleryFor } from '../projectGallery.js'
@@ -50,6 +58,9 @@ const CHIP_LINE = '#E3D4AC'  // filter chip border
 const ACCENT = OLIVE_BRIGHT  // #8c8d25 — price / accents
 const PURPLE = '#351D93'     // Investment-Plan brand purple — interactive hovers
 const PURPLE_HI = '#472bb0'  // brighter purple for pressed/hover fill
+const GOLD = '#B98C52'       // Figma "Find Property" button gold
+const GOLD_HI = '#C89E63'    // hover
+const HERO_BG = '/images/hero-poster.jpg' // drone Muscat still behind the glass
 
 // Stock fallback pool (real files under public/images/blog) — used only when a
 // project has no bundled gallery. Varied per unit so cards never look cloned.
@@ -119,19 +130,31 @@ const LABELS = {
   },
 }
 
-// Chip micro-labels (the small uppercase caption above each filter value).
+// Filter-chip labels (the 5 dropdowns in the Figma panel).
 const CHIP_LABELS = {
-  en: { location: 'Location', type: 'Property type', beds: 'Bedrooms', price: 'Budget' },
-  ru: { location: 'Район', type: 'Тип', beds: 'Спальни', price: 'Бюджет' },
-  ar: { location: 'المنطقة', type: 'النوع', beds: 'الغرف', price: 'الميزانية' },
-  fa: { location: 'منطقه', type: 'نوع ملک', beds: 'خواب', price: 'بودجه' },
+  en: { location: 'Location', type: 'Property Type', price: 'Pricing Range', size: 'Property Size', beds: 'Bedrooms' },
+  ru: { location: 'Район', type: 'Тип недвижимости', price: 'Диапазон цен', size: 'Площадь', beds: 'Спальни' },
+  ar: { location: 'المنطقة', type: 'نوع العقار', price: 'نطاق السعر', size: 'المساحة', beds: 'غرف النوم' },
+  fa: { location: 'منطقه', type: 'نوع ملک', price: 'محدودهٔ قیمت', size: 'متراژ', beds: 'خواب' },
+}
+
+// Property-size buckets (sqm) — the Figma "Property Size" dropdown.
+const SIZE_VALUES = [
+  { v: 'any', min: 0, max: Infinity }, { v: 's', min: 0, max: 100 },
+  { v: 'm', min: 100, max: 200 }, { v: 'l', min: 200, max: 400 }, { v: 'xl', min: 400, max: Infinity },
+]
+const SIZE_LABELS = {
+  en: ['Any size', 'Under 100 m²', '100–200 m²', '200–400 m²', '400+ m²'],
+  ru: ['Любая площадь', 'До 100 m²', '100–200 m²', '200–400 m²', '400+ m²'],
+  ar: ['أي مساحة', 'أقل من 100 م²', '100–200 م²', '200–400 م²', '400+ م²'],
+  fa: ['هر متراژ', 'زیر ۱۰۰ m²', '۱۰۰–۲۰۰ m²', '۲۰۰–۴۰۰ m²', '۴۰۰+ m²'],
 }
 
 const STR = {
-  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities — every listing priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from' },
-  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана — с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От' },
-  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان — كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من' },
-  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از' },
+  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities — every listing priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property — e.g. “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy — showing keyword matches instead.' },
+  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана — с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость — напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят — показаны совпадения по словам.' },
+  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان — كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار — مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول — نعرض تطابقات الكلمات.' },
+  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن — مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است — نتایج کلیدواژه‌ای نمایش داده شد.' },
 }
 
 // Localised unit-type words (project names themselves stay English brand nouns).
@@ -224,6 +247,39 @@ const CSS = `
   .pfx-card{flex-direction:column}
   .pfx-media{flex-basis:auto;max-width:none;width:100%;aspect-ratio:16/10}
   .pfx-body{padding:18px 18px 18px}
+}
+/* ── dark glass hero panel (Figma 953-28313) ── */
+.pfh-hero{position:relative;padding:120px 20px 56px;background:#0a0a0a;overflow:hidden}
+.pfh-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(180deg,rgba(8,8,8,.74),rgba(8,8,8,.5) 42%,rgba(8,8,8,.82)),url('${HERO_BG}');background-size:cover;background-position:center;z-index:0}
+.pfh-wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.pfh-panel{max-width:980px;background:rgba(15,15,16,.5);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:38px 40px 30px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.pfh-eyebrow{font-family:${FONT};font-size:14px;color:rgba(255,255,255,.82);font-weight:500;letter-spacing:.01em}
+.pfh-h1{margin:9px 0 0;font-family:${FONT};font-weight:400;font-size:clamp(30px,4.6vw,54px);letter-spacing:-.02em;color:#fff;line-height:1.03}
+.pfh-lead{margin:13px 0 0;font-family:${FONT};font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.6;color:rgba(255,255,255,.6);max-width:640px}
+.pfh-search{display:flex;align-items:center;gap:10px;margin-top:26px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:8px 8px 8px 20px;transition:border-color .2s}
+.pfh-search:focus-within{border-color:rgba(255,255,255,.32)}
+.pfh-search input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:#fff;font-family:${FONT};font-size:15.5px}
+.pfh-search input::placeholder{color:rgba(255,255,255,.42)}
+.pfh-find{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 24px;background:${GOLD};color:#fff;border:none;border-radius:9px;font-family:${FONT};font-weight:600;font-size:15px;cursor:pointer;transition:background .2s}
+.pfh-find:hover{background:${GOLD_HI}}
+.pfh-find:disabled{opacity:.75;cursor:default}
+.pfh-filters{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+.pfh-fchip{position:relative;flex:1 1 0;min-width:150px;display:flex;align-items:center;gap:8px;height:54px;padding:0 11px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.13);border-radius:11px;cursor:pointer;transition:border-color .2s,background .2s}
+.pfh-fchip:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.075)}
+.pfh-fchip-txt{flex:1;font-family:${FONT};font-size:13.5px;color:rgba(255,255,255,.84);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pfh-fchip select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+.pfh-spin{width:17px;height:17px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:pfhSpin .7s linear infinite}
+@keyframes pfhSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.pfh-spin{animation-duration:1.6s}}
+@media(max-width:768px){
+  .pfh-hero{padding:96px 14px 34px}
+  .pfh-panel{padding:24px 18px 20px;border-radius:16px}
+  .pfh-search{flex-wrap:wrap;padding:8px}
+  .pfh-search input{padding:4px 8px}
+  .pfh-find{width:100%;height:46px}
+  .pfh-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .pfh-filters::-webkit-scrollbar{display:none}
+  .pfh-fchip{min-width:62%;flex:0 0 auto}
 }
 `
 
@@ -365,6 +421,18 @@ function FilterChip({ label, value, children }) {
   )
 }
 
+// Dark glass filter chip (icon + value + chevron) overlaying a real <select>.
+function HeroChip({ icon, value, children }) {
+  return (
+    <label className="pfh-fchip">
+      <span style={{ display: 'inline-flex', color: 'rgba(255,255,255,0.62)', flexShrink: 0 }}>{icon}</span>
+      <span className="pfh-fchip-txt">{value}</span>
+      <KeyboardArrowDownRoundedIcon sx={{ fontSize: 20, color: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
+      {children}
+    </label>
+  )
+}
+
 export default function SearchPage() {
   const { lang } = useI18n()
   const t = STR[lang] || STR.en
@@ -379,12 +447,14 @@ export default function SearchPage() {
 
   const L = LABELS[lang] || LABELS.en
   const C = CHIP_LABELS[lang] || CHIP_LABELS.en
-  const [q, setQ] = useState(params.get('q') || '')       // live input value
-  const [liveQ, setLiveQ] = useState(params.get('q') || '') // debounced needle
-  const [pending, setPending] = useState(false)             // re-filtering now?
+  const [aiQuery, setAiQuery] = useState(params.get('q') || '') // AI search box
+  const [aiFilter, setAiFilter] = useState(null)                // parsed constraints
+  const [aiReply, setAiReply] = useState('')                    // assistant message
+  const [aiBusy, setAiBusy] = useState(false)
   const type = params.get('type') || 'Any'
   const beds = params.get('beds') || 'any'
   const price = params.get('price') || 'any'
+  const size = params.get('size') || 'any'
   const area = params.get('area') || 'any'
   const sort = params.get('sort') || 'price_asc'
 
@@ -437,44 +507,61 @@ export default function SearchPage() {
     setParams(next, { replace: true })
   }
 
-  // Write the query to the URL (shareable) off the freshest params.
-  const writeQ = (value) => {
-    const next = new URLSearchParams(paramsRef.current)
-    const v = value.trim()
-    if (v) next.set('q', v)
-    else next.delete('q')
+  // Manual dropdown change → drop any active AI result so the two don't fight.
+  const clearAi = () => { setAiFilter(null); setAiReply('') }
+  const onManual = (key, val, dflt) => { clearAi(); setParam(key, val, dflt) }
+
+  // AI search — POST the free-text query to the property-search edge function
+  // (Claude), which returns a structured filter + a short reply. We apply the
+  // filter to the units already loaded and surface the reply. Falls back to a
+  // plain keyword match if the AI is unavailable.
+  const runAiSearch = async (text) => {
+    const query = (text ?? aiQuery).trim()
+    if (!query || aiBusy) return
+    setAiBusy(true)
+    // AI result stands alone → clear manual dropdowns, keep ?q shareable.
+    const next = new URLSearchParams()
+    next.set('q', query)
     setParams(next, { replace: true })
+    try {
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/property-search`
+      const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: key, Authorization: `Bearer ${key}` },
+        body: JSON.stringify({ query, language: lang }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || 'ai_failed')
+      setAiFilter(data.filter || {})
+      setAiReply(data.reply || '')
+    } catch {
+      setAiFilter({ q: query }) // graceful keyword fallback
+      setAiReply(t.aiFallback)
+    } finally {
+      setAiBusy(false)
+    }
   }
 
-  // Live search: as the user types, flash the skeleton "buffer" then debounce
-  // the needle into the filter + URL ~300ms after they stop typing.
+  // Deep-link / landing-pill entry: if ?q= is present on first load, run it.
   useEffect(() => {
-    if (q === liveQ) return
-    setPending(true)
-    const id = setTimeout(() => {
-      setLiveQ(q)
-      writeQ(q)
-      setPending(false)
-    }, 300)
-    return () => clearTimeout(id)
+    const q0 = params.get('q')
+    if (q0) runAiSearch(q0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q])
-
-  // Enter / Search button → flush immediately (skip the debounce wait).
-  const commitSearch = () => {
-    setLiveQ(q)
-    writeQ(q)
-    setPending(false)
-  }
+  }, [])
 
   const results = useMemo(() => {
     const priceMax = PRICE_VALUES.find((o) => o.v === price)?.max ?? Infinity
-    const needle = liveQ.trim().toLowerCase()
+    const sizeBucket = SIZE_VALUES.find((o) => o.v === size) || SIZE_VALUES[0]
+    const af = aiFilter
     const enriched = units
       .map((u) => ({ unit: u, project: projById[u.project_id] }))
       .filter((it) => it.project) // drop units whose project lacks coords/data
       .filter((it) => {
         const u = it.unit, p = it.project
+        const sqm = Number(u.total_area_sqm || u.internal_area_sqm || 0)
+        if (u.price_omr == null || Number(u.price_omr) <= 0) return false
+        // manual dropdown filters
         if (area !== 'any' && (p.area?.name || p.location) !== area) return false
         if (type !== 'Any' && typeGroup(u.unit_type) !== type) return false
         if (beds !== 'any') {
@@ -482,10 +569,24 @@ export default function SearchPage() {
           if (beds === '4') { if (b < 4) return false } else if (String(b) !== beds) return false
         }
         if (Number(u.price_omr) > priceMax) return false
-        if (u.price_omr == null || Number(u.price_omr) <= 0) return false
-        if (needle) {
-          const hay = [p.name, p.location, p.area?.name, p.area?.city, u.unit_type].filter(Boolean).join(' ').toLowerCase()
-          if (!hay.includes(needle)) return false
+        if (size !== 'any' && (sqm < sizeBucket.min || sqm > sizeBucket.max)) return false
+        // AI natural-language filter (from property-search)
+        if (af) {
+          const b = u.bedrooms ?? 0
+          if (af.type && typeGroup(u.unit_type) !== af.type) return false
+          if (af.bedsMin != null && b < af.bedsMin) return false
+          if (af.bedsMax != null && b > af.bedsMax) return false
+          if (af.priceMin != null && Number(u.price_omr) < af.priceMin) return false
+          if (af.priceMax != null && Number(u.price_omr) > af.priceMax) return false
+          if (af.sizeMin != null && sqm < af.sizeMin) return false
+          if (af.sizeMax != null && sqm > af.sizeMax) return false
+          if (af.q) {
+            const hay = [p.name, p.location, p.area?.name, p.area?.city, u.unit_type].filter(Boolean).join(' ').toLowerCase()
+            if (!hay.includes(af.q.toLowerCase())) return false
+          }
+          // viewKeywords are a SOFT preference (applied as a sort boost below),
+          // not a hard filter — a beachfront community's units often carry a
+          // "lagoon"/"garden" view label, so filtering them out empties results.
         }
         return true
       })
@@ -505,6 +606,13 @@ export default function SearchPage() {
       if (sort === 'area_desc') return (b.unit.total_area_sqm || 0) - (a.unit.total_area_sqm || 0)
       return (a.unit.price_omr || 0) - (b.unit.price_omr || 0)
     })
+    // Soft view preference from AI search: float matching-view units to the top
+    // (stable, so the price/area order holds within each partition).
+    if (af && af.viewKeywords && af.viewKeywords.length) {
+      const kw = af.viewKeywords
+      const vmatch = (u) => { const v = String(u.view || '').toLowerCase(); return kw.some((k) => v.includes(k)) }
+      grouped.sort((a, b) => (vmatch(b.unit) ? 1 : 0) - (vmatch(a.unit) ? 1 : 0))
+    }
 
     // Assign each card an image, rotating through the project's OWN gallery so
     // sibling units don't clone the same cover; fall back to the stock pool.
@@ -517,92 +625,88 @@ export default function SearchPage() {
       g.photoCount = gal.length
     }
     return grouped
-  }, [units, projById, type, beds, price, area, sort, liveQ])
+  }, [units, projById, type, beds, price, size, area, sort, aiFilter])
 
-  const busy = loading || pending // show the skeleton buffer
+  const busy = loading || aiBusy // skeleton while AI is thinking / data loads
+  const SL = SIZE_LABELS[lang] || SIZE_LABELS.en
   const typeVal = L.type[TYPE_OPTIONS.indexOf(type)] || L.type[0]
   const bedsVal = L.beds[BEDS_VALUES.indexOf(beds)] || L.beds[0]
   const priceVal = L.price[PRICE_VALUES.findIndex((o) => o.v === price)] || L.price[0]
+  const sizeVal = SL[SIZE_VALUES.findIndex((o) => o.v === size)] || SL[0]
   const areaVal = area === 'any' ? L.anyArea : area
 
   return (
     <main className="pfx-page" dir={rtl ? 'rtl' : 'ltr'}>
       <style>{CSS}</style>
 
-      {/* ── heading + filter bar ── */}
-      <section style={{ borderBottom: `1px solid ${LINE}`, padding: '104px 0 26px' }}>
-        <div className="pfx-wrap">
-          {/* eyebrow — purple accent ties in the Investment-Plan brand */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 14 }}>
-            <span style={{ width: 24, height: 2, background: PURPLE, display: 'inline-block' }} />
-            <span style={{ fontFamily: FONT, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: PURPLE, fontWeight: 700 }}>{t.eyebrow}</span>
-          </div>
+      {/* ── dark glass hero panel (Figma 953-28313) ── */}
+      <section className="pfh-hero">
+        <div className="pfh-wrap">
+          <div className="pfh-panel" dir={rtl ? 'rtl' : 'ltr'}>
+            <div className="pfh-eyebrow">{t.eyebrow}</div>
+            <h1 className="pfh-h1">{t.heading}</h1>
+            <p className="pfh-lead">{t.lead}</p>
 
-          <h1 style={{ margin: 0, fontFamily: FONT, fontWeight: 300, fontSize: 'clamp(27px, 4vw, 44px)', letterSpacing: '-0.01em', color: INK, lineHeight: 1.1 }}>
-            {t.heading}
-          </h1>
-
-          <p style={{ margin: '13px 0 0', fontFamily: FONT, fontSize: 'clamp(14.5px, 1.5vw, 16.5px)', lineHeight: 1.6, color: SUB, maxWidth: 660 }}>
-            {t.lead}
-          </p>
-
-          {/* live portfolio stats — the "app dashboard" strip */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'stretch', margin: '22px 0 24px', rowGap: 14 }}>
-            {[
-              { num: `${localizeDigits(CATALOGUE.props, lang)}+`, label: t.stProps },
-              { num: localizeDigits(CATALOGUE.projects, lang), label: t.stProjects },
-              { num: localizeDigits(CATALOGUE.areas, lang), label: t.stAreas },
-              { num: fmtOmr(minPrice, lang), label: t.stFrom },
-            ].map((s, i) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 3, padding: '2px 24px', paddingInlineStart: i === 0 ? 0 : 24, borderInlineStart: i > 0 ? `1px solid ${LINE_2}` : 'none' }}>
-                <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(20px, 2.4vw, 27px)', color: INK, lineHeight: 1.02, letterSpacing: '-0.015em' }}>{s.num}</span>
-                <span style={{ fontFamily: FONT, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: FAINT, fontWeight: 600 }}>{s.label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="pfx-bar">
-            <div className="pfx-search">
-              <SearchRoundedIcon sx={{ fontSize: 21, color: FAINT }} />
+            {/* AI natural-language search */}
+            <form className="pfh-search" onSubmit={(e) => { e.preventDefault(); runAiSearch() }}>
+              <SearchRoundedIcon sx={{ fontSize: 22, color: 'rgba(255,255,255,0.55)' }} />
               <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') commitSearch() }}
-                placeholder={t.placeholder}
-                aria-label={t.placeholder}
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                placeholder={t.aiPlaceholder}
+                aria-label={t.aiPlaceholder}
               />
-            </div>
+              <button type="submit" className="pfh-find" disabled={aiBusy}>
+                {aiBusy ? <span className="pfh-spin" /> : <AutoAwesomeRoundedIcon sx={{ fontSize: 18 }} />}
+                {aiBusy ? t.aiThinking : t.find}
+              </button>
+            </form>
 
-            <div className="pfx-chips">
-              <FilterChip label={C.location} value={areaVal}>
-                <select value={area} onChange={(e) => setParam('area', e.target.value, 'any')} aria-label={C.location}>
+            {/* 5 filter dropdowns */}
+            <div className="pfh-filters">
+              <HeroChip icon={<PlaceOutlinedIcon sx={{ fontSize: 19 }} />} value={area === 'any' ? C.location : areaVal}>
+                <select value={area} onChange={(e) => onManual('area', e.target.value, 'any')} aria-label={C.location}>
                   <option value="any">{L.anyArea}</option>
                   {areaOptions.map((a) => <option key={a} value={a}>{a}</option>)}
                 </select>
-              </FilterChip>
-              <FilterChip label={C.type} value={typeVal}>
-                <select value={type} onChange={(e) => setParam('type', e.target.value, 'Any')} aria-label={C.type}>
+              </HeroChip>
+              <HeroChip icon={<HomeWorkOutlinedIcon sx={{ fontSize: 19 }} />} value={type === 'Any' ? C.type : typeVal}>
+                <select value={type} onChange={(e) => onManual('type', e.target.value, 'Any')} aria-label={C.type}>
                   {TYPE_OPTIONS.map((o, i) => <option key={o} value={o}>{L.type[i]}</option>)}
                 </select>
-              </FilterChip>
-              <FilterChip label={C.beds} value={bedsVal}>
-                <select value={beds} onChange={(e) => setParam('beds', e.target.value, 'any')} aria-label={C.beds}>
-                  {BEDS_VALUES.map((v, i) => <option key={v} value={v}>{L.beds[i]}</option>)}
-                </select>
-              </FilterChip>
-              <FilterChip label={C.price} value={priceVal}>
-                <select value={price} onChange={(e) => setParam('price', e.target.value, 'any')} aria-label={C.price}>
+              </HeroChip>
+              <HeroChip icon={<PaymentsOutlinedIcon sx={{ fontSize: 18 }} />} value={price === 'any' ? C.price : priceVal}>
+                <select value={price} onChange={(e) => onManual('price', e.target.value, 'any')} aria-label={C.price}>
                   {PRICE_VALUES.map((o, i) => <option key={o.v} value={o.v}>{L.price[i]}</option>)}
                 </select>
-              </FilterChip>
+              </HeroChip>
+              <HeroChip icon={<StraightenRoundedIcon sx={{ fontSize: 18 }} />} value={size === 'any' ? C.size : sizeVal}>
+                <select value={size} onChange={(e) => onManual('size', e.target.value, 'any')} aria-label={C.size}>
+                  {SIZE_VALUES.map((o, i) => <option key={o.v} value={o.v}>{SL[i]}</option>)}
+                </select>
+              </HeroChip>
+              <HeroChip icon={<KingBedOutlinedIcon sx={{ fontSize: 19 }} />} value={beds === 'any' ? C.beds : bedsVal}>
+                <select value={beds} onChange={(e) => onManual('beds', e.target.value, 'any')} aria-label={C.beds}>
+                  {BEDS_VALUES.map((v, i) => <option key={v} value={v}>{L.beds[i]}</option>)}
+                </select>
+              </HeroChip>
             </div>
-
-            <button type="button" className="pfx-btn" onClick={commitSearch}>
-              <SearchRoundedIcon sx={{ fontSize: 19 }} /> {t.search}
-            </button>
           </div>
         </div>
       </section>
+
+      {/* ── AI assistant reply banner ── */}
+      {aiReply && (
+        <section className="pfx-wrap" style={{ padding: '20px 20px 0' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, background: SURFACE, border: `1px solid ${LINE}`, borderInlineStart: `3px solid ${GOLD}`, padding: '14px 16px' }} dir={rtl ? 'rtl' : 'ltr'}>
+            <AutoAwesomeRoundedIcon sx={{ fontSize: 20, color: GOLD, mt: '2px', flexShrink: 0 }} />
+            <p style={{ margin: 0, flex: 1, fontFamily: FONT, fontSize: 14.5, lineHeight: 1.55, color: INK }}>{aiReply}</p>
+            <button type="button" onClick={clearAi} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'transparent', border: 'none', color: SUB, fontFamily: FONT, fontSize: 13, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
+              <CloseRoundedIcon sx={{ fontSize: 16 }} /> {t.aiClear}
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* ── breadcrumb + count + sort ── */}
       <section className="pfx-wrap" style={{ padding: '22px 20px 0' }}>
@@ -637,7 +741,7 @@ export default function SearchPage() {
         ) : results.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: SUB, fontFamily: FONT }}>
             <p style={{ fontSize: 16, marginBottom: 16 }}>{t.empty}</p>
-            <button type="button" onClick={() => setParams(new URLSearchParams(), { replace: true })}
+            <button type="button" onClick={() => { clearAi(); setAiQuery(''); setParams(new URLSearchParams(), { replace: true }) }}
               style={{ background: 'transparent', color: INK, border: `1px solid ${LINE_2}`, padding: '10px 20px', fontFamily: FONT, fontSize: 14, cursor: 'pointer' }}>
               {t.reset}
             </button>
