@@ -37,7 +37,7 @@ const OLIVE_BRIGHT = '#8c8d25'
 // English fallback; brand wordmarks (Maison Shirdel) carry no key and stay.
 const PAGE_LINKS = [
   { label: 'Buy', to: '/buy', navKey: 'buy' },
-  { label: 'Project', to: '/', navKey: 'project' },
+  { label: 'Project', to: '/project', navKey: 'project' },
   { label: 'Maison Shirdel', to: '/maison-shirdel' },
   // The blog drives most organic entries — a footer link on every page keeps
   // it one crawl hop from anywhere on the site.

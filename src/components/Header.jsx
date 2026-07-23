@@ -116,7 +116,7 @@ export default function Header() {
 
   const navLinks = [
     { label: t.nav.buy, to: '/buy' },
-    { label: t.nav.project, to: '/' },
+    { label: t.nav.project, to: '/project' },
     { label: t.nav.maison, to: '/maison-shirdel' },
     { label: t.nav.invest, to: '/invest' },
     // These pages exist only in the Persian site.
