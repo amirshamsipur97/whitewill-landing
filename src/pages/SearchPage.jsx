@@ -62,13 +62,13 @@ const GOLD = '#B98C52'       // Figma "Find Property" button gold
 const GOLD_HI = '#C89E63'    // hover
 const HERO_BG = '/images/hero-poster.jpg' // drone Muscat still behind the glass
 
-// Stock fallback pool (real files under public/images/blog) — used only when a
-// project has no bundled gallery. Varied per unit so cards never look cloned.
-const POOL = [
-  ...Array.from({ length: 13 }, (_, i) => `/images/blog/muscat-${i + 1}.jpg`),
-  ...Array.from({ length: 7 }, (_, i) => `/images/blog/sifah-${i + 1}.jpg`),
-  ...Array.from({ length: 12 }, (_, i) => `/images/blog/salalah-${i + 1}.jpg`),
-]
+// Stock fallback pool — used ONLY when a project has no bundled gallery
+// (currently just "Aida" in Yiti). Deliberately restricted to the neutral,
+// UNBRANDED Muscat-area renders. The sifah-* images are Jebel Sifah / Olive
+// Farms / Solaris branded renders (some with text overlays) and the salalah-*
+// are Salalah-specific — using either as a fallback made Aida cards look like
+// Olive Farms / Solaris. Projects WITH their own gallery are unaffected.
+const POOL = Array.from({ length: 13 }, (_, i) => `/images/blog/muscat-${i + 1}.jpg`)
 const hashId = (id) => {
   let x = 0
   const s = String(id)
