@@ -29,6 +29,8 @@ import { galleryFor } from '../projectGallery.js'
 import { slugify } from './BuyPage.jsx'
 import { LocalizedLink } from '../lib/localize.js'
 import { FONT, OLIVE_BRIGHT } from '../components/invest/ui.jsx'
+import { getProjectDetails } from '../data/projectDetails.js'
+import { FEATURE_META, FEATURES_HEADING } from '../data/amenities.jsx'
 
 // ── light palette ─────────────────────────────────────────────────────────
 const PAPER = '#ffffff'
@@ -41,6 +43,21 @@ const OLIVE = OLIVE_BRIGHT // #8c8d25 — price / accents
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 const POOL = Array.from({ length: 13 }, (_, i) => `/images/blog/muscat-${i + 1}.jpg`)
+
+// Gallery mosaic — one large image + a 2x2 grid of four (reference layout).
+const GALLERY_CSS = `
+.pfp-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;height:clamp(320px,42vw,520px)}
+.pfp-gallery .g{position:relative;overflow:hidden;background:#eee}
+.pfp-gallery img{width:100%;height:100%;object-fit:cover;display:block}
+.pfp-gallery .g0{grid-row:1 / 3;grid-column:1}
+.pfp-viewall{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(20,18,14,.42);color:#fff;font-family:${FONT};font-weight:600;font-size:14px;border:none;cursor:pointer}
+.pfp-viewall:hover{background:rgba(20,18,14,.56)}
+@media(max-width:760px){
+  .pfp-gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto;height:auto}
+  .pfp-gallery .g0{grid-row:auto;grid-column:1 / 3;aspect-ratio:16 / 10}
+  .pfp-gallery .g:not(.g0){aspect-ratio:4 / 3}
+}
+`
 const hashId = (id) => { let x = 0; const s = String(id); for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x }
 
 function typeGroup(raw) {
@@ -82,10 +99,10 @@ function unitTitle(beds, type, lang) {
 }
 
 const STR = {
-  en: { sale: 'For Sale', propertyType: 'Property Type', bedrooms: 'Bedrooms', size: 'Size', ref: 'Ref no.', about: 'About this property', showMore: 'Show more', showLess: 'Show less', showAll: 'Show all photos', floorPlan: 'Request floor plan', keyDetails: 'Key details', internalArea: 'Internal area', totalArea: 'Total area', gardenArea: 'Garden', view: 'View', floor: 'Floor', perSqm: 'Price per m²', developer: 'Developer', availability: 'Availability', location: 'Location', mapTitle: 'On the map', recommended: 'You may also like', contact: 'Contact our team', from: 'From', freehold: 'Freehold', studio: 'Studio', notFound: 'This property is no longer listed.', backToSearch: 'Back to search', crumbHome: 'Home', crumbSearch: 'Properties', approx: 'approx.' },
-  ru: { sale: 'В продаже', propertyType: 'Тип', bedrooms: 'Спальни', size: 'Площадь', ref: 'Номер', about: 'Об объекте', showMore: 'Показать ещё', showLess: 'Свернуть', showAll: 'Все фото', floorPlan: 'Запросить план', keyDetails: 'Ключевые детали', internalArea: 'Внутренняя площадь', totalArea: 'Общая площадь', gardenArea: 'Сад', view: 'Вид', floor: 'Этаж', perSqm: 'Цена за м²', developer: 'Застройщик', availability: 'Статус', location: 'Расположение', mapTitle: 'На карте', recommended: 'Вам также понравится', contact: 'Связаться с нами', from: 'От', freehold: 'Фрихолд', studio: 'Студия', notFound: 'Этот объект больше не в продаже.', backToSearch: 'Назад к поиску', crumbHome: 'Главная', crumbSearch: 'Недвижимость', approx: 'около' },
-  ar: { sale: 'للبيع', propertyType: 'النوع', bedrooms: 'غرف النوم', size: 'المساحة', ref: 'الرقم', about: 'عن هذا العقار', showMore: 'عرض المزيد', showLess: 'عرض أقل', showAll: 'كل الصور', floorPlan: 'اطلب المخطط', keyDetails: 'التفاصيل', internalArea: 'المساحة الداخلية', totalArea: 'المساحة الكلية', gardenArea: 'الحديقة', view: 'الإطلالة', floor: 'الطابق', perSqm: 'السعر لكل م²', developer: 'المطوّر', availability: 'الحالة', location: 'الموقع', mapTitle: 'على الخريطة', recommended: 'قد يعجبك أيضاً', contact: 'تواصل مع فريقنا', from: 'من', freehold: 'تملّك حر', studio: 'استوديو', notFound: 'لم يعد هذا العقار معروضاً.', backToSearch: 'العودة للبحث', crumbHome: 'الرئيسية', crumbSearch: 'العقارات', approx: 'حوالي' },
-  fa: { sale: 'برای فروش', propertyType: 'نوع ملک', bedrooms: 'اتاق خواب', size: 'متراژ', ref: 'کد', about: 'دربارهٔ این ملک', showMore: 'بیشتر', showLess: 'کمتر', showAll: 'همهٔ عکس‌ها', floorPlan: 'درخواست نقشه', keyDetails: 'جزئیات کلیدی', internalArea: 'متراژ داخلی', totalArea: 'متراژ کل', gardenArea: 'باغ', view: 'منظره', floor: 'طبقه', perSqm: 'قیمت هر متر', developer: 'سازنده', availability: 'وضعیت', location: 'موقعیت', mapTitle: 'روی نقشه', recommended: 'شاید بپسندید', contact: 'تماس با تیم ما', from: 'از', freehold: 'فری‌هولد', studio: 'استودیو', notFound: 'این ملک دیگر در دسترس نیست.', backToSearch: 'بازگشت به جستجو', crumbHome: 'خانه', crumbSearch: 'املاک', approx: 'حدود' },
+  en: { sale: 'For Sale', propertyType: 'Property Type', bedrooms: 'Bedrooms', size: 'Size', ref: 'Ref no.', about: 'About this property', aboutDev: 'About the development', showMore: 'Show more', showLess: 'Show less', showAll: 'Show all photos', floorPlan: 'Request floor plan', keyDetails: 'Key details', internalArea: 'Internal area', totalArea: 'Total area', gardenArea: 'Garden', view: 'View', floor: 'Floor', perSqm: 'Price per m²', developer: 'Developer', availability: 'Availability', location: 'Location', mapTitle: 'On the map', recommended: 'You may also like', contact: 'Contact our team', from: 'From', freehold: 'Freehold', studio: 'Studio', notFound: 'This property is no longer listed.', backToSearch: 'Back to search', crumbHome: 'Home', crumbSearch: 'Properties', approx: 'approx.' },
+  ru: { sale: 'В продаже', propertyType: 'Тип', bedrooms: 'Спальни', size: 'Площадь', ref: 'Номер', about: 'Об объекте', aboutDev: 'О проекте', showMore: 'Показать ещё', showLess: 'Свернуть', showAll: 'Все фото', floorPlan: 'Запросить план', keyDetails: 'Ключевые детали', internalArea: 'Внутренняя площадь', totalArea: 'Общая площадь', gardenArea: 'Сад', view: 'Вид', floor: 'Этаж', perSqm: 'Цена за м²', developer: 'Застройщик', availability: 'Статус', location: 'Расположение', mapTitle: 'На карте', recommended: 'Вам также понравится', contact: 'Связаться с нами', from: 'От', freehold: 'Фрихолд', studio: 'Студия', notFound: 'Этот объект больше не в продаже.', backToSearch: 'Назад к поиску', crumbHome: 'Главная', crumbSearch: 'Недвижимость', approx: 'около' },
+  ar: { sale: 'للبيع', propertyType: 'النوع', bedrooms: 'غرف النوم', size: 'المساحة', ref: 'الرقم', about: 'عن هذا العقار', aboutDev: 'عن المشروع', showMore: 'عرض المزيد', showLess: 'عرض أقل', showAll: 'كل الصور', floorPlan: 'اطلب المخطط', keyDetails: 'التفاصيل', internalArea: 'المساحة الداخلية', totalArea: 'المساحة الكلية', gardenArea: 'الحديقة', view: 'الإطلالة', floor: 'الطابق', perSqm: 'السعر لكل م²', developer: 'المطوّر', availability: 'الحالة', location: 'الموقع', mapTitle: 'على الخريطة', recommended: 'قد يعجبك أيضاً', contact: 'تواصل مع فريقنا', from: 'من', freehold: 'تملّك حر', studio: 'استوديو', notFound: 'لم يعد هذا العقار معروضاً.', backToSearch: 'العودة للبحث', crumbHome: 'الرئيسية', crumbSearch: 'العقارات', approx: 'حوالي' },
+  fa: { sale: 'برای فروش', propertyType: 'نوع ملک', bedrooms: 'اتاق خواب', size: 'متراژ', ref: 'کد', about: 'دربارهٔ این ملک', aboutDev: 'دربارهٔ پروژه', showMore: 'بیشتر', showLess: 'کمتر', showAll: 'همهٔ عکس‌ها', floorPlan: 'درخواست نقشه', keyDetails: 'جزئیات کلیدی', internalArea: 'متراژ داخلی', totalArea: 'متراژ کل', gardenArea: 'باغ', view: 'منظره', floor: 'طبقه', perSqm: 'قیمت هر متر', developer: 'سازنده', availability: 'وضعیت', location: 'موقعیت', mapTitle: 'روی نقشه', recommended: 'شاید بپسندید', contact: 'تماس با تیم ما', from: 'از', freehold: 'فری‌هولد', studio: 'استودیو', notFound: 'این ملک دیگر در دسترس نیست.', backToSearch: 'بازگشت به جستجو', crumbHome: 'خانه', crumbSearch: 'املاک', approx: 'حدود' },
 }
 
 // Compose an honest description from the real unit + project fields (no invented facts).
@@ -198,6 +215,7 @@ export default function PropertyPage() {
   const projById = useMemo(() => { const m = {}; for (const p of projects) m[p.id] = p; return m }, [projects])
   const unit = useMemo(() => units.find((u) => String(u.id) === String(id)) || null, [units, id])
   const project = unit ? projById[unit.project_id] : null
+  const details = useMemo(() => (project ? getProjectDetails(project.name, lang) : null), [project, lang])
 
   const recommended = useMemo(() => {
     if (!unit || !project) return []
@@ -247,6 +265,7 @@ export default function PropertyPage() {
   const beds = unit.bedrooms
   const gallery = galleryFor(slugify(project.name))
   const photos = gallery.length ? gallery : POOL
+  const mosaic = (photos.length >= 5 ? photos : [...photos, ...POOL]).slice(0, 5)
   const paras = describe(unit, project, lang)
   const crypto = unit.price_omr > 0 ? cryptoFor(Number(unit.price_omr)) : null
   const hasCoords = project.latitude != null && project.longitude != null
@@ -273,6 +292,7 @@ export default function PropertyPage() {
 
   return (
     <main style={{ background: PAPER, minHeight: '100vh', color: INK }} dir={rtl ? 'rtl' : 'ltr'}>
+      <style>{GALLERY_CSS}</style>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '104px 20px 80px' }}>
         {/* breadcrumb */}
         <nav style={{ color: FAINT, fontFamily: FONT, fontSize: 12.5, marginBottom: 20 }}>
@@ -319,6 +339,44 @@ export default function PropertyPage() {
 
         <hr style={{ border: 'none', borderTop: `1px solid ${LINE}`, margin: '26px 0' }} />
 
+        {/* ── gallery mosaic (hero) ── */}
+        <section>
+          {!showAllPhotos ? (
+            <div className="pfp-gallery">
+              {mosaic.map((src, i) => (
+                <div key={i} className={`g g${i}`}>
+                  <img src={src} alt={`${title} ${i + 1}`} loading={i === 0 ? 'eager' : 'lazy'} />
+                  {i === 4 && photos.length > 5 && (
+                    <button type="button" className="pfp-viewall" onClick={() => setShowAllPhotos(true)}>
+                      <PhotoLibraryRoundedIcon sx={{ fontSize: 18 }} /> {t.showAll} ({localizeDigits(photos.length, lang)})
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 10 }}>
+              {photos.map((src, i) => (
+                <div key={i} style={{ aspectRatio: '4 / 3', overflow: 'hidden', background: '#eee' }}>
+                  <img src={src} alt={`${title} ${i + 1}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                </div>
+              ))}
+            </div>
+          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
+            {photos.length > 5 && (
+              <button type="button" onClick={() => setShowAllPhotos((v) => !v)} style={ghostBtn}>
+                <PhotoLibraryRoundedIcon sx={{ fontSize: 18 }} /> {showAllPhotos ? t.showLess : `${t.showAll} (${localizeDigits(photos.length, lang)})`}
+              </button>
+            )}
+            <LocalizedLink to={inquiryTo} style={{ ...ghostBtn, textDecoration: 'none' }}>
+              <DescriptionOutlinedIcon sx={{ fontSize: 18 }} /> {t.floorPlan}
+            </LocalizedLink>
+          </div>
+        </section>
+
+        <hr style={{ border: 'none', borderTop: `1px solid ${LINE}`, margin: '30px 0' }} />
+
         {/* about */}
         <section>
           <h2 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 22, margin: '0 0 14px' }}>{t.about}</h2>
@@ -329,26 +387,42 @@ export default function PropertyPage() {
           </button>
         </section>
 
-        {/* gallery */}
-        <section style={{ marginTop: 34 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
-            {(showAllPhotos ? photos : photos.slice(0, 4)).map((src, i) => (
-              <div key={i} style={{ aspectRatio: '4/3', overflow: 'hidden', background: '#eee' }}>
-                <img src={src} alt={`${title} ${i + 1}`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        {/* about the development (project blurb + sections) */}
+        {details && (details.tagline || details.description) && (
+          <section style={{ marginTop: 40 }}>
+            <h2 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 22, margin: '0 0 12px' }}>
+              {t.aboutDev} <span style={{ color: SUB, fontWeight: 400 }}>· {project.name}</span>
+            </h2>
+            {details.tagline && <p style={{ fontFamily: FONT, fontSize: 17, fontWeight: 600, color: OLIVE, margin: '0 0 12px' }}>{details.tagline}</p>}
+            {details.description && <p style={{ fontFamily: FONT, fontSize: 16, lineHeight: 1.75, color: SUB, margin: 0 }}>{details.description}</p>}
+            {Array.isArray(details.sections) && details.sections.map((s, i) => (
+              <div key={i} style={{ marginTop: 18 }}>
+                <h3 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 16, margin: '0 0 6px', color: INK }}>{s.title}</h3>
+                <p style={{ fontFamily: FONT, fontSize: 15.5, lineHeight: 1.7, color: SUB, margin: 0 }}>{s.body}</p>
               </div>
             ))}
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
-            {photos.length > 4 && (
-              <button type="button" onClick={() => setShowAllPhotos((v) => !v)} style={ghostBtn}>
-                <PhotoLibraryRoundedIcon sx={{ fontSize: 18 }} /> {t.showAll} ({localizeDigits(photos.length, lang)})
-              </button>
-            )}
-            <LocalizedLink to={inquiryTo} style={{ ...ghostBtn, textDecoration: 'none' }}>
-              <DescriptionOutlinedIcon sx={{ fontSize: 18 }} /> {t.floorPlan}
-            </LocalizedLink>
-          </div>
-        </section>
+          </section>
+        )}
+
+        {/* features & amenities */}
+        {details?.features?.length > 0 && (
+          <section style={{ marginTop: 40 }}>
+            <h2 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 22, margin: '0 0 18px' }}>{FEATURES_HEADING[lang] || FEATURES_HEADING.en}</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px 20px' }}>
+              {details.features.map((key) => {
+                const meta = FEATURE_META[key]
+                if (!meta) return null
+                const Icon = meta.icon
+                return (
+                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <Icon sx={{ fontSize: 22, color: OLIVE }} />
+                    <span style={{ fontFamily: FONT, fontSize: 15, color: INK }}>{meta[lang] || meta.en}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         {/* key details */}
         {keyCells.length > 0 && (
