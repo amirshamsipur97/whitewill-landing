@@ -156,10 +156,12 @@ export default function Header() {
         <Box
           component={RouterLink}
           to="/"
+          aria-label="Irfan Investment — home"
           sx={{
             display: 'flex',
             alignItems: 'center',
             mr: { md: 2 },
+            flexShrink: 0, // never let the Home logo squeeze on tight rows
             textDecoration: 'none',
             color: 'inherit',
             transition: 'opacity 200ms ease',
@@ -171,8 +173,9 @@ export default function Header() {
             src="/logo.svg"
             alt="Irfan Investment"
             sx={{
-              height: { xs: 36, md: 44 },
+              height: { xs: 38, md: 44 },
               width: 'auto',
+              flexShrink: 0,
               display: 'block',
             }}
           />
@@ -269,42 +272,9 @@ export default function Header() {
             </Box>
           </Stack>
 
-          {/* Divider (lg+) */}
-          <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
-            <VerticalDivider />
-          </Box>
-
-          {/* Address — full text only on xl (room to breathe). On laptops (lg,
-              ~13") the multi-line address used to wrap/stack into a tall column,
-              so there we collapse it to one location icon with the full address
-              in a tooltip on hover. */}
-          <Box sx={{ display: { xs: 'none', xl: 'block' }, maxWidth: 260 }}>
-            <Typography sx={{ ...ADDRESS_FONT, whiteSpace: 'pre-line' }}>
-              {t.address}
-            </Typography>
-          </Box>
-          <Tooltip
-            arrow
-            title={
-              <Box sx={{ whiteSpace: 'pre-line', fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif', fontSize: 12, lineHeight: 1.5, p: 0.25 }}>
-                {t.address}
-              </Box>
-            }
-          >
-            <IconButton
-              aria-label={typeof t.address === 'string' ? t.address.replace(/\n/g, ', ') : 'Office address'}
-              disableRipple
-              sx={{
-                display: { xs: 'none', lg: 'inline-flex', xl: 'none' },
-                color: 'rgba(255,255,255,0.85)',
-                p: 0.5,
-                flexShrink: 0,
-                '&:hover': { color: '#fff', bgcolor: 'transparent' },
-              }}
-            >
-              <PlaceOutlinedIcon sx={{ fontSize: 20 }} />
-            </IconButton>
-          </Tooltip>
+          {/* Office address removed from the top bar — it crowded the row and
+              squeezed the logo (the Home link) on smaller screens. The full
+              address still lives in the mobile drawer + footer. */}
 
           {/* Divider before language (lg+) */}
           <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
