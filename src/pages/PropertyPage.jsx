@@ -35,8 +35,8 @@ import { FEATURE_META, FEATURES_HEADING } from '../data/amenities.jsx'
 // ── light palette ─────────────────────────────────────────────────────────
 const PAPER = '#ffffff'
 const INK = '#17140f'
-const SUB = '#615d54'
-const FAINT = '#9a968b'
+const SUB = '#57534a'
+const FAINT = '#736f63'
 const LINE = '#e7e3d9'
 const LINE_2 = '#d7d2c4'
 const OLIVE = OLIVE_BRIGHT // #8c8d25 — price / accents
@@ -159,8 +159,8 @@ function coverFor(project, unitId) {
 function Stat({ label, value }) {
   return (
     <div style={{ minWidth: 0 }}>
-      <div style={{ color: FAINT, fontFamily: FONT, fontSize: 13, marginBottom: 4 }}>{label}</div>
-      <div style={{ color: INK, fontFamily: FONT, fontSize: 16.5, fontWeight: 600 }}>{value}</div>
+      <div style={{ color: FAINT, fontFamily: FONT, fontSize: 15.5, marginBottom: 5 }}>{label}</div>
+      <div style={{ color: INK, fontFamily: FONT, fontSize: 18.5, fontWeight: 600 }}>{value}</div>
     </div>
   )
 }
@@ -182,9 +182,9 @@ function MiniCard({ item, t, lang }) {
           <img src={src} alt={title} loading="lazy" onError={() => setErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         </div>
         <div style={{ padding: '13px 14px 15px' }}>
-          <div style={{ color: OLIVE, fontFamily: FONT, fontWeight: 700, fontSize: 16 }}>{unit.price_omr > 0 ? fmtOmr(unit.price_omr, lang) : '—'}</div>
-          <div style={{ color: INK, fontFamily: FONT, fontSize: 14.5, fontWeight: 600, marginTop: 4 }}>{title}</div>
-          <div style={{ color: FAINT, fontFamily: FONT, fontSize: 12.5, marginTop: 2 }}>{area}</div>
+          <div style={{ color: OLIVE, fontFamily: FONT, fontWeight: 700, fontSize: 18 }}>{unit.price_omr > 0 ? fmtOmr(unit.price_omr, lang) : '—'}</div>
+          <div style={{ color: INK, fontFamily: FONT, fontSize: 16.5, fontWeight: 600, marginTop: 4 }}>{title}</div>
+          <div style={{ color: FAINT, fontFamily: FONT, fontSize: 15, marginTop: 3 }}>{area}</div>
         </div>
       </article>
     </LocalizedLink>
@@ -295,7 +295,7 @@ export default function PropertyPage() {
       <style>{GALLERY_CSS}</style>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '104px 20px 80px' }}>
         {/* breadcrumb */}
-        <nav style={{ color: FAINT, fontFamily: FONT, fontSize: 12.5, marginBottom: 20 }}>
+        <nav style={{ color: FAINT, fontFamily: FONT, fontSize: 15, marginBottom: 20 }}>
           <LocalizedLink to="/" style={{ color: FAINT, textDecoration: 'none' }}>{t.crumbHome}</LocalizedLink>
           <span style={{ margin: '0 8px' }}>›</span>
           <LocalizedLink to="/project" style={{ color: FAINT, textDecoration: 'none' }}>{t.crumbSearch}</LocalizedLink>
@@ -304,7 +304,7 @@ export default function PropertyPage() {
         </nav>
 
         {/* SALE badge */}
-        <span style={{ display: 'inline-block', background: INK, color: '#fff', fontFamily: FONT, fontWeight: 700, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '6px 12px', marginBottom: 18 }}>{t.sale}</span>
+        <span style={{ display: 'inline-block', background: INK, color: '#fff', fontFamily: FONT, fontWeight: 700, fontSize: 14.5, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '7px 14px', marginBottom: 18 }}>{t.sale}</span>
 
         {/* title + price */}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20 }}>
@@ -317,17 +317,24 @@ export default function PropertyPage() {
             </div>
             {crypto && (
               <div style={{ display: 'flex', gap: 14, justifyContent: rtl ? 'flex-start' : 'flex-end', flexWrap: 'wrap', marginTop: 8 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 12.5, fontWeight: 600 }}><b style={{ color: '#f7931a' }}>₿</b> {crypto.btc} BTC</span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 12.5, fontWeight: 600 }}><b style={{ color: '#627eea' }}>Ξ</b> {crypto.eth} ETH</span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 12.5, fontWeight: 600 }}><b style={{ color: '#26a17b' }}>₮</b> {crypto.usdt} USDT</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 15, fontWeight: 600 }}><b style={{ color: '#f7931a' }}>₿</b> {crypto.btc} BTC</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 15, fontWeight: 600 }}><b style={{ color: '#627eea' }}>Ξ</b> {crypto.eth} ETH</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 15, fontWeight: 600 }}><b style={{ color: '#26a17b' }}>₮</b> {crypto.usdt} USDT</span>
               </div>
             )}
           </div>
         </div>
 
+        {/* project tagline snippet under the title */}
+        {details?.tagline && (
+          <p style={{ margin: '12px 0 0', fontFamily: FONT, fontSize: 18, color: SUB, maxWidth: 760, lineHeight: 1.5 }}>
+            {details.tagline.replace(/\s*[—–]\s*/g, ', ')}
+          </p>
+        )}
+
         {/* location */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: SUB, fontFamily: FONT, fontSize: 15, marginTop: 14 }}>
-          <PlaceRoundedIcon sx={{ fontSize: 19, color: FAINT }} /> {area}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: SUB, fontFamily: FONT, fontSize: 18, marginTop: 14 }}>
+          <PlaceRoundedIcon sx={{ fontSize: 21, color: FAINT }} /> {area}
         </div>
 
         <hr style={{ border: 'none', borderTop: `1px solid ${LINE}`, margin: '26px 0' }} />
@@ -382,7 +389,7 @@ export default function PropertyPage() {
           <h2 style={{ fontFamily: FONT, fontWeight: 700, fontSize: 22, margin: '0 0 14px' }}>{t.about}</h2>
           <p style={{ fontFamily: FONT, fontSize: 16, lineHeight: 1.75, color: SUB, margin: '0 0 14px' }}>{paras[0]}</p>
           {expanded && <p style={{ fontFamily: FONT, fontSize: 16, lineHeight: 1.75, color: SUB, margin: '0 0 14px' }}>{paras[1]}</p>}
-          <button type="button" onClick={() => setExpanded((v) => !v)} style={{ background: 'none', border: 'none', color: INK, fontFamily: FONT, fontSize: 15, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 4, cursor: 'pointer', padding: 0 }}>
+          <button type="button" onClick={() => setExpanded((v) => !v)} style={{ background: 'none', border: 'none', color: INK, fontFamily: FONT, fontSize: 16, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 4, cursor: 'pointer', padding: 0 }}>
             {expanded ? t.showLess : t.showMore}
           </button>
         </section>
@@ -416,7 +423,7 @@ export default function PropertyPage() {
                 return (
                   <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <Icon sx={{ fontSize: 22, color: OLIVE }} />
-                    <span style={{ fontFamily: FONT, fontSize: 15, color: INK }}>{meta[lang] || meta.en}</span>
+                    <span style={{ fontFamily: FONT, fontSize: 16, color: INK }}>{meta[lang] || meta.en}</span>
                   </div>
                 )
               })}
@@ -431,8 +438,8 @@ export default function PropertyPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px 24px', border: `1px solid ${LINE}`, padding: '22px 24px' }}>
               {keyCells.map((c) => (
                 <div key={c.label} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <span style={{ color: FAINT, fontFamily: FONT, fontSize: 13 }}>{c.label}</span>
-                  <span style={{ color: INK, fontFamily: FONT, fontSize: 15.5, fontWeight: 600, textTransform: 'capitalize' }}>{c.value}</span>
+                  <span style={{ color: FAINT, fontFamily: FONT, fontSize: 15.5 }}>{c.label}</span>
+                  <span style={{ color: INK, fontFamily: FONT, fontSize: 17, fontWeight: 600, textTransform: 'capitalize' }}>{c.value}</span>
                 </div>
               ))}
             </div>
@@ -473,5 +480,5 @@ export default function PropertyPage() {
   )
 }
 
-const ghostBtn = { display: 'inline-flex', alignItems: 'center', gap: 8, height: 46, padding: '0 20px', background: 'transparent', color: INK, border: `1px solid ${LINE_2}`, fontFamily: FONT, fontSize: 14.5, fontWeight: 600, cursor: 'pointer' }
+const ghostBtn = { display: 'inline-flex', alignItems: 'center', gap: 8, height: 48, padding: '0 22px', background: 'transparent', color: INK, border: `1px solid ${LINE_2}`, fontFamily: FONT, fontSize: 16, fontWeight: 600, cursor: 'pointer' }
 const primaryBtn = { display: 'inline-flex', alignItems: 'center', gap: 8, height: 50, padding: '0 28px', background: INK, color: '#fff', border: 'none', fontFamily: FONT, fontSize: 15, fontWeight: 700, cursor: 'pointer' }
