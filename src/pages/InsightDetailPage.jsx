@@ -60,7 +60,7 @@ function setJsonLd(obj) {
 // following text). Returns null if no usable Q&A pairs are found.
 function extractFaq(md) {
   if (!md) return null
-  const m = md.split(/^##\s+FAQ.*$/im)[1]
+  const m = md.split(/^##\s+(?:FAQ|Frequently|سوالات|پرسش|الأسئلة|أسئلة|Часто|Вопросы).*$/im)[1]
   if (!m) return null
   const parts = m.split(/^###\s+/m).slice(1)
   const qa = []

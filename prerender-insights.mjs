@@ -54,7 +54,7 @@ async function fetchAll() {
 // FAQ extraction mirroring the client's InsightDetailPage parser: a "## FAQ"
 // section whose "### question" headings each map to an answer paragraph.
 function faqFrom(md) {
-  const m = String(md || '').split(/^##\s+FAQ.*$/im)[1]
+  const m = String(md || '').split(/^##\s+(?:FAQ|Frequently|سوالات|پرسش|الأسئلة|أسئلة|Часто|Вопросы).*$/im)[1]
   if (!m) return null
   const section = m.split(/^##\s+/m)[0]
   const qa = []
