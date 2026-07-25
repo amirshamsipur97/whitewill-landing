@@ -1,4 +1,10 @@
-# HANDOFF — SEO overhaul, 2026-07-25
+# HANDOFF — SEO overhaul, 2026-07-25 (session A)
+
+> ➡️ **A second session followed this one. Read `HANDOFF-2026-07-25-B.md`
+> for the current state** — it covers the price-index page, the `/project`
+> map rebuild, the em-dash removal and the Mapbox style wiring, and it
+> supersedes the "still open" list at the bottom of this file.
+
 
 One long session. Everything below is **built, deployed to production and
 verified live** on `https://www.irfaninvest.com` unless explicitly marked open.
