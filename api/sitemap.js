@@ -23,6 +23,9 @@ const STATIC = [
   { path: '/buy-property-in-muscat', priority: '0.9', changefreq: 'weekly' },
   { path: '/buy-apartment-in-muscat', priority: '0.9', changefreq: 'weekly' },
   { path: '/buy-property-in-salalah', priority: '0.8', changefreq: 'weekly' },
+  // Per-m² price index — the linkable data asset. Recomputed from live
+  // inventory on every load, so it genuinely changes weekly.
+  { path: '/property-prices-in-oman', priority: '0.8', changefreq: 'weekly' },
   { path: '/invest', priority: '0.8', changefreq: 'monthly' },
   { path: '/schools', priority: '0.8', changefreq: 'monthly' },
   { path: '/investment', priority: '0.7', changefreq: 'monthly' },

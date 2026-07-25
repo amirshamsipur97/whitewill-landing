@@ -134,6 +134,7 @@ const BuyProjectPage = lazy(() => import('./pages/BuyProjectPage'))
 const SearchPage = lazy(() => import('./pages/SearchPage'))
 const PropertyPage = lazy(() => import('./pages/PropertyPage'))
 const CityLandingPage = lazy(() => import('./pages/CityLandingPage'))
+const PriceIndexPage = lazy(() => import('./pages/PriceIndexPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MaisonShirdelPage = lazy(() => import('./pages/MaisonShirdelPage'))
 const InvestPage = lazy(() => import('./pages/InvestPage'))
@@ -265,6 +266,8 @@ function PageRoutes() {
       <Route path="buy-property-in-muscat" element={<CityLandingPage slug="buy-property-in-muscat" />} />
       <Route path="buy-apartment-in-muscat" element={<CityLandingPage slug="buy-apartment-in-muscat" />} />
       <Route path="buy-property-in-salalah" element={<CityLandingPage slug="buy-property-in-salalah" />} />
+      {/* Data asset for the backlink strategy — per-m² index over live stock. */}
+      <Route path="property-prices-in-oman" element={<PriceIndexPage />} />
       <Route path="maison-shirdel" element={<MaisonShirdelPage />} />
       <Route path="invest" element={<InvestPage />} />
       <Route path="investment" element={<InvestmentPage />} />

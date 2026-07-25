@@ -20,6 +20,8 @@ import { BUY_SEO, buyFaqJsonLd } from './src/buySeoContent.mjs'
 import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
 import { POPULAR, COMMUNITIES, PROJECTS, footerSeoCopy } from './src/footerSeoLinks.mjs'
+import { buildPriceIndex, fmtInt, fmtOmr, fmtRange, fmtSqm } from './src/priceIndexData.mjs'
+import { priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill } from './src/priceIndexContent.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const LANGS = ['en', 'ru', 'ar', 'fa']
@@ -81,7 +83,7 @@ function pageFor(route, lang) {
   // Minimal real content for the crawler's first fetch; React wipes it on mount.
   html = html.replace(
     /<div id="root"><\/div>/,
-    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title.split('|')[0].trim())}</h1><p>${esc(desc)}</p>${route === '/buy' ? buySeoHtml(lang) : ''}${route === '/project' ? projectSeoHtml(lang) : ''}${LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : ''}${footerLinksHtml(lang)}</div></div>`,
+    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title.split('|')[0].trim())}</h1><p>${esc(desc)}</p>${route === '/buy' ? buySeoHtml(lang) : ''}${route === '/project' ? projectSeoHtml(lang) : ''}${LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : ''}${route === PRICE_INDEX_ROUTE ? priceIndexHtml(lang) : ''}${footerLinksHtml(lang)}</div></div>`,
   )
   // FAQPage JSON-LD on /buy (same id the SPA reuses → hydration replaces it).
   if (route === '/buy') {
@@ -140,6 +142,16 @@ function pageFor(route, lang) {
       `    <script type="application/ld+json" id="landing-faq-jsonld">${JSON.stringify(landingFaqJsonLd(route.slice(1), lang))}</script>\n  </head>`,
     )
   }
+  // Price index: Dataset + Breadcrumb + FAQ, with the BUILD-TIME figures baked
+  // in. Same script ids PriceIndexPage.jsx uses, so hydration replaces rather
+  // than duplicates them.
+  if (route === PRICE_INDEX_ROUTE && priceIndex.units > 0) {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="price-index-faq-jsonld">${JSON.stringify(priceIndexFaqJsonLd(lang))}</script>\n` +
+      `    <script type="application/ld+json" id="price-index-dataset-jsonld">${JSON.stringify(priceIndexJsonLd(lang, priceIndex, BUILD_DAY))}</script>\n  </head>`,
+    )
+  }
   return html
 }
 
@@ -191,6 +203,95 @@ function landingSeoHtml(slug, lang) {
     `<p>${esc(c.lead)}</p>` +
     (areas ? `<h2>${esc(c.areasHeading)}</h2><ul>${areas}</ul>` : '') +
     `<h2>${esc(c.heading)}</h2>${paras}${faq}` +
+    `<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+  )
+}
+
+// ── /property-prices-in-oman ───────────────────────────────────────────────
+// The one page on this site built to be CITED rather than browsed, so its
+// numbers must exist in the HTML a crawler (or a journalist's reader-mode)
+// gets on the first fetch — a client-only table is worth nothing as a linkable
+// asset. Computed from the SAME module the React page uses, over the SAME
+// inventory fetch that feeds the /buy/:slug AggregateOffer.
+const PRICE_INDEX_ROUTE = '/property-prices-in-oman'
+const BUILD_DAY = (process.env.VERCEL_DEPLOYMENT_CREATED_AT
+  ? new Date(Number(process.env.VERCEL_DEPLOYMENT_CREATED_AT))
+  : new Date()
+).toISOString().slice(0, 10)
+
+function priceIndexHtml(lang) {
+  const idx = priceIndex
+  if (!idx.units) return ''
+  const c = priceIndexCopy(lang)
+  const prefix = langPrefix(lang)
+  const vars = {
+    units: fmtInt(idx.units), areas: idx.areas, projects: idx.projects,
+    updated: BUILD_DAY, excluded: idx.plotExcluded,
+  }
+
+  const dagger = (r) => (r.thin ? '<sup>†</sup>' : '')
+  const table = (head, rows) =>
+    `<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;font-size:14px">` +
+    `<thead><tr>${head.map((h) => `<th style="text-align:start;padding:8px 10px;border-bottom:1px solid #444">${esc(h)}</th>`).join('')}</tr></thead>` +
+    `<tbody>${rows
+      .map((cells) => `<tr>${cells.map((v) => `<td style="padding:8px 10px;border-bottom:1px solid #2a2a2a">${v}</td>`).join('')}</tr>`)
+      .join('')}</tbody></table></div>`
+
+  const areaTable = table(
+    [c.cols.area, c.cols.city, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.medianPrice, c.cols.typicalSize],
+    idx.byArea.map((a) => [
+      `<a href="${prefix}/project?area=${encodeURIComponent(a.key)}" style="color:#8c8d25">${esc(a.label)}</a>${dagger(a)}`,
+      esc(a.city || '—'), fmtInt(a.n), `<strong>${fmtInt(a.medianPpsm)}</strong>`,
+      esc(fmtRange(a.minPpsm, a.maxPpsm)), esc(fmtOmr(a.medianPrice)), esc(fmtSqm(a.medianArea)),
+    ]),
+  )
+  const typeTable = table(
+    [c.cols.type, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.medianPrice, c.cols.from, c.cols.typicalSize],
+    idx.byType.map((t) => [
+      esc(t.label) + dagger(t), fmtInt(t.n), `<strong>${fmtInt(t.medianPpsm)}</strong>`,
+      esc(fmtRange(t.minPpsm, t.maxPpsm)), esc(fmtOmr(t.medianPrice)), esc(fmtOmr(t.minPrice)), esc(fmtSqm(t.medianArea)),
+    ]),
+  )
+  const bedTable = table(
+    [c.cols.beds, c.cols.units, c.cols.medianPpsm, c.cols.medianPrice, c.cols.from, c.cols.typicalSize],
+    idx.byBeds.map((b) => [
+      esc(b.key === '0' ? c.studio : b.key) + dagger(b), fmtInt(b.n), `<strong>${fmtInt(b.medianPpsm)}</strong>`,
+      esc(fmtOmr(b.medianPrice)), esc(fmtOmr(b.minPrice)), esc(fmtSqm(b.medianArea)),
+    ]),
+  )
+  const projTable = table(
+    [c.cols.project, c.cols.area, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.from],
+    idx.byProject.map((p) => [
+      `<a href="${prefix}/buy/${p.slug}" style="color:#8c8d25">${esc(p.label)}</a>${dagger(p)}`,
+      esc(p.area || '—'), fmtInt(p.n), `<strong>${fmtInt(p.medianPpsm)}</strong>`,
+      esc(fmtRange(p.minPpsm, p.maxPpsm)), esc(fmtOmr(p.minPrice)),
+    ]),
+  )
+
+  const stats =
+    `<ul><li><strong>${fmtInt(idx.units)}</strong> ${esc(c.stats.units)}</li>` +
+    `<li><strong>${fmtInt(idx.areas)}</strong> ${esc(c.stats.areas)}</li>` +
+    `<li><strong>${fmtInt(idx.overall.medianPpsm)}</strong> ${esc(c.stats.median)}</li>` +
+    `<li><strong>${esc(fmtOmr(idx.overall.minPrice))}</strong> ${esc(c.stats.entry)}</li></ul>`
+
+  const paras = (list) => list.map((p) => `<p>${esc(fill(p, vars))}</p>`).join('')
+  const links = c.links
+    .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+
+  return (
+    `<p>${esc(fill(c.lead, vars))}</p>` +
+    `<p>${esc(c.updatedLabel)}: ${BUILD_DAY}</p>` + stats +
+    `<h2>${esc(c.areasHeading)}</h2><p>${esc(c.areasSub)}</p>${areaTable}` +
+    `<h2>${esc(c.typesHeading)}</h2><p>${esc(c.typesSub)}</p>${typeTable}` +
+    `<h2>${esc(c.bedsHeading)}</h2><p>${esc(c.bedsSub)}</p>${bedTable}` +
+    `<h2>${esc(c.projectsHeading)}</h2><p>${esc(c.projectsSub)}</p>${projTable}` +
+    `<p>${esc(c.thinNote)}</p>` +
+    `<h2>${esc(c.methodHeading)}</h2>${paras(c.methodParas)}` +
+    `<h2>${esc(c.heading)}</h2>${paras(c.paras)}` +
+    c.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('') +
+    `<h2>${esc(c.ctaHeading)}</h2><p>${esc(c.ctaText)}</p>` +
+    `<p><a href="${prefix}/project" style="color:#8c8d25">${esc(c.ctaBtn)}</a></p>` +
     `<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
   )
 }
@@ -272,6 +373,13 @@ for (const { unit, project } of inventory) {
 }
 for (const a of aggBySlug.values()) if (a.min === Infinity) a.min = 0
 
+// …and the same fetch feeds the price index. Must be initialised before the
+// route loop below, which is what calls pageFor().
+const priceIndex = buildPriceIndex(inventory)
+console.log(
+  `prerender-routes: price index over ${priceIndex.units} units — median ${priceIndex.overall.medianPpsm} OMR/m² across ${priceIndex.areas} communities`,
+)
+
 let count = 0
 let skipped = 0
 for (const route of Object.keys(ROUTES)) {
@@ -324,14 +432,15 @@ const typeGroup = (t) => {
   for (const [re, name] of TYPE_MAP) if (re.test(String(t || ''))) return name
   return 'Apartment'
 }
-const fmtOmr = (n) => `OMR ${Number(n).toLocaleString('en-US')}`
+// fmtOmr comes from priceIndexData.mjs — same output for a positive number,
+// and '—' instead of "OMR NaN" when a price is missing.
 
 async function fetchUnitsAndProjects() {
   const h = { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` }
   const [pr, ur] = await Promise.all([
     fetch(`${SUPABASE_URL}/rest/v1/projects?select=id,name,location,latitude,areas(name,city)&latitude=not.is.null`, { headers: h }),
     fetch(
-      `${SUPABASE_URL}/rest/v1/project_units?select=id,unit_type,layout_type,bedrooms,view,floor_label,total_area_sqm,internal_area_sqm,price_omr,project_id&availability_status=eq.available&limit=2000`,
+      `${SUPABASE_URL}/rest/v1/project_units?select=id,unit_type,layout_type,bedrooms,view,floor_label,total_area_sqm,internal_area_sqm,total_garden_sqm,price_omr,price_per_sqm_omr,project_id&availability_status=eq.available&limit=2000`,
       { headers: h },
     ),
   ])

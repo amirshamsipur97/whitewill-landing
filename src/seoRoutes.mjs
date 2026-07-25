@@ -92,6 +92,26 @@ export const ROUTES = {
       fa: 'خرید ملک فری‌هولد در صلاله عمان: ویلا و شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال عمان. برای همه ملیت‌ها، تقاضای قوی اجاره در فصل خریف، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
     },
   },
+  // Data asset, not a listing page — the one page here worth LINKING to.
+  // Oman publishes no official per-m² index, so this targets the "how much
+  // does property cost in Oman / price per square meter" cluster that the
+  // portals answer only with a listing grid. Copy + tables live in
+  // src/priceIndexContent.mjs / src/priceIndexData.mjs. No figures in the
+  // meta: they move with inventory.
+  '/property-prices-in-oman': {
+    title: {
+      en: 'Oman Property Price Index — Price per m² by Area 2026 | Irfan',
+      ru: 'Индекс цен на недвижимость Омана — цена за м² по районам 2026 | Irfan',
+      ar: 'مؤشر أسعار العقارات في عُمان — سعر المتر حسب المنطقة 2026 | Irfan',
+      fa: 'شاخص قیمت ملک در عمان — قیمت هر متر بر اساس منطقه ۲۰۲۶ | ایرفان',
+    },
+    desc: {
+      en: 'How much property costs in Oman, area by area: median price per square metre for Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah and Hawana Salalah, computed from live freehold inventory and updated continuously.',
+      ru: 'Сколько стоит недвижимость в Омане по районам: медианная цена за квадратный метр в Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah и Hawana Salalah — расчёт по актуальному фрихолд-предложению.',
+      ar: 'كم تكلّف العقارات في عُمان منطقة بمنطقة: وسيط سعر المتر المربع في الموج وخليج مسقط ومدينة السلطان هيثم وييتي وجبل سيفة وهوانا صلالة، محتسب من مخزون التملّك الحر المتاح ويُحدَّث باستمرار.',
+      fa: 'قیمت ملک در عمان منطقه به منطقه: میانه قیمت هر مترمربع در الموج، خلیج مسقط، شهر سلطان هیثم، ییتی، جبل سیفه و هوانا صلاله، محاسبه‌شده از موجودی زنده فری‌هولد و به‌روزرسانی پیوسته.',
+    },
+  },
   '/maison-shirdel': {
     title: {
       en: 'Maison Shirdel — Luxury Residences in Oman | Irfan Investment',

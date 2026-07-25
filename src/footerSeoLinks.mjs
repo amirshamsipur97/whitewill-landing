@@ -22,6 +22,7 @@ export const POPULAR = [
   { to: '/buy-property-in-muscat', key: 'muscat' },
   { to: '/buy-apartment-in-muscat', key: 'aptMuscat' },
   { to: '/buy-property-in-salalah', key: 'salalah' },
+  { to: '/property-prices-in-oman', key: 'prices' },
 ]
 
 // Facet links into the portal. `area` must match project.area.name exactly.
@@ -57,6 +58,7 @@ export const FOOTER_SEO = {
       muscat: 'Buy property in Muscat',
       aptMuscat: 'Buy an apartment in Muscat',
       salalah: 'Buy property in Salalah',
+      prices: 'Oman property prices per m²',
     },
     community: 'Property for sale in {area}',
     project: '{name} — prices & available units',
@@ -69,6 +71,7 @@ export const FOOTER_SEO = {
       muscat: 'خرید ملک در مسقط',
       aptMuscat: 'خرید آپارتمان در مسقط',
       salalah: 'خرید ملک در صلاله',
+      prices: 'قیمت ملک در عمان هر متر',
     },
     community: 'ملک برای فروش در {area}',
     project: '{name} — قیمت‌ها و واحدهای موجود',
@@ -81,6 +84,7 @@ export const FOOTER_SEO = {
       muscat: 'شراء عقار في مسقط',
       aptMuscat: 'شراء شقة في مسقط',
       salalah: 'شراء عقار في صلالة',
+      prices: 'أسعار العقارات في عُمان للمتر',
     },
     community: 'عقارات للبيع في {area}',
     project: '{name} — الأسعار والوحدات المتاحة',
@@ -93,6 +97,7 @@ export const FOOTER_SEO = {
       muscat: 'Купить недвижимость в Маскате',
       aptMuscat: 'Купить квартиру в Маскате',
       salalah: 'Купить недвижимость в Салале',
+      prices: 'Цены на недвижимость Омана за м²',
     },
     community: 'Недвижимость на продажу в {area}',
     project: '{name} — цены и доступные лоты',
