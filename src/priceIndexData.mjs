@@ -170,7 +170,7 @@ export function buildPriceIndex(items) {
 // Latin digits everywhere in the tables, even in fa/ar: these are figures
 // people copy into spreadsheets, and the rest of the site already prints
 // prices with toLocaleString('en-US').
-export const fmtInt = (n) => (n == null ? '—' : Number(n).toLocaleString('en-US'))
-export const fmtOmr = (n) => (n == null ? '—' : `OMR ${Number(n).toLocaleString('en-US')}`)
-export const fmtRange = (a, b) => (a == null || b == null ? '—' : `${fmtInt(a)} – ${fmtInt(b)}`)
-export const fmtSqm = (n) => (n == null ? '—' : `${fmtInt(n)} m²`)
+export const fmtInt = (n) => (n == null ? '–' : Number(n).toLocaleString('en-US'))
+export const fmtOmr = (n) => (n == null ? '–' : `OMR ${Number(n).toLocaleString('en-US')}`)
+export const fmtRange = (a, b) => (a == null || b == null ? '–' : `${fmtInt(a)} – ${fmtInt(b)}`)
+export const fmtSqm = (n) => (n == null ? '–' : `${fmtInt(n)} m²`)

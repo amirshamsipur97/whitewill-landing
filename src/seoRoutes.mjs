@@ -6,8 +6,8 @@ export const ROUTES = {
   '/': {
     title: {
       en: 'Buy Property in Oman & Invest | Irfan Investment Group',
-      ru: 'Irfan Investment Group — купить недвижимость в Омане',
-      ar: 'Irfan Investment Group — شراء العقارات والاستثمار في عُمان',
+      ru: 'Irfan Investment Group: купить недвижимость в Омане',
+      ar: 'Irfan Investment Group: شراء العقارات والاستثمار في عُمان',
       fa: 'خرید ملک در عمان و سرمایه‌گذاری | گروه سرمایه‌گذاری ایرفان',
     },
     desc: {
@@ -19,30 +19,30 @@ export const ROUTES = {
   },
   '/buy': {
     title: {
-      en: 'Buy Property in Oman 2026 — Apartments & Villas from OMR 35,625 | Irfan',
-      ru: 'Купить недвижимость в Омане — квартиры и виллы | Irfan Investment',
-      ar: 'شراء عقار في عُمان — شقق وفلل للبيع | Irfan Investment',
+      en: 'Buy Property in Oman 2026: Apartments & Villas from OMR 35,625 | Irfan',
+      ru: 'Купить недвижимость в Омане: квартиры и виллы | Irfan Investment',
+      ar: 'شراء عقار في عُمان: شقق وفلل للبيع | Irfan Investment',
       fa: 'خرید ملک در عمان ۲۰۲۶ | لیست آپارتمان و ویلا با قیمت | ایرفان',
     },
     desc: {
       en: 'Browse freehold apartments, villas and chalets for sale in Muscat, Salalah and Jebel Sifah. Live prices from OMR 35,625, full unit inventory and Oman investor residency with your purchase.',
       ru: 'Подборка недвижимости на продажу в Омане: квартиры, виллы и элитные резиденции в Маскате и Салале от ведущих застройщиков, с правом собственности для иностранцев.',
-      ar: 'تصفح عقارات مختارة للبيع في عُمان — شقق وفلل ومساكن فاخرة في مسقط وصلالة من كبار المطورين، بتملك حر للأجانب.',
-      fa: 'مجموعه‌ای منتخب از املاک برای فروش در عمان — آپارتمان، ویلا و اقامتگاه‌های لوکس در مسقط و صلاله از معتبرترین سازندگان، با مالکیت آزاد برای خارجی‌ها.',
+      ar: 'تصفح عقارات مختارة للبيع في عُمان: شقق وفلل ومساكن فاخرة في مسقط وصلالة من كبار المطورين، بتملك حر للأجانب.',
+      fa: 'مجموعه‌ای منتخب از املاک برای فروش در عمان: آپارتمان، ویلا و اقامتگاه‌های لوکس در مسقط و صلاله از معتبرترین سازندگان، با مالکیت آزاد برای خارجی‌ها.',
     },
   },
   '/project': {
     title: {
-      en: 'Properties for Sale in Oman — Search Apartments & Villas | Irfan',
-      ru: 'Недвижимость на продажу в Омане — поиск квартир и вилл | Irfan',
-      ar: 'عقارات للبيع في عُمان — ابحث عن شقق وفلل | Irfan Investment',
-      fa: 'جستجوی ملک در عمان — آپارتمان و ویلا برای فروش | ایرفان',
+      en: 'Properties for Sale in Oman: Search Apartments & Villas | Irfan',
+      ru: 'Недвижимость на продажу в Омане: поиск квартир и вилл | Irfan',
+      ar: 'عقارات للبيع في عُمان: ابحث عن شقق وفلل | Irfan Investment',
+      fa: 'جستجوی ملک در عمان: آپارتمان و ویلا برای فروش | ایرفان',
     },
     desc: {
       en: 'Search 400+ freehold apartments, villas and studios for sale across Muscat, Al Mouj, Muscat Bay, Jebel Sifah, Yiti and Salalah. Filter by type, bedrooms and price. Live developer prices from OMR 35,625 with Oman investor residency.',
       ru: 'Поиск более 400 объектов недвижимости на продажу в Омане: квартиры, виллы и студии в Маскате, Аль-Мудж, Джебель-Сифа и Салале. Фильтры по типу, спальням и цене. Актуальные цены от 35 625 OMR.',
-      ar: 'ابحث في أكثر من 400 عقار تملّك حر للبيع في عُمان — شقق وفلل واستوديوهات في مسقط والموج وجبل سيفة وصلالة. فلترة حسب النوع والغرف والسعر. أسعار مباشرة من 35,625 ر.ع مع إقامة المستثمر.',
-      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان — آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۳۵٬۶۲۵ ریال عمان با اقامت سرمایه‌گذار.',
+      ar: 'ابحث في أكثر من 400 عقار تملّك حر للبيع في عُمان: شقق وفلل واستوديوهات في مسقط والموج وجبل سيفة وصلالة. فلترة حسب النوع والغرف والسعر. أسعار مباشرة من 35,625 ر.ع مع إقامة المستثمر.',
+      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان: آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۳۵٬۶۲۵ ریال عمان با اقامت سرمایه‌گذار.',
     },
   },
   // ── head-term city/type landing pages ──────────────────────────────────
@@ -52,10 +52,10 @@ export const ROUTES = {
   // only the min price, which is stable.
   '/buy-property-in-muscat': {
     title: {
-      en: 'Buy Property in Muscat — Freehold Apartments & Villas from OMR 35,625 | Irfan',
-      ru: 'Купить недвижимость в Маскате — фрихолд от 35 625 OMR | Irfan',
-      ar: 'شراء عقار في مسقط — تملّك حر من 35,625 ر.ع | Irfan Investment',
-      fa: 'خرید ملک در مسقط — فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
+      en: 'Buy Property in Muscat: Freehold Apartments & Villas from OMR 35,625 | Irfan',
+      ru: 'Купить недвижимость в Маскате: фрихолд от 35 625 OMR | Irfan',
+      ar: 'شراء عقار في مسقط: تملّك حر من 35,625 ر.ع | Irfan Investment',
+      fa: 'خرید ملک در مسقط: فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
     },
     desc: {
       en: 'Buy freehold property in Muscat: apartments, villas and townhouses in Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah and Yiti. Open to all nationalities, from OMR 35,625, with Oman investor residency.',
@@ -66,10 +66,10 @@ export const ROUTES = {
   },
   '/buy-apartment-in-muscat': {
     title: {
-      en: 'Buy an Apartment in Muscat — Freehold Apartments for Sale from OMR 35,625 | Irfan',
-      ru: 'Купить квартиру в Маскате — фрихолд-квартиры от 35 625 OMR | Irfan',
-      ar: 'شراء شقة في مسقط — شقق تملّك حر للبيع من 35,625 ر.ع | Irfan Investment',
-      fa: 'خرید آپارتمان در مسقط — آپارتمان فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
+      en: 'Buy an Apartment in Muscat: Freehold Apartments for Sale from OMR 35,625 | Irfan',
+      ru: 'Купить квартиру в Маскате: фрихолд-квартиры от 35 625 OMR | Irfan',
+      ar: 'شراء شقة في مسقط: شقق تملّك حر للبيع من 35,625 ر.ع | Irfan Investment',
+      fa: 'خرید آپارتمان در مسقط: آپارتمان فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
     },
     desc: {
       en: 'Freehold apartments for sale in Muscat: studios from OMR 35,625 and apartments from OMR 48,125 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, up to 8% rental yield, investor residency included.',
@@ -80,10 +80,10 @@ export const ROUTES = {
   },
   '/buy-property-in-salalah': {
     title: {
-      en: 'Buy Property in Salalah — Freehold Beachfront Villas & Chalets from OMR 98,000 | Irfan',
-      ru: 'Купить недвижимость в Салале — фрихолд у моря от 98 000 OMR | Irfan',
-      ar: 'شراء عقار في صلالة — فلل وشاليهات شاطئية تملّك حر من 98,000 ر.ع | Irfan',
-      fa: 'خرید ملک در صلاله — ویلا و شاله ساحلی فری‌هولد از ۹۸٬۰۰۰ ریال عمان | ایرفان',
+      en: 'Buy Property in Salalah: Freehold Beachfront Villas & Chalets from OMR 98,000 | Irfan',
+      ru: 'Купить недвижимость в Салале: фрихолд у моря от 98 000 OMR | Irfan',
+      ar: 'شراء عقار في صلالة: فلل وشاليهات شاطئية تملّك حر من 98,000 ر.ع | Irfan',
+      fa: 'خرید ملک در صلاله: ویلا و شاله ساحلی فری‌هولد از ۹۸٬۰۰۰ ریال عمان | ایرفان',
     },
     desc: {
       en: 'Buy freehold property in Salalah, Oman: beachfront villas and chalets in Hawana Salalah from OMR 98,000. Open to all nationalities, strong khareef season rental demand, no tax on rental income, Oman investor residency included.',
@@ -100,28 +100,28 @@ export const ROUTES = {
   // meta: they move with inventory.
   '/property-prices-in-oman': {
     title: {
-      en: 'Oman Property Price Index — Price per m² by Area 2026 | Irfan',
-      ru: 'Индекс цен на недвижимость Омана — цена за м² по районам 2026 | Irfan',
-      ar: 'مؤشر أسعار العقارات في عُمان — سعر المتر حسب المنطقة 2026 | Irfan',
-      fa: 'شاخص قیمت ملک در عمان — قیمت هر متر بر اساس منطقه ۲۰۲۶ | ایرفان',
+      en: 'Oman Property Price Index: Price per m² by Area 2026 | Irfan',
+      ru: 'Индекс цен на недвижимость Омана: цена за м² по районам 2026 | Irfan',
+      ar: 'مؤشر أسعار العقارات في عُمان: سعر المتر حسب المنطقة 2026 | Irfan',
+      fa: 'شاخص قیمت ملک در عمان: قیمت هر متر بر اساس منطقه ۲۰۲۶ | ایرفان',
     },
     desc: {
       en: 'How much property costs in Oman, area by area: median price per square metre for Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah and Hawana Salalah, computed from live freehold inventory and updated continuously.',
-      ru: 'Сколько стоит недвижимость в Омане по районам: медианная цена за квадратный метр в Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah и Hawana Salalah — расчёт по актуальному фрихолд-предложению.',
+      ru: 'Сколько стоит недвижимость в Омане по районам: медианная цена за квадратный метр в Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah и Hawana Salalah. Расчёт по актуальному фрихолд-предложению.',
       ar: 'كم تكلّف العقارات في عُمان منطقة بمنطقة: وسيط سعر المتر المربع في الموج وخليج مسقط ومدينة السلطان هيثم وييتي وجبل سيفة وهوانا صلالة، محتسب من مخزون التملّك الحر المتاح ويُحدَّث باستمرار.',
       fa: 'قیمت ملک در عمان منطقه به منطقه: میانه قیمت هر مترمربع در الموج، خلیج مسقط، شهر سلطان هیثم، ییتی، جبل سیفه و هوانا صلاله، محاسبه‌شده از موجودی زنده فری‌هولد و به‌روزرسانی پیوسته.',
     },
   },
   '/maison-shirdel': {
     title: {
-      en: 'Maison Shirdel — Luxury Residences in Oman | Irfan Investment',
-      ru: 'Maison Shirdel — элитные резиденции в Омане | Irfan Investment',
-      ar: 'ميزون شيردل — مساكن فاخرة في عُمان | Irfan Investment',
-      fa: 'میزون شیردل — اقامتگاه‌های لوکس در عمان | Irfan Investment',
+      en: 'Maison Shirdel: Luxury Residences in Oman | Irfan Investment',
+      ru: 'Maison Shirdel: элитные резиденции в Омане | Irfan Investment',
+      ar: 'ميزون شيردل: مساكن فاخرة في عُمان | Irfan Investment',
+      fa: 'میزون شیردل: اقامتگاه‌های لوکس در عمان | Irfan Investment',
     },
     desc: {
       en: 'Discover Maison Shirdel, a collection of luxury residences for sale in Oman curated by Irfan Investment Group.',
-      ru: 'Maison Shirdel — коллекция элитных резиденций на продажу в Омане от Irfan Investment Group.',
+      ru: 'Maison Shirdel, коллекция элитных резиденций на продажу в Омане от Irfan Investment Group.',
       ar: 'اكتشف ميزون شيردل، مجموعة مساكن فاخرة للبيع في عُمان من Irfan Investment Group.',
       fa: 'میزون شیردل، مجموعه‌ای از اقامتگاه‌های لوکس برای فروش در عمان از Irfan Investment Group.',
     },
@@ -134,10 +134,10 @@ export const ROUTES = {
       fa: 'ثبت شرکت و سرمایه‌گذاری در عمان | Irfan Investment Group',
     },
     desc: {
-      en: 'Company formation & business setup in Oman with up to 100% foreign ownership — LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax. Updated 2026 framework.',
+      en: 'Company formation & business setup in Oman with up to 100% foreign ownership: LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax. Updated 2026 framework.',
       ru: 'Регистрация компании в Омане со 100% иностранным владением: LLC, SPC, коммерческая регистрация (CR), лицензии, корпоративный банкинг, инвесторские визы и налоги.',
-      ar: 'تأسيس الشركات في عُمان بملكية أجنبية تصل إلى 100% — تسجيل LLC وSPC والشركات المساهمة، والسجل التجاري، والتراخيص، والخدمات المصرفية للشركات، وتأشيرات المستثمرين.',
-      fa: 'ثبت شرکت و راه‌اندازی کسب‌وکار در عمان با مالکیت خارجی تا ۱۰۰٪ — ثبت LLC و SPC، ثبت تجاری (CR)، مجوزها، بانکداری شرکتی، ویزای سرمایه‌گذار و مالیات.',
+      ar: 'تأسيس الشركات في عُمان بملكية أجنبية تصل إلى 100%: تسجيل LLC وSPC والشركات المساهمة، والسجل التجاري، والتراخيص، والخدمات المصرفية للشركات، وتأشيرات المستثمرين.',
+      fa: 'ثبت شرکت و راه‌اندازی کسب‌وکار در عمان با مالکیت خارجی تا ۱۰۰٪: ثبت LLC و SPC، ثبت تجاری (CR)، مجوزها، بانکداری شرکتی، ویزای سرمایه‌گذار و مالیات.',
     },
   },
   '/investment': {
@@ -176,7 +176,7 @@ export const ROUTES = {
       fa: 'واردات خودرو از عمان به ایران | Irfan Investment Group',
     },
     desc: {
-      en: 'Car import services from Oman to Iran — vehicle selection and purchase, customs clearance, shipping and transit, insurance and delivery.',
+      en: 'Car import services from Oman to Iran: vehicle selection and purchase, customs clearance, shipping and transit, insurance and delivery.',
       ru: 'Услуги импорта автомобилей из Омана в Иран: подбор и покупка, таможенное оформление, доставка и транзит, страхование.',
       ar: 'خدمات استيراد السيارات من عُمان إلى إيران؛ اختيار وشراء السيارة، والتخليص الجمركي، والشحن والعبور، والتأمين والتسليم.',
       fa: 'خدمات واردات خودرو از عمان به ایران؛ انتخاب و خرید خودرو، ترخیص گمرکی، حمل و ترانزیت، بیمه و تحویل.',
@@ -184,24 +184,24 @@ export const ROUTES = {
   },
   '/about': {
     title: {
-      en: 'About Irfan Investment Group — Real Estate Advisory in Oman',
-      ru: 'О компании Irfan Investment Group — недвижимость в Омане',
-      ar: 'عن Irfan Investment Group — استشارات عقارية في عُمان',
-      fa: 'درباره Irfan Investment Group — مشاور املاک در عمان',
+      en: 'About Irfan Investment Group: Real Estate Advisory in Oman',
+      ru: 'О компании Irfan Investment Group: недвижимость в Омане',
+      ar: 'عن Irfan Investment Group: استشارات عقارية في عُمان',
+      fa: 'درباره Irfan Investment Group: مشاور املاک در عمان',
     },
     desc: {
       en: 'Irfan Investment Group is a strategic investment division focused on business growth and international real estate opportunities in Oman.',
-      ru: 'Irfan Investment Group — стратегическое инвестиционное подразделение, специализирующееся на росте бизнеса и международной недвижимости в Омане.',
+      ru: 'Irfan Investment Group, стратегическое инвестиционное подразделение, специализирующееся на росте бизнеса и международной недвижимости в Омане.',
       ar: 'Irfan Investment Group قسم استثماري استراتيجي يركز على نمو الأعمال وفرص العقارات الدولية في عُمان.',
       fa: 'Irfan Investment Group یک مجموعه سرمایه‌گذاری راهبردی متمرکز بر رشد کسب‌وکار و فرصت‌های املاک بین‌المللی در عمان است.',
     },
   },
   '/insights': {
     title: {
-      en: 'Insights — Real Estate & Investment in Oman | Irfan Investment Group',
-      ru: 'Инсайты — недвижимость и инвестиции в Омане | Irfan Investment',
-      ar: 'مقالات — العقارات والاستثمار في عُمان | Irfan Investment Group',
-      fa: 'مقالات — املاک و سرمایه‌گذاری در عمان | Irfan Investment Group',
+      en: 'Insights: Real Estate & Investment in Oman | Irfan Investment Group',
+      ru: 'Инсайты: недвижимость и инвестиции в Омане | Irfan Investment',
+      ar: 'مقالات: العقارات والاستثمار في عُمان | Irfan Investment Group',
+      fa: 'مقالات: املاک و سرمایه‌گذاری در عمان | Irfan Investment Group',
     },
     desc: {
       en: 'Guides, market analysis and updates on real estate, investment, company formation and doing business in Oman.',
@@ -215,10 +215,10 @@ export const ROUTES = {
   // property in salalah). Must stay ahead of the generic /buy/:slug template.
   '/buy/hawana-salalah': {
     title: {
-      en: 'Hawana Salalah — Villas & Houses for Sale in Salalah, Oman | Freehold',
-      ru: 'Хавана Салала — виллы и дома на продажу в Салале, Оман | Фрихолд',
-      ar: 'هوانا صلالة — فلل وشاليهات للبيع في صلالة | تملك حر وإقامة',
-      fa: 'هوانا صلاله — ویلا و خانه برای فروش در صلاله عمان | مالکیت آزاد',
+      en: 'Hawana Salalah: Villas & Houses for Sale in Salalah, Oman | Freehold',
+      ru: 'Хавана Салала: виллы и дома на продажу в Салале, Оман | Фрихолд',
+      ar: 'هوانا صلالة: فلل وشاليهات للبيع في صلالة | تملك حر وإقامة',
+      fa: 'هوانا صلاله: ویلا و خانه برای فروش در صلاله عمان | مالکیت آزاد',
     },
     desc: {
       en: 'Buy property in Salalah: freehold waterfront chalets and villas at Hawana Salalah from OMR 98,000. Two rental seasons, Omani residency eligibility, 3-year payment plans. New Lubana Island release.',
@@ -236,7 +236,7 @@ export const ROUTES = {
       fa: 'مدارس بین‌المللی عمان | راهنمای کامل برای خانواده‌های مهاجر',
     },
     desc: {
-      en: 'International schools in Muscat and Oman — British, Cambridge, IB and American curricula, fees and admissions. Irfan Investment helps your family relocate, invest and settle in Oman.',
+      en: 'International schools in Muscat and Oman: British, Cambridge, IB and American curricula, fees and admissions. Irfan Investment helps your family relocate, invest and settle in Oman.',
       ru: 'Международные школы Маската и Омана: британская, кембриджская, IB и американская программы, стоимость и поступление. Irfan Investment помогает вашей семье переехать, инвестировать и обустроиться.',
       ar: 'المدارس الدولية في مسقط وعُمان: المناهج البريطانية وكامبريدج والبكالوريا الدولية والأمريكية، والرسوم والقبول. تساعد Irfan Investment عائلتك على الانتقال والاستثمار والاستقرار.',
       fa: 'مدارس بین‌المللی مسقط و عمان؛ برنامه‌های بریتانیایی، کمبریج، IB و آمریکایی، شهریه و پذیرش. Irfan Investment به خانواده شما برای مهاجرت، سرمایه‌گذاری و اسکان کمک می‌کند.',
@@ -264,10 +264,10 @@ export const ROUTES = {
 export function projectMeta(name) {
   return {
     title: {
-      en: `${name} — Prices, Available Units & Payment Plan | Buy in Oman`,
-      ru: `${name} — цены, юниты и план оплаты | Недвижимость в Омане`,
-      ar: `${name} — الأسعار والوحدات المتاحة وخطة السداد | عقارات عُمان`,
-      fa: `${name} — قیمت، واحدهای موجود و شرایط پرداخت | املاک عمان`,
+      en: `${name}: Prices, Available Units & Payment Plan | Buy in Oman`,
+      ru: `${name}: цены, юниты и план оплаты | Недвижимость в Омане`,
+      ar: `${name}: الأسعار والوحدات المتاحة وخطة السداد | عقارات عُمان`,
+      fa: `${name}: قیمت، واحدهای موجود و شرایط پرداخت | املاک عمان`,
     },
     desc: {
       en: `${name} in Oman: current prices, available units, payment plans, photos and investor residency visa details. View the live inventory with Irfan Investment Group.`,

@@ -61,7 +61,7 @@ export const FOOTER_SEO = {
       prices: 'Oman property prices per m²',
     },
     community: 'Property for sale in {area}',
-    project: '{name} — prices & available units',
+    project: '{name}: prices & available units',
   },
   fa: {
     headings: { popular: 'جستجوهای پرطرفدار', communities: 'خرید بر اساس منطقه', projects: 'پروژه‌های منتخب' },
@@ -74,7 +74,7 @@ export const FOOTER_SEO = {
       prices: 'قیمت ملک در عمان هر متر',
     },
     community: 'ملک برای فروش در {area}',
-    project: '{name} — قیمت‌ها و واحدهای موجود',
+    project: '{name}: قیمت‌ها و واحدهای موجود',
   },
   ar: {
     headings: { popular: 'عمليات البحث الشائعة', communities: 'الشراء حسب المنطقة', projects: 'مشاريع مختارة' },
@@ -87,7 +87,7 @@ export const FOOTER_SEO = {
       prices: 'أسعار العقارات في عُمان للمتر',
     },
     community: 'عقارات للبيع في {area}',
-    project: '{name} — الأسعار والوحدات المتاحة',
+    project: '{name}: الأسعار والوحدات المتاحة',
   },
   ru: {
     headings: { popular: 'Популярные запросы', communities: 'Покупка по районам', projects: 'Избранные проекты' },
@@ -100,7 +100,7 @@ export const FOOTER_SEO = {
       prices: 'Цены на недвижимость Омана за м²',
     },
     community: 'Недвижимость на продажу в {area}',
-    project: '{name} — цены и доступные лоты',
+    project: '{name}: цены и доступные лоты',
   },
 }
 

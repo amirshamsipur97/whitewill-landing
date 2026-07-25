@@ -23,7 +23,7 @@ export const PRICE_INDEX = {
   en: {
     eyebrow: 'Irfan Investment · Market Data',
     h1: 'Oman Property Price Index',
-    lead: 'What a square metre actually costs in Oman, area by area — calculated from {units} freehold homes currently for sale across {areas} communities. A portfolio index, not a national average: read the method before you quote it.',
+    lead: 'What a square metre actually costs in Oman, area by area, calculated from {units} freehold homes currently for sale across {areas} communities. A portfolio index, not a national average: read the method before you quote it.',
     updatedLabel: 'Updated',
     stats: {
       units: 'units priced',
@@ -36,7 +36,7 @@ export const PRICE_INDEX = {
     typesHeading: 'Price per square metre by property type',
     typesSub: 'Apartments dominate the freehold inventory; villas trade at a lower rate per metre but a higher ticket.',
     bedsHeading: 'Price by number of bedrooms',
-    bedsSub: 'Smaller homes cost more per square metre almost everywhere — the fixed cost of a kitchen and a bathroom is spread over less floor area.',
+    bedsSub: 'Smaller homes cost more per square metre almost everywhere, because the fixed cost of a kitchen and a bathroom is spread over less floor area.',
     projectsHeading: 'Price per square metre by development',
     projectsSub: 'The same table at project level. Each name links to that development’s live price list.',
     cols: {
@@ -53,7 +53,7 @@ export const PRICE_INDEX = {
       typicalSize: 'Typical size',
     },
     studio: 'Studio',
-    thinNote: '† Fewer than five units on the market in this row — read it as an indication, not a rate.',
+    thinNote: '† Fewer than five units on the market in this row, so read it as an indication rather than a rate.',
     ui: {
       heroSub: 'Median asking price per square metre, community by community, from live freehold inventory.',
       introHeading: 'What a square metre costs in Oman',
@@ -81,13 +81,13 @@ export const PRICE_INDEX = {
     methodParas: [
       'The dataset is Irfan Investment Group’s own live inventory: every unit we currently have available for sale in Oman, {units} of them across {projects} developments in {areas} communities, as at {updated}. It is recalculated from the same database that powers our listings, so a unit that sells drops out of the index automatically.',
       'Price per square metre is simply the asking price divided by the area we publish for that home, so you can reproduce any figure here from the listing page itself. We publish the median rather than the average, because a single large development restocking would otherwise swing the headline number. Each row shows the number of units behind it so you can judge the weight of the figure yourself, and rows built on fewer than five units are flagged.',
-      'Two deliberate exclusions. Homes whose registered area is mostly private plot rather than floor area — {excluded} of them today, villas and farm houses sold with their land — are left out of the per-square-metre columns, because land and floor do not price at the same rate and mixing them would make those homes look four times cheaper than they are. They still count in the unit and price columns. Units we have not yet priced are excluded outright.',
-      'This is a portfolio index, not an official measure of the Oman property market. It covers only freehold stock inside Integrated Tourism Complexes — the zones where foreign buyers can own outright — so it says nothing about the leasehold and Omani-national market that makes up most transactions in the country. Prices are developer list prices before negotiation, and exclude registration and transaction costs, furnishing and service charges. There is no official per-square-metre index published for Oman, which is exactly why we publish ours.',
+      'Two deliberate exclusions. Homes whose registered area is mostly private plot rather than floor area, {excluded} of them today, are left out of the per-square-metre columns. These are villas and farm houses sold with their land, and because land and floor do not price at the same rate, mixing them would make those homes look four times cheaper than they are. They still count in the unit and price columns. Units we have not yet priced are excluded outright.',
+      'This is a portfolio index, not an official measure of the Oman property market. It covers only freehold stock inside Integrated Tourism Complexes, the zones where foreign buyers can own outright, so it says nothing about the leasehold and Omani-national market that makes up most transactions in the country. Prices are developer list prices before negotiation, and exclude registration and transaction costs, furnishing and service charges. There is no official per-square-metre index published for Oman, which is exactly why we publish ours.',
     ],
     heading: 'What the numbers say about buying in Oman',
     paras: [
       'The spread between the cheapest and the most expensive square metre in this index is roughly fourfold, and almost all of it is location rather than build quality. Waterfront and marina addresses in Muscat carry the highest rate per metre in the country; the newer inland master plans in Al Seeb sit at the bottom of the range while offering the largest floor areas for the money. Between those two poles sit the resort communities down the coast, where the same money buys a smaller home in a more scenic setting.',
-      'Two patterns hold across almost every community. Small homes cost more per square metre than large ones, so a studio will always look expensive on this measure and a four bedroom villa cheap — compare the total price column before drawing conclusions. And villas trade at a lower rate per metre than apartments in the same district, because land-heavy product is priced against a different buyer. If you are working to a budget rather than a location, the price by bedroom table is the more useful of the two.',
+      'Two patterns hold across almost every community. Small homes cost more per square metre than large ones, so a studio will always look expensive on this measure and a four bedroom villa cheap, so compare the total price column before drawing conclusions. And villas trade at a lower rate per metre than apartments in the same district, because land-heavy product is priced against a different buyer. If you are working to a budget rather than a location, the price by bedroom table is the more useful of the two.',
     ],
     faq: [
       {
@@ -131,7 +131,7 @@ export const PRICE_INDEX = {
   fa: {
     eyebrow: 'عرفان اینوست · داده‌های بازار',
     h1: 'شاخص قیمت ملک در عمان',
-    lead: 'قیمت واقعی هر مترمربع در عمان، منطقه به منطقه — محاسبه‌شده از {units} ملک فری‌هولد که هم‌اکنون در {areas} منطقه برای فروش موجود است. این یک شاخص سبد املاک ماست، نه میانگین ملی؛ پیش از استناد، روش محاسبه را بخوانید.',
+    lead: 'قیمت واقعی هر مترمربع در عمان، منطقه به منطقه، محاسبه‌شده از {units} ملک فری‌هولد که هم‌اکنون در {areas} منطقه برای فروش موجود است. این یک شاخص سبد املاک ماست، نه میانگین ملی؛ پیش از استناد، روش محاسبه را بخوانید.',
     updatedLabel: 'به‌روزرسانی',
     stats: {
       units: 'واحد قیمت‌گذاری‌شده',
@@ -189,7 +189,7 @@ export const PRICE_INDEX = {
     methodParas: [
       'داده‌ها موجودی زنده خود گروه سرمایه‌گذاری ایرفان است: هر واحدی که هم‌اکنون در عمان برای فروش داریم، {units} واحد در {projects} پروژه و {areas} منطقه، تا تاریخ {updated}. محاسبه از همان پایگاه داده‌ای انجام می‌شود که آگهی‌های سایت را تغذیه می‌کند، پس واحدی که فروخته شود خودبه‌خود از شاخص خارج می‌شود.',
       'قیمت هر مترمربع یعنی قیمت درخواستی تقسیم بر همان مساحتی که برای آن ملک منتشر می‌کنیم، پس هر رقم این صفحه را می‌توانید از خود صفحه آگهی بازتولید کنید. ما میانه را منتشر می‌کنیم نه میانگین، چون در غیر این صورت شارژ شدن موجودی یک پروژه بزرگ عدد اصلی را جابه‌جا می‌کرد. هر ردیف تعداد واحد پشت خود را نشان می‌دهد تا وزن رقم را خودتان بسنجید، و ردیف‌های با کمتر از پنج واحد علامت‌گذاری شده‌اند.',
-      'دو استثنای عمدی. ملک‌هایی که مساحت ثبت‌شده‌شان بیشتر زمین اختصاصی است تا زیربنا — امروز {excluded} مورد، ویلا و خانه‌باغ‌هایی که با زمین فروخته می‌شوند — از ستون‌های قیمت هر متر کنار گذاشته شده‌اند، چون زمین و زیربنا با یک نرخ قیمت نمی‌خورند و آمیختن‌شان این خانه‌ها را چهار برابر ارزان‌تر از واقعیت نشان می‌داد. این‌ها همچنان در ستون تعداد و قیمت شمرده می‌شوند. واحدهایی که هنوز قیمت‌گذاری نشده‌اند به‌کلی کنار گذاشته می‌شوند.',
+      'دو استثنای عمدی. ملک‌هایی که مساحت ثبت‌شده‌شان بیشتر زمین اختصاصی است تا زیربنا، امروز {excluded} مورد، ویلا و خانه‌باغ‌هایی که با زمین فروخته می‌شوند، از ستون‌های قیمت هر متر کنار گذاشته شده‌اند، چون زمین و زیربنا با یک نرخ قیمت نمی‌خورند و آمیختن‌شان این خانه‌ها را چهار برابر ارزان‌تر از واقعیت نشان می‌داد. این‌ها همچنان در ستون تعداد و قیمت شمرده می‌شوند. واحدهایی که هنوز قیمت‌گذاری نشده‌اند به‌کلی کنار گذاشته می‌شوند.',
       'این شاخص سبد املاک ماست، نه سنجه رسمی بازار ملک عمان. فقط موجودی فری‌هولد داخل مجتمع‌های گردشگری یکپارچه (ITC) را پوشش می‌دهد، یعنی مناطقی که خارجی‌ها می‌توانند مالک کامل شوند؛ بنابراین درباره بازار اجاره‌داری بلندمدت و بازار شهروندان عمانی که بیشتر معاملات کشور را می‌سازد چیزی نمی‌گوید. قیمت‌ها لیست سازنده پیش از مذاکره است و هزینه ثبت و انتقال، مبلمان و شارژ خدمات را شامل نمی‌شود. برای عمان هیچ شاخص رسمی هر مترمربعی منتشر نمی‌شود، و دقیقاً به همین دلیل ما شاخص خودمان را منتشر می‌کنیم.',
     ],
     heading: 'این اعداد درباره خرید در عمان چه می‌گویند',
@@ -239,7 +239,7 @@ export const PRICE_INDEX = {
   ar: {
     eyebrow: 'عرفان للاستثمار · بيانات السوق',
     h1: 'مؤشر أسعار العقارات في عُمان',
-    lead: 'كم يكلّف المتر المربع فعلياً في عُمان، منطقة بمنطقة — محتسب من {units} وحدة تملّك حر معروضة للبيع حالياً في {areas} مناطق. هذا مؤشر لمحفظتنا وليس متوسطاً وطنياً: اقرأ المنهجية قبل الاقتباس.',
+    lead: 'كم يكلّف المتر المربع فعلياً في عُمان، منطقة بمنطقة، محتسب من {units} وحدة تملّك حر معروضة للبيع حالياً في {areas} مناطق. هذا مؤشر لمحفظتنا وليس متوسطاً وطنياً: اقرأ المنهجية قبل الاقتباس.',
     updatedLabel: 'آخر تحديث',
     stats: {
       units: 'وحدة مسعّرة',
@@ -269,7 +269,7 @@ export const PRICE_INDEX = {
       typicalSize: 'المساحة المعتادة',
     },
     studio: 'استوديو',
-    thinNote: '† أقل من خمس وحدات معروضة في هذا الصف — اقرأه كمؤشر لا كسعر سوق.',
+    thinNote: '† أقل من خمس وحدات معروضة في هذا الصف، اقرأه كمؤشر لا كسعر سوق.',
     ui: {
       heroSub: 'وسيط سعر المتر المربع المطلوب، منطقة بمنطقة، من مخزون التملّك الحر المتاح.',
       introHeading: 'كم يكلّف المتر المربع في عُمان',
@@ -297,13 +297,13 @@ export const PRICE_INDEX = {
     methodParas: [
       'البيانات هي مخزون مجموعة عرفان للاستثمار نفسه: كل وحدة متاحة لدينا للبيع في عُمان، وعددها {units} وحدة في {projects} مشاريع و{areas} مناطق، حتى {updated}. تُحتسب من قاعدة البيانات ذاتها التي تغذّي إعلاناتنا، فالوحدة التي تُباع تخرج من المؤشر تلقائياً.',
       'سعر المتر المربع هو ببساطة السعر المطلوب مقسوماً على المساحة التي ننشرها لتلك الوحدة، فيمكنك إعادة احتساب أي رقم هنا من صفحة الإعلان نفسها. ننشر الوسيط لا المتوسط، لأن إعادة طرح مشروع كبير واحد كانت ستحرّك الرقم الرئيسي. يُظهر كل صف عدد الوحدات خلفه لتحكم بنفسك على وزن الرقم، والصفوف المبنية على أقل من خمس وحدات مُعلَّمة.',
-      'استثناءان متعمدان. الوحدات التي تشكّل الأرض الخاصة معظم مساحتها المسجّلة بدل المساحة المبنية — وعددها اليوم {excluded}، وهي فلل وبيوت مزارع تُباع مع أرضها — مستبعدة من أعمدة سعر المتر، لأن الأرض والمساحة المبنية لا تُسعَّران بالمعدل نفسه وخلطهما كان سيُظهر هذه المنازل أرخص بأربعة أضعاف مما هي عليه. وتبقى محسوبة في عمودي عدد الوحدات والسعر. أما الوحدات التي لم نسعّرها بعد فمستبعدة تماماً.',
+      'استثناءان متعمدان. الوحدات التي تشكّل الأرض الخاصة معظم مساحتها المسجّلة بدل المساحة المبنية، وعددها اليوم {excluded}، وهي فلل وبيوت مزارع تُباع مع أرضها، مستبعدة من أعمدة سعر المتر، لأن الأرض والمساحة المبنية لا تُسعَّران بالمعدل نفسه وخلطهما كان سيُظهر هذه المنازل أرخص بأربعة أضعاف مما هي عليه. وتبقى محسوبة في عمودي عدد الوحدات والسعر. أما الوحدات التي لم نسعّرها بعد فمستبعدة تماماً.',
       'هذا مؤشر لمحفظتنا وليس قياساً رسمياً لسوق العقار العُماني. يغطي فقط مخزون التملّك الحر داخل المجمعات السياحية المتكاملة، أي المناطق التي يملك فيها الأجانب ملكية كاملة، ولذلك لا يقول شيئاً عن سوق حق الانتفاع وسوق المواطنين العُمانيين الذي يشكّل معظم الصفقات في البلاد. الأسعار هي أسعار قوائم المطورين قبل التفاوض، ولا تشمل رسوم التسجيل والمعاملات ولا التأثيث ولا رسوم الخدمات. لا يوجد مؤشر رسمي لسعر المتر في عُمان، ولهذا بالذات ننشر مؤشرنا.',
     ],
     heading: 'ماذا تقول الأرقام عن الشراء في عُمان',
     paras: [
       'الفارق بين أرخص متر وأغلاه في هذا المؤشر نحو أربعة أضعاف، ومعظمه موقع لا جودة بناء. عناوين الواجهة البحرية والمارينا في مسقط تحمل أعلى سعر للمتر في البلاد؛ أما المخططات الداخلية الأحدث في السيب فتقع في أسفل المدى وتمنح أكبر مساحة مقابل المال. وبين الطرفين تقع مجتمعات المنتجعات على الساحل، حيث يشتري المبلغ نفسه منزلاً أصغر في موقع أجمل.',
-      'هناك نمطان يصحّان في كل منطقة تقريباً. المنازل الصغيرة أغلى للمتر من الكبيرة، فالاستوديو يبدو دائماً غالياً بهذا المقياس والفيلا بأربع غرف تبدو رخيصة — راجع عمود السعر الإجمالي قبل الحكم. والفلل تُسعَّر للمتر بأقل من الشقق في المنطقة نفسها لأن المنتج القائم على الأرض يُسعَّر لمشترٍ مختلف. إن كنت تعمل ضمن ميزانية لا موقع محدد، فجدول السعر حسب الغرف أنفع لك.',
+      'هناك نمطان يصحّان في كل منطقة تقريباً. المنازل الصغيرة أغلى للمتر من الكبيرة، فالاستوديو يبدو دائماً غالياً بهذا المقياس والفيلا بأربع غرف تبدو رخيصة، راجع عمود السعر الإجمالي قبل الحكم. والفلل تُسعَّر للمتر بأقل من الشقق في المنطقة نفسها لأن المنتج القائم على الأرض يُسعَّر لمشترٍ مختلف. إن كنت تعمل ضمن ميزانية لا موقع محدد، فجدول السعر حسب الغرف أنفع لك.',
     ],
     faq: [
       {
@@ -347,7 +347,7 @@ export const PRICE_INDEX = {
   ru: {
     eyebrow: 'Irfan Investment · Данные рынка',
     h1: 'Индекс цен на недвижимость Омана',
-    lead: 'Сколько на самом деле стоит квадратный метр в Омане, район за районом — расчёт по {units} объектам во фрихолде, выставленным на продажу сейчас в {areas} районах. Это индекс нашего портфеля, а не средняя по стране: прочитайте методику, прежде чем цитировать.',
+    lead: 'Сколько на самом деле стоит квадратный метр в Омане, район за районом, расчёт по {units} объектам во фрихолде, выставленным на продажу сейчас в {areas} районах. Это индекс нашего портфеля, а не средняя по стране: прочитайте методику, прежде чем цитировать.',
     updatedLabel: 'Обновлено',
     stats: {
       units: 'объектов в расчёте',
@@ -356,7 +356,7 @@ export const PRICE_INDEX = {
       entry: 'цена входа',
     },
     areasHeading: 'Цена квадратного метра по районам',
-    areasSub: 'От самого дорогого к самому доступному. Каждая цифра — медиана объектов, выставленных в этом районе сегодня.',
+    areasSub: 'От самого дорогого к самому доступному. Каждая цифра представляет собой медиану объектов, выставленных в этом районе сегодня.',
     typesHeading: 'Цена квадратного метра по типу недвижимости',
     typesSub: 'Квартиры составляют основную часть фрихолд-предложения; виллы дешевле за метр, но дороже целиком.',
     bedsHeading: 'Цена по количеству спален',
@@ -377,12 +377,12 @@ export const PRICE_INDEX = {
       typicalSize: 'Типичная площадь',
     },
     studio: 'Студия',
-    thinNote: '† В этой строке меньше пяти объектов — читайте её как ориентир, а не как ставку рынка.',
+    thinNote: '† В этой строке меньше пяти объектов, читайте её как ориентир, а не как ставку рынка.',
     ui: {
       heroSub: 'Медианная цена предложения за квадратный метр, район за районом, по актуальному фрихолд-предложению.',
       introHeading: 'Сколько стоит квадратный метр в Омане',
       faqHeading: 'Частые вопросы',
-      faqSub: 'Что индекс охватывает, а что нет. Если вашего вопроса здесь нет — спросите нас напрямую.',
+      faqSub: 'Что индекс охватывает, а что нет. Если вашего вопроса здесь нет, спросите нас напрямую.',
       metricPpsm: 'За м²',
       metricTotal: 'Медианная цена',
       communitiesHeading: 'Районы с одного взгляда',
@@ -403,15 +403,15 @@ export const PRICE_INDEX = {
     },
     methodHeading: 'Как рассчитан индекс',
     methodParas: [
-      'Источник данных — собственный актуальный портфель Irfan Investment Group: все объекты, доступные у нас к продаже в Омане, {units} штук в {projects} проектах и {areas} районах, по состоянию на {updated}. Расчёт идёт из той же базы, что питает наши объявления, поэтому проданный объект выпадает из индекса автоматически.',
-      'Цена за квадратный метр — это цена предложения, делённая на ту площадь, которую мы публикуем для этого объекта, поэтому любую цифру отсюда можно перепроверить прямо на странице лота. Мы публикуем медиану, а не среднее: иначе пополнение одного крупного проекта смещало бы итоговую цифру. В каждой строке указано число объектов за ней, чтобы вы сами оценили вес значения, а строки менее чем из пяти объектов помечены.',
-      'Два намеренных исключения. Объекты, у которых бо́льшую часть зарегистрированной площади составляет собственный участок, а не площадь дома — сегодня их {excluded}, это виллы и фермерские дома, продаваемые с землёй, — исключены из колонок цены за метр: земля и дом не стоят одинаково за метр, и их смешение делало бы такие объекты вчетверо дешевле, чем они есть. В колонках количества и цены они остаются. Объекты без цены исключены полностью.',
-      'Это индекс портфеля, а не официальная оценка рынка недвижимости Омана. Он охватывает только фрихолд внутри интегрированных туристических комплексов — зон, где иностранцы могут владеть недвижимостью полностью, — и потому ничего не говорит о рынке долгосрочной аренды прав и о рынке граждан Омана, на который приходится большинство сделок в стране. Цены — прайс застройщика до переговоров, без учёта регистрационных и транзакционных расходов, меблировки и сервисных сборов. Официального индекса цены за метр в Омане не публикуется — именно поэтому мы публикуем свой.',
+      'Источником данных служит собственный актуальный портфель Irfan Investment Group: все объекты, доступные у нас к продаже в Омане, {units} штук в {projects} проектах и {areas} районах, по состоянию на {updated}. Расчёт идёт из той же базы, что питает наши объявления, поэтому проданный объект выпадает из индекса автоматически.',
+      'Цена за квадратный метр рассчитывается как цена предложения, делённая на ту площадь, которую мы публикуем для этого объекта, поэтому любую цифру отсюда можно перепроверить прямо на странице лота. Мы публикуем медиану, а не среднее: иначе пополнение одного крупного проекта смещало бы итоговую цифру. В каждой строке указано число объектов за ней, чтобы вы сами оценили вес значения, а строки менее чем из пяти объектов помечены.',
+      'Два намеренных исключения. Объекты, у которых бо́льшую часть зарегистрированной площади составляет собственный участок, а не площадь дома, сегодня их {excluded}, исключены из колонок цены за метр. Это виллы и фермерские дома, продаваемые с землёй: земля и дом не стоят одинаково за метр, и их смешение делало бы такие объекты вчетверо дешевле, чем они есть. В колонках количества и цены они остаются. Объекты без цены исключены полностью.',
+      'Это индекс портфеля, а не официальная оценка рынка недвижимости Омана. Он охватывает только фрихолд внутри интегрированных туристических комплексов, зон, где иностранцы могут владеть недвижимостью полностью, и потому ничего не говорит о рынке долгосрочной аренды прав и о рынке граждан Омана, на который приходится большинство сделок в стране. Цены представляют собой прайс застройщика до переговоров, без учёта регистрационных и транзакционных расходов, меблировки и сервисных сборов. Официального индекса цены за метр в Омане не публикуется, и именно поэтому мы публикуем свой.',
     ],
     heading: 'Что цифры говорят о покупке в Омане',
     paras: [
-      'Разрыв между самым дешёвым и самым дорогим метром в индексе — примерно четырёхкратный, и почти весь он объясняется локацией, а не качеством строительства. Набережные и марины Маската держат самую высокую ставку за метр в стране; более новые мастер-планы вглубь материка в Эс-Сибе находятся внизу диапазона и дают наибольшую площадь за те же деньги. Между этими полюсами — курортные комьюнити вдоль побережья, где та же сумма покупает меньший дом в более живописном месте.',
-      'Две закономерности работают почти в каждом районе. Маленькие объекты дороже за метр, чем большие, поэтому студия по этому показателю всегда выглядит дорогой, а вилла с четырьмя спальнями — дешёвой: смотрите на колонку полной цены. И виллы стоят за метр меньше, чем квартиры в том же районе, потому что продукт с землёй ориентирован на другого покупателя. Если вы отталкиваетесь от бюджета, а не от локации, таблица по спальням полезнее.',
+      'Разрыв между самым дешёвым и самым дорогим метром в индексе примерно четырёхкратный, и почти весь он объясняется локацией, а не качеством строительства. Набережные и марины Маската держат самую высокую ставку за метр в стране; более новые мастер-планы вглубь материка в Эс-Сибе находятся внизу диапазона и дают наибольшую площадь за те же деньги. Между этими полюсами, курортные комьюнити вдоль побережья, где та же сумма покупает меньший дом в более живописном месте.',
+      'Две закономерности работают почти в каждом районе. Маленькие объекты дороже за метр, чем большие, поэтому студия по этому показателю всегда выглядит дорогой, а вилла с четырьмя спальнями, дешёвой: смотрите на колонку полной цены. И виллы стоят за метр меньше, чем квартиры в том же районе, потому что продукт с землёй ориентирован на другого покупателя. Если вы отталкиваетесь от бюджета, а не от локации, таблица по спальням полезнее.',
     ],
     faq: [
       {
@@ -436,11 +436,11 @@ export const PRICE_INDEX = {
       },
       {
         q: 'Могут ли иностранцы покупать по этим ценам в Омане?',
-        a: 'Да. Каждый объект в индексе находится внутри интегрированного туристического комплекса — зоны, где покупатель любой национальности получает полное право собственности, зарегистрированное в Министерстве жилищного строительства. Покупка также даёт право на продлеваемую инвесторскую резиденцию Омана, а ежегодного налога на недвижимость и налога на доход от аренды в Омане нет.',
+        a: 'Да. Каждый объект в индексе находится внутри интегрированного туристического комплекса, зоны, где покупатель любой национальности получает полное право собственности, зарегистрированное в Министерстве жилищного строительства. Покупка также даёт право на продлеваемую инвесторскую резиденцию Омана, а ежегодного налога на недвижимость и налога на доход от аренды в Омане нет.',
       },
     ],
     ctaHeading: 'Нужен полный прайс, стоящий за этими цифрами?',
-    ctaText: 'Каждый объект в индексе — реальный дом, который можно посмотреть, с планировкой, планом оплаты и референс-номером. Откройте живой каталог или запросите разбивку по конкретному району.',
+    ctaText: 'Каждый объект в индексе это реальный дом, который можно посмотреть, с планировкой, планом оплаты и референс-номером. Откройте живой каталог или запросите разбивку по конкретному району.',
     ctaBtn: 'Вся недвижимость Омана',
     linksHeading: 'Смежные страницы',
     links: [

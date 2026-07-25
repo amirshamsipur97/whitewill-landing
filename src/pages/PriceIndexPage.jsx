@@ -584,7 +584,7 @@ export default function PriceIndexPage() {
                 rows={index.byArea}
                 cols={[
                   { key: 'name', label: c.cols.area, value: (r) => r.label, render: (r) => nameLink(`/project?area=${encodeURIComponent(r.key)}`, r.label) },
-                  { key: 'city', label: c.cols.city, muted: true, value: (r) => r.city || '', render: (r) => r.city || '—' },
+                  { key: 'city', label: c.cols.city, muted: true, value: (r) => r.city || '', render: (r) => r.city || '–' },
                   { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
                   { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
                   { key: 'range', label: c.cols.rangePpsm, muted: true, value: (r) => r.minPpsm, render: (r) => tnum(fmtRange(r.minPpsm, r.maxPpsm)) },
@@ -698,7 +698,7 @@ export default function PriceIndexPage() {
                 heading: c.projectsHeading, sub: c.projectsSub, rows: index.byProject, defaultKey: 'ppsm', defaultDir: 'desc',
                 cols: [
                   { key: 'name', label: c.cols.project, value: (r) => r.label, render: (r) => nameLink(`/buy/${r.slug}`, r.label) },
-                  { key: 'area', label: c.cols.area, muted: true, value: (r) => r.area || '', render: (r) => r.area || '—' },
+                  { key: 'area', label: c.cols.area, muted: true, value: (r) => r.area || '', render: (r) => r.area || '–' },
                   { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
                   { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
                   { key: 'range', label: c.cols.rangePpsm, muted: true, value: (r) => r.minPpsm, render: (r) => tnum(fmtRange(r.minPpsm, r.maxPpsm)) },

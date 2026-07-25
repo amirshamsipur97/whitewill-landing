@@ -263,7 +263,7 @@ function priceIndexHtml(lang) {
     [c.cols.area, c.cols.city, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.medianPrice, c.cols.typicalSize],
     idx.byArea.map((a) => [
       `<a href="${prefix}/project?area=${encodeURIComponent(a.key)}" style="color:#6f7020">${esc(a.label)}</a>${dagger(a)}`,
-      esc(a.city || '—'), fmtInt(a.n), `<strong>${fmtInt(a.medianPpsm)}</strong>`,
+      esc(a.city || '–'), fmtInt(a.n), `<strong>${fmtInt(a.medianPpsm)}</strong>`,
       esc(fmtRange(a.minPpsm, a.maxPpsm)), esc(fmtOmr(a.medianPrice)), esc(fmtSqm(a.medianArea)),
     ]),
   )
@@ -285,7 +285,7 @@ function priceIndexHtml(lang) {
     [c.cols.project, c.cols.area, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.from],
     idx.byProject.map((p) => [
       `<a href="${prefix}/buy/${p.slug}" style="color:#6f7020">${esc(p.label)}</a>${dagger(p)}`,
-      esc(p.area || '—'), fmtInt(p.n), `<strong>${fmtInt(p.medianPpsm)}</strong>`,
+      esc(p.area || '–'), fmtInt(p.n), `<strong>${fmtInt(p.medianPpsm)}</strong>`,
       esc(fmtRange(p.minPpsm, p.maxPpsm)), esc(fmtOmr(p.minPrice)),
     ]),
   )
@@ -491,7 +491,7 @@ function propertyPageFor({ unit, project }, canonicalUrl) {
   const route = `/property/${unit.id}`
   const url = `${SITE}${route}`
 
-  const title = `${bedLabel} ${g} for Sale in ${city}${priceTxt ? ` — ${priceTxt}` : ''} | Irfan`
+  const title = `${bedLabel} ${g} for Sale in ${city}${priceTxt ? `: ${priceTxt}` : ''} | Irfan`
   const desc = [
     `${bedLabel} ${g.toLowerCase()} for sale at ${project.name}, ${city}, Oman.`,
     sqm ? `${sqm} m² built-up area.` : '',
@@ -567,7 +567,7 @@ function propertyPageFor({ unit, project }, canonicalUrl) {
     unit.floor_label ? ['Floor', unit.floor_label] : null,
     priceTxt ? ['Price', priceTxt] : null,
     ['Reference', `IRF-${unit.id}`],
-    ['Ownership', 'Freehold — all nationalities'],
+    ['Ownership', 'Freehold, all nationalities'],
   ].filter(Boolean)
     .map(([k, v]) => `<li><strong>${esc(k)}:</strong> ${esc(v)}</li>`)
     .join('')
@@ -582,7 +582,7 @@ function propertyPageFor({ unit, project }, canonicalUrl) {
     `<p>Request the floor plan, full price list and payment plan for reference IRF-${unit.id} from Irfan Investment Group.</p>` +
     `<ul>` +
     `<li><a href="/project" style="color:#8c8d25">All properties for sale in Oman</a></li>` +
-    `<li><a href="/buy/${slugify(project.name)}" style="color:#8c8d25">${esc(`${project.name} — prices, available units and payment plan`)}</a></li>` +
+    `<li><a href="/buy/${slugify(project.name)}" style="color:#8c8d25">${esc(`${project.name}: prices, available units and payment plan`)}</a></li>` +
     `<li><a href="/buy" style="color:#8c8d25">Buy property in Oman: full guide</a></li>` +
     `</ul>` + footerLinksHtml('en')
 

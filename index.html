@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google tag (gtag.js) — one shared library, two destinations:
+    <!-- Google tag (gtag.js): one shared library, two destinations:
            • GA4 Analytics : G-P2PTCKJKYK  (send_page_view:false → manual SPA
              page_views from src/analytics.js, so each page is recorded with its
              own title + content group + language)
@@ -16,7 +16,7 @@
          competes with the first paint. The inline gtag() stub below keeps
          queuing every early event into dataLayer; Google's script flushes the
          queue when it arrives, so page_view / conversion attribution is
-         unchanged — leads convert minutes later, not in the first second. -->
+         unchanged. Leads convert minutes later, not in the first second. -->
     <script>
       (function () {
         function loadGtag() {
@@ -39,12 +39,12 @@
       gtag('config', 'AW-17743726667');
     </script>
 
-    <!-- Meta (Facebook) Pixel — same deferred pattern as gtag: the fbq stub
+    <!-- Meta (Facebook) Pixel: same deferred pattern as gtag: the fbq stub
          queues events immediately; the real fbevents.js loads after
          window.load (+1.5s) so it never competes with first paint. SPA
          PageView + Lead events are fired from src/analytics.js.
          META_PIXEL_ID is empty until the pixel is created in Meta Business
-         Suite — with an empty ID everything below is a silent no-op. -->
+         Suite. With an empty ID everything below is a silent no-op. -->
     <script>
       (function () {
         var META_PIXEL_ID = window.__META_PIXEL_ID = ''; // set real ID to activate
@@ -69,7 +69,7 @@
       })();
     </script>
 
-    <!-- Resource hints — open TCP/TLS sockets to the third parties we hit
+    <!-- Resource hints: open TCP/TLS sockets to the third parties we hit
          from the first paint (fonts, Mapbox tiles + analytics, Supabase
          REST/edge functions) so the browser doesn't pay handshake latency
          on the first request to each. -->
@@ -137,7 +137,7 @@
     <meta name="twitter:description" content="Premium real estate brokerage in Oman. Buy apartments, villas and off-plan property in Muscat with freehold ownership and Oman residency for foreign investors." />
     <meta name="twitter:image" content="https://www.irfaninvest.com/peninsula.jpg" />
 
-    <!-- Structured data — helps search engines understand the business -->
+    <!-- Structured data: helps search engines understand the business -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -147,7 +147,7 @@
       "url": "https://www.irfaninvest.com/",
       "logo": "https://www.irfaninvest.com/logo.svg",
       "image": "https://www.irfaninvest.com/peninsula.jpg",
-      "description": "A premium real estate brokerage and investment advisory in Oman — property, company registration, banking & financing, and investor residency.",
+      "description": "A premium real estate brokerage and investment advisory in Oman: property, company registration, banking & financing, and investor residency.",
       "telephone": "+968 766 44000",
       "priceRange": "$$$",
       "areaServed": [
@@ -185,7 +185,7 @@
     }
     </script>
     <!-- ─────────────────────────────────────────────────────────────────
-         Boot splash — painted on the very first frame (inline, before the
+         Boot splash: painted on the very first frame (inline, before the
          JS bundle loads) so the user never sees an empty page while the
          bundle parses, the hero video buffers, and Supabase data arrives.
          Black canvas + brand lockup + tagline + dotted spinner. A tiny
@@ -271,7 +271,7 @@
           var lang = seg || localStorage.getItem('ww_lang') || 'en';
           var taglines = {
             en: 'Irfan Investment Group is a strategic investment division focused on business growth and international opportunities.',
-            ru: 'Irfan Investment Group — стратегическое инвестиционное подразделение, ориентированное на рост бизнеса и международные возможности.',
+            ru: 'Irfan Investment Group, стратегическое инвестиционное подразделение, ориентированное на рост бизнеса и международные возможности.',
             ar: 'مجموعة عرفان الاستثمارية هي ذراعٌ استثماري استراتيجي يركّز على نمو الأعمال والفرص الدولية.',
             fa: 'مجموعه سرمایه‌گذاری عرفان، بازوی راهبردیِ سرمایه‌گذاری با تمرکز بر رشد کسب‌وکار و فرصت‌های بین‌المللی.'
           };
@@ -290,7 +290,7 @@
         if (!splash) return;
         var now = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
         // Ads landing traffic: every splash millisecond delays the first
-        // usable paint, so the brand moment is now short — 900ms minimum,
+        // usable paint, so the brand moment is now short, 900ms minimum,
         // hard-capped at 1500ms even on slow loads.
         var MIN = 500, MAX = 1200, start = now(), done = false;
 
@@ -306,7 +306,7 @@
         }
         if (document.readyState === 'complete') afterLoad();
         else window.addEventListener('load', afterLoad);
-        setTimeout(hide, MAX); // hard cap — never lingers past ~3s
+        setTimeout(hide, MAX); // hard cap, never lingers past ~3s
       })();
     </script>
 
