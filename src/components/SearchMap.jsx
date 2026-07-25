@@ -40,20 +40,26 @@ function shortOmr(n) {
 }
 
 const CSS = `
+/* ── marker ROOT ────────────────────────────────────────────────────────
+   Mapbox writes \`transform: translate(...)\` onto THIS element on every
+   single map move. It must therefore carry NO transform transition: with
+   one, each pan animated over 160ms, so the pins visibly lagged behind the
+   map and then eased back onto their point. All hover/press motion lives on
+   the inner pill instead. */
+.smap-marker{will-change:transform}
 .smap-pin{
   display:inline-flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer;
   background:#fff;color:${INK};border:1px solid rgba(0,0,0,.08);
   border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px;
   font-family:"Peyda","Arsenal SC","Inter",system-ui,sans-serif;
   box-shadow:0 2px 8px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.04);
-  transition:transform .16s cubic-bezier(.4,0,.2,1),background .16s,color .16s;
-  will-change:transform}
+  transition:transform .16s cubic-bezier(.4,0,.2,1),background .16s,color .16s,opacity .16s}
 .smap-pin:hover{transform:scale(1.08)}
 .smap-pin .smap-name{display:none;font-weight:600;opacity:.72}
 /* Selected pill inverts and reveals the project name, the way Airbnb's
    viewed-listing pill does. */
 .smap-pin.is-on{background:${INK};color:#fff;border-color:${INK};
-  box-shadow:0 4px 16px rgba(0,0,0,.45)}
+  box-shadow:0 4px 16px rgba(0,0,0,.45);transform:scale(1.06)}
 .smap-pin.is-on .smap-name{display:inline;opacity:.7}
 .smap-pin.is-dim{opacity:.45}
 .smap-pin.is-dim:hover{opacity:1}
@@ -90,23 +96,29 @@ export default function SearchMap({ projects, selectedId, onSelect }) {
 
     const bounds = new mapboxgl.LngLatBounds()
     for (const p of projects) {
-      const el = document.createElement('button')
-      el.type = 'button'
-      el.className = 'smap-pin'
-      el.setAttribute(
+      // Two elements on purpose: mapbox owns the root's transform, the pill
+      // owns the hover/selected motion. See the .smap-marker note above.
+      const root = document.createElement('div')
+      root.className = 'smap-marker'
+
+      const pill = document.createElement('button')
+      pill.type = 'button'
+      pill.className = 'smap-pin'
+      pill.setAttribute(
         'aria-label',
         `${p.name}${p.parent ? ` (${p.parent})` : ''}, ${p.count} units from ${shortOmr(p.minPrice)}`,
       )
-      el.title = p.parent ? `${p.name} · ${p.parent}` : p.name
-      el.innerHTML =
-        `<span class="smap-name"></span><span class="smap-price"></span>`
-      el.querySelector('.smap-name').textContent = p.name
-      el.querySelector('.smap-price').textContent = shortOmr(p.minPrice)
-      el.addEventListener('click', (e) => {
+      pill.title = p.parent ? `${p.name} · ${p.parent}` : p.name
+      pill.innerHTML = `<span class="smap-name"></span><span class="smap-price"></span>`
+      pill.querySelector('.smap-name').textContent = p.name
+      pill.querySelector('.smap-price').textContent = shortOmr(p.minPrice)
+      pill.addEventListener('click', (e) => {
         e.stopPropagation()
         selectRef.current?.(p.id)
       })
-      const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      root.appendChild(pill)
+
+      const marker = new mapboxgl.Marker({ element: root, anchor: 'center' })
         .setLngLat([p.lng, p.lat])
         .addTo(map)
       markersRef.current.set(p.id, marker)
@@ -143,11 +155,13 @@ export default function SearchMap({ projects, selectedId, onSelect }) {
   // ── selection: invert the chosen pill, dim the rest, ease the map over ──
   useEffect(() => {
     for (const [id, marker] of markersRef.current) {
-      const el = marker.getElement()
-      el.classList.toggle('is-on', String(id) === String(selectedId))
-      el.classList.toggle('is-dim', Boolean(selectedId) && String(id) !== String(selectedId))
+      const root = marker.getElement()
+      const pill = root.querySelector('.smap-pin')
+      const on = String(id) === String(selectedId)
+      pill?.classList.toggle('is-on', on)
+      pill?.classList.toggle('is-dim', Boolean(selectedId) && !on)
       // Selected pill must sit above its neighbours in the Muscat cluster.
-      el.parentElement && (el.parentElement.style.zIndex = String(id) === String(selectedId) ? 5 : 1)
+      root.style.zIndex = on ? 5 : 1
     }
     const map = mapRef.current
     if (!map || !selectedId) return

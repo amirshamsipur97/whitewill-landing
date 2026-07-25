@@ -242,7 +242,7 @@ export async function fetchProjects() {
     .from('projects')
     .select(`
       id, name, location, latitude, longitude,
-      developer:developers(name),
+      developer:developers(name, country_of_origin, website, description),
       area:areas(name, city, governorate)
     `)
     .not('latitude', 'is', null)

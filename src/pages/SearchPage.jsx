@@ -156,10 +156,10 @@ const SIZE_LABELS = {
 }
 
 const STR = {
-  en: { mapTitle: 'Projects on the map', mapHint: 'Tap a price to see that project’s units', pinsOne: '{n} project pinned', pins: '{n} projects pinned', inProject: '{n} units in {name}', clearPin: 'All projects', showMap: 'Map', showList: 'List', unitsIn: 'Units in {name}', crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities, every one priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property, like “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy, showing keyword matches instead.', aiSender: 'Irfan Assistant' },
-  ru: { mapTitle: 'Проекты на карте', mapHint: 'Нажмите на цену, чтобы увидеть объекты проекта', pinsOne: '{n} проект на карте', pins: '{n} проектов на карте', inProject: '{n} объектов в {name}', clearPin: 'Все проекты', showMap: 'Карта', showList: 'Список', unitsIn: 'Объекты в {name}', crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана, все с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость, напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят, показаны совпадения по словам.', aiSender: 'Ассистент Irfan' },
-  ar: { mapTitle: 'المشاريع على الخريطة', mapHint: 'اضغط على السعر لعرض وحدات المشروع', pinsOne: 'مشروع واحد على الخريطة', pins: '{n} مشاريع على الخريطة', inProject: '{n} وحدة في {name}', clearPin: 'كل المشاريع', showMap: 'الخريطة', showList: 'القائمة', unitsIn: 'وحدات {name}', crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان، كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول، نعرض تطابقات الكلمات.', aiSender: 'مساعد عرفان' },
-  fa: { mapTitle: 'پروژه‌ها روی نقشه', mapHint: 'روی قیمت بزنید تا واحدهای آن پروژه را ببینید', pinsOne: '{n} پروژه روی نقشه', pins: '{n} پروژه روی نقشه', inProject: '{n} واحد در {name}', clearPin: 'همه پروژه‌ها', showMap: 'نقشه', showList: 'لیست', unitsIn: 'واحدهای {name}', crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن، مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است، نتایج کلیدواژه‌ای نمایش داده شد.', aiSender: 'دستیار عرفان' },
+  en: { developer: 'Developer', devSite: 'Developer website', viewProject: 'View project', mapTitle: 'Projects on the map', mapHint: 'Tap a price to see that project’s units', pinsOne: '{n} project pinned', pins: '{n} projects pinned', inProject: '{n} units in {name}', clearPin: 'All projects', showMap: 'Map', showList: 'List', unitsIn: 'Units in {name}', crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities, every one priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property, like “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy, showing keyword matches instead.', aiSender: 'Irfan Assistant' },
+  ru: { developer: 'Застройщик', devSite: 'Сайт застройщика', viewProject: 'Открыть проект', mapTitle: 'Проекты на карте', mapHint: 'Нажмите на цену, чтобы увидеть объекты проекта', pinsOne: '{n} проект на карте', pins: '{n} проектов на карте', inProject: '{n} объектов в {name}', clearPin: 'Все проекты', showMap: 'Карта', showList: 'Список', unitsIn: 'Объекты в {name}', crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана, все с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость, напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят, показаны совпадения по словам.', aiSender: 'Ассистент Irfan' },
+  ar: { developer: 'المطور', devSite: 'موقع المطور', viewProject: 'عرض المشروع', mapTitle: 'المشاريع على الخريطة', mapHint: 'اضغط على السعر لعرض وحدات المشروع', pinsOne: 'مشروع واحد على الخريطة', pins: '{n} مشاريع على الخريطة', inProject: '{n} وحدة في {name}', clearPin: 'كل المشاريع', showMap: 'الخريطة', showList: 'القائمة', unitsIn: 'وحدات {name}', crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان، كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول، نعرض تطابقات الكلمات.', aiSender: 'مساعد عرفان' },
+  fa: { developer: 'سازنده', devSite: 'وب‌سایت سازنده', viewProject: 'مشاهده پروژه', mapTitle: 'پروژه‌ها روی نقشه', mapHint: 'روی قیمت بزنید تا واحدهای آن پروژه را ببینید', pinsOne: '{n} پروژه روی نقشه', pins: '{n} پروژه روی نقشه', inProject: '{n} واحد در {name}', clearPin: 'همه پروژه‌ها', showMap: 'نقشه', showList: 'لیست', unitsIn: 'واحدهای {name}', crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن، مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است، نتایج کلیدواژه‌ای نمایش داده شد.', aiSender: 'دستیار عرفان' },
 }
 
 // Localised unit-type words (project names themselves stay English brand nouns).
@@ -326,6 +326,39 @@ const CSS = `
   gap:6px;background:${INK};color:${PAPER};border:none;border-radius:999px;padding:8px 15px;
   font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .18s}
 .pfx-mapclear:hover{background:${GOLD};color:#fff}
+/* Info card for the selected pin. Sits in the MAP COLUMN, not on the pin, so
+   panning never drags it and long developer copy stays readable. */
+.pfx-mapcard{position:absolute;bottom:12px;left:12px;right:12px;z-index:4;
+  background:rgba(14,14,16,.93);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid ${LINE_2};border-radius:14px;padding:16px 18px 15px;
+  box-shadow:0 18px 46px rgba(0,0,0,.55);max-height:calc(100% - 88px);overflow-y:auto}
+.pfx-mapcard-x{position:absolute;top:10px;inset-inline-end:10px;display:inline-flex;
+  align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:none;color:${SUB};cursor:pointer;transition:background .18s,color .18s}
+.pfx-mapcard-x:hover{background:rgba(255,255,255,.16);color:${INK}}
+.pfx-mapcard-area{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;color:${FAINT};padding-inline-end:30px}
+.pfx-mapcard-name{margin-top:5px;font-size:19px;font-weight:600;color:${INK};line-height:1.25}
+.pfx-mapcard-parent{margin-top:2px;font-size:12.5px;color:${SUB}}
+.pfx-mapcard-dev{margin-top:12px;padding-top:12px;border-top:1px solid ${LINE}}
+.pfx-mapcard-devrow{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pfx-mapcard-devlabel{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:${FAINT}}
+.pfx-mapcard-devname{font-size:14.5px;font-weight:600;color:${INK}}
+.pfx-mapcard-flagtxt{font-size:11.5px;color:${SUB};background:${CHIP};border:1px solid ${CHIP_LINE};
+  border-radius:999px;padding:2px 8px}
+.pfx-mapcard-devdesc{margin:7px 0 0;font-size:13px;line-height:1.55;color:${SUB}}
+.pfx-mapcard-stats{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:13px;padding-top:12px;
+  border-top:1px solid ${LINE}}
+.pfx-mapcard-stats b{display:block;font-size:14.5px;font-weight:700;color:${ACCENT};line-height:1.3}
+.pfx-mapcard-stats span{display:block;margin-top:2px;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:${FAINT}}
+.pfx-mapcard-actions{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+.pfx-mapcard-btn{display:inline-flex;align-items:center;height:38px;padding:0 18px;background:${INK};
+  color:${PAPER};border-radius:999px;font-size:13.5px;font-weight:700;text-decoration:none;
+  transition:background .18s,color .18s}
+.pfx-mapcard-btn:hover{background:${GOLD};color:#fff}
+.pfx-mapcard-link{font-size:13px;color:${ACCENT};text-decoration:none}
+.pfx-mapcard-link:hover{text-decoration:underline}
 .pfx-mapnote{position:absolute;bottom:14px;left:12px;z-index:3;pointer-events:none;
   background:rgba(12,12,14,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   border:1px solid ${LINE};border-radius:10px;padding:7px 12px;color:${SUB};font-size:12px}
@@ -751,10 +784,21 @@ export default function SearchPage() {
         parent: sub ? p.name : '',
         slug: slugify(p.name),
         lat: Number(p.latitude), lng: Number(p.longitude),
-        area: p.area?.name || p.location || '', count: 0, minPrice: Infinity,
+        area: p.area?.name || p.location || '',
+        city: p.area?.city || '',
+        developer: p.developer || null,
+        count: 0, minPrice: Infinity, maxPrice: 0,
+        types: new Set(), bedsMin: Infinity, bedsMax: 0,
       }
       cur.count++
       cur.minPrice = Math.min(cur.minPrice, priceNum)
+      cur.maxPrice = Math.max(cur.maxPrice, priceNum)
+      cur.types.add(typeGroup(u.unit_type))
+      const b = Number(u.bedrooms)
+      if (Number.isFinite(b)) {
+        cur.bedsMin = Math.min(cur.bedsMin, b)
+        cur.bedsMax = Math.max(cur.bedsMax, b)
+      }
       agg.set(key, cur)
     }
     const list = [...agg.values()]
@@ -777,6 +821,7 @@ export default function SearchPage() {
         r.fanned = true
       })
     }
+    for (const r of list) r.types = [...r.types]
     return list.sort((a, b) => a.minPrice - b.minPrice)
   }, [units, projById])
 
@@ -1036,6 +1081,67 @@ export default function SearchPage() {
             )}
           </div>
           {!selectedProject && <div className="pfx-mapnote">{t.mapHint}</div>}
+
+          {/* ── info card: who builds it, what is in it, where it is ──
+              Anchored to the map column rather than to the pin, so panning
+              never drags it around and the text stays readable. */}
+          {selectedProject && (
+            <div className="pfx-mapcard" dir={rtl ? 'rtl' : 'ltr'}>
+              <button type="button" className="pfx-mapcard-x" onClick={() => setParam('project', null, null)} aria-label={t.clearPin}>
+                <CloseRoundedIcon sx={{ fontSize: 17 }} />
+              </button>
+
+              <div className="pfx-mapcard-area">
+                <PlaceRoundedIcon sx={{ fontSize: 14, color: GOLD }} />
+                {selectedProject.area}{selectedProject.city ? `, ${selectedProject.city}` : ''}
+              </div>
+              <div className="pfx-mapcard-name">{selectedProject.name}</div>
+              {selectedProject.parent && (
+                <div className="pfx-mapcard-parent">{selectedProject.parent}</div>
+              )}
+
+              {selectedProject.developer?.name && (
+                <div className="pfx-mapcard-dev">
+                  <div className="pfx-mapcard-devrow">
+                    <span className="pfx-mapcard-devlabel">{t.developer}</span>
+                    <span className="pfx-mapcard-devname">{selectedProject.developer.name}</span>
+                    {selectedProject.developer.country_of_origin && (
+                      <span className="pfx-mapcard-flagtxt">{selectedProject.developer.country_of_origin}</span>
+                    )}
+                  </div>
+                  {selectedProject.developer.description && (
+                    <p className="pfx-mapcard-devdesc">{selectedProject.developer.description}</p>
+                  )}
+                </div>
+              )}
+
+              <div className="pfx-mapcard-stats">
+                <div><b>{localizeDigits(selectedProject.count, lang)}</b><span>{t.stProps}</span></div>
+                <div><b>{fmtOmr(selectedProject.minPrice, lang)}</b><span>{t.stFrom}</span></div>
+                {selectedProject.types.length > 0 && (
+                  <div>
+                    <b>{selectedProject.types.map((x) => (TYPE_WORDS[lang] || TYPE_WORDS.en)[x] || x).join(' · ')}</b>
+                    <span>{C.type}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="pfx-mapcard-actions">
+                <LocalizedLink className="pfx-mapcard-btn" to={`/buy/${selectedProject.slug}`}>
+                  {t.viewProject}
+                </LocalizedLink>
+                {selectedProject.developer?.website && (
+                  <a
+                    className="pfx-mapcard-link"
+                    href={`https://${String(selectedProject.developer.website).replace(/^https?:\/\//, '')}`}
+                    target="_blank" rel="noopener noreferrer nofollow"
+                  >
+                    {t.devSite}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </aside>
 
         <button type="button" className="pfx-maptoggle" onClick={() => setShowMap((v) => !v)}>
