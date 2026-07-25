@@ -45,11 +45,18 @@
  * Imagery is DERIVED from the inventory (largest project in each community),
  * never hardcoded, so it can never point at a delisted development.
  *
- * MOTION IS DELIBERATELY LIGHT: opacity plus an 8px lift, ~380ms. Driven by
- * React state via setTimeout — never rAF, which does not fire in a hidden tab
- * and would leave the page at opacity:0 (see HANDOFF-SEO-2026-07-25 §4).
+ * MOTION IS DELIBERATELY LIGHT. Two mechanisms, on purpose:
+ *  • sections fade in on a CSS transition driven by React state via
+ *    setTimeout — never rAF, which does not fire in a hidden tab and would
+ *    leave the page at opacity:0 (see HANDOFF-SEO-2026-07-25 §4);
+ *  • the two PHOTO ROWS use GSAP (useSoftReveal below) for a staggered fade,
+ *    because a stagger that only animates the cards that are actually new is
+ *    not expressible in CSS. GSAP's ticker IS rAF, so that hook refuses to
+ *    animate while the document is hidden and renders the cards plainly
+ *    instead — motion is a nicety, a blank card is a bug.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { gsap } from 'gsap'
 import {
   Card, CardActionArea, Chip, Collapse, Slider, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, TableSortLabel, Tooltip,
@@ -273,6 +280,56 @@ const cellSx = {
 }
 const cellMutedSx = { ...cellSx, color: N600 }
 
+/**
+ * Softly reveals newly-added children of `ref` with GSAP, staggered.
+ *
+ * Two things make this less trivial than a one-line `gsap.from()`:
+ *
+ * 1. THE CARDS RE-RENDER CONSTANTLY. The budget cards are recomputed on every
+ *    slider step, so animating "all children" would replay the whole reveal
+ *    on each nudge of the slider. Only children whose `data-reveal-key` was
+ *    not present on the previous pass are animated, so an existing card sits
+ *    still while a newly affordable community fades in beside it.
+ *
+ * 2. GSAP'S TICKER IS requestAnimationFrame. rAF does not fire while the tab
+ *    is hidden, so a tween started then never advances and its targets stay
+ *    at the from-state — invisible, permanently. That is the exact trap that
+ *    made a modal on this project look "frozen" (see HANDOFF §4). When the
+ *    document is hidden we therefore skip the tween entirely and let the
+ *    cards render plainly; motion is a nicety, a blank card is a bug.
+ *    Cleanup also clears the inline props so a tween killed mid-flight can
+ *    never leave a card stuck either.
+ */
+function useSoftReveal(ref, keys) {
+  const seen = useRef(new Set())
+  const signature = keys.join('|')
+  useEffect(() => {
+    const host = ref.current
+    if (!host) return
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+      seen.current = new Set(keys)
+      return
+    }
+    const fresh = [...host.children].filter((el) => !seen.current.has(el.dataset.revealKey))
+    seen.current = new Set(keys)
+    if (!fresh.length) return
+    const tw = gsap.fromTo(
+      fresh,
+      { autoAlpha: 0, y: 18, scale: 0.985 },
+      {
+        autoAlpha: 1, y: 0, scale: 1,
+        duration: 0.62, ease: 'power2.out', stagger: 0.075,
+        clearProps: 'all',
+      },
+    )
+    return () => {
+      tw.kill()
+      // autoAlpha also writes visibility:hidden — never leave that behind.
+      gsap.set(fresh, { clearProps: 'all' })
+    }
+  }, [signature])
+}
+
 // setTimeout, not requestAnimationFrame: rAF never fires while the tab is
 // hidden, which would leave every section stuck at opacity:0.
 function useMounted() {
@@ -463,6 +520,13 @@ export default function PriceIndexPage() {
     return () => nodes.forEach((n) => n.remove())
   }, [lang, index, hasData, updated])
 
+  // GSAP soft reveal for the two photo rows. Keys drive which children are
+  // treated as "new" on a re-render.
+  const stripRef = useRef(null)
+  const budgetTilesRef = useRef(null)
+  useSoftReveal(stripRef, index.byArea.map((a) => a.key))
+  useSoftReveal(budgetTilesRef, affordable?.areas || [])
+
   const shown = useMounted()
   const rv = (i) => ({ className: `pi-rv${shown ? ' in' : ''}`, style: { transitionDelay: `${i * 60}ms` } })
 
@@ -552,9 +616,9 @@ export default function PriceIndexPage() {
                 <h2 className="pi-h2">{t.communitiesHeading}</h2>
                 <p className="pi-p" style={{ margin: 0 }}>{t.communitiesSub}</p>
               </div>
-              <div className="pi-strip">
+              <div className="pi-strip" ref={stripRef}>
                 {index.byArea.map((a) => (
-                  <Card key={a.key} className="pi-tile" elevation={0} sx={{ bgcolor: 'transparent', borderRadius: 0 }}>
+                  <Card key={a.key} data-reveal-key={a.key} className="pi-tile" elevation={0} sx={{ bgcolor: 'transparent', borderRadius: 0 }}>
                     <CardActionArea
                       onClick={() => navLocal(`/project?area=${encodeURIComponent(a.key)}`)}
                       sx={{ borderRadius: '14px', display: 'block', textAlign: 'start' }}
@@ -634,10 +698,10 @@ export default function PriceIndexPage() {
                         react to the slider, and each opens that community's
                         listings pre-filtered to the chosen budget. */}
                     {affordable?.n > 0 && affordable.areas.length > 0 && (
-                      <div className="pi-budget-tiles">
+                      <div className="pi-budget-tiles" ref={budgetTilesRef}>
                         {affordable.areas.map((a) => (
                           <button
-                            type="button" key={a} className="pi-btile"
+                            type="button" key={a} data-reveal-key={a} className="pi-btile"
                             onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
                           >
                             <span className="pi-btile-img">
