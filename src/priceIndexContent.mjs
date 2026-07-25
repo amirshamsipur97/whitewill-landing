@@ -55,6 +55,10 @@ export const PRICE_INDEX = {
     studio: 'Studio',
     thinNote: '† Fewer than five units on the market in this row — read it as an indication, not a rate.',
     ui: {
+      heroSub: 'Median asking price per square metre, community by community, from live freehold inventory.',
+      introHeading: 'What a square metre costs in Oman',
+      faqHeading: 'Frequently asked questions',
+      faqSub: 'What this index does and does not cover. If your question is not answered here, ask us directly.',
       metricPpsm: 'Per m²',
       metricTotal: 'Median price',
       communitiesHeading: 'Communities at a glance',
@@ -159,6 +163,10 @@ export const PRICE_INDEX = {
     studio: 'استودیو',
     thinNote: '† کمتر از پنج واحد در این ردیف موجود است؛ آن را نشانه بدانید، نه نرخ.',
     ui: {
+      heroSub: 'میانه قیمت درخواستی هر مترمربع، منطقه به منطقه، از موجودی زنده فری‌هولد.',
+      introHeading: 'یک مترمربع در عمان چقدر می‌ارزد',
+      faqHeading: 'پرسش‌های پرتکرار',
+      faqSub: 'این شاخص چه چیزی را پوشش می‌دهد و چه چیزی را نه. اگر پرسش شما اینجا نیست، مستقیم از ما بپرسید.',
       metricPpsm: 'هر متر',
       metricTotal: 'میانه قیمت',
       communitiesHeading: 'مناطق در یک نگاه',
@@ -263,6 +271,10 @@ export const PRICE_INDEX = {
     studio: 'استوديو',
     thinNote: '† أقل من خمس وحدات معروضة في هذا الصف — اقرأه كمؤشر لا كسعر سوق.',
     ui: {
+      heroSub: 'وسيط سعر المتر المربع المطلوب، منطقة بمنطقة، من مخزون التملّك الحر المتاح.',
+      introHeading: 'كم يكلّف المتر المربع في عُمان',
+      faqHeading: 'الأسئلة الشائعة',
+      faqSub: 'ما يغطيه هذا المؤشر وما لا يغطيه. إن لم تجد سؤالك هنا، اسألنا مباشرة.',
       metricPpsm: 'للمتر',
       metricTotal: 'وسيط السعر',
       communitiesHeading: 'المناطق في لمحة',
@@ -367,6 +379,10 @@ export const PRICE_INDEX = {
     studio: 'Студия',
     thinNote: '† В этой строке меньше пяти объектов — читайте её как ориентир, а не как ставку рынка.',
     ui: {
+      heroSub: 'Медианная цена предложения за квадратный метр, район за районом, по актуальному фрихолд-предложению.',
+      introHeading: 'Сколько стоит квадратный метр в Омане',
+      faqHeading: 'Частые вопросы',
+      faqSub: 'Что индекс охватывает, а что нет. Если вашего вопроса здесь нет — спросите нас напрямую.',
       metricPpsm: 'За м²',
       metricTotal: 'Медианная цена',
       communitiesHeading: 'Районы с одного взгляда',

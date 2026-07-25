@@ -81,9 +81,28 @@ function pageFor(route, lang) {
   html = html.replace('</head>', `    ${links}\n  </head>`)
 
   // Minimal real content for the crawler's first fetch; React wipes it on mount.
+  // The price index is the one LIGHT page on the site (Perumnas Figma kit), so
+  // its shell must not flash a black box before React takes over.
+  const light = route === PRICE_INDEX_ROUTE
+  const inner = light
+    ? 'max-width:1100px;margin:0 auto;padding:96px 24px'
+    : 'max-width:760px;margin:0 auto;padding:96px 20px'
+  const body =
+    `<h1>${esc(title.split('|')[0].trim())}</h1><p>${esc(desc)}</p>` +
+    (route === '/buy' ? buySeoHtml(lang) : '') +
+    (route === '/project' ? projectSeoHtml(lang) : '') +
+    (LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : '') +
+    (light ? priceIndexHtml(lang) : '') +
+    footerLinksHtml(lang)
+  // The light page needs a FULL-BLEED white backdrop: the global stylesheet
+  // paints body black, so a centred max-width block alone would sit between
+  // two black bars until React mounts.
+  const wrap = light
+    ? `<div style="background:#fff;color:#12161D;min-height:100vh"><div style="${inner}">${body}</div></div>`
+    : `<div style="${inner};color:#fff;background:#000">${body}</div>`
   html = html.replace(
     /<div id="root"><\/div>/,
-    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title.split('|')[0].trim())}</h1><p>${esc(desc)}</p>${route === '/buy' ? buySeoHtml(lang) : ''}${route === '/project' ? projectSeoHtml(lang) : ''}${LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : ''}${route === PRICE_INDEX_ROUTE ? priceIndexHtml(lang) : ''}${footerLinksHtml(lang)}</div></div>`,
+    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="font-family:Inter,system-ui,sans-serif">${wrap}</div></div>`,
   )
   // FAQPage JSON-LD on /buy (same id the SPA reuses → hydration replaces it).
   if (route === '/buy') {
@@ -229,18 +248,21 @@ function priceIndexHtml(lang) {
     updated: BUILD_DAY, excluded: idx.plotExcluded,
   }
 
+  // Table chrome mirrors the "Tables design samples" Figma kit: no container
+  // border, small grey column labels, ONE heavy rule under the header and
+  // hairline row dividers. Same look the React page renders after hydration.
   const dagger = (r) => (r.thin ? '<sup>†</sup>' : '')
   const table = (head, rows) =>
-    `<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;font-size:14px">` +
-    `<thead><tr>${head.map((h) => `<th style="text-align:start;padding:8px 10px;border-bottom:1px solid #444">${esc(h)}</th>`).join('')}</tr></thead>` +
+    `<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;font-size:15px">` +
+    `<thead><tr>${head.map((h) => `<th style="text-align:start;padding:12px 14px;color:#61656E;font-weight:400;border-bottom:2px solid #12161D">${esc(h)}</th>`).join('')}</tr></thead>` +
     `<tbody>${rows
-      .map((cells) => `<tr>${cells.map((v) => `<td style="padding:8px 10px;border-bottom:1px solid #2a2a2a">${v}</td>`).join('')}</tr>`)
+      .map((cells) => `<tr>${cells.map((v) => `<td style="padding:15px 14px;border-bottom:1px solid #E5E5E6">${v}</td>`).join('')}</tr>`)
       .join('')}</tbody></table></div>`
 
   const areaTable = table(
     [c.cols.area, c.cols.city, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.medianPrice, c.cols.typicalSize],
     idx.byArea.map((a) => [
-      `<a href="${prefix}/project?area=${encodeURIComponent(a.key)}" style="color:#8c8d25">${esc(a.label)}</a>${dagger(a)}`,
+      `<a href="${prefix}/project?area=${encodeURIComponent(a.key)}" style="color:#6f7020">${esc(a.label)}</a>${dagger(a)}`,
       esc(a.city || '—'), fmtInt(a.n), `<strong>${fmtInt(a.medianPpsm)}</strong>`,
       esc(fmtRange(a.minPpsm, a.maxPpsm)), esc(fmtOmr(a.medianPrice)), esc(fmtSqm(a.medianArea)),
     ]),
@@ -262,7 +284,7 @@ function priceIndexHtml(lang) {
   const projTable = table(
     [c.cols.project, c.cols.area, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.from],
     idx.byProject.map((p) => [
-      `<a href="${prefix}/buy/${p.slug}" style="color:#8c8d25">${esc(p.label)}</a>${dagger(p)}`,
+      `<a href="${prefix}/buy/${p.slug}" style="color:#6f7020">${esc(p.label)}</a>${dagger(p)}`,
       esc(p.area || '—'), fmtInt(p.n), `<strong>${fmtInt(p.medianPpsm)}</strong>`,
       esc(fmtRange(p.minPpsm, p.maxPpsm)), esc(fmtOmr(p.minPrice)),
     ]),

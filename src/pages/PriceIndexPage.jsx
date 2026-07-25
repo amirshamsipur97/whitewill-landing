@@ -12,40 +12,56 @@
  * prerenderer bakes the build-time numbers into the static HTML from the very
  * same module (src/priceIndexData.mjs) so a crawler sees real figures.
  *
- * BUILT ON MATERIAL, not hand-rolled boxes: MUI Card / Table / TableSortLabel
- * / Slider / ToggleButtonGroup / Chip carry the interaction states, ripples and
- * elevation, and the page's own SectionHeading + FaqAccordion come from the
- * shared kit in components/invest/ui.jsx so it matches the rest of the site.
+ * ── DESIGN ────────────────────────────────────────────────────────────────
+ * Two Figma kits, deliberately combined:
  *
- * Three things make it USEFUL rather than just readable:
- *   1. the budget slider — "what does OMR X actually buy, and where",
- *      answered from the same inventory and handed off to the portal;
- *   2. every table sorts on any column;
- *   3. community cards carry the real project photography and link straight
- *      into the filtered listings.
+ *  1. PAGE — "Perumnas / Real Estate Website Design" (TCwUAiZbL29LTXvPdymh8I,
+ *     node 5:32). A LIGHT editorial layout, which is why this is the one page
+ *     on the site that is not dark: a figures page has to read like a
+ *     reference document, and white is what makes a table legible. Its token
+ *     set is used verbatim (Neutral 0/25/100/600/900 + the Inter Display type
+ *     scale), along with its three signature moves — a full-bleed photo that
+ *     dissolves into white, a left-heading / right-body asymmetric split, and
+ *     naked stat numbers with no boxes around them.
+ *
+ *  2. TABLES — "Tables design samples" (7CQA0rYUdROKqkHcT2HvHx, node
+ *     202:20434): no container border, small grey column labels, a single
+ *     heavy rule under the header, hairline row dividers, a bold first
+ *     column, soft pastel tag chips, and an accent-coloured active sort
+ *     column with an underline bar. The kit's blue is swapped for the brand
+ *     olive so the page still belongs to irfaninvest.
+ *
+ * NOTE: components/invest/ui.jsx cannot be reused here — SectionHeading and
+ * FaqAccordion hardcode white text and rgba(255,255,255,…) surfaces for the
+ * dark pages. Light equivalents are built locally instead.
+ *
+ * The site header is a permanently dark blurred bar, so it sits happily over
+ * both the photo hero and the white body.
+ *
+ * Three things make the page USEFUL rather than just readable: the budget
+ * slider, sorting on every column of every table, and community tiles that
+ * link straight into the filtered listings.
  *
  * Imagery is DERIVED from the inventory (largest project in each community),
  * never hardcoded, so it can never point at a delisted development.
  *
- * MOTION IS DELIBERATELY LIGHT: opacity plus an 8px lift, ~380ms, and that is
- * all. Driven by React state via setTimeout — never rAF, which does not fire
- * in a hidden tab and would leave the page at opacity:0
- * (see HANDOFF-SEO-2026-07-25 §4).
+ * MOTION IS DELIBERATELY LIGHT: opacity plus an 8px lift, ~380ms. Driven by
+ * React state via setTimeout — never rAF, which does not fire in a hidden tab
+ * and would leave the page at opacity:0 (see HANDOFF-SEO-2026-07-25 §4).
  */
 import { useEffect, useMemo, useState } from 'react'
 import {
-  Card, CardActionArea, Chip, Divider, Paper, Slider, Table, TableBody,
-  TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
-  ToggleButton, ToggleButtonGroup, Tooltip,
+  Card, CardActionArea, Chip, Collapse, Slider, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, TableSortLabel, Tooltip,
 } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
-import UpdateRoundedIcon from '@mui/icons-material/UpdateRounded'
+import AddRoundedIcon from '@mui/icons-material/AddRounded'
+import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
 import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
 import { galleryFor } from '../projectGallery.js'
 import { LocalizedLink, useLocalizedNavigate } from '../lib/localize.js'
-import { FONT, OLIVE_BRIGHT, SectionHeading, FaqAccordion } from '../components/invest/ui.jsx'
+import { FONT } from '../components/invest/ui.jsx'
 import {
   buildPriceIndex, median, slugify, typeGroup,
   fmtInt, fmtOmr, fmtRange, fmtSqm,
@@ -54,13 +70,25 @@ import {
   priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill,
 } from '../priceIndexContent.mjs'
 
-const PAPER = '#0b0b0c'
-const INK = '#f4f2ec'
-const SUB = 'rgba(244,242,236,0.62)'
-const FAINT = 'rgba(244,242,236,0.42)'
-const LINE = 'rgba(255,255,255,0.10)'
-const ACCENT = OLIVE_BRIGHT
+// ── Perumnas kit tokens (Figma variables, verbatim) ────────────────────────
+const N0 = '#FFFFFF'
+const N25 = '#FAFAFB'
+const N100 = '#E5E5E6'
+const N600 = '#61656E'
+const N900 = '#12161D'
+// Brand olive, darkened from #8c8d25 to clear AA on white. Replaces the
+// Tables kit's blue for active sort / data emphasis.
+const OLIVE = '#6f7020'
 const GOLD = '#B98C52'
+
+// Pastel tag chips from the Tables kit, repurposed to band the sample size —
+// so the chip carries information instead of decoration.
+const BANDS = {
+  high: { bg: '#E3F5E9', fg: '#1E6B3A' },
+  mid: { bg: '#E8E9F5', fg: '#3D4270' },
+  thin: { bg: '#FCF3DC', fg: '#7A5C13' },
+}
+const bandFor = (n) => (n < 5 ? BANDS.thin : n < 50 ? BANDS.mid : BANDS.high)
 
 // Neutral site-owned image for a community we have no project photography for
 // (Aida/Yiti ships without a gallery folder). Deliberately NOT another
@@ -68,85 +96,159 @@ const GOLD = '#B98C52'
 const FALLBACK_IMG = '/images/hero-poster.jpg'
 
 const CSS = `
-.pi-page{background:${PAPER};color:${INK};min-height:100vh;font-family:${FONT}}
-.pi-wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+/* The global stylesheet paints html, body AND #root black for the rest of the
+   site. On the one light page that shows as black overscroll edges and black
+   bars beside the centred content, so it has to be overridden — including the
+   #root rule, which outranks a bare type selector. This <style> block is
+   rendered inside the component, so React removes it on unmount and the dark
+   site is restored automatically. */
+html,body,#root{background:${N0} !important}
+.pi-page{background:${N0};color:${N900};min-height:100vh;font-family:${FONT};
+  -webkit-font-smoothing:antialiased}
+.pi-wrap{max-width:1280px;margin:0 auto;padding:0 24px}
 
-.pi-hero{position:relative;padding:128px 20px 56px;overflow:hidden;background:#0a0a0b}
+/* ── hero: full-bleed photograph dissolving into the white page ─────────── */
+.pi-hero{position:relative;min-height:min(72vh,620px);display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:150px 24px 120px;overflow:hidden;background:#c9d3dc}
 .pi-hero-bg{position:absolute;inset:0;z-index:0;opacity:0;transition:opacity .7s ease}
-.pi-hero-bg.in{opacity:.34}
+.pi-hero-bg.in{opacity:1}
 .pi-hero-bg img{width:100%;height:100%;object-fit:cover;display:block}
-.pi-hero-veil{position:absolute;inset:0;z-index:1;background:
-  linear-gradient(180deg,rgba(10,10,11,.9) 0%,rgba(10,10,11,.68) 45%,rgba(11,11,12,.97) 100%),
-  radial-gradient(900px 420px at 50% -10%,rgba(185,140,82,.18),transparent 70%)}
-.pi-hero-wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto}
-.pi-crumb{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:${FAINT};font-size:13px;margin-bottom:20px}
-.pi-crumb a{color:${FAINT};text-decoration:none;transition:color .18s}
-.pi-crumb a:hover{color:${INK}}
-.pi-h1{margin:10px 0 0;font-weight:300;font-size:clamp(30px,4.6vw,54px);letter-spacing:-.02em;color:#fff;line-height:1.06}
-.pi-lead{margin:15px 0 0;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.72;color:${SUB};max-width:720px}
+/* The kit's signature move is the wash to white at the bottom. The radial
+   scrim is ours: the hero image is DERIVED from inventory, so it can be a
+   near-white render (Vistal currently is) and white type over it would fail
+   contrast. The scrim guarantees legibility whatever photo turns up. */
+.pi-hero-fade{position:absolute;inset:0;z-index:1;background:
+  radial-gradient(760px 380px at 50% 44%,rgba(8,12,18,.34),rgba(8,12,18,0) 74%),
+  linear-gradient(180deg,rgba(8,12,18,.38) 0%,rgba(8,12,18,.18) 32%,rgba(8,12,18,.03) 56%,rgba(255,255,255,.46) 80%,${N0} 100%)}
+.pi-hero-in{position:relative;z-index:2;max-width:900px}
+.pi-crumb{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;
+  color:rgba(255,255,255,.78);font-size:14px;margin-bottom:26px}
+.pi-crumb a{color:rgba(255,255,255,.78);text-decoration:none;transition:color .18s}
+.pi-crumb a:hover{color:#fff}
+.pi-eyebrow{font-size:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.9);text-shadow:0 1px 12px rgba(0,0,0,.4)}
+.pi-d2{margin:14px 0 0;font-weight:500;font-size:clamp(34px,5.2vw,72px);line-height:1.09;
+  letter-spacing:-.035em;color:#fff;text-shadow:0 2px 22px rgba(0,0,0,.5)}
+.pi-hero-sub{margin:18px auto 0;max-width:620px;font-size:clamp(15px,1.4vw,18px);line-height:1.5;
+  color:rgba(255,255,255,.94);text-shadow:0 1px 14px rgba(0,0,0,.4)}
+.pi-hero-meta{margin:22px 0 0;font-size:13.5px;color:rgba(255,255,255,.8);letter-spacing:.02em;
+  text-shadow:0 1px 12px rgba(0,0,0,.45)}
 
-.pi-sec{padding:60px 0 0}
-.pi-sub{font-size:14.5px;line-height:1.6;color:${SUB};margin:-14px 0 22px;max-width:760px}
-.pi-note{font-size:12.5px;color:${FAINT};margin:12px 0 0;line-height:1.6}
+/* ── asymmetric split: heading left, body right (kit's core rhythm) ─────── */
+.pi-split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.pi-h1{font-weight:500;font-size:clamp(28px,3.4vw,44px);line-height:1.18;letter-spacing:-.01em;
+  color:${N900};margin:0}
+.pi-h2{font-weight:500;font-size:clamp(24px,2.8vw,36px);line-height:1.3;letter-spacing:-.01em;
+  color:${N900};margin:0 0 10px}
+.pi-h3{font-weight:500;font-size:clamp(19px,1.9vw,24px);line-height:1.34;color:${N900};margin:0}
+.pi-p{font-size:clamp(15.5px,1.35vw,18px);line-height:1.62;color:${N600};margin:0 0 20px}
+.pi-lbl{font-size:14px;line-height:1.4;color:${N600}}
 
-/* Bar chart — plain CSS widths. No charting library, no JS animation loop. */
-.pi-bars{display:flex;flex-direction:column;gap:11px;margin:0 0 24px}
-.pi-bar{display:grid;grid-template-columns:minmax(120px,190px) 1fr auto;align-items:center;gap:14px}
-.pi-bar-label{font-size:13.5px;color:${SUB};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pi-bar-track{height:10px;background:rgba(255,255,255,.055);border-radius:999px;overflow:hidden}
-.pi-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,${GOLD},${ACCENT});transition:width .52s cubic-bezier(.4,0,.2,1)}
-.pi-bar-val{font-size:13.5px;font-weight:700;color:${INK};font-variant-numeric:tabular-nums;min-width:64px;text-align:end}
-[dir=rtl] .pi-bar-fill{background:linear-gradient(270deg,${GOLD},${ACCENT})}
+/* naked stat numbers — no boxes, exactly the kit's +100 / +60K / +70K row */
+.pi-stats{display:flex;flex-wrap:wrap;gap:14px 56px;margin-top:36px}
+.pi-stat b{display:block;font-weight:500;font-size:clamp(26px,3vw,36px);line-height:1.2;
+  letter-spacing:-.02em;color:${N900};font-variant-numeric:tabular-nums}
+.pi-stat span{display:block;margin-top:8px;font-size:14px;color:${N600}}
 
-.pi-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:16px}
-.pi-cardimg{position:relative;aspect-ratio:16/10;overflow:hidden;background:#1a1a1b}
-.pi-cardimg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .42s cubic-bezier(.4,0,.2,1)}
-.pi-card:hover .pi-cardimg img{transform:scale(1.05)}
-.pi-cardimg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.8) 100%)}
-.pi-cardname{position:absolute;left:14px;right:14px;bottom:11px;z-index:2;display:flex;align-items:center;gap:6px;color:#fff;font-weight:600;font-size:15.5px;text-shadow:0 2px 10px rgba(0,0,0,.6)}
-.pi-cardbody{padding:14px 15px 15px}
-.pi-cardrate{font-size:23px;font-weight:700;color:${ACCENT};letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
-.pi-cardunit{font-size:11.5px;color:${FAINT};text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-top:3px}
-.pi-cardmeta{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:11px;border-top:1px solid ${LINE};font-size:13px;color:${SUB}}
+.pi-sec{padding:96px 0 0}
+.pi-sec-head{max-width:760px;margin-bottom:34px}
+.pi-note{font-size:14px;color:${N600};margin:16px 0 0;line-height:1.55}
 
-.pi-copy{max-width:860px;padding:70px 0 0}
-.pi-copy p{font-size:15.5px;line-height:1.85;color:${SUB};margin:0 0 18px}
-.pi-method{border-inline-start:2px solid ${GOLD};padding-inline-start:22px}
+/* ── community strip: the kit's bleeding 3-up photo row ─────────────────── */
+.pi-strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(310px,1fr);gap:28px;
+  overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.pi-strip::-webkit-scrollbar{height:6px}
+.pi-strip::-webkit-scrollbar-thumb{background:${N100};border-radius:99px}
+.pi-tile{scroll-snap-align:start}
+.pi-tileimg{position:relative;aspect-ratio:16/11;overflow:hidden;border-radius:14px;background:${N25}}
+.pi-tileimg img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .42s cubic-bezier(.4,0,.2,1)}
+.pi-tile:hover .pi-tileimg img{transform:scale(1.04)}
+.pi-tilefoot{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  margin-top:18px;padding-bottom:16px;border-bottom:1px solid ${N100}}
+.pi-tilename{font-weight:500;font-size:18px;line-height:1.35;color:${N900}}
+.pi-tilemeta{margin-top:6px;font-size:14px;color:${N600}}
+.pi-tilerate b{font-weight:500;font-size:26px;line-height:1;letter-spacing:-.02em;color:${OLIVE};
+  font-variant-numeric:tabular-nums}
+.pi-tilerate span{display:block;margin-top:5px;font-size:12.5px;color:${N600};text-align:end}
 
-.pi-links{margin:0;padding-inline-start:18px;list-style:disc;padding-bottom:96px}
-.pi-links li{margin-bottom:9px}
-.pi-links a{font-size:15px;color:${ACCENT};text-decoration:none;transition:opacity .18s}
-.pi-links a:hover{opacity:.75;text-decoration:underline}
+/* ── bar chart: grey track, olive fill, no chrome ───────────────────────── */
+.pi-bars{display:flex;flex-direction:column;gap:14px}
+.pi-bar{display:grid;grid-template-columns:minmax(130px,210px) 1fr auto;align-items:center;gap:18px}
+.pi-bar-label{font-size:15px;color:${N900};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-bar-track{height:8px;background:${N100};border-radius:99px;overflow:hidden}
+.pi-bar-fill{height:100%;border-radius:99px;background:${OLIVE};
+  transition:width .52s cubic-bezier(.4,0,.2,1)}
+.pi-bar-val{font-size:15px;font-weight:500;color:${N900};font-variant-numeric:tabular-nums;
+  min-width:74px;text-align:end}
 
-/* Light reveal: opacity + 8px, 380ms. Nothing slides across the screen. */
+/* light segmented control */
+.pi-seg{display:inline-flex;border:1px solid ${N100};border-radius:10px;overflow:hidden;
+  margin-bottom:28px;background:${N0}}
+.pi-seg button{appearance:none;border:0;background:transparent;font-family:${FONT};font-size:14px;
+  color:${N600};padding:10px 18px;cursor:pointer;transition:background .18s,color .18s}
+.pi-seg button+button{border-inline-start:1px solid ${N100}}
+.pi-seg button[aria-pressed=true]{background:${N900};color:#fff}
+
+/* ── budget explorer ───────────────────────────────────────────────────── */
+.pi-panel{border:1px solid ${N100};border-radius:16px;background:${N25};padding:38px 34px}
+.pi-budgetnum{font-weight:500;font-size:clamp(30px,4vw,44px);line-height:1.1;letter-spacing:-.025em;
+  color:${N900};margin:6px 0 10px;font-variant-numeric:tabular-nums}
+.pi-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+
+/* ── FAQ: the kit's bordered accordion cards ───────────────────────────── */
+.pi-faq{display:flex;flex-direction:column;gap:16px}
+.pi-faqcard{border:1px solid ${N100};border-radius:12px;background:${N0};overflow:hidden}
+.pi-faqq{display:flex;align-items:flex-start;gap:20px;width:100%;text-align:start;appearance:none;
+  border:0;background:transparent;font-family:${FONT};padding:24px 26px;cursor:pointer}
+.pi-faqq h3{flex:1;font-weight:500;font-size:clamp(17px,1.7vw,22px);line-height:1.38;color:${N900};margin:0}
+.pi-faqa{padding:0 26px 24px;font-size:clamp(15px,1.3vw,17px);line-height:1.62;color:${N600}}
+
+.pi-cta{margin-top:96px;border-top:1px solid ${N100};padding-top:56px}
+.pi-btn{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 28px;background:${N900};
+  color:#fff;border-radius:10px;font-weight:500;font-size:16px;text-decoration:none;
+  transition:background .18s,gap .18s}
+.pi-btn:hover{background:${OLIVE};gap:15px}
+.pi-links{margin:28px 0 0;padding:0 0 110px;list-style:none}
+.pi-links li{border-bottom:1px solid ${N100}}
+.pi-links a{display:block;padding:17px 0;font-size:16px;color:${N900};text-decoration:none;
+  transition:color .18s,padding-inline-start .18s}
+.pi-links a:hover{color:${OLIVE};padding-inline-start:6px}
+
 .pi-rv{opacity:0;transform:translateY(8px);transition:opacity .38s ease,transform .38s cubic-bezier(.4,0,.2,1)}
 .pi-rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
   .pi-rv,.pi-rv.in{opacity:1;transform:none;transition:none}
-  .pi-bar-fill,.pi-cardimg img{transition:none}
+  .pi-bar-fill,.pi-tileimg img{transition:none}
 }
-@media (max-width:720px){
-  .pi-hero{padding:106px 16px 40px}
-  .pi-bar{grid-template-columns:minmax(92px,1fr) 1.1fr auto;gap:10px}
+@media (max-width:900px){
+  .pi-split{grid-template-columns:1fr;gap:26px}
+  .pi-sec{padding:68px 0 0}
+  .pi-panel{padding:26px 20px}
+  .pi-hero{padding:126px 20px 90px;min-height:auto}
+  .pi-bar{grid-template-columns:minmax(96px,1fr) 1.1fr auto;gap:12px}
+  .pi-stats{gap:20px 32px}
 }
 `
 
-// MUI overrides kept in one place so every table/control on the page shares
-// the site's dark palette instead of Material's default light surfaces.
-const cellSx = { fontFamily: FONT, fontSize: 14, color: SUB, borderColor: 'rgba(255,255,255,.055)', whiteSpace: 'nowrap', py: 1.6 }
+// ── Tables-kit cell styling ────────────────────────────────────────────────
+// Small grey labels, ONE heavy rule under the header, hairline row dividers,
+// bold first column, and an olive active-sort column with an underline bar.
 const headSx = {
-  fontFamily: FONT, fontSize: 11.5, fontWeight: 700, letterSpacing: '.07em',
-  textTransform: 'uppercase', color: FAINT, borderColor: LINE,
-  whiteSpace: 'nowrap', bgcolor: 'rgba(255,255,255,.022)',
-  '& .MuiTableSortLabel-root': { color: FAINT },
-  '& .MuiTableSortLabel-root:hover': { color: INK },
-  '& .MuiTableSortLabel-root.Mui-active': { color: ACCENT },
-  '& .MuiTableSortLabel-icon': { color: `${ACCENT} !important` },
+  fontFamily: FONT, fontSize: 14, fontWeight: 400, color: N600,
+  borderBottom: `2px solid ${N900}`, whiteSpace: 'nowrap',
+  py: 1.6, px: 2, verticalAlign: 'bottom', lineHeight: 1.35,
+  '& .MuiTableSortLabel-root': { color: N600, alignItems: 'flex-end' },
+  '& .MuiTableSortLabel-root:hover': { color: N900 },
+  '& .MuiTableSortLabel-root.Mui-active': { color: OLIVE, fontWeight: 500 },
+  '& .MuiTableSortLabel-icon': { color: `${OLIVE} !important`, fontSize: 17 },
 }
-const panelSx = {
-  bgcolor: 'rgba(255,255,255,.028)', border: `1px solid ${LINE}`, borderRadius: '16px',
-  backgroundImage: 'none', color: INK,
+const headActiveSx = { boxShadow: `inset 0 -2px 0 0 ${OLIVE}` }
+const cellSx = {
+  fontFamily: FONT, fontSize: 16, color: N900, borderBottom: `1px solid ${N100}`,
+  whiteSpace: 'nowrap', py: 2.1, px: 2,
 }
+const cellMutedSx = { ...cellSx, color: N600 }
 
 // setTimeout, not requestAnimationFrame: rAF never fires while the tab is
 // hidden, which would leave every section stuck at opacity:0.
@@ -169,8 +271,8 @@ const bucketFor = (budget) => {
   return b ? String(b / 1000) : 'any'
 }
 
-/** Sortable Material table. `cols` = [{key,label,align,render,value}]. */
-function SortableTable({ cols, rows, defaultKey, defaultDir = 'desc' }) {
+/** Sortable table in the Tables-kit idiom. `cols` = [{key,label,render,value}]. */
+function DataTable({ cols, rows, defaultKey, defaultDir = 'desc' }) {
   const [key, setKey] = useState(defaultKey)
   const [dir, setDir] = useState(defaultDir)
   const sorted = useMemo(() => {
@@ -190,13 +292,21 @@ function SortableTable({ cols, rows, defaultKey, defaultDir = 'desc' }) {
   }
 
   return (
-    <TableContainer component={Paper} elevation={0} sx={{ ...panelSx, overflowX: 'auto' }}>
-      <Table size="small" sx={{ minWidth: 640 }}>
+    <TableContainer sx={{ overflowX: 'auto' }}>
+      <Table sx={{ minWidth: 720, borderCollapse: 'separate', borderSpacing: 0 }}>
         <TableHead>
           <TableRow>
             {cols.map((c) => (
-              <TableCell key={c.key} sx={headSx} sortDirection={key === c.key ? dir : false}>
-                <TableSortLabel active={key === c.key} direction={key === c.key ? dir : 'asc'} onClick={() => onSort(c.key)}>
+              <TableCell
+                key={c.key}
+                sx={{ ...headSx, ...(key === c.key ? headActiveSx : {}) }}
+                sortDirection={key === c.key ? dir : false}
+              >
+                <TableSortLabel
+                  active={key === c.key}
+                  direction={key === c.key ? dir : 'asc'}
+                  onClick={() => onSort(c.key)}
+                >
                   {c.label}
                 </TableSortLabel>
               </TableCell>
@@ -205,9 +315,11 @@ function SortableTable({ cols, rows, defaultKey, defaultDir = 'desc' }) {
         </TableHead>
         <TableBody>
           {sorted.map((r) => (
-            <TableRow key={r.key} hover sx={{ '&:last-child td': { border: 0 } }}>
-              {cols.map((c) => (
-                <TableCell key={c.key} sx={{ ...cellSx, ...(c.sx || {}) }}>{c.render(r)}</TableCell>
+            <TableRow key={r.key} sx={{ '&:hover td': { bgcolor: N25 }, '&:last-child td': { borderBottom: 0 } }}>
+              {cols.map((c, i) => (
+                <TableCell key={c.key} sx={i === 0 ? { ...cellSx, fontWeight: 600 } : (c.muted ? cellMutedSx : cellSx)}>
+                  {c.render(r)}
+                </TableCell>
               ))}
             </TableRow>
           ))}
@@ -228,6 +340,7 @@ export default function PriceIndexPage() {
   const [units, setUnits] = useState([])
   const [metric, setMetric] = useState('ppsm')
   const [budget, setBudget] = useState(null)
+  const [openFaq, setOpenFaq] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -330,19 +443,27 @@ export default function PriceIndexPage() {
   const shown = useMounted()
   const rv = (i) => ({ className: `pi-rv${shown ? ' in' : ''}`, style: { transitionDelay: `${i * 60}ms` } })
 
-  const thin = (row) => (row.thin
-    ? <Tooltip title={c.thinNote}><span style={{ color: GOLD, fontSize: 11, verticalAlign: 'super', cursor: 'help' }}>†</span></Tooltip>
-    : null)
-  const anyThin = (rows) => rows.some((r) => r.thin)
+  // Sample-size chip: pastel band from the Tables kit, carrying real meaning.
+  const sample = (row) => {
+    const b = bandFor(row.n)
+    const chip = (
+      <Chip
+        size="small" label={fmtInt(row.n)}
+        sx={{
+          fontFamily: FONT, fontSize: 13.5, fontWeight: 500, height: 26, borderRadius: '6px',
+          bgcolor: b.bg, color: b.fg, '& .MuiChip-label': { px: 1.1 },
+        }}
+      />
+    )
+    return row.thin ? <Tooltip title={c.thinNote}><span>{chip}</span></Tooltip> : chip
+  }
   const bedLabel = (k) => (k === '0' ? c.studio : k)
-
-  const num = (v) => <span style={{ color: INK, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{v}</span>
-  const lead = (v) => <span style={{ color: ACCENT, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{v}</span>
-  const nameLink = (to, label, row) => (
-    <>
-      <LocalizedLink to={to} style={{ color: INK, fontWeight: 600, textDecoration: 'none' }}>{label}</LocalizedLink>
-      {thin(row)}
-    </>
+  const strong = (v) => <span style={{ color: OLIVE, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{v}</span>
+  const tnum = (v) => <span style={{ fontVariantNumeric: 'tabular-nums' }}>{v}</span>
+  const nameLink = (to, label) => (
+    <LocalizedLink to={to} style={{ color: N900, fontWeight: 600, textDecoration: 'none', borderBottom: `1px solid ${N100}` }}>
+      {label}
+    </LocalizedLink>
   )
 
   // Bars are scaled against the leader, so the chart reads as a comparison
@@ -355,108 +476,98 @@ export default function PriceIndexPage() {
     <div className="pi-page" dir={rtl ? 'rtl' : 'ltr'}>
       <style>{CSS}</style>
 
-      {/* ── hero: real project photography + the headline figures ── */}
+      {/* ── hero: full-bleed photograph washing into white ── */}
       <section className="pi-hero">
         <div className={`pi-hero-bg${heroImg && shown ? ' in' : ''}`} aria-hidden="true">
-          {/* Decorative: the veil sits over it and the container is
-              position:absolute/inset:0, so no intrinsic size is needed and no
-              CLS is possible. `fetchpriority` is deliberately LOWERCASE —
-              React 18 does not recognise the camelCase spelling and drops it
+          {/* Decorative; the container is position:absolute/inset:0 so no
+              intrinsic size is needed and no CLS is possible. `fetchpriority`
+              is deliberately LOWERCASE — React 18 drops the camelCase spelling
               with a console warning. */}
           {heroImg && <img src={heroImg} alt="" fetchpriority="high" decoding="async" />}
         </div>
-        <div className="pi-hero-veil" aria-hidden="true" />
+        <div className="pi-hero-fade" aria-hidden="true" />
 
-        <div className="pi-hero-wrap">
+        <div className="pi-hero-in">
           <nav className="pi-crumb">
             <LocalizedLink to="/">Home</LocalizedLink><span>/</span>
             <LocalizedLink to="/project">Oman</LocalizedLink><span>/</span>
-            <span style={{ color: SUB }}>{c.h1}</span>
+            <span style={{ color: '#fff' }}>{c.h1}</span>
           </nav>
-
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.16em', color: ACCENT, textTransform: 'uppercase' }}>
-            {c.eyebrow}
-          </div>
-          <h1 className="pi-h1">{c.h1}</h1>
-          <p className="pi-lead">{fill(c.lead, vars)}</p>
-
-          <Chip
-            size="small"
-            icon={<UpdateRoundedIcon sx={{ fontSize: 16 }} />}
-            label={`${c.updatedLabel}: ${updated}`}
-            sx={{
-              mt: 2.2, fontFamily: FONT, fontSize: 12.5, color: SUB,
-              bgcolor: 'rgba(255,255,255,.05)', border: `1px solid ${LINE}`,
-              '& .MuiChip-icon': { color: GOLD },
-            }}
-          />
-
-          {hasData && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(168px,1fr))', gap: 12, marginTop: 26 }}>
-              {[
-                [fmtInt(index.units), c.stats.units],
-                [fmtInt(index.areas), c.stats.areas],
-                [fmtInt(index.overall.medianPpsm), c.stats.median],
-                [fmtOmr(index.overall.minPrice), c.stats.entry],
-              ].map(([v, label], i) => (
-                <Paper key={label} elevation={0} className={rv(i).className} style={rv(i).style} sx={{ ...panelSx, p: '16px 18px' }}>
-                  <div style={{ fontSize: 'clamp(21px,2.4vw,27px)', fontWeight: 700, color: ACCENT, letterSpacing: '-.02em', lineHeight: 1.15 }}>{v}</div>
-                  <div style={{ marginTop: 5, fontSize: 12.5, color: SUB }}>{label}</div>
-                </Paper>
-              ))}
-            </div>
-          )}
+          <div className="pi-eyebrow">{c.eyebrow}</div>
+          <h1 className="pi-d2">{c.h1}</h1>
+          <p className="pi-hero-sub">{t.heroSub}</p>
+          <p className="pi-hero-meta">{c.updatedLabel}: {updated}</p>
         </div>
       </section>
 
       <div className="pi-wrap">
+        {/* ── intro split + naked stat row ── */}
+        <section className={`pi-split ${rv(0).className}`} style={{ paddingTop: 8, ...rv(0).style }}>
+          <h2 className="pi-h1">{t.introHeading}</h2>
+          <div>
+            <p className="pi-p">{fill(c.lead, vars)}</p>
+            {hasData && (
+              <div className="pi-stats">
+                {[
+                  [fmtInt(index.units), c.stats.units],
+                  [fmtInt(index.areas), c.stats.areas],
+                  [fmtInt(index.overall.medianPpsm), c.stats.median],
+                  [fmtOmr(index.overall.minPrice), c.stats.entry],
+                ].map(([v, label]) => (
+                  <div className="pi-stat" key={label}><b>{v}</b><span>{label}</span></div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
         {hasData && (
           <>
-            {/* ── community cards + chart + table ── */}
-            <section className={`pi-sec ${rv(0).className}`} style={rv(0).style}>
-              <SectionHeading eyebrow={t.communitiesHeading} title={c.areasHeading} sx={{ mb: 2 }} />
-              <p className="pi-sub">{t.communitiesSub}</p>
-
-              <div className="pi-cards" style={{ marginBottom: 34 }}>
+            {/* ── community photo strip ── */}
+            <section className={`pi-sec ${rv(1).className}`} style={rv(1).style}>
+              <div className="pi-sec-head">
+                <h2 className="pi-h2">{t.communitiesHeading}</h2>
+                <p className="pi-p" style={{ margin: 0 }}>{t.communitiesSub}</p>
+              </div>
+              <div className="pi-strip">
                 {index.byArea.map((a) => (
-                  <Card key={a.key} className="pi-card" elevation={0} sx={{ ...panelSx, overflow: 'hidden', transition: 'border-color .18s, transform .18s', '&:hover': { borderColor: 'rgba(185,140,82,.5)', transform: 'translateY(-2px)' } }}>
-                    <CardActionArea onClick={() => navLocal(`/project?area=${encodeURIComponent(a.key)}`)}>
-                      <div className="pi-cardimg">
+                  <Card key={a.key} className="pi-tile" elevation={0} sx={{ bgcolor: 'transparent', borderRadius: 0 }}>
+                    <CardActionArea
+                      onClick={() => navLocal(`/project?area=${encodeURIComponent(a.key)}`)}
+                      sx={{ borderRadius: '14px', display: 'block', textAlign: 'start' }}
+                    >
+                      <div className="pi-tileimg">
                         <img src={areaImg[a.key] || FALLBACK_IMG} alt={`Property for sale in ${a.label}, Oman`} loading="lazy" />
-                        <span className="pi-cardname">
-                          <PlaceRoundedIcon sx={{ fontSize: 16, color: GOLD }} /> {a.label}{a.thin ? ' †' : ''}
-                        </span>
                       </div>
-                      <div className="pi-cardbody">
-                        <div className="pi-cardrate">{fmtInt(a.medianPpsm)}</div>
-                        <div className="pi-cardunit">{c.cols.medianPpsm}</div>
-                        <div className="pi-cardmeta">
-                          <span>{fmtInt(a.n)} {t.homes}</span>
-                          <span>{t.from} {fmtOmr(a.minPrice)}</span>
+                      <div className="pi-tilefoot">
+                        <div>
+                          <div className="pi-tilename">{a.label}</div>
+                          <div className="pi-tilemeta">{fmtInt(a.n)} {t.homes} · {t.from} {fmtOmr(a.minPrice)}</div>
+                        </div>
+                        <div className="pi-tilerate">
+                          <b>{fmtInt(a.medianPpsm)}</b>
+                          <span>{c.cols.medianPpsm}</span>
                         </div>
                       </div>
                     </CardActionArea>
                   </Card>
                 ))}
               </div>
+            </section>
 
-              <ToggleButtonGroup
-                size="small" exclusive value={metric}
-                onChange={(_, v) => v && setMetric(v)}
-                sx={{
-                  mb: 2.5,
-                  '& .MuiToggleButton-root': {
-                    fontFamily: FONT, fontSize: 13, textTransform: 'none', color: SUB,
-                    borderColor: LINE, px: 2,
-                  },
-                  '& .Mui-selected': { color: `${INK} !important`, bgcolor: 'rgba(185,140,82,.18) !important', borderColor: 'rgba(185,140,82,.45) !important' },
-                }}
-              >
-                <ToggleButton value="ppsm">{t.metricPpsm}</ToggleButton>
-                <ToggleButton value="price">{t.metricTotal}</ToggleButton>
-              </ToggleButtonGroup>
+            {/* ── chart + community table ── */}
+            <section className={`pi-sec ${rv(2).className}`} style={rv(2).style}>
+              <div className="pi-sec-head">
+                <h2 className="pi-h2">{c.areasHeading}</h2>
+                <p className="pi-p" style={{ margin: 0 }}>{c.areasSub}</p>
+              </div>
 
-              <div className="pi-bars">
+              <div className="pi-seg" role="group">
+                <button type="button" aria-pressed={metric === 'ppsm'} onClick={() => setMetric('ppsm')}>{t.metricPpsm}</button>
+                <button type="button" aria-pressed={metric === 'price'} onClick={() => setMetric('price')}>{t.metricTotal}</button>
+              </div>
+
+              <div className="pi-bars" style={{ marginBottom: 44 }}>
                 {bars.map((a) => (
                   <div className="pi-bar" key={a.key}>
                     <span className="pi-bar-label">{a.label}</span>
@@ -468,189 +579,199 @@ export default function PriceIndexPage() {
                 ))}
               </div>
 
-              <SortableTable
+              <DataTable
                 defaultKey="ppsm"
                 rows={index.byArea}
                 cols={[
-                  { key: 'name', label: c.cols.area, value: (r) => r.label, render: (r) => nameLink(`/project?area=${encodeURIComponent(r.key)}`, r.label, r) },
-                  { key: 'city', label: c.cols.city, value: (r) => r.city || '', render: (r) => r.city || '—' },
-                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: (r) => num(fmtInt(r.n)) },
-                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => lead(fmtInt(r.medianPpsm)) },
-                  { key: 'range', label: c.cols.rangePpsm, value: (r) => r.minPpsm, render: (r) => fmtRange(r.minPpsm, r.maxPpsm) },
-                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => num(fmtOmr(r.medianPrice)) },
-                  { key: 'size', label: c.cols.typicalSize, value: (r) => r.medianArea, render: (r) => fmtSqm(r.medianArea) },
+                  { key: 'name', label: c.cols.area, value: (r) => r.label, render: (r) => nameLink(`/project?area=${encodeURIComponent(r.key)}`, r.label) },
+                  { key: 'city', label: c.cols.city, muted: true, value: (r) => r.city || '', render: (r) => r.city || '—' },
+                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
+                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
+                  { key: 'range', label: c.cols.rangePpsm, muted: true, value: (r) => r.minPpsm, render: (r) => tnum(fmtRange(r.minPpsm, r.maxPpsm)) },
+                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => tnum(fmtOmr(r.medianPrice)) },
+                  { key: 'size', label: c.cols.typicalSize, muted: true, value: (r) => r.medianArea, render: (r) => tnum(fmtSqm(r.medianArea)) },
                 ]}
               />
-              <p className="pi-note">{t.sortHint}{anyThin(index.byArea) ? ` · ${c.thinNote}` : ''}</p>
+              <p className="pi-note">{t.sortHint} · {c.thinNote}</p>
             </section>
 
             {/* ── budget explorer: the practical half of the page ── */}
             {priceBounds && budget != null && (
-              <section className={`pi-sec ${rv(1).className}`} style={rv(1).style}>
-                <SectionHeading title={t.budgetHeading} sx={{ mb: 2 }} />
-                <p className="pi-sub">{t.budgetSub}</p>
-
-                <Paper elevation={0} sx={{ ...panelSx, p: { xs: 2.5, md: 4 } }}>
-                  <div style={{ fontSize: 12.5, color: FAINT, letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 600 }}>{t.budgetLabel}</div>
-                  <div style={{ fontSize: 'clamp(28px,4vw,40px)', fontWeight: 700, color: ACCENT, letterSpacing: '-.02em', margin: '4px 0 6px', fontVariantNumeric: 'tabular-nums' }}>
-                    {fmtOmr(budget)}
+              <section className={`pi-sec ${rv(3).className}`} style={rv(3).style}>
+                <div className="pi-split">
+                  <div>
+                    <h2 className="pi-h2">{t.budgetHeading}</h2>
+                    <p className="pi-p">{t.budgetSub}</p>
                   </div>
 
-                  <Slider
-                    value={budget}
-                    min={priceBounds.min}
-                    max={priceBounds.max}
-                    step={5000}
-                    onChange={(_, v) => setBudget(v)}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(v) => fmtOmr(v)}
-                    aria-label={t.budgetLabel}
-                    sx={{
-                      color: GOLD, mt: 1,
-                      '& .MuiSlider-rail': { opacity: 0.22 },
-                      '& .MuiSlider-thumb': { width: 20, height: 20, '&:hover,&.Mui-focusVisible': { boxShadow: '0 0 0 8px rgba(185,140,82,.16)' } },
-                      '& .MuiSlider-valueLabel': { fontFamily: FONT, fontSize: 12, bgcolor: '#1a1a1b', border: `1px solid ${LINE}` },
-                    }}
-                  />
+                  <div className="pi-panel">
+                    <div className="pi-lbl">{t.budgetLabel}</div>
+                    <div className="pi-budgetnum">{fmtOmr(budget)}</div>
 
-                  <Divider sx={{ borderColor: LINE, my: 2.5 }} />
+                    <Slider
+                      value={budget}
+                      min={priceBounds.min}
+                      max={priceBounds.max}
+                      step={5000}
+                      onChange={(_, v) => setBudget(v)}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={(v) => fmtOmr(v)}
+                      aria-label={t.budgetLabel}
+                      sx={{
+                        color: OLIVE, mt: 0.5,
+                        '& .MuiSlider-rail': { bgcolor: N100, opacity: 1 },
+                        '& .MuiSlider-thumb': {
+                          width: 20, height: 20, bgcolor: N0, border: `2px solid ${OLIVE}`,
+                          '&:hover,&.Mui-focusVisible': { boxShadow: `0 0 0 8px rgba(111,112,32,.12)` },
+                        },
+                        '& .MuiSlider-valueLabel': { fontFamily: FONT, fontSize: 12.5, bgcolor: N900 },
+                      }}
+                    />
 
-                  {affordable?.n > 0 ? (
-                    <>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 18 }}>
-                        {[
-                          [fmtInt(affordable.n), t.budgetHomes],
-                          [fmtSqm(affordable.size), t.budgetSize],
-                          [fmtInt(affordable.areas.length), t.budgetAreas],
-                          [fmtInt(affordable.types.length), t.budgetTypes],
-                        ].map(([v, label]) => (
-                          <div key={label}>
-                            <div style={{ fontSize: 24, fontWeight: 700, color: INK, letterSpacing: '-.02em', fontVariantNumeric: 'tabular-nums' }}>{v}</div>
-                            <div style={{ fontSize: 12.5, color: SUB, marginTop: 3, lineHeight: 1.45 }}>{label}</div>
-                          </div>
-                        ))}
-                      </div>
+                    {affordable?.n > 0 ? (
+                      <>
+                        <div className="pi-stats" style={{ marginTop: 26, gap: '18px 40px' }}>
+                          {[
+                            [fmtInt(affordable.n), t.budgetHomes],
+                            [fmtSqm(affordable.size), t.budgetSize],
+                            [fmtInt(affordable.areas.length), t.budgetAreas],
+                            [fmtInt(affordable.types.length), t.budgetTypes],
+                          ].map(([v, label]) => (
+                            <div className="pi-stat" key={label}>
+                              <b style={{ fontSize: 26 }}>{v}</b><span>{label}</span>
+                            </div>
+                          ))}
+                        </div>
 
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 20 }}>
-                        {affordable.areas.map((a) => (
-                          <Chip
-                            key={a} label={a} size="small" clickable
-                            onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
-                            sx={{ fontFamily: FONT, fontSize: 13, color: INK, bgcolor: 'rgba(255,255,255,.05)', border: `1px solid ${LINE}`, '&:hover': { bgcolor: 'rgba(185,140,82,.18)' } }}
-                          />
-                        ))}
-                      </div>
+                        <div className="pi-chips">
+                          {affordable.areas.map((a) => (
+                            <Chip
+                              key={a} label={a} size="small" clickable
+                              onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
+                              sx={{
+                                fontFamily: FONT, fontSize: 14, height: 32, borderRadius: '8px',
+                                color: N900, bgcolor: N0, border: `1px solid ${N100}`,
+                                '&:hover': { bgcolor: N0, borderColor: OLIVE, color: OLIVE },
+                              }}
+                            />
+                          ))}
+                        </div>
 
-                      <LocalizedLink
-                        to={`/project?price=${bucketFor(budget)}`}
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 9, marginTop: 24,
-                          height: 46, padding: '0 22px', background: INK, color: PAPER,
-                          borderRadius: 9, fontWeight: 700, fontSize: 14.5, textDecoration: 'none',
-                        }}
-                      >
-                        {t.budgetCta} <ArrowForwardRoundedIcon sx={{ fontSize: 18, transform: rtl ? 'scaleX(-1)' : 'none' }} />
-                      </LocalizedLink>
-                    </>
-                  ) : (
-                    <p style={{ margin: 0, fontSize: 15, color: SUB, lineHeight: 1.7 }}>{t.budgetNone}</p>
-                  )}
-                </Paper>
+                        <LocalizedLink className="pi-btn" to={`/project?price=${bucketFor(budget)}`} style={{ marginTop: 30 }}>
+                          {t.budgetCta} <ArrowForwardRoundedIcon sx={{ fontSize: 19, transform: rtl ? 'scaleX(-1)' : 'none' }} />
+                        </LocalizedLink>
+                      </>
+                    ) : (
+                      <p className="pi-p" style={{ margin: '20px 0 0' }}>{t.budgetNone}</p>
+                    )}
+                  </div>
+                </div>
               </section>
             )}
 
-            {/* ── by type ── */}
-            <section className={`pi-sec ${rv(2).className}`} style={rv(2).style}>
-              <SectionHeading eyebrow={c.cols.type} title={c.typesHeading} sx={{ mb: 2 }} />
-              <p className="pi-sub">{c.typesSub}</p>
-              <SortableTable
-                defaultKey="ppsm"
-                rows={index.byType}
-                cols={[
-                  { key: 'name', label: c.cols.type, value: (r) => r.label, render: (r) => <>{<span style={{ color: INK, fontWeight: 600 }}>{r.label}</span>}{thin(r)}</> },
-                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: (r) => num(fmtInt(r.n)) },
-                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => lead(fmtInt(r.medianPpsm)) },
-                  { key: 'range', label: c.cols.rangePpsm, value: (r) => r.minPpsm, render: (r) => fmtRange(r.minPpsm, r.maxPpsm) },
-                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => num(fmtOmr(r.medianPrice)) },
-                  { key: 'from', label: c.cols.from, value: (r) => r.minPrice, render: (r) => fmtOmr(r.minPrice) },
-                  { key: 'size', label: c.cols.typicalSize, value: (r) => r.medianArea, render: (r) => fmtSqm(r.medianArea) },
-                ]}
-              />
-              {anyThin(index.byType) && <p className="pi-note">{c.thinNote}</p>}
-            </section>
-
-            {/* ── by bedrooms ── */}
-            <section className={`pi-sec ${rv(3).className}`} style={rv(3).style}>
-              <SectionHeading eyebrow={c.cols.beds} title={c.bedsHeading} sx={{ mb: 2 }} />
-              <p className="pi-sub">{c.bedsSub}</p>
-              <SortableTable
-                defaultKey="name" defaultDir="asc"
-                rows={index.byBeds}
-                cols={[
-                  { key: 'name', label: c.cols.beds, value: (r) => Number(r.key), render: (r) => <>{<span style={{ color: INK, fontWeight: 600 }}>{bedLabel(r.key)}</span>}{thin(r)}</> },
-                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: (r) => num(fmtInt(r.n)) },
-                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => lead(fmtInt(r.medianPpsm)) },
-                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => num(fmtOmr(r.medianPrice)) },
-                  { key: 'from', label: c.cols.from, value: (r) => r.minPrice, render: (r) => fmtOmr(r.minPrice) },
-                  { key: 'size', label: c.cols.typicalSize, value: (r) => r.medianArea, render: (r) => fmtSqm(r.medianArea) },
-                ]}
-              />
-              {anyThin(index.byBeds) && <p className="pi-note">{c.thinNote}</p>}
-            </section>
-
-            {/* ── by development ── */}
-            <section className={`pi-sec ${rv(4).className}`} style={rv(4).style}>
-              <SectionHeading eyebrow={c.cols.project} title={c.projectsHeading} sx={{ mb: 2 }} />
-              <p className="pi-sub">{c.projectsSub}</p>
-              <SortableTable
-                defaultKey="ppsm"
-                rows={index.byProject}
-                cols={[
-                  { key: 'name', label: c.cols.project, value: (r) => r.label, render: (r) => nameLink(`/buy/${r.slug}`, r.label, r) },
-                  { key: 'area', label: c.cols.area, value: (r) => r.area || '', render: (r) => r.area || '—' },
-                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: (r) => num(fmtInt(r.n)) },
-                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => lead(fmtInt(r.medianPpsm)) },
-                  { key: 'range', label: c.cols.rangePpsm, value: (r) => r.minPpsm, render: (r) => fmtRange(r.minPpsm, r.maxPpsm) },
-                  { key: 'from', label: c.cols.from, value: (r) => r.minPrice, render: (r) => num(fmtOmr(r.minPrice)) },
-                ]}
-              />
-              {anyThin(index.byProject) && <p className="pi-note">{c.thinNote}</p>}
-            </section>
+            {/* ── remaining breakdowns ── */}
+            {[
+              {
+                heading: c.typesHeading, sub: c.typesSub, rows: index.byType, defaultKey: 'ppsm', defaultDir: 'desc',
+                cols: [
+                  { key: 'name', label: c.cols.type, value: (r) => r.label, render: (r) => r.label },
+                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
+                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
+                  { key: 'range', label: c.cols.rangePpsm, muted: true, value: (r) => r.minPpsm, render: (r) => tnum(fmtRange(r.minPpsm, r.maxPpsm)) },
+                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => tnum(fmtOmr(r.medianPrice)) },
+                  { key: 'from', label: c.cols.from, muted: true, value: (r) => r.minPrice, render: (r) => tnum(fmtOmr(r.minPrice)) },
+                  { key: 'size', label: c.cols.typicalSize, muted: true, value: (r) => r.medianArea, render: (r) => tnum(fmtSqm(r.medianArea)) },
+                ],
+              },
+              {
+                heading: c.bedsHeading, sub: c.bedsSub, rows: index.byBeds, defaultKey: 'name', defaultDir: 'asc',
+                cols: [
+                  { key: 'name', label: c.cols.beds, value: (r) => Number(r.key), render: (r) => bedLabel(r.key) },
+                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
+                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
+                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => tnum(fmtOmr(r.medianPrice)) },
+                  { key: 'from', label: c.cols.from, muted: true, value: (r) => r.minPrice, render: (r) => tnum(fmtOmr(r.minPrice)) },
+                  { key: 'size', label: c.cols.typicalSize, muted: true, value: (r) => r.medianArea, render: (r) => tnum(fmtSqm(r.medianArea)) },
+                ],
+              },
+              {
+                heading: c.projectsHeading, sub: c.projectsSub, rows: index.byProject, defaultKey: 'ppsm', defaultDir: 'desc',
+                cols: [
+                  { key: 'name', label: c.cols.project, value: (r) => r.label, render: (r) => nameLink(`/buy/${r.slug}`, r.label) },
+                  { key: 'area', label: c.cols.area, muted: true, value: (r) => r.area || '', render: (r) => r.area || '—' },
+                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
+                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
+                  { key: 'range', label: c.cols.rangePpsm, muted: true, value: (r) => r.minPpsm, render: (r) => tnum(fmtRange(r.minPpsm, r.maxPpsm)) },
+                  { key: 'from', label: c.cols.from, value: (r) => r.minPrice, render: (r) => tnum(fmtOmr(r.minPrice)) },
+                ],
+              },
+            ].map((s, i) => (
+              <section className={`pi-sec ${rv(4 + i).className}`} style={rv(4 + i).style} key={s.heading}>
+                <div className="pi-sec-head">
+                  <h2 className="pi-h2">{s.heading}</h2>
+                  <p className="pi-p" style={{ margin: 0 }}>{s.sub}</p>
+                </div>
+                <DataTable cols={s.cols} rows={s.rows} defaultKey={s.defaultKey} defaultDir={s.defaultDir} />
+              </section>
+            ))}
           </>
         )}
 
-        {/* ── method + analysis + FAQ ── */}
-        <section className={`pi-copy ${rv(5).className}`} style={{ textAlign: rtl ? 'right' : 'left', ...rv(5).style }}>
-          <div className="pi-method">
-            <SectionHeading title={c.methodHeading} sx={{ mb: 2.5 }} />
-            {c.methodParas.map((p, i) => <p key={i}>{fill(p, vars)}</p>)}
+        {/* ── method: the kit's asymmetric split + feature-list rhythm ── */}
+        <section className={`pi-sec pi-split ${rv(7).className}`} style={rv(7).style}>
+          <h2 className="pi-h1">{c.methodHeading}</h2>
+          <div>
+            {c.methodParas.map((p, i) => <p className="pi-p" key={i}>{fill(p, vars)}</p>)}
+          </div>
+        </section>
+
+        <section className={`pi-sec pi-split ${rv(8).className}`} style={rv(8).style}>
+          <h2 className="pi-h1">{c.heading}</h2>
+          <div>
+            {c.paras.map((p, i) => <p className="pi-p" key={i}>{p}</p>)}
+          </div>
+        </section>
+
+        {/* ── FAQ: left heading, right accordion cards ── */}
+        <section className={`pi-sec pi-split ${rv(9).className}`} style={rv(9).style}>
+          <div>
+            <h2 className="pi-h1">{t.faqHeading}</h2>
+            <p className="pi-p" style={{ marginTop: 18 }}>{t.faqSub}</p>
+          </div>
+          <div className="pi-faq">
+            {c.faq.map((f, i) => (
+              <div className="pi-faqcard" key={i}>
+                <button
+                  type="button" className="pi-faqq"
+                  aria-expanded={openFaq === i}
+                  onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
+                >
+                  <h3>{f.q}</h3>
+                  {openFaq === i
+                    ? <RemoveRoundedIcon sx={{ fontSize: 22, color: N900, flexShrink: 0, mt: '2px' }} />
+                    : <AddRoundedIcon sx={{ fontSize: 22, color: N900, flexShrink: 0, mt: '2px' }} />}
+                </button>
+                <Collapse in={openFaq === i}>
+                  <div className="pi-faqa">{f.a}</div>
+                </Collapse>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── CTA + related pages ── */}
+        <section className={`pi-cta ${rv(10).className}`} style={rv(10).style}>
+          <div className="pi-split">
+            <h2 className="pi-h1">{c.ctaHeading}</h2>
+            <div>
+              <p className="pi-p">{c.ctaText}</p>
+              <LocalizedLink className="pi-btn" to="/project">
+                {c.ctaBtn} <ArrowForwardRoundedIcon sx={{ fontSize: 19, transform: rtl ? 'scaleX(-1)' : 'none' }} />
+              </LocalizedLink>
+            </div>
           </div>
 
-          <div style={{ marginTop: 56 }}>
-            <SectionHeading title={c.heading} sx={{ mb: 2.5 }} />
-            {c.paras.map((p, i) => <p key={i}>{p}</p>)}
-          </div>
-
-          <div style={{ marginTop: 44 }}>
-            <FaqAccordion items={c.faq} />
-          </div>
-
-          <Paper elevation={0} sx={{ ...panelSx, mt: 7, p: { xs: 3, md: 4 } }}>
-            <h2 style={{ fontWeight: 600, fontSize: 'clamp(19px,2.1vw,24px)', color: INK, margin: '0 0 10px' }}>{c.ctaHeading}</h2>
-            <p style={{ margin: '0 0 20px', maxWidth: 640 }}>{c.ctaText}</p>
-            <LocalizedLink
-              to="/project"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 9, height: 48,
-                padding: '0 24px', background: INK, color: PAPER, borderRadius: 9,
-                fontWeight: 700, fontSize: 14.5, textDecoration: 'none',
-              }}
-            >
-              {c.ctaBtn} <ArrowForwardRoundedIcon sx={{ fontSize: 18, transform: rtl ? 'scaleX(-1)' : 'none' }} />
-            </LocalizedLink>
-          </Paper>
-
-          <h3 style={{ fontWeight: 600, fontSize: 17, color: INK, margin: '48px 0 12px' }}>{c.linksHeading}</h3>
+          <h3 className="pi-h3" style={{ marginTop: 72 }}>{c.linksHeading}</h3>
           <ul className="pi-links">
             {c.links.map((l) => (
               <li key={l.href}><LocalizedLink to={l.href}>{l.label}</LocalizedLink></li>
