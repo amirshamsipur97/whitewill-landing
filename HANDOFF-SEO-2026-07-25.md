@@ -220,8 +220,14 @@ plus ~160 image files.
 
 The first page here built to be **cited** rather than browsed. Oman publishes
 no official per-square-metre index, so this turns the live ~400-unit inventory
-into one. Not deployed yet at time of writing — `git push` + `vercel deploy
---prod --yes`.
+into one. **Deployed and verified live** in all four languages.
+
+> 🚨 **`git push` does NOT deploy this project.** The Vercel project is not
+> connected to the GitHub repo, so pushing left production on the previous
+> commit while `/property-prices-in-oman` still answered **200** — the
+> `vercel.json` catch-all serves the SPA shell for any unknown URL, so a
+> status code proves nothing. Verify with the `<title>` or the sitemap URL
+> count instead, and deploy with `vercel deploy --prod --yes`.
 
 **Files** — `src/priceIndexData.mjs` (maths, shared with the prerenderer),
 `src/priceIndexContent.mjs` (copy ×4 langs + `Dataset`/`FAQPage` JSON-LD),
