@@ -47,6 +47,16 @@
       "permanent": true
     },
     {
+      "source": "/oman/investment",
+      "destination": "/buy",
+      "permanent": true
+    },
+    {
+      "source": "/oman/:path*",
+      "destination": "/buy",
+      "permanent": true
+    },
+    {
       "source": "/oman-property/:path*",
       "destination": "/buy",
       "permanent": true
