@@ -136,6 +136,11 @@ html,body,#root{background:${N0} !important}
 
 /* ── asymmetric split: heading left, body right (kit's core rhythm) ─────── */
 .pi-split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+/* Flip a split so the panel sits on the left and the heading on the right,
+   without changing DOM order (which the mobile stack and screen readers
+   follow). Desktop only — see the max-width:900px block. */
+.pi-split--flip>*:first-child{order:2}
+.pi-split--flip>*:last-child{order:1}
 .pi-h1{font-weight:500;font-size:clamp(28px,3.4vw,44px);line-height:1.18;letter-spacing:-.01em;
   color:${N900};margin:0}
 .pi-h2{font-weight:500;font-size:clamp(24px,2.8vw,36px);line-height:1.3;letter-spacing:-.01em;
@@ -195,6 +200,20 @@ html,body,#root{background:${N0} !important}
 .pi-budgetnum{font-weight:500;font-size:clamp(30px,4vw,44px);line-height:1.1;letter-spacing:-.025em;
   color:${N900};margin:6px 0 10px;font-variant-numeric:tabular-nums}
 .pi-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+/* Communities within budget, as photo cards instead of text chips. */
+.pi-budget-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));
+  gap:12px;margin-top:24px}
+.pi-btile{display:block;text-align:start;padding:0;background:transparent;border:0;
+  font-family:inherit;cursor:pointer}
+.pi-btile-img{display:block;position:relative;aspect-ratio:4/3;overflow:hidden;
+  border-radius:11px;background:${N100};border:1px solid ${N100}}
+.pi-btile-img img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .42s cubic-bezier(.4,0,.2,1)}
+.pi-btile:hover .pi-btile-img img{transform:scale(1.06)}
+.pi-btile:hover .pi-btile-img{border-color:${OLIVE}}
+.pi-btile-name{display:block;margin-top:8px;font-size:13.5px;font-weight:500;color:${N900};
+  line-height:1.35;transition:color .18s}
+.pi-btile:hover .pi-btile-name{color:${OLIVE}}
 
 /* ── FAQ: the kit's bordered accordion cards ───────────────────────────── */
 .pi-faq{display:flex;flex-direction:column;gap:16px}
@@ -223,6 +242,9 @@ html,body,#root{background:${N0} !important}
 }
 @media (max-width:900px){
   .pi-split{grid-template-columns:1fr;gap:26px}
+  /* stacked: heading before the tool again */
+  .pi-split--flip>*:first-child{order:1}
+  .pi-split--flip>*:last-child{order:2}
   .pi-sec{padding:68px 0 0}
   .pi-panel{padding:26px 20px}
   .pi-hero{padding:126px 20px 90px;min-height:auto}
@@ -598,7 +620,10 @@ export default function PriceIndexPage() {
             {/* ── budget explorer: the practical half of the page ── */}
             {priceBounds && budget != null && (
               <section className={`pi-sec ${rv(3).className}`} style={rv(3).style}>
-                <div className="pi-split">
+                {/* Heading stays FIRST in the DOM for reading order; CSS
+                    order flips the panel to the left column on desktop only,
+                    so the mobile stack still reads heading then tool. */}
+                <div className="pi-split pi-split--flip">
                   <div>
                     <h2 className="pi-h2">{t.budgetHeading}</h2>
                     <p className="pi-p">{t.budgetSub}</p>
@@ -643,17 +668,22 @@ export default function PriceIndexPage() {
                           ))}
                         </div>
 
-                        <div className="pi-chips">
+                        {/* Photo cards rather than text chips: the same
+                            language as the communities strip above, so a
+                            budget result is something you can look at. Each
+                            opens that community's listings already filtered
+                            to the chosen budget. */}
+                        <div className="pi-budget-tiles">
                           {affordable.areas.map((a) => (
-                            <Chip
-                              key={a} label={a} size="small" clickable
+                            <button
+                              type="button" key={a} className="pi-btile"
                               onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
-                              sx={{
-                                fontFamily: FONT, fontSize: 14, height: 32, borderRadius: '8px',
-                                color: N900, bgcolor: N0, border: `1px solid ${N100}`,
-                                '&:hover': { bgcolor: N0, borderColor: OLIVE, color: OLIVE },
-                              }}
-                            />
+                            >
+                              <span className="pi-btile-img">
+                                <img src={areaImg[a] || FALLBACK_IMG} alt={`Property for sale in ${a}, Oman`} loading="lazy" />
+                              </span>
+                              <span className="pi-btile-name">{a}</span>
+                            </button>
                           ))}
                         </div>
 
