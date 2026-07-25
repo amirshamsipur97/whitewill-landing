@@ -149,6 +149,16 @@ export function buildPriceIndex(items) {
     (it) => (it.unit.bedrooms == null ? null : String(it.unit.bedrooms)),
     (k) => k,
   ).sort((a, b) => Number(a.key) - Number(b.key))
+  // City is a coarser cut than community and the one people actually search
+  // ("property prices in Muscat", "…in Salalah"). Al Seeb is administratively
+  // its own wilayat but sits inside Muscat Governorate, so each row also
+  // carries the communities behind it and the table states the distinction.
+  const byCity = groupBy(
+    list,
+    cityOf,
+    (k) => k,
+    (k, l) => ({ areas: [...new Set(l.map(areaOf).filter(Boolean))].sort() }),
+  ).sort(byPpsmDesc)
 
   return {
     units: all.n,
@@ -160,6 +170,7 @@ export function buildPriceIndex(items) {
     cities: new Set(list.map(cityOf).filter(Boolean)).size,
     overall: all,
     byArea,
+    byCity,
     byType,
     byProject,
     byBeds,

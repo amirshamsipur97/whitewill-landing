@@ -66,7 +66,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
 import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
-import { galleryFor } from '../projectGallery.js'
+import { galleryFor, thumbForSlug } from '../projectGallery.js'
 import { LocalizedLink, useLocalizedNavigate } from '../lib/localize.js'
 import { FONT } from '../components/invest/ui.jsx'
 import {
@@ -101,6 +101,32 @@ const bandFor = (n) => (n < 5 ? BANDS.thin : n < 50 ? BANDS.mid : BANDS.high)
 // (Aida/Yiti ships without a gallery folder). Deliberately NOT another
 // project's photo — showing Al Mouj under a Yiti heading would be a lie.
 const FALLBACK_IMG = '/images/hero-poster.jpg'
+// 640w cut of the same frame, so a fallback tile does not pull a 1920px poster
+// for a 310px slot either. Its own file, because the full-size poster path is
+// a literal string in several prerendered pages and must not change.
+const FALLBACK_THUMB = '/images/hero-poster-640.webp'
+
+// Community tiles render far smaller than the 1600px cover they are cut from,
+// so they ship a srcset with the 640w variant and a `sizes` that tells the
+// browser the real display width. Without `sizes` the browser assumes 100vw
+// and picks the big file anyway.
+const TILE_SIZES = '(max-width:600px) 88vw, (max-width:900px) 45vw, 320px'
+const BTILE_SIZES = '(max-width:600px) 44vw, 180px'
+
+function TileImg({ pic, alt, sizes }) {
+  const full = pic?.url || FALLBACK_IMG
+  const thumb = pic?.url ? pic.thumb : FALLBACK_THUMB
+  return (
+    <img
+      src={full}
+      srcSet={thumb ? `${thumb} 640w, ${full} 1600w` : undefined}
+      sizes={thumb ? sizes : undefined}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
+  )
+}
 
 const CSS = `
 /* The global stylesheet paints html, body AND #root black for the rest of the
@@ -224,6 +250,30 @@ html,body,#root{background:${N0} !important}
 .pi-btile:hover .pi-btile-name{color:${OLIVE}}
 
 /* ── FAQ: the kit's bordered accordion cards ───────────────────────────── */
+/* ── table of contents: a plain ordered list of real anchors ─────────────── */
+.pi-toc{margin:56px 0 8px;padding:22px 26px;background:${N25};border:1px solid ${N100};
+  border-radius:16px}
+.pi-toc-h{margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:${N600}}
+.pi-toc ol{margin:0;padding:0;list-style:none;display:grid;gap:8px 28px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.pi-toc a{color:${N900};font-size:15px;text-decoration:none;border-bottom:1px solid transparent}
+.pi-toc a:hover{color:${OLIVE};border-bottom-color:${OLIVE}}
+
+/* ── citation block ─────────────────────────────────────────────────────── */
+.pi-cite-label{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:${N600}}
+.pi-cite{margin:0 0 16px;padding:18px 20px;background:${N25};border:1px solid ${N100};
+  border-inline-start:3px solid ${OLIVE};border-radius:12px;font-size:15px;line-height:1.65;
+  color:${N900};overflow-wrap:anywhere}
+.pi-cite-btn{appearance:none;border:1px solid ${N900};background:transparent;color:${N900};
+  font-family:inherit;font-size:14px;font-weight:600;padding:10px 20px;border-radius:999px;
+  cursor:pointer;transition:background-color .18s,color .18s}
+.pi-cite-btn:hover{background:${N900};color:${N0}}
+.pi-cite-json{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:14px;color:${OLIVE};text-decoration:none;border-bottom:1px solid ${OLIVE};
+  direction:ltr;unicode-bidi:isolate}
+
 .pi-faq{display:flex;flex-direction:column;gap:16px}
 .pi-faqcard{border:1px solid ${N100};border-radius:12px;background:${N0};overflow:hidden}
 .pi-faqq{display:flex;align-items:flex-start;gap:20px;width:100%;text-align:start;appearance:none;
@@ -449,11 +499,15 @@ export default function PriceIndexPage() {
       m.set(it.project.name, (m.get(it.project.name) || 0) + 1)
       count.set(a, m)
     }
+    // Each entry is { url, thumb }: the tiles render at ~310 CSS px, so they
+    // must not pull the 1600px cover. thumb is the 640w variant when one
+    // exists (see projectGallery.js).
     const img = {}
     for (const [area, byProject] of count) {
       for (const [name] of [...byProject.entries()].sort((x, y) => y[1] - x[1])) {
-        const g = galleryFor(slugify(name))
-        if (g?.length) { img[area] = g[0]; break }
+        const slug = slugify(name)
+        const g = galleryFor(slug)
+        if (g?.length) { img[area] = { url: g[0], thumb: thumbForSlug(slug) }; break }
       }
     }
     // Hero = the most expensive community's photograph: apt for a price page,
@@ -467,7 +521,7 @@ export default function PriceIndexPage() {
         if (g?.length) { hero = g[1] || g[0]; break }
       }
     }
-    return { areaImg: img, heroImg: hero || img[top] || null }
+    return { areaImg: img, heroImg: hero || img[top]?.url || null }
   }, [items, index])
 
   // ── budget explorer ───────────────────────────────────────────────────────
@@ -529,6 +583,21 @@ export default function PriceIndexPage() {
 
   const shown = useMounted()
   const rv = (i) => ({ className: `pi-rv${shown ? ' in' : ''}`, style: { transitionDelay: `${i * 60}ms` } })
+
+  // A ready-made citation, built from the same live figures as the tables so a
+  // quote can never drift from what the page shows. The sample size, the date
+  // and the "freehold stock open to foreign buyers" scope are inside the
+  // string on purpose: whoever copies it carries the caveat with the number.
+  const [copied, setCopied] = useState(false)
+  const citation = hasData
+    ? `Irfan Investment Group, Oman Property Price Index, ${updated}. Median ${fmtInt(index.overall.medianPpsm)} OMR per m² across ${fmtInt(index.units)} freehold homes listed for sale in ${fmtInt(index.areas)} Omani communities open to foreign buyers. https://www.irfaninvest.com/property-prices-in-oman`
+    : ''
+  const copyCitation = () => {
+    navigator.clipboard?.writeText(citation).then(
+      () => { setCopied(true); setTimeout(() => setCopied(false), 2200) },
+      () => {},
+    )
+  }
 
   // Sample-size chip: pastel band from the Tables kit, carrying real meaning.
   const sample = (row) => {
@@ -608,6 +677,31 @@ export default function PriceIndexPage() {
           </div>
         </section>
 
+        {/* ── table of contents ──
+            A reference page with eight sections needs a way in. It is also the
+            shape Google uses for the "Jump to" links it sometimes attaches to a
+            result, and it costs one <nav> of real anchors. */}
+        {hasData && (
+          <nav className="pi-toc" aria-label={c.tocHeading}>
+            <h2 className="pi-toc-h">{c.tocHeading}</h2>
+            <ol>
+              {[
+                ['#by-community', c.areasHeading],
+                ['#by-city', c.citiesHeading],
+                ['#by-type', c.typesHeading],
+                ['#by-bedrooms', c.bedsHeading],
+                ['#by-development', c.projectsHeading],
+                ['#method', c.methodHeading],
+                ['#analysis', c.heading],
+                ['#faq', t.faqHeading],
+                ['#cite', c.citeHeading],
+              ].map(([href, label]) => (
+                <li key={href}><a href={href}>{label}</a></li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
         {hasData && (
           <>
             {/* ── community photo strip ── */}
@@ -624,7 +718,7 @@ export default function PriceIndexPage() {
                       sx={{ borderRadius: '14px', display: 'block', textAlign: 'start' }}
                     >
                       <div className="pi-tileimg">
-                        <img src={areaImg[a.key] || FALLBACK_IMG} alt={`Property for sale in ${a.label}, Oman`} loading="lazy" />
+                        <TileImg pic={areaImg[a.key]} alt={`Property for sale in ${a.label}, Oman`} sizes={TILE_SIZES} />
                       </div>
                       <div className="pi-tilefoot">
                         <div>
@@ -643,7 +737,7 @@ export default function PriceIndexPage() {
             </section>
 
             {/* ── chart + community table ── */}
-            <section className={`pi-sec ${rv(2).className}`} style={rv(2).style}>
+            <section id="by-community" className={`pi-sec ${rv(2).className}`} style={rv(2).style}>
               <div className="pi-sec-head">
                 <h2 className="pi-h2">{c.areasHeading}</h2>
                 <p className="pi-p" style={{ margin: 0 }}>{c.areasSub}</p>
@@ -705,7 +799,7 @@ export default function PriceIndexPage() {
                             onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
                           >
                             <span className="pi-btile-img">
-                              <img src={areaImg[a] || FALLBACK_IMG} alt={`Property for sale in ${a}, Oman`} loading="lazy" />
+                              <TileImg pic={areaImg[a]} alt={`Property for sale in ${a}, Oman`} sizes={BTILE_SIZES} />
                             </span>
                             <span className="pi-btile-name">{a}</span>
                           </button>
@@ -768,6 +862,23 @@ export default function PriceIndexPage() {
             {/* ── remaining breakdowns ── */}
             {[
               {
+                // City is the coarser cut and the one people actually search
+                // ("property prices in Muscat"). Community stays the headline
+                // table because it is where the real spread lives.
+                id: 'by-city',
+                heading: c.citiesHeading, sub: c.citiesSub, rows: index.byCity, defaultKey: 'ppsm', defaultDir: 'desc',
+                cols: [
+                  { key: 'name', label: c.cols.city, value: (r) => r.label, render: (r) => r.label },
+                  { key: 'areas', label: c.citiesCol, muted: true, value: (r) => (r.areas || []).length, render: (r) => (r.areas || []).join(', ') || '–' },
+                  { key: 'n', label: c.cols.units, value: (r) => r.n, render: sample },
+                  { key: 'ppsm', label: c.cols.medianPpsm, value: (r) => r.medianPpsm, render: (r) => strong(fmtInt(r.medianPpsm)) },
+                  { key: 'range', label: c.cols.rangePpsm, muted: true, value: (r) => r.minPpsm, render: (r) => tnum(fmtRange(r.minPpsm, r.maxPpsm)) },
+                  { key: 'price', label: c.cols.medianPrice, value: (r) => r.medianPrice, render: (r) => tnum(fmtOmr(r.medianPrice)) },
+                  { key: 'from', label: c.cols.from, muted: true, value: (r) => r.minPrice, render: (r) => tnum(fmtOmr(r.minPrice)) },
+                ],
+              },
+              {
+                id: 'by-type',
                 heading: c.typesHeading, sub: c.typesSub, rows: index.byType, defaultKey: 'ppsm', defaultDir: 'desc',
                 cols: [
                   { key: 'name', label: c.cols.type, value: (r) => r.label, render: (r) => r.label },
@@ -780,6 +891,7 @@ export default function PriceIndexPage() {
                 ],
               },
               {
+                id: 'by-bedrooms',
                 heading: c.bedsHeading, sub: c.bedsSub, rows: index.byBeds, defaultKey: 'name', defaultDir: 'asc',
                 cols: [
                   { key: 'name', label: c.cols.beds, value: (r) => Number(r.key), render: (r) => bedLabel(r.key) },
@@ -791,6 +903,7 @@ export default function PriceIndexPage() {
                 ],
               },
               {
+                id: 'by-development',
                 heading: c.projectsHeading, sub: c.projectsSub, rows: index.byProject, defaultKey: 'ppsm', defaultDir: 'desc',
                 cols: [
                   { key: 'name', label: c.cols.project, value: (r) => r.label, render: (r) => nameLink(`/buy/${r.slug}`, r.label) },
@@ -802,7 +915,7 @@ export default function PriceIndexPage() {
                 ],
               },
             ].map((s, i) => (
-              <section className={`pi-sec ${rv(4 + i).className}`} style={rv(4 + i).style} key={s.heading}>
+              <section id={s.id} className={`pi-sec ${rv(4 + i).className}`} style={rv(4 + i).style} key={s.heading}>
                 <div className="pi-sec-head">
                   <h2 className="pi-h2">{s.heading}</h2>
                   <p className="pi-p" style={{ margin: 0 }}>{s.sub}</p>
@@ -814,14 +927,36 @@ export default function PriceIndexPage() {
         )}
 
         {/* ── method: the kit's asymmetric split + feature-list rhythm ── */}
-        <section className={`pi-sec pi-split ${rv(7).className}`} style={rv(7).style}>
+        <section id="method" className={`pi-sec pi-split ${rv(7).className}`} style={rv(7).style}>
           <h2 className="pi-h1">{c.methodHeading}</h2>
           <div>
             {c.methodParas.map((p, i) => <p className="pi-p" key={i}>{fill(p, vars)}</p>)}
           </div>
         </section>
 
-        <section className={`pi-sec pi-split ${rv(8).className}`} style={rv(8).style}>
+        {/* ── how to cite ──
+            The page exists to be cited, so it hands over a formatted citation
+            and a JSON feed rather than hoping someone constructs one. The
+            caveat travels inside the citation string on purpose: whoever
+            copies it repeats the caveat with the number. */}
+        {hasData && (
+          <section id="cite" className={`pi-sec pi-split ${rv(8).className}`} style={rv(8).style}>
+            <h2 className="pi-h1">{c.citeHeading}</h2>
+            <div>
+              <p className="pi-p">{c.citeIntro}</p>
+              <p className="pi-cite-label">{c.citeLabel}</p>
+              <blockquote className="pi-cite">{citation}</blockquote>
+              <button type="button" className="pi-cite-btn" onClick={copyCitation}>
+                {copied ? c.citeCopied : c.citeCopy}
+              </button>
+              <p className="pi-cite-label" style={{ marginTop: 34 }}>{c.citeDataLabel}</p>
+              <p className="pi-p" style={{ margin: '0 0 10px' }}>{c.citeDataNote}</p>
+              <a className="pi-cite-json" href="/api/price-index.json">/api/price-index.json</a>
+            </div>
+          </section>
+        )}
+
+        <section id="analysis" className={`pi-sec pi-split ${rv(9).className}`} style={rv(9).style}>
           <h2 className="pi-h1">{c.heading}</h2>
           <div>
             {c.paras.map((p, i) => <p className="pi-p" key={i}>{p}</p>)}
@@ -829,7 +964,7 @@ export default function PriceIndexPage() {
         </section>
 
         {/* ── FAQ: left heading, right accordion cards ── */}
-        <section className={`pi-sec pi-split ${rv(9).className}`} style={rv(9).style}>
+        <section id="faq" className={`pi-sec pi-split ${rv(10).className}`} style={rv(10).style}>
           <div>
             <h2 className="pi-h1">{t.faqHeading}</h2>
             <p className="pi-p" style={{ marginTop: 18 }}>{t.faqSub}</p>
@@ -856,7 +991,7 @@ export default function PriceIndexPage() {
         </section>
 
         {/* ── CTA + related pages ── */}
-        <section className={`pi-cta ${rv(10).className}`} style={rv(10).style}>
+        <section className={`pi-cta ${rv(11).className}`} style={rv(11).style}>
           <div className="pi-split">
             <h2 className="pi-h1">{c.ctaHeading}</h2>
             <div>

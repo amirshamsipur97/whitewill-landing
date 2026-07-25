@@ -289,6 +289,39 @@ function priceIndexHtml(lang) {
       esc(fmtRange(p.minPpsm, p.maxPpsm)), esc(fmtOmr(p.minPrice)),
     ]),
   )
+  const cityTable = table(
+    [c.cols.city, c.citiesCol, c.cols.units, c.cols.medianPpsm, c.cols.rangePpsm, c.cols.medianPrice, c.cols.from],
+    idx.byCity.map((x) => [
+      `<strong>${esc(x.label)}</strong>${dagger(x)}`, esc((x.areas || []).join(', ') || '–'),
+      fmtInt(x.n), `<strong>${fmtInt(x.medianPpsm)}</strong>`,
+      esc(fmtRange(x.minPpsm, x.maxPpsm)), esc(fmtOmr(x.medianPrice)), esc(fmtOmr(x.minPrice)),
+    ]),
+  )
+
+  // Same anchors the React page renders, so a crawler that never executes JS
+  // still sees the section structure and the in-page links.
+  const toc =
+    `<h2>${esc(c.tocHeading)}</h2><ol>` +
+    [
+      ['#by-community', c.areasHeading], ['#by-city', c.citiesHeading],
+      ['#by-type', c.typesHeading], ['#by-bedrooms', c.bedsHeading],
+      ['#by-development', c.projectsHeading], ['#method', c.methodHeading],
+      ['#analysis', c.heading], ['#faq', c.ui.faqHeading], ['#cite', c.citeHeading],
+    ].map(([h, l]) => `<li><a href="${h}" style="color:#6f7020">${esc(l)}</a></li>`).join('') +
+    `</ol>`
+
+  // The citation string is built from the same build-time figures as the
+  // tables, so the static copy can never quote a number the page does not show.
+  const citation =
+    `Irfan Investment Group, Oman Property Price Index, ${BUILD_DAY}. ` +
+    `Median ${fmtInt(idx.overall.medianPpsm)} OMR per m² across ${fmtInt(idx.units)} freehold homes ` +
+    `listed for sale in ${fmtInt(idx.areas)} Omani communities open to foreign buyers. ` +
+    `https://www.irfaninvest.com/property-prices-in-oman`
+  const cite =
+    `<h2 id="cite">${esc(c.citeHeading)}</h2><p>${esc(c.citeIntro)}</p>` +
+    `<p><strong>${esc(c.citeLabel)}</strong></p><blockquote>${esc(citation)}</blockquote>` +
+    `<p><strong>${esc(c.citeDataLabel)}</strong></p><p>${esc(c.citeDataNote)}</p>` +
+    `<p><a href="/api/price-index.json" style="color:#6f7020">/api/price-index.json</a></p>`
 
   const stats =
     `<ul><li><strong>${fmtInt(idx.units)}</strong> ${esc(c.stats.units)}</li>` +
@@ -303,14 +336,17 @@ function priceIndexHtml(lang) {
 
   return (
     `<p>${esc(fill(c.lead, vars))}</p>` +
-    `<p>${esc(c.updatedLabel)}: ${BUILD_DAY}</p>` + stats +
-    `<h2>${esc(c.areasHeading)}</h2><p>${esc(c.areasSub)}</p>${areaTable}` +
-    `<h2>${esc(c.typesHeading)}</h2><p>${esc(c.typesSub)}</p>${typeTable}` +
-    `<h2>${esc(c.bedsHeading)}</h2><p>${esc(c.bedsSub)}</p>${bedTable}` +
-    `<h2>${esc(c.projectsHeading)}</h2><p>${esc(c.projectsSub)}</p>${projTable}` +
+    `<p>${esc(c.updatedLabel)}: ${BUILD_DAY}</p>` + stats + toc +
+    `<h2 id="by-community">${esc(c.areasHeading)}</h2><p>${esc(c.areasSub)}</p>${areaTable}` +
+    `<h2 id="by-city">${esc(c.citiesHeading)}</h2><p>${esc(c.citiesSub)}</p>${cityTable}` +
+    `<h2 id="by-type">${esc(c.typesHeading)}</h2><p>${esc(c.typesSub)}</p>${typeTable}` +
+    `<h2 id="by-bedrooms">${esc(c.bedsHeading)}</h2><p>${esc(c.bedsSub)}</p>${bedTable}` +
+    `<h2 id="by-development">${esc(c.projectsHeading)}</h2><p>${esc(c.projectsSub)}</p>${projTable}` +
     `<p>${esc(c.thinNote)}</p>` +
-    `<h2>${esc(c.methodHeading)}</h2>${paras(c.methodParas)}` +
-    `<h2>${esc(c.heading)}</h2>${paras(c.paras)}` +
+    `<h2 id="method">${esc(c.methodHeading)}</h2>${paras(c.methodParas)}` +
+    cite +
+    `<h2 id="analysis">${esc(c.heading)}</h2>${paras(c.paras)}` +
+    `<h2 id="faq">${esc(c.ui.faqHeading)}</h2>` +
     c.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('') +
     `<h2>${esc(c.ctaHeading)}</h2><p>${esc(c.ctaText)}</p>` +
     `<p><a href="${prefix}/project" style="color:#8c8d25">${esc(c.ctaBtn)}</a></p>` +

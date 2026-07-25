@@ -42,6 +42,7 @@ export const PROJECT_SEO = {
     ],
     linksHeading: 'Browse by community',
     links: [
+      { href: '/property-prices-in-oman', label: 'Oman property prices: median price per square metre by area' },
       { href: '/buy-apartment-in-muscat', label: 'Buy an apartment in Muscat: prices by community' },
       { href: '/buy-property-in-muscat', label: 'Buy property in Muscat: apartments, villas and townhouses' },
       { href: '/buy-property-in-salalah', label: 'Buy property in Salalah: beachfront villas and chalets' },
@@ -79,6 +80,7 @@ export const PROJECT_SEO = {
     ],
     linksHeading: 'مرور بر اساس مجموعه',
     links: [
+      { href: '/property-prices-in-oman', label: 'قیمت ملک در عمان: میانه قیمت هر متر مربع بر اساس منطقه' },
       { href: '/buy-apartment-in-muscat', label: 'خرید آپارتمان در مسقط: قیمت‌ها بر اساس منطقه' },
       { href: '/buy-property-in-muscat', label: 'خرید ملک در مسقط: آپارتمان، ویلا و تاون‌هاوس' },
       { href: '/buy-property-in-salalah', label: 'خرید ملک در صلاله: ویلا و شاله ساحلی' },
@@ -116,6 +118,7 @@ export const PROJECT_SEO = {
     ],
     linksHeading: 'تصفّح حسب المجتمع',
     links: [
+      { href: '/property-prices-in-oman', label: 'أسعار العقارات في عُمان: وسيط سعر المتر المربع حسب المنطقة' },
       { href: '/buy-apartment-in-muscat', label: 'شراء شقة في مسقط: الأسعار حسب المجتمع' },
       { href: '/buy-property-in-muscat', label: 'شراء عقار في مسقط: شقق وفلل وتاون هاوس' },
       { href: '/buy-property-in-salalah', label: 'شراء عقار في صلالة: فلل وشاليهات شاطئية' },
@@ -153,6 +156,7 @@ export const PROJECT_SEO = {
     ],
     linksHeading: 'Смотреть по сообществам',
     links: [
+      { href: '/property-prices-in-oman', label: 'Цены на недвижимость в Омане: медианная цена за квадратный метр по районам' },
       { href: '/buy-apartment-in-muscat', label: 'Купить квартиру в Маскате: цены по районам' },
       { href: '/buy-property-in-muscat', label: 'Купить недвижимость в Маскате: квартиры и виллы' },
       { href: '/buy-property-in-salalah', label: 'Купить недвижимость в Салале: виллы и шале' },

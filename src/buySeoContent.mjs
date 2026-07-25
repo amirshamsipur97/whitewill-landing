@@ -34,6 +34,7 @@ export const BUY_SEO = {
     ],
     linksHeading: 'Helpful guides',
     links: [
+      { href: '/property-prices-in-oman', label: 'Oman property price index: what a square metre costs by area' },
       { href: '/insights/buy-property-oman-foreigners-itc-rules-2026', label: 'Buying property in Oman as a foreigner: ITC rules and costs' },
       { href: '/insights/buy-apartment-in-oman-2026', label: 'Buy an apartment in Oman: 2026 price map' },
       { href: '/buy/hawana-salalah', label: 'Villas and chalets for sale in Hawana Salalah' },
@@ -69,6 +70,7 @@ export const BUY_SEO = {
     ],
     linksHeading: 'راهنماهای مرتبط',
     links: [
+      { href: '/property-prices-in-oman', label: 'شاخص قیمت ملک عمان: قیمت هر متر مربع در هر منطقه' },
       { href: '/insights/kharid-melk-dar-oman-2026', label: 'راهنمای گام به گام خرید ملک در عمان برای ایرانیان' },
       { href: '/buy/hawana-salalah', label: 'خرید ویلا و شاله ساحلی در هوانا صلاله' },
       { href: '/buy/jebel-sifah', label: 'خرید آپارتمان در جبل سیفه' },
@@ -104,6 +106,7 @@ export const BUY_SEO = {
     ],
     linksHeading: 'أدلة مفيدة',
     links: [
+      { href: '/property-prices-in-oman', label: 'مؤشر أسعار العقارات في عُمان: تكلفة المتر المربع حسب المنطقة' },
       { href: '/insights/buy-property-oman-foreigners-itc-rules-2026', label: 'شراء عقار في عُمان للأجانب: قواعد ITC والتكاليف' },
       { href: '/buy/hawana-salalah', label: 'فلل وشاليهات للبيع في هوانا صلالة' },
       { href: '/buy/jebel-sifah', label: 'شقق للبيع في جبل سيفة' },
@@ -139,6 +142,7 @@ export const BUY_SEO = {
     ],
     linksHeading: 'Полезные гиды',
     links: [
+      { href: '/property-prices-in-oman', label: 'Индекс цен на недвижимость Омана: сколько стоит квадратный метр по районам' },
       { href: '/insights/buy-property-oman-foreigners-itc-rules-2026', label: 'Покупка недвижимости в Омане для иностранцев: правила ITC' },
       { href: '/buy/hawana-salalah', label: 'Виллы и шале на продажу в Hawana Salalah' },
       { href: '/buy/jebel-sifah', label: 'Квартиры на продажу в Jebel Sifah' },

@@ -98,6 +98,10 @@
       "destination": "/api/sitemap"
     },
     {
+      "source": "/api/price-index.json",
+      "destination": "/api/price-index"
+    },
+    {
       "source": "/uae/:path*",
       "destination": "/api/gone"
     },

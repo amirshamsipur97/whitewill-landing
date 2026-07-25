@@ -63,6 +63,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'Related pages',
       links: [
+        { href: '/property-prices-in-oman', label: 'Muscat property prices per square metre, community by community' },
         { href: '/buy-apartment-in-muscat', label: 'Buy an apartment in Muscat: prices by community' },
         { href: '/project', label: 'Search all properties for sale in Oman' },
         { href: '/buy', label: 'Buy property in Oman: full guide and price list' },
@@ -98,6 +99,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'صفحات مرتبط',
       links: [
+        { href: '/property-prices-in-oman', label: 'قیمت هر متر مربع ملک در مسقط، منطقه به منطقه' },
         { href: '/buy-apartment-in-muscat', label: 'خرید آپارتمان در مسقط: قیمت‌ها بر اساس منطقه' },
         { href: '/project', label: 'جستجوی همه املاک برای فروش در عمان' },
         { href: '/buy', label: 'خرید ملک در عمان: راهنمای کامل و لیست قیمت' },
@@ -133,6 +135,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'صفحات ذات صلة',
       links: [
+        { href: '/property-prices-in-oman', label: 'أسعار العقارات في مسقط للمتر المربع، مجتمعاً تلو الآخر' },
         { href: '/buy-apartment-in-muscat', label: 'شراء شقة في مسقط: الأسعار حسب المجتمع' },
         { href: '/project', label: 'ابحث في جميع العقارات للبيع في عُمان' },
         { href: '/buy', label: 'شراء عقار في عُمان: الدليل الكامل وقائمة الأسعار' },
@@ -168,6 +171,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'Связанные страницы',
       links: [
+        { href: '/property-prices-in-oman', label: 'Цены на недвижимость Маската за квадратный метр, по районам' },
         { href: '/buy-apartment-in-muscat', label: 'Купить квартиру в Маскате: цены по районам' },
         { href: '/project', label: 'Поиск по всей недвижимости Омана' },
         { href: '/buy', label: 'Купить недвижимость в Омане: полный гид' },
@@ -214,6 +218,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'Related pages',
       links: [
+        { href: '/property-prices-in-oman', label: 'Price per square metre in Muscat compared across communities' },
         { href: '/buy-property-in-muscat', label: 'Buy property in Muscat: villas, townhouses and apartments' },
         { href: '/project', label: 'Search all properties for sale in Oman' },
         { href: '/buy', label: 'Buy property in Oman: full guide and price list' },
@@ -249,6 +254,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'صفحات مرتبط',
       links: [
+        { href: '/property-prices-in-oman', label: 'مقایسه قیمت هر متر مربع در مناطق مختلف مسقط' },
         { href: '/buy-property-in-muscat', label: 'خرید ملک در مسقط: ویلا، تاون‌هاوس و آپارتمان' },
         { href: '/project', label: 'جستجوی همه املاک برای فروش در عمان' },
         { href: '/buy', label: 'خرید ملک در عمان: راهنمای کامل و لیست قیمت' },
@@ -284,6 +290,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'صفحات ذات صلة',
       links: [
+        { href: '/property-prices-in-oman', label: 'مقارنة سعر المتر المربع بين مجتمعات مسقط' },
         { href: '/buy-property-in-muscat', label: 'شراء عقار في مسقط: فلل وتاون هاوس وشقق' },
         { href: '/project', label: 'ابحث في جميع العقارات للبيع في عُمان' },
         { href: '/buy', label: 'شراء عقار في عُمان: الدليل الكامل وقائمة الأسعار' },
@@ -319,6 +326,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'Связанные страницы',
       links: [
+        { href: '/property-prices-in-oman', label: 'Сравнение цены за квадратный метр по районам Маската' },
         { href: '/buy-property-in-muscat', label: 'Купить недвижимость в Маскате: виллы, таунхаусы, квартиры' },
         { href: '/project', label: 'Поиск по всей недвижимости Омана' },
         { href: '/buy', label: 'Купить недвижимость в Омане: полный гид' },
@@ -359,6 +367,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'Related pages',
       links: [
+        { href: '/property-prices-in-oman', label: 'Salalah property prices per square metre compared with Muscat' },
         { href: '/buy/hawana-salalah', label: 'Hawana Salalah: available units, prices and payment plan' },
         { href: '/buy-property-in-muscat', label: 'Buy property in Muscat: apartments and villas' },
         { href: '/project', label: 'Search all properties for sale in Oman' },
@@ -394,6 +403,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'صفحات مرتبط',
       links: [
+        { href: '/property-prices-in-oman', label: 'مقایسه قیمت هر متر مربع ملک در صلاله با مسقط' },
         { href: '/buy/hawana-salalah', label: 'هوانا صلاله: واحدهای موجود، قیمت و طرح پرداخت' },
         { href: '/buy-property-in-muscat', label: 'خرید ملک در مسقط: آپارتمان و ویلا' },
         { href: '/project', label: 'جستجوی همه املاک برای فروش در عمان' },
@@ -429,6 +439,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'صفحات ذات صلة',
       links: [
+        { href: '/property-prices-in-oman', label: 'مقارنة أسعار المتر المربع في صلالة مع مسقط' },
         { href: '/buy/hawana-salalah', label: 'هوانا صلالة: الوحدات المتاحة والأسعار وخطة الدفع' },
         { href: '/buy-property-in-muscat', label: 'شراء عقار في مسقط: شقق وفلل' },
         { href: '/project', label: 'ابحث في جميع العقارات للبيع في عُمان' },
@@ -464,6 +475,7 @@ export const LANDINGS = {
       ],
       linksHeading: 'Связанные страницы',
       links: [
+        { href: '/property-prices-in-oman', label: 'Цены за квадратный метр в Салале в сравнении с Маскатом' },
         { href: '/buy/hawana-salalah', label: 'Hawana Salalah: доступные лоты, цены и план оплаты' },
         { href: '/buy-property-in-muscat', label: 'Купить недвижимость в Маскате: квартиры и виллы' },
         { href: '/project', label: 'Поиск по всей недвижимости Омана' },
