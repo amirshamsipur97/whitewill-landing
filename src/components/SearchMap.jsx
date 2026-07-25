@@ -20,6 +20,7 @@
 import { useEffect, useRef } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { MAP_STYLE } from '../lib/mapStyle.js'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 if (MAPBOX_TOKEN) mapboxgl.accessToken = MAPBOX_TOKEN
@@ -75,7 +76,7 @@ export default function SearchMap({ projects, selectedId, onSelect }) {
     if (!mapRef.current) {
       mapRef.current = new mapboxgl.Map({
         container: ref.current,
-        style: 'mapbox://styles/mapbox/dark-v11',
+        style: MAP_STYLE,
         center: [58.4, 23.6],
         zoom: 8,
         attributionControl: false,

@@ -3,6 +3,7 @@ import { Box, Container, Typography, CircularProgress, Alert } from '@mui/materi
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { MAP_STYLE } from '../lib/mapStyle.js'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useI18n } from '../i18n.jsx'
@@ -15,7 +16,7 @@ import PropertyToolbar, { EMPTY_FILTERS } from './PropertyToolbar'
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 mapboxgl.accessToken = MAPBOX_TOKEN
 
-const MAP_STYLE = 'mapbox://styles/mapbox/dark-v11'
+// style now comes from src/lib/mapStyle.js (VITE_MAPBOX_STYLE)
 const INITIAL_CENTER = [56.5, 21.0]
 const INITIAL_ZOOM = 5.4
 

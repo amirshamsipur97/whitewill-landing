@@ -12,6 +12,7 @@
 import { useEffect, useRef } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { MAP_STYLE } from '../lib/mapStyle.js'
 
 const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 const OLIVE_BRIGHT = '#8c8d25'
@@ -44,7 +45,7 @@ export default function SchoolsMap({ schools = [], visitLabel = 'Visit website' 
     mapboxgl.accessToken = TOKEN
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
+      style: MAP_STYLE,
       center: [58.35, 23.59],
       zoom: 9.4,
       cooperativeGestures: true,

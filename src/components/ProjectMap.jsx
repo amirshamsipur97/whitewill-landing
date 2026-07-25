@@ -12,6 +12,7 @@ import { useEffect, useRef } from 'react'
 import { Box } from '@mui/material'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { MAP_STYLE } from '../lib/mapStyle.js'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 const INDIGO = '#391FAF'
@@ -28,7 +29,7 @@ export default function ProjectMap({ project }) {
 
     const map = new mapboxgl.Map({
       container: ref.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
+      style: MAP_STYLE,
       center: [Number(project.longitude), Number(project.latitude)],
       zoom: 13.5,
       pitch: 30,
