@@ -121,6 +121,7 @@ import HorizontalCarousel from './components/HorizontalCarousel'
 import ContactCTA from './components/ContactCTA'
 import SalalahPopup from './components/SalalahPopup.jsx'
 import SiteFooter from './components/SiteFooter'
+import FooterSeoLinks from './components/FooterSeoLinks'
 import BackToTop from './components/BackToTop'
 import CookieBanner from './components/CookieBanner'
 import ChatWidget from './components/chat/ChatWidget'
@@ -132,6 +133,7 @@ const BuyPage = lazy(() => import('./pages/BuyPage'))
 const BuyProjectPage = lazy(() => import('./pages/BuyProjectPage'))
 const SearchPage = lazy(() => import('./pages/SearchPage'))
 const PropertyPage = lazy(() => import('./pages/PropertyPage'))
+const CityLandingPage = lazy(() => import('./pages/CityLandingPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MaisonShirdelPage = lazy(() => import('./pages/MaisonShirdelPage'))
 const InvestPage = lazy(() => import('./pages/InvestPage'))
@@ -256,6 +258,13 @@ function PageRoutes() {
       <Route path="buy/:slug" element={<BuyProjectPage />} />
       <Route path="project" element={<SearchPage />} />
       <Route path="property/:id" element={<PropertyPage />} />
+      {/* Head-term SEO landings — the 316 unit pages own the long tail, these
+          own "buy property/apartment in muscat" and "buy property in salalah".
+          Slug must match a key in src/cityLandingContent.mjs AND a ROUTES key
+          in src/seoRoutes.mjs (which is what gets prerendered). */}
+      <Route path="buy-property-in-muscat" element={<CityLandingPage slug="buy-property-in-muscat" />} />
+      <Route path="buy-apartment-in-muscat" element={<CityLandingPage slug="buy-apartment-in-muscat" />} />
+      <Route path="buy-property-in-salalah" element={<CityLandingPage slug="buy-property-in-salalah" />} />
       <Route path="maison-shirdel" element={<MaisonShirdelPage />} />
       <Route path="invest" element={<InvestPage />} />
       <Route path="investment" element={<InvestmentPage />} />
@@ -314,6 +323,10 @@ export default function App() {
       {/* The footer's 4-office grid is a big DOM subtree that no route shows
           above the fold — mounting it lazily trims initial style/layout work
           on every page. */}
+      {/* Keyword-anchored internal links. Rendered EAGERLY (not inside a
+          DeferredMount) so crawlers get them on first render — deferring it
+          would hide every money page behind an IntersectionObserver. */}
+      {!isLp && !isAdmin && <FooterSeoLinks />}
       {!isLp && <DeferredMount minHeight="90vh"><SiteFooter /></DeferredMount>}
       <CookieBanner />
       {!isAdmin && !isLp && <ChatWidget />}

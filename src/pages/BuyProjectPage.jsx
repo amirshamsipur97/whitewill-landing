@@ -9,7 +9,7 @@
  *      form (the same modal we use elsewhere) so the lead doesn't stall.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react'
 import { useParams } from 'react-router-dom'
 import { LocalizedLink as RouterLink, useLocalizedNavigate as useNavigate } from '../lib/localize.js'
 import {
@@ -47,14 +47,47 @@ import DirectionsBikeOutlined from '@mui/icons-material/DirectionsBikeOutlined'
 import SchoolOutlined from '@mui/icons-material/SchoolOutlined'
 import LocalParkingOutlined from '@mui/icons-material/LocalParkingOutlined'
 import VerifiedOutlined from '@mui/icons-material/VerifiedOutlined'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
 import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchProjectUnits } from '../supabase'
 import { getProjectDetails } from '../data/projectDetails.js'
-import ProjectInquiryModal from '../components/ProjectInquiryModal'
+import QuickInquiryModal from '../components/QuickInquiryModal'
 import { slugify } from './BuyPage.jsx'
 import { galleryFor, coverForSlug } from '../projectGallery.js'
+
+// Mapbox is 1.76 MB — never let it block a project page's first paint.
+const ProjectMap = lazy(() => import('../components/ProjectMap'))
+
+// Renders children only once the slot scrolls near the viewport, so the
+// mapbox chunk is fetched on demand rather than on every project-page load.
+function WhenVisible({ children, fallback = null }) {
+  const ref = useRef(null)
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || show) return
+    // Scroll backstop as well as the observer: IntersectionObserver is
+    // throttled to a standstill while a tab is hidden, and a map that can
+    // never appear is worse than one loaded slightly early.
+    const near = () => {
+      const r = el.getBoundingClientRect()
+      return r.top < window.innerHeight + 300 && r.bottom > -300
+    }
+    const check = () => { if (near()) setShow(true) }
+    check()
+    window.addEventListener('scroll', check, { passive: true })
+
+    if (typeof IntersectionObserver === 'undefined') {
+      return () => window.removeEventListener('scroll', check)
+    }
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setShow(true); io.disconnect() }
+    }, { rootMargin: '300px 0px' })
+    io.observe(el)
+    return () => { io.disconnect(); window.removeEventListener('scroll', check) }
+  }, [show])
+  return <Box ref={ref} sx={{ width: '100%', height: '100%' }}>{show ? children : fallback}</Box>
+}
+
 
 const OLIVE = '#7c7856'
 const OLIVE_BRIGHT = '#8c8d25'
@@ -107,7 +140,6 @@ const GALLERY_HEADING = {
 }
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
-if (MAPBOX_TOKEN) mapboxgl.accessToken = MAPBOX_TOKEN
 
 const PLACEHOLDER_POOL = [
   '/images/carosel-1.jpg',
@@ -222,68 +254,6 @@ function statsFor(units) {
     minPrice: prices.length ? Math.min(...prices) : null,
     maxPrice: prices.length ? Math.max(...prices) : null,
   }
-}
-
-// ── small embedded map ─────────────────────────────────────────────────
-function ProjectMap({ project }) {
-  const ref = useRef(null)
-  const mapRef = useRef(null)
-
-  useEffect(() => {
-    if (!ref.current || !MAPBOX_TOKEN) return
-    if (project.latitude == null || project.longitude == null) return
-
-    const map = new mapboxgl.Map({
-      container: ref.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: [Number(project.longitude), Number(project.latitude)],
-      zoom: 13.5,
-      pitch: 30,
-      attributionControl: false,
-    })
-    mapRef.current = map
-
-    map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'top-right')
-
-    // Marker
-    const wrap = document.createElement('div')
-    wrap.style.cssText = `
-      width: 22px; height: 22px;
-      background: ${INDIGO};
-      border: 2px solid rgba(255,255,255,0.95);
-      border-radius: 50%;
-      box-shadow: 0 6px 18px rgba(57,31,175,0.45), 0 0 0 6px rgba(57,31,175,0.25);
-    `
-    new mapboxgl.Marker({ element: wrap, anchor: 'center' })
-      .setLngLat([Number(project.longitude), Number(project.latitude)])
-      .addTo(map)
-
-    return () => {
-      map.remove()
-      mapRef.current = null
-    }
-  }, [project.id, project.latitude, project.longitude])
-
-  if (project.latitude == null || project.longitude == null) {
-    return (
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'rgba(255,255,255,0.4)',
-          fontFamily: '"Arsenal SC", "Inter", sans-serif',
-          fontSize: 13,
-          bgcolor: 'rgba(255,255,255,0.04)',
-        }}
-      >
-        Location coming soon
-      </Box>
-    )
-  }
-  return <Box ref={ref} sx={{ width: '100%', height: '100%' }} />
 }
 
 // ── unit row ──────────────────────────────────────────────────────────
@@ -1095,7 +1065,7 @@ export default function BuyProjectPage() {
                   minHeight: { xs: 320, md: 620 },
                 }}
               >
-                <ProjectMap project={project} />
+                <WhenVisible fallback={<Box sx={{ width: '100%', height: '100%', bgcolor: 'rgba(255,255,255,0.04)' }} />}><Suspense fallback={<Box sx={{ width: '100%', height: '100%', bgcolor: 'rgba(255,255,255,0.04)' }} />}><ProjectMap project={project} /></Suspense></WhenVisible>
               </Box>
             </Box>
           </Box>
@@ -1171,7 +1141,7 @@ export default function BuyProjectPage() {
         )}
       </Container>
 
-      <ProjectInquiryModal
+      <QuickInquiryModal
         open={inquiryOpen}
         onClose={() => setInquiryOpen(false)}
         project={project}

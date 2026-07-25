@@ -28,9 +28,12 @@ import { fetchProjects, fetchAllUnits } from '../supabase'
 import { galleryFor } from '../projectGallery.js'
 import { slugify } from './BuyPage.jsx'
 import { LocalizedLink } from '../lib/localize.js'
+import QuickInquiryModal from '../components/QuickInquiryModal'
 import { FONT, OLIVE_BRIGHT } from '../components/invest/ui.jsx'
 import { getProjectDetails } from '../data/projectDetails.js'
 import { FEATURE_META, FEATURES_HEADING } from '../data/amenities.jsx'
+
+const SITE = 'https://www.irfaninvest.com'
 
 // ── light palette ─────────────────────────────────────────────────────────
 const PAPER = '#ffffff'
@@ -56,6 +59,9 @@ const GALLERY_CSS = `
   .pfp-gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto;height:auto}
   .pfp-gallery .g0{grid-row:auto;grid-column:1 / 3;aspect-ratio:16 / 10}
   .pfp-gallery .g:not(.g0){aspect-ratio:4 / 3}
+  /* price sits directly under the title, start-aligned (not floating to the middle) */
+  .pfp-price{flex:1 1 100% !important;min-width:0 !important;text-align:start !important}
+  .pfp-crypto{justify-content:flex-start !important}
 }
 `
 const hashId = (id) => { let x = 0; const s = String(id); for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return x }
@@ -201,6 +207,7 @@ export default function PropertyPage() {
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState(false)
   const [showAllPhotos, setShowAllPhotos] = useState(false)
+  const [inquiryOpen, setInquiryOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -243,17 +250,95 @@ export default function PropertyPage() {
     return out
   }, [units, projById, unit, project])
 
+  // ── per-unit SEO ────────────────────────────────────────────────────────
+  // SeoManager only knows the generic /project meta for this route, so the
+  // page overwrites title/description with the real unit facts (same pattern
+  // as InsightDetailPage) and emits RealEstateListing + Offer + Breadcrumb
+  // JSON-LD — the markup that lets a listing win a rich result.
+  useEffect(() => {
+    if (!unit || !project) return
+    const g = typeGroup(unit.unit_type)
+    // Always the ENGLISH type word: English is the canonical version of a unit
+    // page (localized variants canonicalize to it in seo.jsx), and mixing
+    // languages produced titles like "3-Bedroom شقة for Sale in Muscat".
+    const word = TYPE_WORDS.en[g] || g
+    const beds_ = unit.bedrooms
+    const bedLabel = beds_ === 0 || beds_ == null ? 'Studio' : `${beds_}-Bedroom`
+    const city = project.area?.city || project.area?.name || project.location || 'Oman'
+    const sqm_ = Math.round(Number(unit.total_area_sqm || unit.internal_area_sqm || 0))
+    const priceTxt = unit.price_omr > 0 ? `OMR ${Number(unit.price_omr).toLocaleString()}` : null
+
+    const seoTitle = `${bedLabel} ${word} for Sale in ${city}${priceTxt ? ` — ${priceTxt}` : ''} | Irfan`
+    const seoDesc = [
+      `${bedLabel} ${word.toLowerCase()} for sale at ${project.name}, ${city}, Oman.`,
+      sqm_ ? `${sqm_} m² built-up area.` : '',
+      priceTxt ? `Price ${priceTxt}.` : '',
+      'Freehold ownership for all nationalities with Oman investor residency. Ref IRF-' + unit.id + '.',
+    ].filter(Boolean).join(' ')
+
+    document.title = seoTitle
+    const d = document.head.querySelector('meta[name="description"]')
+    if (d) d.setAttribute('content', seoDesc)
+
+    const url = `${SITE}/property/${unit.id}`
+    const imgs = (galleryFor(slugify(project.name)) || []).slice(0, 6)
+      .map((s) => (s.startsWith('http') ? s : `${SITE}${s}`))
+
+    const graph = [
+      {
+        '@type': 'RealEstateListing',
+        '@id': `${url}#listing`,
+        url,
+        name: seoTitle.replace(' | Irfan', ''),
+        description: seoDesc,
+        ...(imgs.length ? { image: imgs } : {}),
+        ...(unit.price_omr > 0 ? {
+          offers: {
+            '@type': 'Offer',
+            price: Number(unit.price_omr),
+            priceCurrency: 'OMR',
+            availability: 'https://schema.org/InStock',
+            url,
+            seller: { '@id': `${SITE}/#organization` },
+          },
+        } : {}),
+        about: {
+          '@type': g === 'Villa' || g === 'Townhouse' ? 'House' : 'Apartment',
+          name: `${bedLabel} ${word} at ${project.name}`,
+          ...(beds_ != null ? { numberOfRooms: beds_ } : {}),
+          ...(sqm_ ? { floorSize: { '@type': 'QuantitativeValue', value: sqm_, unitCode: 'MTK' } } : {}),
+          address: { '@type': 'PostalAddress', addressLocality: city, addressCountry: 'OM' },
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: 'Properties for Sale in Oman', item: `${SITE}/project` },
+          { '@type': 'ListItem', position: 3, name: seoTitle.replace(' | Irfan', ''), item: url },
+        ],
+      },
+    ]
+
+    const tag = document.createElement('script')
+    tag.type = 'application/ld+json'
+    tag.dataset.propertyLd = '1'
+    tag.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })
+    document.head.appendChild(tag)
+    return () => { tag.remove() }
+  }, [unit, project, lang])
+
   if (loading) {
-    return <main style={{ background: PAPER, minHeight: '100vh' }}><div style={{ maxWidth: 1180, margin: '0 auto', padding: '130px 20px', fontFamily: FONT, color: FAINT }}>…</div></main>
+    return <div style={{ background: PAPER, minHeight: '100vh' }}><div style={{ maxWidth: 1180, margin: '0 auto', padding: '130px 20px', fontFamily: FONT, color: FAINT }}>…</div></div>
   }
   if (!unit || !project) {
     return (
-      <main style={{ background: PAPER, minHeight: '100vh' }} dir={rtl ? 'rtl' : 'ltr'}>
+      <div style={{ background: PAPER, minHeight: '100vh' }} dir={rtl ? 'rtl' : 'ltr'}>
         <div style={{ maxWidth: 1180, margin: '0 auto', padding: '150px 20px', textAlign: 'center', fontFamily: FONT }}>
           <p style={{ color: INK, fontSize: 18, marginBottom: 18 }}>{t.notFound}</p>
           <LocalizedLink to="/project" style={{ color: OLIVE, fontFamily: FONT, fontWeight: 600, textDecoration: 'none' }}>← {t.backToSearch}</LocalizedLink>
         </div>
-      </main>
+      </div>
     )
   }
 
@@ -272,8 +357,6 @@ export default function PropertyPage() {
   const mapSrc = hasCoords && MAPBOX_TOKEN
     ? `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-l+8c8d25(${project.longitude},${project.latitude})/${project.longitude},${project.latitude},13,0/1200x420@2x?access_token=${MAPBOX_TOKEN}`
     : null
-  const inquiryTo = `/buy/${slugify(project.name)}?unit=${unit.id}`
-
   const metaCells = [
     { label: t.propertyType, value: typeWord },
     { label: t.bedrooms, value: beds === 0 || beds == null ? t.studio : localizeDigits(beds, lang) },
@@ -291,7 +374,7 @@ export default function PropertyPage() {
   ].filter(Boolean)
 
   return (
-    <main style={{ background: PAPER, minHeight: '100vh', color: INK }} dir={rtl ? 'rtl' : 'ltr'}>
+    <div style={{ background: PAPER, minHeight: '100vh', color: INK }} dir={rtl ? 'rtl' : 'ltr'}>
       <style>{GALLERY_CSS}</style>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '104px 20px 80px' }}>
         {/* breadcrumb */}
@@ -311,12 +394,12 @@ export default function PropertyPage() {
           <h1 style={{ margin: 0, fontFamily: FONT, fontWeight: 600, fontSize: 'clamp(26px, 3.6vw, 40px)', lineHeight: 1.15, letterSpacing: '-0.01em', maxWidth: 720 }}>
             {title} <span style={{ color: SUB, fontWeight: 400 }}>· {project.name}</span>
           </h1>
-          <div style={{ textAlign: rtl ? 'left' : 'right', minWidth: 220 }}>
+          <div className="pfp-price" style={{ textAlign: rtl ? 'left' : 'right', minWidth: 220 }}>
             <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 'clamp(24px, 3vw, 34px)', color: INK, whiteSpace: 'nowrap' }}>
               {unit.price_omr > 0 ? fmtOmr(unit.price_omr, lang) : '—'}
             </div>
             {crypto && (
-              <div style={{ display: 'flex', gap: 14, justifyContent: rtl ? 'flex-start' : 'flex-end', flexWrap: 'wrap', marginTop: 8 }}>
+              <div className="pfp-crypto" style={{ display: 'flex', gap: 14, justifyContent: rtl ? 'flex-start' : 'flex-end', flexWrap: 'wrap', marginTop: 8 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 15, fontWeight: 600 }}><b style={{ color: '#f7931a' }}>₿</b> {crypto.btc} BTC</span>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 15, fontWeight: 600 }}><b style={{ color: '#627eea' }}>Ξ</b> {crypto.eth} ETH</span>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: SUB, fontFamily: FONT, fontSize: 15, fontWeight: 600 }}><b style={{ color: '#26a17b' }}>₮</b> {crypto.usdt} USDT</span>
@@ -376,9 +459,9 @@ export default function PropertyPage() {
                 <PhotoLibraryRoundedIcon sx={{ fontSize: 18 }} /> {showAllPhotos ? t.showLess : `${t.showAll} (${localizeDigits(photos.length, lang)})`}
               </button>
             )}
-            <LocalizedLink to={inquiryTo} style={{ ...ghostBtn, textDecoration: 'none' }}>
+            <button type="button" onClick={() => setInquiryOpen(true)} style={ghostBtn}>
               <DescriptionOutlinedIcon sx={{ fontSize: 18 }} /> {t.floorPlan}
-            </LocalizedLink>
+            </button>
           </div>
         </section>
 
@@ -461,9 +544,9 @@ export default function PropertyPage() {
 
         {/* contact CTA */}
         <section style={{ marginTop: 40, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-          <LocalizedLink to={inquiryTo} style={{ ...primaryBtn, textDecoration: 'none' }}>
+          <button type="button" onClick={() => setInquiryOpen(true)} style={primaryBtn}>
             {t.contact} <ArrowForwardRoundedIcon sx={{ fontSize: 18, transform: rtl ? 'scaleX(-1)' : 'none' }} />
-          </LocalizedLink>
+          </button>
         </section>
 
         {/* recommended */}
@@ -476,7 +559,14 @@ export default function PropertyPage() {
           </section>
         )}
       </div>
-    </main>
+
+      <QuickInquiryModal
+        open={inquiryOpen}
+        onClose={() => setInquiryOpen(false)}
+        project={project}
+        unit={unit}
+      />
+    </div>
   )
 }
 

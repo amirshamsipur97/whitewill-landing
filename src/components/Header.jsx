@@ -18,6 +18,7 @@ import {
   ListItemText,
   Divider,
   ListItemIcon,
+  ListSubheader,
   Tooltip,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -43,6 +44,15 @@ import { useI18n, LANGS } from '../i18n.jsx'
  */
 
 // Tailwind/MUI-friendly tokens lifted straight from the Figma node.
+// Labels for the property-portal dropdown. Kept local rather than in the
+// (very large) i18n dictionary because only this menu uses them.
+const PORTAL_MENU = {
+  en: { all: 'All Properties in Oman', muscat: 'Muscat', salalah: 'Salalah', propMuscat: 'Property in Muscat', aptMuscat: 'Apartments in Muscat', propSalalah: 'Property in Salalah' },
+  ru: { all: 'Вся недвижимость Омана', muscat: 'Маскат', salalah: 'Салала', propMuscat: 'Недвижимость в Маскате', aptMuscat: 'Квартиры в Маскате', propSalalah: 'Недвижимость в Салале' },
+  ar: { all: 'جميع العقارات في عُمان', muscat: 'مسقط', salalah: 'صلالة', propMuscat: 'عقارات في مسقط', aptMuscat: 'شقق في مسقط', propSalalah: 'عقارات في صلالة' },
+  fa: { all: 'همهٔ املاک عمان', muscat: 'مسقط', salalah: 'صلاله', propMuscat: 'ملک در مسقط', aptMuscat: 'آپارتمان در مسقط', propSalalah: 'ملک در صلاله' },
+}
+
 const NAV_FONT = {
   // Navbar links pinned to Arsenal SC Bold per brand spec.
   fontFamily: '"Arsenal SC", "Inter", system-ui, sans-serif',
@@ -80,6 +90,7 @@ export default function Header() {
   const navigate = useLocalizedNavigate()
   const [langAnchor, setLangAnchor] = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [portalAnchor, setPortalAnchor] = useState(null)
   const headerRef = useRef(null)
 
   // ── Hide / show navbar around pinned project sections ─────────────
@@ -114,9 +125,23 @@ export default function Header() {
     }
   }, [])
 
+  // The property-portal dropdown. The three SEO landings don't map onto a
+  // flat city list (Muscat has both an all-types and an apartments page), so
+  // the menu groups BY CITY and nests the type-level pages under Muscat —
+  // 3 groups, 4 destinations.
+  const pm = PORTAL_MENU[lang] || PORTAL_MENU.en
+  const portalChildren = [
+    { label: pm.all, to: '/project' },
+    { group: pm.muscat },
+    { label: pm.propMuscat, to: '/buy-property-in-muscat' },
+    { label: pm.aptMuscat, to: '/buy-apartment-in-muscat' },
+    { group: pm.salalah },
+    { label: pm.propSalalah, to: '/buy-property-in-salalah' },
+  ]
+
   const navLinks = [
     { label: t.nav.buy, to: '/buy' },
-    { label: t.nav.project, to: '/project' },
+    { label: t.nav.project, to: '/project', children: portalChildren },
     { label: t.nav.maison, to: '/maison-shirdel' },
     { label: t.nav.invest, to: '/invest' },
     // These pages exist only in the Persian site.
@@ -192,25 +217,127 @@ export default function Header() {
             ml: { lg: 1.5, xl: 2 },
           }}
         >
-          {navLinks.map((item) => (
-            <Box
-              key={item.label}
-              component={RouterLink}
-              to={item.to}
-              sx={{
-                ...NAV_FONT,
-                color: '#fff',
-                textDecoration: 'none',
-                whiteSpace: 'nowrap',
-                position: 'relative',
-                transition: 'opacity 180ms ease',
-                '&:hover': { opacity: 0.75 },
-              }}
-            >
-              {item.label}
-            </Box>
-          ))}
+          {navLinks.map((item) =>
+            item.children ? (
+              // Stays a real <a href="/project"> — turning it into a plain
+              // div would strip the site-wide nav link to the portal. The
+              // dropdown opens on hover; clicking still navigates.
+              <Box
+                key={item.label}
+                component={RouterLink}
+                to={item.to}
+                onMouseEnter={(e) => setPortalAnchor(e.currentTarget)}
+                sx={{
+                  ...NAV_FONT,
+                  color: '#fff',
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  cursor: 'pointer',
+                  transition: 'opacity 180ms ease',
+                  '&:hover': { opacity: 0.75 },
+                }}
+              >
+                {item.label}
+                <KeyboardArrowDownIcon
+                  sx={{
+                    fontSize: 17,
+                    transition: 'transform 200ms ease',
+                    transform: portalAnchor ? 'rotate(180deg)' : 'none',
+                  }}
+                />
+              </Box>
+            ) : (
+              <Box
+                key={item.label}
+                component={RouterLink}
+                to={item.to}
+                sx={{
+                  ...NAV_FONT,
+                  color: '#fff',
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                  position: 'relative',
+                  transition: 'opacity 180ms ease',
+                  '&:hover': { opacity: 0.75 },
+                }}
+              >
+                {item.label}
+              </Box>
+            ),
+          )}
         </Stack>
+
+        {/* Property-portal dropdown (desktop). Every entry is a real
+            RouterLink, so the SEO landings stay crawlable from the nav. */}
+        <Menu
+          // keepMounted: the sub-links must exist in the DOM even while the
+          // menu is closed, otherwise a crawler never sees the three SEO
+          // landings linked from the nav.
+          keepMounted
+          anchorEl={portalAnchor}
+          open={Boolean(portalAnchor)}
+          onClose={() => setPortalAnchor(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          slotProps={{
+            list: { onMouseLeave: () => setPortalAnchor(null), sx: { py: 1 } },
+            paper: {
+              sx: {
+                mt: 1,
+                minWidth: 262,
+                bgcolor: 'rgba(18,18,19,0.97)',
+                backdropFilter: 'blur(14px)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                borderRadius: '12px',
+                boxShadow: '0 22px 60px rgba(0,0,0,0.5)',
+              },
+            },
+          }}
+        >
+          {portalChildren.map((child, i) =>
+            child.group ? (
+              <ListSubheader
+                key={`g-${i}`}
+                sx={{
+                  bgcolor: 'transparent',
+                  color: 'rgba(255,255,255,0.42)',
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  lineHeight: 1,
+                  pt: 1.7,
+                  pb: 0.9,
+                  px: 2,
+                }}
+              >
+                {child.group}
+              </ListSubheader>
+            ) : (
+              <MenuItem
+                key={child.to}
+                component={RouterLink}
+                to={child.to}
+                onClick={() => setPortalAnchor(null)}
+                sx={{
+                  color: 'rgba(255,255,255,0.88)',
+                  fontSize: 14.5,
+                  py: 1.05,
+                  px: 2,
+                  mx: 0.75,
+                  borderRadius: '8px',
+                  transition: 'background-color 160ms ease, color 160ms ease',
+                  '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', color: '#fff' },
+                }}
+              >
+                {child.label}
+              </MenuItem>
+            ),
+          )}
+        </Menu>
 
         {/* Pushes everything after to the right */}
         <Box sx={{ flexGrow: 1 }} />
@@ -358,21 +485,61 @@ export default function Header() {
       >
         <List>
           {navLinks.map((item) => (
-            <ListItem key={item.label} disablePadding>
-              <ListItemButton
-                onClick={() => {
-                  setDrawerOpen(false)
-                  navigate(item.to)
-                }}
-              >
-                <ListItemText
-                  primary={item.label}
-                  // MUI v6/v9 renamed primary/secondaryTypographyProps
-                  // → slotProps.primary / slotProps.secondary.
-                  slotProps={{ primary: { sx: NAV_FONT } }}
-                />
-              </ListItemButton>
-            </ListItem>
+            <Box key={item.label}>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => {
+                    setDrawerOpen(false)
+                    navigate(item.to)
+                  }}
+                >
+                  <ListItemText
+                    primary={item.label}
+                    // MUI v6/v9 renamed primary/secondaryTypographyProps
+                    // → slotProps.primary / slotProps.secondary.
+                    slotProps={{ primary: { sx: NAV_FONT } }}
+                  />
+                </ListItemButton>
+              </ListItem>
+              {/* Portal sub-links, always expanded on mobile — a collapsed
+                  accordion would hide the SEO landings behind an extra tap. */}
+              {item.children?.map((child, i) =>
+                child.group ? (
+                  <ListSubheader
+                    key={`m-g-${i}`}
+                    sx={{
+                      bgcolor: 'transparent',
+                      color: 'text.secondary',
+                      fontSize: 10.5,
+                      fontWeight: 700,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      lineHeight: 1,
+                      pt: 1.6,
+                      pb: 0.6,
+                      pl: 4,
+                    }}
+                  >
+                    {child.group}
+                  </ListSubheader>
+                ) : (
+                  <ListItem key={child.to} disablePadding>
+                    <ListItemButton
+                      sx={{ pl: 4, py: 0.7 }}
+                      onClick={() => {
+                        setDrawerOpen(false)
+                        navigate(child.to)
+                      }}
+                    >
+                      <ListItemText
+                        primary={child.label}
+                        slotProps={{ primary: { sx: { fontSize: 14, opacity: 0.85 } } }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ),
+              )}
+            </Box>
           ))}
           <Divider sx={{ my: 1 }} />
           <ListItem disablePadding>

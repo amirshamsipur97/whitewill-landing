@@ -57,6 +57,16 @@ function resolve(pathname, lang = 'en') {
     return { title: pick(pm.title, lang), desc: pick(pm.desc, lang), index: true }
   }
 
+  // Unit detail pages (/property/:id) — generic-but-indexable until
+  // PropertyPage writes the precise per-unit tags (same pattern as blog
+  // articles). Without this branch they fell through to the 404 catch-all
+  // below and were emitted as noindex, so none of the ~315 listings could
+  // ever rank.
+  if (/^\/property\/[^/]+\/?$/.test(pathname)) {
+    const r = ROUTES['/project']
+    return { title: pick(r.title, lang), desc: pick(r.desc, lang), index: true }
+  }
+
   // Admin tool — never index.
   if (pathname.startsWith('/insights-admin')) {
     return { title: 'Admin — Irfan Investment Group', desc: '', index: false }
@@ -141,10 +151,18 @@ export default function SeoManager() {
     setMeta('property', 'og:locale', OG_LOCALE[lang] || 'en_US')
     setMeta('name', 'twitter:title', title)
     setMeta('name', 'twitter:description', desc)
-    // Self-referential canonical for every page.
-    setCanonical(url)
+    // Unit pages are prerendered in ENGLISH ONLY (see prerender-routes.mjs), so
+    // English is the single canonical version: /ar|/fa|/ru/property/:id point
+    // their canonical at the English URL and advertise no hreflang alternates.
+    // Otherwise each localized variant — reachable from the localized /project
+    // listing — would be crawled as its own near-duplicate of the English page
+    // and land in "Duplicate, Google chose different canonical".
+    const isUnitPage = /^\/property\/[^/]+\/?$/.test(logical)
+
+    // Self-referential canonical for every page (English URL for unit pages).
+    setCanonical(isUnitPage ? SITE + localizePath(logical.replace(/\/$/, ''), 'en') : url)
     // hreflang only for indexable pages; clear it on noindex/404/admin.
-    setAlternates(index ? (logical === '/' ? '/' : logical.replace(/\/$/, '')) : null)
+    setAlternates(index && !isUnitPage ? (logical === '/' ? '/' : logical.replace(/\/$/, '')) : null)
   }, [pathname])
 
   return null

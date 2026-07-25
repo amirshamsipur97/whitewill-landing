@@ -14,9 +14,10 @@ import { DIAL_CODES, DEFAULT_DIAL } from '../data/dialCodes.js'
  * - The purple launcher pill (same size as the chat pill, bottom-left) is
  *   mounted on EVERY page and toggles the popup; its icon rotates 45° while
  *   the popup is open.
- * - The popup auto-opens 3s after arriving on the LANDING page only, and
- *   re-opens every 20s after being dismissed — until a lead is submitted
- *   (sessionStorage flag), then never again for the session.
+ * - The popup auto-opens on EVERY page: after 18s on the landing page and
+ *   after 35s elsewhere. It re-opens on the same per-page cadence after being
+ *   dismissed — until a lead is submitted (sessionStorage flag), then never
+ *   again for the session.
  * - While open: page dimmed 20% + blurred, page scroll locked (Lenis paused).
  * - Submit: first/last name + phone → shared `submit-form` pipeline
  *   (Supabase `leads` + Google Sheet + GA4 `generate_lead` + optional Ads
@@ -27,8 +28,11 @@ import { DIAL_CODES, DEFAULT_DIAL } from '../data/dialCodes.js'
 const SLIDES = ['/images/popup/slide-1.jpg', '/images/popup/slide-2.jpg', '/images/popup/slide-3.jpg']
 const TOGGLE_ICON = '/images/popup/toggle-icon.svg'
 const SLIDE_MS = 2000
-const FIRST_MS = 3000
-const REOPEN_MS = 20000
+// Auto-open cadence: the popup surfaces on EVERY page. The first open and every
+// re-open after a dismissal wait the full interval for the current page —
+// 18s on the landing page, 35s everywhere else — until a lead is submitted.
+const LANDING_MS = 18000
+const OTHER_MS = 35000
 const DONE_KEY = 'irfan_popup_lead_done'
 
 const PURPLE = '#351D93'
@@ -152,7 +156,7 @@ export default function LeadPopup() {
   const { pathname } = useLocation()
   const t = STRINGS[lang] || STRINGS.en
   const rtl = lang === 'fa' || lang === 'ar'
-  const isLanding = stripLang(pathname) === '/'
+  const intervalFor = (path) => (stripLang(path) === '/' ? LANDING_MS : OTHER_MS)
 
   const [open, setOpen] = useState(false)
   const [slide, setSlide] = useState(0)
@@ -191,19 +195,20 @@ export default function LeadPopup() {
     animateClose(() => {
       setOpen(false)
       clearTimeout(timerRef.current)
-      // Re-open only while the visitor is still on the landing page.
-      if (!isDone() && stripLang(window.location.pathname) === '/') {
-        timerRef.current = setTimeout(() => setOpen(true), REOPEN_MS)
+      // Re-open after the current page's interval (18s landing / 35s other).
+      if (!isDone()) {
+        timerRef.current = setTimeout(() => setOpen(true), intervalFor(window.location.pathname))
       }
     })
   }, [animateClose])
 
-  // First auto-open: 3s after arriving on the landing page.
+  // First auto-open: after the current page's interval (18s landing / 35s
+  // other). Re-runs on every navigation so each page gets its own timer.
   useEffect(() => {
-    if (!isLanding || isDone()) return
-    timerRef.current = setTimeout(() => setOpen(true), FIRST_MS)
+    if (open || isDone()) return
+    timerRef.current = setTimeout(() => setOpen(true), intervalFor(pathname))
     return () => clearTimeout(timerRef.current)
-  }, [isLanding])
+  }, [pathname])
 
   // Opening animation + launcher/close icon 45° rotation.
   useEffect(() => {

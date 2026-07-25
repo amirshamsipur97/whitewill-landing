@@ -43,6 +43,8 @@ import { fetchProjects, fetchAllUnits } from '../supabase'
 import { galleryFor } from '../projectGallery.js'
 import { slugify } from './BuyPage.jsx'
 import { LocalizedLink } from '../lib/localize.js'
+import QuickInquiryModal from '../components/QuickInquiryModal'
+import { PROJECT_SEO, projectFaqJsonLd } from '../projectSeoContent.mjs'
 import { FONT, OLIVE_BRIGHT } from '../components/invest/ui.jsx'
 
 // ── uniform dark palette (matches the hero; whole /project page is dark) ───
@@ -251,6 +253,9 @@ const CSS = `
 /* ── dark glass hero panel (Figma 953-28313) ── */
 .pfh-hero{position:relative;padding:120px 20px 56px;background:linear-gradient(180deg,#141416 0%,#0a0a0b 100%);overflow:hidden}
 .pfh-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(1100px 460px at 50% -8%,rgba(255,255,255,.05),transparent 68%);z-index:0}
+/* Oman flag — hangs from the top-start corner of the hero, below the header
+   (matches the landing hero); mirrors to the top-right in RTL. */
+.pfh-flag{position:absolute;top:0;inset-inline-start:40px;width:78px;height:auto;aspect-ratio:158/238;z-index:2;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .pfh-wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
 .pfh-panel{max-width:1060px;margin:0 auto;text-align:center;background:rgba(255,255,255,.032);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:40px 40px 34px;box-shadow:0 24px 70px rgba(0,0,0,.32)}
 .pfh-eyebrow{font-family:${FONT};font-size:14px;color:rgba(255,255,255,.82);font-weight:500;letter-spacing:.01em}
@@ -258,11 +263,14 @@ const CSS = `
 .pfh-lead{margin:13px auto 0;font-family:${FONT};font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.6;color:rgba(255,255,255,.6);max-width:600px}
 .pfh-search{display:flex;align-items:center;gap:10px;margin-top:26px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:8px 8px 8px 20px;transition:border-color .2s;text-align:start}
 .pfh-search:focus-within{border-color:rgba(255,255,255,.32)}
+.pfh-search-ico{color:rgba(255,255,255,.55);flex-shrink:0}
 .pfh-search input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:#fff;font-family:${FONT};font-size:15.5px;text-align:start}
 .pfh-search input::placeholder{color:rgba(255,255,255,.42)}
 .pfh-find{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 24px;background:${GOLD};color:#fff;border:none;border-radius:9px;font-family:${FONT};font-weight:600;font-size:15px;cursor:pointer;transition:background .2s}
 .pfh-find:hover{background:${GOLD_HI}}
 .pfh-find:disabled{opacity:.75;cursor:default}
+.pfh-find-ico{display:none}
+.pfh-fchip-div{width:1px;height:20px;background:rgba(255,255,255,.16);flex-shrink:0}
 .pfh-filters{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
 .pfh-fchip{position:relative;flex:1 1 0;min-width:150px;display:flex;align-items:center;gap:8px;height:54px;padding:0 11px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.13);border-radius:11px;cursor:pointer;transition:border-color .2s,background .2s}
 .pfh-fchip:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.075)}
@@ -273,13 +281,15 @@ const CSS = `
 @media(prefers-reduced-motion:reduce){.pfh-spin{animation-duration:1.6s}}
 @media(max-width:768px){
   .pfh-hero{padding:96px 14px 34px}
+  .pfh-flag{top:0;inset-inline-start:16px;width:54px}
   .pfh-panel{padding:24px 18px 20px;border-radius:16px}
-  .pfh-search{flex-wrap:wrap;padding:8px}
-  .pfh-search input{padding:4px 8px}
-  .pfh-find{width:100%;height:46px}
-  .pfh-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-  .pfh-filters::-webkit-scrollbar{display:none}
-  .pfh-fchip{min-width:62%;flex:0 0 auto}
+  .pfh-search{gap:8px;padding:7px 7px 7px 16px}
+  .pfh-search-ico{display:none}
+  .pfh-find{flex:0 0 auto;width:48px;min-width:48px;height:48px;padding:0;border-radius:9px}
+  .pfh-find-txt{display:none}
+  .pfh-find-ico{display:block}
+  .pfh-filters{flex-direction:column;gap:10px}
+  .pfh-fchip{width:100%;min-width:0;flex:1 1 auto;height:58px;border-radius:14px}
 }
 /* ── AI reply as an iOS-style notification card (Figma 955-28582) ── */
 .pfx-msg{position:relative;display:flex;gap:12px;max-width:640px;margin:0 auto;background:#fff;border-radius:16px;padding:15px 18px;box-shadow:0 8px 50px rgba(0,0,0,.5),0 0 0 .5px rgba(255,255,255,.06);font-family:-apple-system,"SF Pro Text","Peyda",${FONT}}
@@ -321,7 +331,7 @@ function SkeletonCard() {
 }
 
 // ── one listing card (image left, details right → stacked on mobile) ──────
-function UnitCard({ item, t, rtl, lang }) {
+function UnitCard({ item, t, rtl, lang, onContact }) {
   const { unit, project, count = 1, cover, photoCount } = item
   const beds = unit.bedrooms
   const type = typeGroup(unit.unit_type)
@@ -409,7 +419,7 @@ function UnitCard({ item, t, rtl, lang }) {
             <span style={{ color: FAINT, fontFamily: FONT, fontSize: 11, letterSpacing: '0.05em' }}>Ref: IRF-{unit.id}</span>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <LocalizedLink to={to} className="pfx-cta pfx-cta-ghost">{t.contact}</LocalizedLink>
+            <button type="button" onClick={onContact} className="pfx-cta pfx-cta-ghost">{t.contact}</button>
             <LocalizedLink to={to} className="pfx-cta pfx-cta-primary">
               {t.view} <ArrowForwardRoundedIcon sx={{ fontSize: 17, transform: rtl ? 'scaleX(-1)' : 'none' }} />
             </LocalizedLink>
@@ -439,6 +449,7 @@ function HeroChip({ icon, value, children }) {
   return (
     <label className="pfh-fchip">
       <span style={{ display: 'inline-flex', color: 'rgba(255,255,255,0.62)', flexShrink: 0 }}>{icon}</span>
+      <span className="pfh-fchip-div" aria-hidden="true" />
       <span className="pfh-fchip-txt">{value}</span>
       <KeyboardArrowDownRoundedIcon sx={{ fontSize: 20, color: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
       {children}
@@ -457,6 +468,8 @@ export default function SearchPage() {
   const [projects, setProjects] = useState([])
   const [units, setUnits] = useState([])
   const [loading, setLoading] = useState(true)
+  // Inline lead capture: { project, unit } when a card's "Contact" is clicked.
+  const [inquiry, setInquiry] = useState(null)
 
   const L = LABELS[lang] || LABELS.en
   const C = CHIP_LABELS[lang] || CHIP_LABELS.en
@@ -674,12 +687,61 @@ export default function SearchPage() {
   const sizeVal = SL[SIZE_VALUES.findIndex((o) => o.v === size)] || SL[0]
   const areaVal = area === 'any' ? L.anyArea : area
 
+  // ── structured data ─────────────────────────────────────────────────────
+  // FAQPage (mirrors the prerendered payload, same id so hydration replaces
+  // rather than duplicates) + an ItemList of the visible listings + a
+  // BreadcrumbList. The ItemList is what lets a listing portal surface as a
+  // rich result instead of a plain blue link.
+  useEffect(() => {
+    const SITE = 'https://www.irfaninvest.com'
+    const faq = document.createElement('script')
+    faq.type = 'application/ld+json'
+    faq.id = 'project-faq-jsonld'
+    faq.textContent = JSON.stringify(projectFaqJsonLd(lang))
+    document.getElementById('project-faq-jsonld')?.remove()
+    document.head.appendChild(faq)
+
+    const list = document.createElement('script')
+    list.type = 'application/ld+json'
+    list.id = 'project-itemlist-jsonld'
+    list.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+            { '@type': 'ListItem', position: 2, name: 'Properties for Sale in Oman', item: `${SITE}/project` },
+          ],
+        },
+        {
+          '@type': 'ItemList',
+          name: 'Properties for sale in Oman',
+          numberOfItems: results.length,
+          itemListElement: results.slice(0, 25).map((it, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            url: `${SITE}/property/${it.unit.id}`,
+            name: `${unitTitle(it.unit.bedrooms, typeGroup(it.unit.unit_type), 'en')} · ${it.project.name}`,
+          })),
+        },
+      ],
+    })
+    document.getElementById('project-itemlist-jsonld')?.remove()
+    document.head.appendChild(list)
+
+    return () => { faq.remove(); list.remove() }
+  }, [lang, results])
+
+  const seoCopy = PROJECT_SEO[lang] || PROJECT_SEO.en
+
   return (
-    <main className="pfx-page" dir={rtl ? 'rtl' : 'ltr'}>
+    <div className="pfx-page" dir={rtl ? 'rtl' : 'ltr'}>
       <style>{CSS}</style>
 
       {/* ── dark glass hero panel (Figma 953-28313) ── */}
       <section className="pfh-hero">
+        <img className="pfh-flag" src="/images/oman-flag.png" alt="Flag of Oman" />
         <div className="pfh-wrap">
           <div className="pfh-panel" dir={rtl ? 'rtl' : 'ltr'}>
             <div className="pfh-eyebrow">{t.eyebrow}</div>
@@ -688,16 +750,17 @@ export default function SearchPage() {
 
             {/* AI natural-language search */}
             <form className="pfh-search" onSubmit={(e) => { e.preventDefault(); runAiSearch() }}>
-              <SearchRoundedIcon sx={{ fontSize: 22, color: 'rgba(255,255,255,0.55)' }} />
+              <SearchRoundedIcon className="pfh-search-ico" sx={{ fontSize: 22 }} />
               <input
                 value={aiQuery}
                 onChange={(e) => setAiQuery(e.target.value)}
                 placeholder={t.aiPlaceholder}
                 aria-label={t.aiPlaceholder}
               />
-              <button type="submit" className="pfh-find" disabled={aiBusy}>
+              <button type="submit" className="pfh-find" disabled={aiBusy} aria-label={t.find}>
                 {aiBusy && <span className="pfh-spin" />}
-                {aiBusy ? t.aiThinking : t.find}
+                <span className="pfh-find-txt">{aiBusy ? t.aiThinking : t.find}</span>
+                {!aiBusy && <SearchRoundedIcon className="pfh-find-ico" sx={{ fontSize: 24 }} />}
               </button>
             </form>
 
@@ -782,6 +845,11 @@ export default function SearchPage() {
 
       {/* ── listing cards ── */}
       <section className="pfx-wrap" style={{ padding: '18px 20px 88px' }}>
+        {/* Visually-hidden h2 so the outline reads h1 -> h2 -> h3(card) rather
+            than skipping a level straight from the page title to each listing. */}
+        <h2 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>
+          {t.crumbSearch}
+        </h2>
         {busy ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -797,11 +865,65 @@ export default function SearchPage() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {results.map((item) => (
-              <UnitCard key={item.unit.id} item={item} t={t} rtl={rtl} lang={lang} />
+              <UnitCard
+                key={item.unit.id}
+                item={item}
+                t={t}
+                rtl={rtl}
+                lang={lang}
+                onContact={() => setInquiry({ project: item.project, unit: item.unit })}
+              />
             ))}
           </div>
         )}
       </section>
-    </main>
+
+      {/* ── crawlable SEO copy + FAQ + internal links ──────────────────────
+          The portal had no body content at all, so it never competed with
+          Bayut/Dubizzle/Vista for the "apartments for sale in muscat" cluster.
+          Same block the prerenderer writes into the static HTML. */}
+      <section
+        style={{ maxWidth: 860, margin: '0 auto', padding: '0 20px 96px', textAlign: rtl ? 'right' : 'left' }}
+        dir={rtl ? 'rtl' : 'ltr'}
+      >
+        <div style={{ borderTop: `1px solid ${LINE}`, paddingTop: 44 }}>
+          <h2 style={{ fontFamily: FONT, fontWeight: 600, fontSize: 'clamp(22px,2.6vw,30px)', color: INK, margin: '0 0 18px', lineHeight: 1.25 }}>
+            {seoCopy.heading}
+          </h2>
+          {seoCopy.paras.map((p, i) => (
+            <p key={i} style={{ fontFamily: FONT, fontSize: 15.5, lineHeight: 1.85, color: SUB, margin: '0 0 18px' }}>{p}</p>
+          ))}
+
+          <div style={{ marginTop: 34 }}>
+            {seoCopy.faq.map((f, i) => (
+              <div key={i} style={{ marginBottom: 22 }}>
+                <h3 style={{ fontFamily: FONT, fontWeight: 600, fontSize: 17, color: INK, margin: '0 0 8px' }}>{f.q}</h3>
+                <p style={{ fontFamily: FONT, fontSize: 15, lineHeight: 1.8, color: SUB, margin: 0 }}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+
+          <h3 style={{ fontFamily: FONT, fontWeight: 600, fontSize: 17, color: INK, margin: '34px 0 12px' }}>
+            {seoCopy.linksHeading}
+          </h3>
+          <ul style={{ margin: 0, padding: rtl ? '0 18px 0 0' : '0 0 0 18px', listStyle: 'disc' }}>
+            {seoCopy.links.map((l) => (
+              <li key={l.href} style={{ marginBottom: 9 }}>
+                <LocalizedLink to={l.href} style={{ fontFamily: FONT, fontSize: 15, color: ACCENT, textDecoration: 'none' }}>
+                  {l.label}
+                </LocalizedLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <QuickInquiryModal
+        open={!!inquiry}
+        onClose={() => setInquiry(null)}
+        project={inquiry?.project}
+        unit={inquiry?.unit}
+      />
+    </div>
   )
 }

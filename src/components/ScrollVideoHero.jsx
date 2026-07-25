@@ -120,8 +120,8 @@ export default function ScrollVideoHero() {
       gsap.set([steps[1], steps[2], steps[3]], { opacity: 0, y: 30, scale: 0.96, filter: 'blur(6px)' })
       gsap.set(ctaRef.current, { opacity: 0, scale: 0.9, pointerEvents: 'none' })
       gsap.set(hintRef.current, { opacity: 1 })
-      // Landing search bar: visible + interactive at the top of the hero,
-      // fades (autoAlpha → visibility:hidden) as soon as the user scrolls in.
+      // Landing search bar: visible + interactive, pinned at the top of the
+      // hero and kept fixed for the whole scroll (no fade — see timeline below).
       gsap.set(searchRef.current, { autoAlpha: 1, y: 0 })
       // Logo starts hidden + slightly small + soft-blurred.
       gsap.set(logoRef.current, { opacity: 0, scale: 0.82, filter: 'blur(8px)' })
@@ -142,8 +142,8 @@ export default function ScrollVideoHero() {
 
       // Scroll hint fades out in the first 8% of scroll
       tl.to(hintRef.current, { opacity: 0, duration: 0.08 }, 0)
-      // The landing search bar fades on the same beat as the hint.
-      tl.to(searchRef.current, { autoAlpha: 0, y: -10, duration: 0.08 }, 0)
+      // The landing search bar stays fixed + visible for the whole hero scroll
+      // (the sticky container keeps it pinned at the top) — it no longer fades.
 
       // 5-stage timeline: 4 text steps + 1 logo reveal at the end.
       // Each stage overlaps its neighbour for a long smooth crossfade.
@@ -509,16 +509,37 @@ export default function ScrollVideoHero() {
           </Box>
         </Box>
 
-        {/* Landing search entry — persistent funnel into /project. Sits at the
-            top of the hero (fades on first scroll via the timeline above) and
-            is fully interactive, unlike the pointer-events-none text steps. */}
+        {/* Oman flag — hangs from the top-start corner of the hero
+            (Figma 958-28698); mirrors to the top-right in RTL. */}
+        <Box
+          component="img"
+          src="/images/oman-flag.png"
+          alt="Flag of Oman"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            insetInlineStart: { xs: 16, md: 40 },
+            width: { xs: 54, md: 78 },
+            height: 'auto',
+            aspectRatio: '158 / 238',
+            zIndex: 4,
+            pointerEvents: 'none',
+            display: 'block',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+          }}
+        />
+
+        {/* Landing search entry — persistent funnel into /project. Pinned at
+            the TOP of the hero, above the text steps, and stays fixed for the
+            whole hero scroll (no fade); fully interactive, unlike the
+            pointer-events-none text steps. */}
         <Box
           ref={searchRef}
           component="form"
           onSubmit={submitHeroSearch}
           sx={{
             position: 'absolute',
-            bottom: { xs: 92, md: 108 },
+            top: { xs: 48, md: 76 },
             left: 0,
             right: 0,
             mx: 'auto',

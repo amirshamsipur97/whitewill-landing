@@ -1,28 +1,117 @@
 {
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "irfaninvest.com" }], "destination": "https://www.irfaninvest.com/:path*", "permanent": true },
-    { "source": "/omans/sultan-haitham-city-yenaier", "destination": "/buy/yenaier", "permanent": true },
-    { "source": "/our-team", "destination": "/about", "permanent": true },
-    { "source": "/team", "destination": "/about", "permanent": true },
-    { "source": "/about-us", "destination": "/about", "permanent": true },
-    { "source": "/contact", "destination": "/about", "permanent": true },
-    { "source": "/properties", "destination": "/buy", "permanent": true },
-    { "source": "/property/:path*", "destination": "/buy", "permanent": true },
-    { "source": "/oman-property/:path*", "destination": "/buy", "permanent": true },
-    { "source": "/salalah", "destination": "/buy/hawana-salalah", "permanent": true },
-    { "source": "/ar/salalah", "destination": "/ar/buy/hawana-salalah", "permanent": true },
-    { "source": "/projects", "destination": "/buy", "permanent": true },
-    { "source": "/sell", "destination": "/", "permanent": true },
-    { "source": "/blog", "destination": "/insights", "permanent": true },
-    { "source": "/news", "destination": "/insights", "permanent": true },
-    { "source": "/ru/about-us", "destination": "/ru/about", "permanent": true },
-    { "source": "/ru/oman", "destination": "/ru/buy", "permanent": true }
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "irfaninvest.com"
+        }
+      ],
+      "destination": "https://www.irfaninvest.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/omans/sultan-haitham-city-yenaier",
+      "destination": "/buy/yenaier",
+      "permanent": true
+    },
+    {
+      "source": "/our-team",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/team",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/properties",
+      "destination": "/buy",
+      "permanent": true
+    },
+    {
+      "source": "/property/investment",
+      "destination": "/buy",
+      "permanent": true
+    },
+    {
+      "source": "/oman-property/:path*",
+      "destination": "/buy",
+      "permanent": true
+    },
+    {
+      "source": "/salalah",
+      "destination": "/buy/hawana-salalah",
+      "permanent": true
+    },
+    {
+      "source": "/ar/salalah",
+      "destination": "/ar/buy/hawana-salalah",
+      "permanent": true
+    },
+    {
+      "source": "/projects",
+      "destination": "/buy",
+      "permanent": true
+    },
+    {
+      "source": "/sell",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/insights",
+      "permanent": true
+    },
+    {
+      "source": "/news",
+      "destination": "/insights",
+      "permanent": true
+    },
+    {
+      "source": "/ru/about-us",
+      "destination": "/ru/about",
+      "permanent": true
+    },
+    {
+      "source": "/ru/oman",
+      "destination": "/ru/buy",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/uae/:path*", "destination": "/api/gone" },
-    { "source": "/omans/:path*", "destination": "/api/gone" },
-    { "source": "/cdn-cgi/:path*", "destination": "/api/gone" },
-    { "source": "/((?!api|assets|images|video|icons|favicon|robots|sitemap).*)", "destination": "/index.html" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/uae/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/omans/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/cdn-cgi/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/((?!api|assets|images|video|icons|favicon|robots|sitemap).*)",
+      "destination": "/app.html"
+    }
   ]
 }

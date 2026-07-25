@@ -15,6 +15,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { dirname, join } from 'path'
 import { marked } from 'marked'
+import { POPULAR, COMMUNITIES, PROJECTS, footerSeoCopy } from './src/footerSeoLinks.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const SUPABASE_URL = 'https://owgvrxipqlusepozlujv.supabase.co'
@@ -119,6 +120,24 @@ function buildHead(a, langsForSlug) {
   return { title, desc, url, links, jsonld }
 }
 
+
+// Mirror of footerLinksHtml() in prerender-routes.mjs. Without it an article's
+// static HTML linked only to other articles, so 119 pages of blog equity never
+// reached /project, /buy or the head-term landings until React mounted.
+function footerLinksHtml(lang) {
+  const c = footerSeoCopy(lang)
+  const prefix = langPrefix(lang)
+  const list = (items) => `<ul>${items.map((i) => `<li><a href="${i.href}">${esc(i.label)}</a></li>`).join('')}</ul>`
+  return (
+    `<h2>${esc(c.headings.popular)}</h2>` +
+    list(POPULAR.map((x) => ({ href: `${prefix}${x.to}`, label: c.popular[x.key] }))) +
+    `<h2>${esc(c.headings.communities)}</h2>` +
+    list(COMMUNITIES.map((a) => ({ href: `${prefix}/project?area=${encodeURIComponent(a.area)}`, label: c.community.replace('{area}', a.label) }))) +
+    `<h2>${esc(c.headings.projects)}</h2>` +
+    list(PROJECTS.map((x) => ({ href: `${prefix}/buy/${x.slug}`, label: c.project.replace('{name}', x.name) })))
+  )
+}
+
 function renderArticleHtml(a) {
   const rtl = RTL.has(a.lang)
   const body = marked.parse(String(a.body_md || ''))
@@ -144,7 +163,7 @@ function pageFor(a, langsForSlug) {
   let html = template
 
   // <html lang> + title + description
-  html = html.replace(/<html lang="[^"]*"/, `<html lang="${a.lang}"`)
+  html = html.replace(/<html lang="[^"]*"/, `<html lang="${a.lang}"${RTL.has(a.lang) ? ' dir="rtl"' : ''}`)
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
   html = html.replace(
     /(<meta name="description" content=")[^"]*(")/,
@@ -172,7 +191,7 @@ function pageFor(a, langsForSlug) {
   // Real content inside #root for the crawler's first fetch
   html = html.replace(
     /<div id="root"><\/div>/,
-    `<div id="root">${renderArticleHtml(a)}</div>`,
+    `<div id="root">${renderArticleHtml(a)}${footerLinksHtml(a.lang)}</div>`,
   )
   return html
 }

@@ -17,6 +17,9 @@ import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { ROUTES, projectMeta } from './src/seoRoutes.mjs'
 import { BUY_SEO, buyFaqJsonLd } from './src/buySeoContent.mjs'
+import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
+import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
+import { POPULAR, COMMUNITIES, PROJECTS, footerSeoCopy } from './src/footerSeoLinks.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const LANGS = ['en', 'ru', 'ar', 'fa']
@@ -37,6 +40,15 @@ const esc = (s) =>
 const pick = (v, lang) => (v && typeof v === 'object' ? v[lang] || v.en : v)
 
 const template = readFileSync('dist/index.html', 'utf8')
+
+// dist/index.html doubles as (a) the English homepage and (b) the SPA fallback
+// every unknown URL falls through to. Those two jobs conflict: leaving it empty
+// so 404s stay contentless meant the site's priority-1.0 page shipped
+// `<div id="root"></div>` with no h1, copy or links, while /ar /ru /fa
+// homepages were fully prerendered. Fix: write the pristine shell to
+// dist/app.html and repoint vercel.json's catch-all rewrite there, freeing
+// index.html to carry real homepage content.
+writeFileSync('dist/app.html', template)
 
 function pageFor(route, lang) {
   const r = ROUTES[route]
@@ -69,13 +81,63 @@ function pageFor(route, lang) {
   // Minimal real content for the crawler's first fetch; React wipes it on mount.
   html = html.replace(
     /<div id="root"><\/div>/,
-    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title)}</h1><p>${esc(desc)}</p>${route === '/buy' ? buySeoHtml(lang) : ''}</div></div>`,
+    `<div id="root"><div dir="${RTL.has(lang) ? 'rtl' : 'ltr'}" style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif"><h1>${esc(title.split('|')[0].trim())}</h1><p>${esc(desc)}</p>${route === '/buy' ? buySeoHtml(lang) : ''}${route === '/project' ? projectSeoHtml(lang) : ''}${LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : ''}${footerLinksHtml(lang)}</div></div>`,
   )
   // FAQPage JSON-LD on /buy (same id the SPA reuses → hydration replaces it).
   if (route === '/buy') {
     html = html.replace(
       '</head>',
       `    <script type="application/ld+json" id="buy-faq-jsonld">${JSON.stringify(buyFaqJsonLd(lang))}</script>\n  </head>`,
+    )
+  }
+  if (route === '/project') {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="project-faq-jsonld">${JSON.stringify(projectFaqJsonLd(lang))}</script>\n  </head>`,
+    )
+  }
+  // Project pages: RealEstateListing + AggregateOffer + Breadcrumb from live
+  // inventory. BuyProjectPage.jsx emits these CLIENT-SIDE only, so all nine
+  // money pages shipped no product markup on a crawler's first fetch.
+  const pslug = route.startsWith('/buy/') ? route.slice(5) : null
+  const agg = pslug ? aggBySlug.get(pslug) : null
+  if (agg && agg.count > 0) {
+    const purl = urlFor(lang, route)
+    const pld = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'RealEstateListing',
+          '@id': `${purl}#listing`,
+          url: purl,
+          name: agg.name,
+          description: desc,
+          ...(agg.min > 0 ? {
+            offers: {
+              '@type': 'AggregateOffer', priceCurrency: 'OMR',
+              lowPrice: agg.min, ...(agg.max > 0 ? { highPrice: agg.max } : {}),
+              offerCount: agg.count, availability: 'https://schema.org/InStock',
+              seller: { '@id': `${SITE}/#organization` },
+            },
+          } : {}),
+          ...(agg.area ? { address: { '@type': 'PostalAddress', addressLocality: agg.area, addressCountry: 'OM' } } : {}),
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}${langPrefix(lang)}/` },
+            { '@type': 'ListItem', position: 2, name: 'Buy', item: `${SITE}${langPrefix(lang)}/buy` },
+            { '@type': 'ListItem', position: 3, name: agg.name, item: purl },
+          ],
+        },
+      ],
+    }
+    html = html.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(pld)}</script>\n  </head>`)
+  }
+  if (LANDINGS[route.slice(1)]) {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="landing-faq-jsonld">${JSON.stringify(landingFaqJsonLd(route.slice(1), lang))}</script>\n  </head>`,
     )
   }
   return html
@@ -92,6 +154,69 @@ function buySeoHtml(lang) {
     .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
     .join('')
   return `<h2>${esc(c.heading)}</h2>${paras}${faq}<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+}
+
+// Same pattern for /project — the search portal had no crawlable body copy at
+// all, which is why it never competed with Bayut/Dubizzle/Vista for the
+// "apartments for sale in muscat" cluster.
+function projectSeoHtml(lang) {
+  const c = PROJECT_SEO[lang] || PROJECT_SEO.en
+  const prefix = langPrefix(lang)
+  const paras = c.paras.map((p) => `<p>${esc(p)}</p>`).join('')
+  const faq = c.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
+  const links = c.links
+    .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+  return `<h2>${esc(c.heading)}</h2>${paras}${faq}<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+}
+
+// Head-term landings (/buy-property-in-muscat, /buy-apartment-in-muscat,
+// /buy-property-in-salalah). The listing grid renders client-side; what the
+// crawler needs on the first fetch is the copy, the community links and the
+// FAQ — the same shape that makes /buy the site's strongest SEO page.
+function landingSeoHtml(slug, lang) {
+  const c = landingCopy(slug, lang)
+  if (!c) return ''
+  const cfg = LANDINGS[slug]
+  const prefix = langPrefix(lang)
+  const paras = c.paras.map((p) => `<p>${esc(p)}</p>`).join('')
+  const faq = c.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
+  const areas = (cfg.areaLinks || [])
+    .map((a) => `<li><a href="${prefix}/project?area=${encodeURIComponent(a.area)}" style="color:#8c8d25">${esc(a.label)}</a></li>`)
+    .join('')
+  const links = c.links
+    .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+  return (
+    `<p>${esc(c.lead)}</p>` +
+    (areas ? `<h2>${esc(c.areasHeading)}</h2><ul>${areas}</ul>` : '') +
+    `<h2>${esc(c.heading)}</h2>${paras}${faq}` +
+    `<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+  )
+}
+
+// The site-wide keyword-anchored link block, mirrored into EVERY prerendered
+// page. The React component (components/FooterSeoLinks.jsx) renders the same
+// links for users; emitting them here too means a crawler gets them on the
+// first fetch without having to execute JS.
+function footerLinksHtml(lang) {
+  const c = footerSeoCopy(lang)
+  const prefix = langPrefix(lang)
+  const list = (items) => `<ul>${items.map((i) => `<li><a href="${i.href}" style="color:#8c8d25">${esc(i.label)}</a></li>`).join('')}</ul>`
+  return (
+    `<h2>${esc(c.headings.popular)}</h2>` +
+    list(POPULAR.map((p) => ({ href: `${prefix}${p.to}`, label: c.popular[p.key] }))) +
+    `<h2>${esc(c.headings.communities)}</h2>` +
+    list(COMMUNITIES.map((a) => ({
+      href: `${prefix}/project?area=${encodeURIComponent(a.area)}`,
+      label: c.community.replace('{area}', a.label),
+    }))) +
+    `<h2>${esc(c.headings.projects)}</h2>` +
+    list(PROJECTS.map((p) => ({
+      href: `${prefix}/buy/${p.slug}`,
+      label: c.project.replace('{name}', p.name),
+    })))
+  )
 }
 
 // /buy/:slug project pages — same selection as api/sitemap.js (projects with
@@ -128,22 +253,37 @@ function projectPageFor(name, lang) {
   ROUTES[route] = fake
   const html = pageFor(route, lang)
   delete ROUTES[route]
+
   return html
 }
+
+// One inventory fetch feeds the /buy/:slug AggregateOffer AND the unit pages.
+let inventory = []
+try { inventory = await fetchUnitsAndProjects() } catch { /* pages still render */ }
+const aggBySlug = new Map()
+for (const { unit, project } of inventory) {
+  const k = slugify(project.name)
+  const a = aggBySlug.get(k) || { count: 0, min: Infinity, max: 0, area: null, name: project.name }
+  a.count++
+  const price = Number(unit.price_omr)
+  if (price > 0) { a.min = Math.min(a.min, price); a.max = Math.max(a.max, price) }
+  a.area = a.area || project.areas?.name || project.areas?.city || project.location || null
+  aggBySlug.set(k, a)
+}
+for (const a of aggBySlug.values()) if (a.min === Infinity) a.min = 0
 
 let count = 0
 let skipped = 0
 for (const route of Object.keys(ROUTES)) {
   for (const lang of LANGS) {
-    // dist/index.html IS the English homepage (and the SPA fallback shell for
-    // unknown URLs) — never overwrite it, or every 404/unknown route would
-    // carry the homepage canonical again.
-    if (route === '/' && lang === 'en') continue
     const segs = route === '/' ? [] : route.split('/').filter(Boolean)
     const out = join('dist', ...(lang === 'en' ? [] : [lang]), ...segs, 'index.html')
+    // The EN homepage is the one file that MUST be overwritten (it starts life
+    // as the raw shell); the pristine copy now lives at dist/app.html.
+    const isEnHome = route === '/' && lang === 'en'
     // prerender-insights.mjs already wrote real article pages; /insights index
     // itself is safe, but never clobber an existing file from an earlier step.
-    if (existsSync(out)) {
+    if (!isEnHome && existsSync(out)) {
       skipped++
       continue
     }
@@ -165,4 +305,190 @@ for (const name of names) {
     projCount++
   }
 }
-console.log(`prerender-routes: wrote ${count} route pages (${skipped} skipped) + ${projCount} project pages for ${names.length} projects`)
+// ── /property/:id unit pages ────────────────────────────────────────────────
+// The deepest, most long-tail-capable inventory on the site (~315 available
+// units). Until now they were 301'd to /buy by vercel.json AND had no seo.jsx
+// branch, so not one of them could be indexed. Prerendered in ENGLISH ONLY:
+// these target the English listing-portal cluster ("2 bedroom apartment for
+// sale in muscat"), and 4× would quadruple the static output for languages
+// whose demand is already served by /buy and the fa/ar pages. The other
+// languages still render correctly client-side via SeoManager.
+const TYPE_MAP = [
+  [/villa/i, 'Villa'],
+  [/penthouse/i, 'Penthouse'],
+  [/town\s*house|townhouse/i, 'Townhouse'],
+  [/chalet/i, 'Chalet'],
+  [/studio/i, 'Studio'],
+]
+const typeGroup = (t) => {
+  for (const [re, name] of TYPE_MAP) if (re.test(String(t || ''))) return name
+  return 'Apartment'
+}
+const fmtOmr = (n) => `OMR ${Number(n).toLocaleString('en-US')}`
+
+async function fetchUnitsAndProjects() {
+  const h = { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` }
+  const [pr, ur] = await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/projects?select=id,name,location,latitude,areas(name,city)&latitude=not.is.null`, { headers: h }),
+    fetch(
+      `${SUPABASE_URL}/rest/v1/project_units?select=id,unit_type,layout_type,bedrooms,view,floor_label,total_area_sqm,internal_area_sqm,price_omr,project_id&availability_status=eq.available&limit=2000`,
+      { headers: h },
+    ),
+  ])
+  if (!pr.ok) throw new Error(`supabase projects ${pr.status}`)
+  if (!ur.ok) throw new Error(`supabase units ${ur.status}`)
+  const projects = await pr.json()
+  const units = await ur.json()
+  const byId = new Map(projects.map((p) => [p.id, p]))
+  return units
+    .map((u) => ({ unit: u, project: byId.get(u.project_id) }))
+    .filter((x) => x.project)
+}
+
+// Mirrors the near-identical-unit grouping in src/pages/SearchPage.jsx so the
+// static pages agree with what the portal actually shows.
+const groupKey = (u) =>
+  `${u.project_id}|${typeGroup(u.unit_type)}|${u.bedrooms ?? 0}|${Math.round(Number(u.price_omr))}`
+
+function propertyPageFor({ unit, project }, canonicalUrl) {
+  const g = typeGroup(unit.unit_type || unit.layout_type)
+  const beds = unit.bedrooms
+  const bedLabel = beds === 0 || beds == null ? 'Studio' : `${beds}-Bedroom`
+  const city = project.areas?.city || project.areas?.name || project.location || 'Oman'
+  const sqm = Math.round(Number(unit.total_area_sqm || unit.internal_area_sqm || 0))
+  const priceTxt = unit.price_omr > 0 ? fmtOmr(unit.price_omr) : null
+  const route = `/property/${unit.id}`
+  const url = `${SITE}${route}`
+
+  const title = `${bedLabel} ${g} for Sale in ${city}${priceTxt ? ` — ${priceTxt}` : ''} | Irfan`
+  const desc = [
+    `${bedLabel} ${g.toLowerCase()} for sale at ${project.name}, ${city}, Oman.`,
+    sqm ? `${sqm} m² built-up area.` : '',
+    priceTxt ? `Price ${priceTxt}.` : '',
+    `Freehold ownership for all nationalities with Oman investor residency. Ref IRF-${unit.id}.`,
+  ].filter(Boolean).join(' ')
+
+  let html = template
+  html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
+  html = html.replace(/(<meta name="description" content=")[^"]*(")/, `$1${esc(desc)}$2`)
+  html = html
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${esc(title)}$2`)
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${esc(desc)}$2`)
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${url}$2`)
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${esc(title)}$2`)
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${esc(desc)}$2`)
+
+  // Canonical: self for the representative of a group, or the representative's
+  // URL for a near-identical duplicate (same project + type + beds + price).
+  // ~80 of the 395 available units are duplicates of another listing, and
+  // shipping them as standalone indexable pages would be textbook thin/
+  // duplicate content. No hreflang alternates — the localized variants are not
+  // prerendered and would resolve to the SPA shell on a crawler's first fetch.
+  html = html.replace(/<link rel="canonical"[^>]*>\s*/g, '')
+  html = html.replace('</head>', `    <link rel="canonical" href="${canonicalUrl || url}">\n  </head>`)
+
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'RealEstateListing',
+        '@id': `${url}#listing`,
+        url,
+        name: title.replace(' | Irfan', ''),
+        description: desc,
+        ...(unit.price_omr > 0 ? {
+          offers: {
+            '@type': 'Offer',
+            price: Number(unit.price_omr),
+            priceCurrency: 'OMR',
+            availability: 'https://schema.org/InStock',
+            url,
+            seller: { '@id': `${SITE}/#organization` },
+          },
+        } : {}),
+        about: {
+          '@type': g === 'Villa' || g === 'Townhouse' ? 'House' : 'Apartment',
+          name: `${bedLabel} ${g} at ${project.name}`,
+          ...(beds != null ? { numberOfRooms: beds } : {}),
+          ...(sqm ? { floorSize: { '@type': 'QuantitativeValue', value: sqm, unitCode: 'MTK' } } : {}),
+          address: { '@type': 'PostalAddress', addressLocality: city, addressCountry: 'OM' },
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: 'Properties for Sale in Oman', item: `${SITE}/project` },
+          { '@type': 'ListItem', position: 3, name: title.replace(' | Irfan', ''), item: url },
+        ],
+      },
+    ],
+  }
+  html = html.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n  </head>`)
+
+  const facts = [
+    ['Project', project.name],
+    ['Area', city],
+    ['Property type', g],
+    ['Bedrooms', beds === 0 || beds == null ? 'Studio' : String(beds)],
+    sqm ? ['Built-up area', `${sqm} m²`] : null,
+    unit.view ? ['View', unit.view] : null,
+    unit.floor_label ? ['Floor', unit.floor_label] : null,
+    priceTxt ? ['Price', priceTxt] : null,
+    ['Reference', `IRF-${unit.id}`],
+    ['Ownership', 'Freehold — all nationalities'],
+  ].filter(Boolean)
+    .map(([k, v]) => `<li><strong>${esc(k)}:</strong> ${esc(v)}</li>`)
+    .join('')
+
+  const body =
+    `<h1>${esc(title.replace(' | Irfan', ''))}</h1>` +
+    `<p>${esc(desc)}</p>` +
+    `<h2>Key details</h2><ul>${facts}</ul>` +
+    `<h2>About ${esc(project.name)}</h2>` +
+    `<p>${esc(`${project.name} is a freehold development in ${city}, Oman. Buying here gives all nationalities full ownership title inside a government approved Integrated Tourism Complex, and qualifies the owner for a renewable Oman investor residency permit. There is no annual property tax and no tax on rental income.`)}</p>` +
+    `<h2>Enquire about this property</h2>` +
+    `<p>Request the floor plan, full price list and payment plan for reference IRF-${unit.id} from Irfan Investment Group.</p>` +
+    `<ul>` +
+    `<li><a href="/project" style="color:#8c8d25">All properties for sale in Oman</a></li>` +
+    `<li><a href="/buy/${slugify(project.name)}" style="color:#8c8d25">${esc(`${project.name} — prices, available units and payment plan`)}</a></li>` +
+    `<li><a href="/buy" style="color:#8c8d25">Buy property in Oman: full guide</a></li>` +
+    `</ul>` + footerLinksHtml('en')
+
+  html = html.replace(
+    /<div id="root"><\/div>/,
+    `<div id="root"><div style="max-width:760px;margin:0 auto;padding:96px 20px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif">${body}</div></div>`,
+  )
+  return html
+}
+
+let unitCount = 0
+let dupCount = 0
+try {
+  const items = inventory.length ? inventory : await fetchUnitsAndProjects()
+  // Pick a stable representative per group (lowest unit id) — must match the
+  // representative api/sitemap.js submits.
+  const rep = new Map()
+  for (const it of items) {
+    const k = groupKey(it.unit)
+    const cur = rep.get(k)
+    if (!cur || it.unit.id < cur.unit.id) rep.set(k, it)
+  }
+  for (const item of items) {
+    const out = join('dist', 'property', String(item.unit.id), 'index.html')
+    if (existsSync(out)) continue
+    const r = rep.get(groupKey(item.unit))
+    const isDup = r && r.unit.id !== item.unit.id
+    if (isDup) dupCount++
+    mkdirSync(dirname(out), { recursive: true })
+    writeFileSync(out, propertyPageFor(item, isDup ? `${SITE}/property/${r.unit.id}` : null))
+    unitCount++
+  }
+  console.log(`prerender-routes: wrote ${unitCount} unit pages (/property/:id, en) — ${unitCount - dupCount} canonical, ${dupCount} canonicalized to a duplicate`)
+} catch (e) {
+  // Never fail the whole build over the unit pages — the rest of the SEO
+  // output is still valuable.
+  console.warn(`prerender-routes: unit pages SKIPPED — ${e.message}`)
+}
+
+console.log(`prerender-routes: wrote ${count} route pages (${skipped} skipped) + ${projCount} project pages for ${names.length} projects + ${unitCount} unit pages`)

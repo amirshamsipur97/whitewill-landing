@@ -45,6 +45,53 @@ export const ROUTES = {
       fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان — آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۳۵٬۶۲۵ ریال عمان با اقامت سرمایه‌گذار.',
     },
   },
+  // ── head-term city/type landing pages ──────────────────────────────────
+  // The 316 unit pages cover the long tail ("3-Bedroom Apartment for Sale in
+  // Muscat — OMR …"); these own the head terms. Body copy + FAQ live in
+  // src/cityLandingContent.mjs. Keep volatile unit COUNTS out of the meta —
+  // only the min price, which is stable.
+  '/buy-property-in-muscat': {
+    title: {
+      en: 'Buy Property in Muscat — Freehold Apartments & Villas from OMR 35,625 | Irfan',
+      ru: 'Купить недвижимость в Маскате — фрихолд от 35 625 OMR | Irfan',
+      ar: 'شراء عقار في مسقط — تملّك حر من 35,625 ر.ع | Irfan Investment',
+      fa: 'خرید ملک در مسقط — فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
+    },
+    desc: {
+      en: 'Buy freehold property in Muscat: apartments, villas and townhouses in Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah and Yiti. Open to all nationalities, from OMR 35,625, with Oman investor residency.',
+      ru: 'Купить недвижимость в Маскате во фрихолд: квартиры, виллы и таунхаусы в Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, от 35 625 OMR, с инвесторской резиденцией.',
+      ar: 'شراء عقار بتملّك حر في مسقط: شقق وفلل وتاون هاوس في الموج وخليج مسقط ومسقط هيلز ومدينة السلطان هيثم وجبل سيفة وييتي. متاح لجميع الجنسيات من 35,625 ر.ع مع إقامة المستثمر.',
+      fa: 'خرید ملک فری‌هولد در مسقط: آپارتمان، ویلا و تاون‌هاوس در الموج، خلیج مسقط، مسقط هیلز، شهر سلطان هیثم، جبل سیفه و ییتی. برای همه ملیت‌ها، از ۳۵٬۶۲۵ ریال عمان همراه با اقامت سرمایه‌گذاری.',
+    },
+  },
+  '/buy-apartment-in-muscat': {
+    title: {
+      en: 'Buy an Apartment in Muscat — Freehold Apartments for Sale from OMR 35,625 | Irfan',
+      ru: 'Купить квартиру в Маскате — фрихолд-квартиры от 35 625 OMR | Irfan',
+      ar: 'شراء شقة في مسقط — شقق تملّك حر للبيع من 35,625 ر.ع | Irfan Investment',
+      fa: 'خرید آپارتمان در مسقط — آپارتمان فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
+    },
+    desc: {
+      en: 'Freehold apartments for sale in Muscat: studios from OMR 35,625 and apartments from OMR 48,125 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, up to 8% rental yield, investor residency included.',
+      ru: 'Квартиры во фрихолд на продажу в Маскате: студии от 35 625 OMR и квартиры от 48 125 OMR в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, доходность до 8%, резиденция инвестора.',
+      ar: 'شقق تملّك حر للبيع في مسقط: استوديوهات من 35,625 ر.ع وشقق من 48,125 ر.ع في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي. لجميع الجنسيات، عائد يصل إلى 8%، مع إقامة المستثمر.',
+      fa: 'آپارتمان فری‌هولد برای فروش در مسقط: استودیو از ۳۵٬۶۲۵ و آپارتمان از ۴۸٬۱۲۵ ریال عمان در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی. همه ملیت‌ها، بازده تا ۸٪، همراه با اقامت سرمایه‌گذاری.',
+    },
+  },
+  '/buy-property-in-salalah': {
+    title: {
+      en: 'Buy Property in Salalah — Freehold Beachfront Villas & Chalets from OMR 98,000 | Irfan',
+      ru: 'Купить недвижимость в Салале — фрихолд у моря от 98 000 OMR | Irfan',
+      ar: 'شراء عقار في صلالة — فلل وشاليهات شاطئية تملّك حر من 98,000 ر.ع | Irfan',
+      fa: 'خرید ملک در صلاله — ویلا و شاله ساحلی فری‌هولد از ۹۸٬۰۰۰ ریال عمان | ایرفان',
+    },
+    desc: {
+      en: 'Buy freehold property in Salalah, Oman: beachfront villas and chalets in Hawana Salalah from OMR 98,000. Open to all nationalities, strong khareef season rental demand, no tax on rental income, Oman investor residency included.',
+      ru: 'Купить недвижимость в Салале во фрихолд: пляжные виллы и шале в Hawana Salalah от 98 000 OMR. Для всех национальностей, сильный арендный сезон хариф, без налога на аренду, с инвесторской резиденцией Омана.',
+      ar: 'شراء عقار بتملّك حر في صلالة: فلل وشاليهات شاطئية في هوانا صلالة من 98,000 ر.ع. متاح لجميع الجنسيات، طلب إيجار قوي في موسم الخريف، بلا ضريبة على دخل الإيجار، مع إقامة المستثمر.',
+      fa: 'خرید ملک فری‌هولد در صلاله عمان: ویلا و شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال عمان. برای همه ملیت‌ها، تقاضای قوی اجاره در فصل خریف، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
+    },
+  },
   '/maison-shirdel': {
     title: {
       en: 'Maison Shirdel — Luxury Residences in Oman | Irfan Investment',

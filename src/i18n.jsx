@@ -14,8 +14,12 @@ export const LANGS = [
 const dict = {
   en: {
     nav: {
-      buy: 'Buy', rent: 'Rent',
-      project: 'Project', projects: 'Projects',
+      // NOTE: `buy` labels /buy (the 12 DEVELOPMENTS) and `project` labels
+      // /project (the 400+ individual UNITS). The labels were historically
+      // inverted vs. their content; only the display text changed — the URLs
+      // are indexed and must stay /buy and /project.
+      buy: 'Projects', rent: 'Rent',
+      project: 'Properties', projects: 'Projects',
       maison: 'Maison Shirdel',
       invest: 'Company Registration',
       schools: 'International Schools',
@@ -505,8 +509,8 @@ const dict = {
   },
   ru: {
     nav: {
-      buy: 'Купить', rent: 'Аренда',
-      project: 'Проект', projects: 'Проекты',
+      buy: 'Проекты', rent: 'Аренда',
+      project: 'Недвижимость', projects: 'Проекты',
       maison: 'Maison Shirdel',
       invest: 'Регистрация компании',
       schools: 'Международные школы',
@@ -996,8 +1000,8 @@ const dict = {
   },
   ar: {
     nav: {
-      buy: 'شراء', rent: 'إيجار',
-      project: 'مشروع', projects: 'مشاريع',
+      buy: 'المشاريع', rent: 'إيجار',
+      project: 'العقارات', projects: 'مشاريع',
       maison: 'Maison Shirdel',
       invest: 'تأسيس الشركات',
       schools: 'المدارس الدولية',

@@ -1,8 +1,8 @@
 // Persian (fa) site-wide UI dictionary. Mirrors the en/ru/ar blocks in i18n.jsx.
 export default {
   nav: {
-    buy: "خرید", rent: "اجاره",
-    project: "پروژه", projects: "پروژه‌ها",
+    buy: "پروژه‌ها", rent: "اجاره",
+    project: "املاک", projects: "پروژه‌ها",
     maison: "Maison Shirdel",
     invest: "ثبت شرکت",
     investment: "سرمایه‌گذاری",

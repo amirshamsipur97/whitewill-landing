@@ -36,8 +36,11 @@ const OLIVE_BRIGHT = '#8c8d25'
 // render time, so the footer follows the active language. `label` is the
 // English fallback; brand wordmarks (Maison Shirdel) carry no key and stay.
 const PAGE_LINKS = [
-  { label: 'Buy', to: '/buy', navKey: 'buy' },
-  { label: 'Project', to: '/project', navKey: 'project' },
+  // Labels resolve from t.nav at render time; these are the English
+  // fallbacks. `buy` = the 12 developments, `project` = the 400+ units — the
+  // display names were corrected 2026-07-25, the URLs deliberately were not.
+  { label: 'Projects', to: '/buy', navKey: 'buy' },
+  { label: 'Properties', to: '/project', navKey: 'project' },
   { label: 'Maison Shirdel', to: '/maison-shirdel' },
   // The blog drives most organic entries — a footer link on every page keeps
   // it one crawl hop from anywhere on the site.
@@ -46,7 +49,7 @@ const PAGE_LINKS = [
 ]
 
 const LEGAL_LINKS = [
-  { label: 'Privacy', to: '/', legalKey: 'privacy' },
+  { label: 'Privacy', to: '/privacy', legalKey: 'privacy' },
   { label: 'Terms', to: '/', legalKey: 'userAgreement' },
   { label: 'Cookies', to: '/', legalKey: 'cookie' },
 ]
