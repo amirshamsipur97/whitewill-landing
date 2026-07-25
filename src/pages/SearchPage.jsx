@@ -653,8 +653,13 @@ export default function SearchPage() {
         const u = it.unit, p = it.project
         const sqm = Number(u.total_area_sqm || u.internal_area_sqm || 0)
         if (u.price_omr == null || Number(u.price_omr) <= 0) return false
-        // map pin selection: the list shows that project's own inventory
-        if (projectId && String(p.id) !== String(projectId)) return false
+        // map pin selection: the list shows that RELEASE's own inventory.
+        // The key is `<projectId>` or `<projectId>::<subproject>`, matching
+        // how mapProjects buckets the pins.
+        if (projectId) {
+          const sub = (u.subproject || '').trim()
+          if ((sub ? `${p.id}::${sub}` : String(p.id)) !== String(projectId)) return false
+        }
         // manual dropdown filters
         if (area !== 'any' && (p.area?.name || p.location) !== area) return false
         if (type !== 'Any' && typeGroup(u.unit_type) !== type) return false
@@ -722,10 +727,12 @@ export default function SearchPage() {
   }, [units, projById, type, beds, price, size, area, sort, aiFilter, projectId])
 
   // ── map pins ───────────────────────────────────────────────────────────
-  // One pin per PROJECT that has available, priced stock AND real
-  // coordinates. Derived, never hardcoded: a project that sells out drops off
-  // the map, a new release appears by itself. The `from` price on the pill is
-  // the project's cheapest available unit.
+  // One pin per RELEASE: a project, or a named sub-project where the
+  // inventory has one. Jebel Sifah sells as Olive Farms and Solaris, and
+  // Hawana Salalah as Amazi and Lubana Island — pinning only the parent hid
+  // four distinct developments behind two pins. Derived, never hardcoded: a
+  // release that sells out drops off, a new one appears by itself. The `from`
+  // price on the pill is that release's cheapest available unit.
   const mapProjects = useMemo(() => {
     const agg = new Map()
     for (const u of units) {
@@ -733,16 +740,44 @@ export default function SearchPage() {
       const priceNum = Number(u.price_omr)
       if (!p || !(priceNum > 0)) continue
       if (p.latitude == null || p.longitude == null) continue
-      const cur = agg.get(p.id) || {
-        id: p.id, name: p.name, slug: slugify(p.name),
+      const sub = (u.subproject || '').trim()
+      const key = sub ? `${p.id}::${sub}` : String(p.id)
+      const cur = agg.get(key) || {
+        id: key,
+        projectId: p.id,
+        sub,
+        name: sub || p.name,
+        // A sub-project sits inside its parent, so the pill names both.
+        parent: sub ? p.name : '',
+        slug: slugify(p.name),
         lat: Number(p.latitude), lng: Number(p.longitude),
         area: p.area?.name || p.location || '', count: 0, minPrice: Infinity,
       }
       cur.count++
       cur.minPrice = Math.min(cur.minPrice, priceNum)
-      agg.set(p.id, cur)
+      agg.set(key, cur)
     }
-    return [...agg.values()].sort((a, b) => a.minPrice - b.minPrice)
+    const list = [...agg.values()]
+    // Sub-projects inherit the parent's single coordinate, so two releases of
+    // the same resort would stack exactly on top of each other. Fan them out
+    // around it — a display device only (they are all inside the same ITC,
+    // a few hundred metres apart), never a claim about an exact address.
+    const byParent = new Map()
+    for (const r of list) {
+      if (!byParent.has(r.projectId)) byParent.set(r.projectId, [])
+      byParent.get(r.projectId).push(r)
+    }
+    for (const group of byParent.values()) {
+      if (group.length < 2) continue
+      const R = 0.0055 // ~600 m
+      group.forEach((r, i) => {
+        const a = (2 * Math.PI * i) / group.length
+        r.lat += R * Math.cos(a)
+        r.lng += R * Math.sin(a) / Math.cos((r.lat * Math.PI) / 180)
+        r.fanned = true
+      })
+    }
+    return list.sort((a, b) => a.minPrice - b.minPrice)
   }, [units, projById])
 
   const selectedProject = mapProjects.find((p) => String(p.id) === String(projectId)) || null

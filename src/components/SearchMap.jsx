@@ -92,7 +92,11 @@ export default function SearchMap({ projects, selectedId, onSelect }) {
       const el = document.createElement('button')
       el.type = 'button'
       el.className = 'smap-pin'
-      el.setAttribute('aria-label', `${p.name}, ${p.count} units from ${shortOmr(p.minPrice)}`)
+      el.setAttribute(
+        'aria-label',
+        `${p.name}${p.parent ? ` (${p.parent})` : ''}, ${p.count} units from ${shortOmr(p.minPrice)}`,
+      )
+      el.title = p.parent ? `${p.name} · ${p.parent}` : p.name
       el.innerHTML =
         `<span class="smap-name"></span><span class="smap-price"></span>`
       el.querySelector('.smap-name').textContent = p.name
