@@ -19,7 +19,7 @@
  * unit_no is internal-only (business rule) → cards show a generated public
  * ref `IRF-<id>`, never the raw unit_no.
  */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { gsap } from 'gsap'
 import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
@@ -38,12 +38,15 @@ import StraightenRoundedIcon from '@mui/icons-material/StraightenRounded'
 import KingBedOutlinedIcon from '@mui/icons-material/KingBedOutlined'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded'
 import { useI18n } from '../i18n.jsx'
 import { fetchProjects, fetchAllUnits } from '../supabase'
 import { galleryFor } from '../projectGallery.js'
 import { slugify } from './BuyPage.jsx'
 import { LocalizedLink } from '../lib/localize.js'
 import QuickInquiryModal from '../components/QuickInquiryModal'
+// mapbox-gl weighs 1.76 MB — never let it into this page's initial chunk.
+const SearchMap = lazy(() => import('../components/SearchMap'))
 import { PROJECT_SEO, projectFaqJsonLd } from '../projectSeoContent.mjs'
 import { FONT, OLIVE_BRIGHT } from '../components/invest/ui.jsx'
 
@@ -153,10 +156,10 @@ const SIZE_LABELS = {
 }
 
 const STR = {
-  en: { crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities, every one priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property, like “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy, showing keyword matches instead.', aiSender: 'Irfan Assistant' },
-  ru: { crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана, все с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость, напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят, показаны совпадения по словам.', aiSender: 'Ассистент Irfan' },
-  ar: { crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان، كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول، نعرض تطابقات الكلمات.', aiSender: 'مساعد عرفان' },
-  fa: { crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن، مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است، نتایج کلیدواژه‌ای نمایش داده شد.', aiSender: 'دستیار عرفان' },
+  en: { mapTitle: 'Projects on the map', mapHint: 'Tap a price to see that project’s units', pinsOne: '{n} project pinned', pins: '{n} projects pinned', inProject: '{n} units in {name}', clearPin: 'All projects', showMap: 'Map', showList: 'List', unitsIn: 'Units in {name}', crumbHome: 'Home', crumbSearch: 'Properties', heading: 'Properties for Sale in Oman', placeholder: 'Search by area, project or city…', search: 'Search', count: '{n} properties', sortBy: 'Sort by', empty: 'No properties match your filters.', reset: 'Clear filters', view: 'View the listing', contact: 'Contact', from: 'From', freehold: 'Freehold', similar: '{n} similar units available', photos: '{n} photos', by: 'By Irfan Investment', eyebrow: 'Irfan Investment · Property Portal', lead: "Access 400+ handpicked homes across Oman's most sought-after communities, every one priced, verified and ready to view.", stProps: 'Properties', stProjects: 'Projects', stAreas: 'Locations', stFrom: 'Starting from', aiPlaceholder: 'Search for a property, like “3-bed beachfront villa under 250k”', find: 'Find Property', aiThinking: 'Searching…', aiClear: 'Clear', aiFallback: 'AI is busy, showing keyword matches instead.', aiSender: 'Irfan Assistant' },
+  ru: { mapTitle: 'Проекты на карте', mapHint: 'Нажмите на цену, чтобы увидеть объекты проекта', pinsOne: '{n} проект на карте', pins: '{n} проектов на карте', inProject: '{n} объектов в {name}', clearPin: 'Все проекты', showMap: 'Карта', showList: 'Список', unitsIn: 'Объекты в {name}', crumbHome: 'Главная', crumbSearch: 'Недвижимость', heading: 'Недвижимость на продажу в Омане', placeholder: 'Поиск по району, проекту или городу…', search: 'Поиск', count: '{n} объектов', sortBy: 'Сортировка', empty: 'Ничего не найдено по фильтрам.', reset: 'Сбросить фильтры', view: 'Смотреть объект', contact: 'Связаться', from: 'От', freehold: 'Фрихолд', similar: 'Доступно похожих объектов: {n}', photos: '{n} фото', by: 'Irfan Investment', eyebrow: 'Irfan Investment · Портал недвижимости', lead: 'Более 400 тщательно отобранных объектов в самых востребованных районах Омана, все с ценами, проверенные и готовые к просмотру.', stProps: 'Объектов', stProjects: 'Проектов', stAreas: 'Локаций', stFrom: 'От', aiPlaceholder: 'Найти недвижимость, напр. «вилла у моря до 250k»', find: 'Найти', aiThinking: 'Поиск…', aiClear: 'Сбросить', aiFallback: 'AI занят, показаны совпадения по словам.', aiSender: 'Ассистент Irfan' },
+  ar: { mapTitle: 'المشاريع على الخريطة', mapHint: 'اضغط على السعر لعرض وحدات المشروع', pinsOne: 'مشروع واحد على الخريطة', pins: '{n} مشاريع على الخريطة', inProject: '{n} وحدة في {name}', clearPin: 'كل المشاريع', showMap: 'الخريطة', showList: 'القائمة', unitsIn: 'وحدات {name}', crumbHome: 'الرئيسية', crumbSearch: 'العقارات', heading: 'عقارات للبيع في عُمان', placeholder: 'ابحث حسب المنطقة أو المشروع أو المدينة…', search: 'بحث', count: '{n} عقار', sortBy: 'ترتيب حسب', empty: 'لا توجد عقارات مطابقة.', reset: 'مسح الفلاتر', view: 'عرض العقار', contact: 'تواصل', from: 'من', freehold: 'تملّك حر', similar: '{n} وحدات مماثلة متاحة', photos: '{n} صور', by: 'بواسطة عرفان للاستثمار', eyebrow: 'عرفان للاستثمار · بوابة العقارات', lead: 'اطّلع على أكثر من 400 عقار مختار في أرقى مناطق عُمان، كل عرض مُسعّر وموثّق وجاهز للمعاينة.', stProps: 'عقار', stProjects: 'مشروع', stAreas: 'منطقة', stFrom: 'تبدأ من', aiPlaceholder: 'ابحث عن عقار مثل «فيلا على البحر بأقل من 250 ألف»', find: 'ابحث', aiThinking: 'جارٍ البحث…', aiClear: 'مسح', aiFallback: 'الذكاء مشغول، نعرض تطابقات الكلمات.', aiSender: 'مساعد عرفان' },
+  fa: { mapTitle: 'پروژه‌ها روی نقشه', mapHint: 'روی قیمت بزنید تا واحدهای آن پروژه را ببینید', pinsOne: '{n} پروژه روی نقشه', pins: '{n} پروژه روی نقشه', inProject: '{n} واحد در {name}', clearPin: 'همه پروژه‌ها', showMap: 'نقشه', showList: 'لیست', unitsIn: 'واحدهای {name}', crumbHome: 'خانه', crumbSearch: 'املاک', heading: 'املاک برای فروش در عمان', placeholder: 'جستجو بر اساس منطقه، پروژه یا شهر…', search: 'جستجو', count: '{n} ملک', sortBy: 'مرتب‌سازی', empty: 'ملکی با این فیلترها پیدا نشد.', reset: 'پاک کردن فیلترها', view: 'مشاهدهٔ ملک', contact: 'تماس', from: 'از', freehold: 'فری‌هولد', similar: '{n} واحد مشابه موجود است', photos: '{n} عکس', by: 'توسط عرفان اینوست', eyebrow: 'عرفان اینوست · پورتال املاک', lead: 'به بیش از ۴۰۰ ملک منتخب در بهترین مناطق عمان دسترسی داشته باشید؛ هر آگهی قیمت‌گذاری‌شده، تأییدشده و آمادهٔ بازدید است.', stProps: 'ملک', stProjects: 'پروژه', stAreas: 'منطقه', stFrom: 'شروع از', aiPlaceholder: 'ملک دلخواهت را توصیف کن، مثل «ویلای ۳خوابه ساحلی زیر ۲۵۰هزار»', find: 'یافتن ملک', aiThinking: 'در حال جستجو…', aiClear: 'پاک کردن', aiFallback: 'هوش مصنوعی مشغول است، نتایج کلیدواژه‌ای نمایش داده شد.', aiSender: 'دستیار عرفان' },
 }
 
 // Localised unit-type words (project names themselves stay English brand nouns).
@@ -304,6 +307,40 @@ const CSS = `
 .pfx-msg-x:hover{color:rgba(60,60,67,.55)}
 .pfx-msg-subject{margin-top:2px;font-size:15px;letter-spacing:-.24px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:capitalize}
 .pfx-msg-preview{margin:3px 0 0;font-size:15px;line-height:1.35;letter-spacing:-.24px;color:rgba(60,60,67,.6);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ── Airbnb split view: results left, sticky map right ────────────────────
+   (Figma VPf1TVnzXcQ4ESr0EPjiAN node 1:2575). The map column is sticky and
+   viewport-tall so it stays put while the list scrolls past it. */
+.pfx-split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:26px;
+  max-width:1560px;margin:0 auto;padding:18px 20px 88px;align-items:start}
+.pfx-mapcol{position:sticky;top:88px;height:calc(100vh - 108px);border:1px solid ${LINE};
+  border-radius:16px;overflow:hidden;background:#0f0f11}
+.pfx-mapwrap{position:absolute;inset:0}
+.pfx-maphead{position:absolute;top:12px;left:12px;right:12px;z-index:3;display:flex;
+  align-items:center;gap:10px;pointer-events:none}
+.pfx-mapbadge{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;
+  background:rgba(12,12,14,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid ${LINE_2};border-radius:999px;padding:8px 14px;color:${INK};
+  font-size:12.5px;font-weight:600;letter-spacing:.01em}
+.pfx-mapclear{pointer-events:auto;margin-inline-start:auto;display:inline-flex;align-items:center;
+  gap:6px;background:${INK};color:${PAPER};border:none;border-radius:999px;padding:8px 15px;
+  font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .18s}
+.pfx-mapclear:hover{background:${GOLD};color:#fff}
+.pfx-mapnote{position:absolute;bottom:14px;left:12px;z-index:3;pointer-events:none;
+  background:rgba(12,12,14,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid ${LINE};border-radius:10px;padding:7px 12px;color:${SUB};font-size:12px}
+/* Mobile: one column at a time, toggled by a floating pill. */
+.pfx-maptoggle{display:none}
+@media (max-width:1024px){
+  .pfx-split{grid-template-columns:1fr;gap:0}
+  .pfx-mapcol{position:fixed;inset:64px 0 0;height:auto;border-radius:0;border:none;z-index:1200}
+  .pfx-split.is-list .pfx-mapcol{display:none}
+  .pfx-split.is-map .pfx-listcol{display:none}
+  .pfx-maptoggle{display:inline-flex;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+    z-index:1300;align-items:center;gap:8px;background:${INK};color:${PAPER};border:none;
+    border-radius:999px;padding:13px 22px;font-family:inherit;font-size:14px;font-weight:700;
+    cursor:pointer;box-shadow:0 8px 26px rgba(0,0,0,.5)}
+}
 `
 
 // Placeholder card shown while the live query re-filters (the grey "buffer").
@@ -487,6 +524,9 @@ export default function SearchPage() {
   const size = params.get('size') || 'any'
   const area = params.get('area') || 'any'
   const sort = params.get('sort') || 'price_asc'
+  // Which map pin is active. A project id, so it survives a rename.
+  const projectId = params.get('project') || ''
+  const [showMap, setShowMap] = useState(false) // mobile: map replaces the list
 
   useEffect(() => {
     // title/meta owned by seo.jsx (ROUTES['/project']); just load data here.
@@ -613,6 +653,8 @@ export default function SearchPage() {
         const u = it.unit, p = it.project
         const sqm = Number(u.total_area_sqm || u.internal_area_sqm || 0)
         if (u.price_omr == null || Number(u.price_omr) <= 0) return false
+        // map pin selection: the list shows that project's own inventory
+        if (projectId && String(p.id) !== String(projectId)) return false
         // manual dropdown filters
         if (area !== 'any' && (p.area?.name || p.location) !== area) return false
         if (type !== 'Any' && typeGroup(u.unit_type) !== type) return false
@@ -677,7 +719,37 @@ export default function SearchPage() {
       g.photoCount = gal.length
     }
     return grouped
-  }, [units, projById, type, beds, price, size, area, sort, aiFilter])
+  }, [units, projById, type, beds, price, size, area, sort, aiFilter, projectId])
+
+  // ── map pins ───────────────────────────────────────────────────────────
+  // One pin per PROJECT that has available, priced stock AND real
+  // coordinates. Derived, never hardcoded: a project that sells out drops off
+  // the map, a new release appears by itself. The `from` price on the pill is
+  // the project's cheapest available unit.
+  const mapProjects = useMemo(() => {
+    const agg = new Map()
+    for (const u of units) {
+      const p = projById[u.project_id]
+      const priceNum = Number(u.price_omr)
+      if (!p || !(priceNum > 0)) continue
+      if (p.latitude == null || p.longitude == null) continue
+      const cur = agg.get(p.id) || {
+        id: p.id, name: p.name, slug: slugify(p.name),
+        lat: Number(p.latitude), lng: Number(p.longitude),
+        area: p.area?.name || p.location || '', count: 0, minPrice: Infinity,
+      }
+      cur.count++
+      cur.minPrice = Math.min(cur.minPrice, priceNum)
+      agg.set(p.id, cur)
+    }
+    return [...agg.values()].sort((a, b) => a.minPrice - b.minPrice)
+  }, [units, projById])
+
+  const selectedProject = mapProjects.find((p) => String(p.id) === String(projectId)) || null
+  const selectPin = (id) => {
+    clearAi()
+    setParam('project', String(id) === String(projectId) ? null : String(id), null)
+  }
 
   const busy = loading || aiBusy // skeleton while AI is thinking / data loads
   const SL = SIZE_LABELS[lang] || SIZE_LABELS.en
@@ -843,13 +915,41 @@ export default function SearchPage() {
         </div>
       </section>
 
-      {/* ── listing cards ── */}
-      <section className="pfx-wrap" style={{ padding: '18px 20px 88px' }}>
+      {/* ── Airbnb split view: units left, project map right ── */}
+      <section className={`pfx-split ${showMap ? 'is-map' : 'is-list'}`}>
+        <div className="pfx-listcol">
         {/* Visually-hidden h2 so the outline reads h1 -> h2 -> h3(card) rather
             than skipping a level straight from the page title to each listing. */}
         <h2 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>
-          {t.crumbSearch}
+          {selectedProject ? t.unitsIn.replace('{name}', selectedProject.name) : t.crumbSearch}
         </h2>
+        {selectedProject && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+            marginBottom: 18, paddingBottom: 14, borderBottom: `1px solid ${LINE}`,
+          }}>
+            <PlaceRoundedIcon sx={{ fontSize: 19, color: GOLD }} />
+            <span style={{ fontFamily: FONT, fontSize: 17, fontWeight: 600, color: INK }}>
+              {selectedProject.name}
+            </span>
+            <span style={{ fontFamily: FONT, fontSize: 13.5, color: SUB }}>
+              {/* the project's TRUE available-unit count, so it matches the
+                  number on the map pin; the card list shows fewer rows because
+                  near-identical units collapse into one card. */}
+              {t.inProject.replace('{n}', localizeDigits(selectedProject.count, lang)).replace('{name}', selectedProject.area)}
+            </span>
+            <button
+              type="button" onClick={() => setParam('project', null, null)}
+              style={{
+                marginInlineStart: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: 'transparent', color: INK, border: `1px solid ${LINE_2}`,
+                borderRadius: 999, padding: '7px 14px', fontFamily: FONT, fontSize: 13, cursor: 'pointer',
+              }}
+            >
+              <CloseRoundedIcon sx={{ fontSize: 15 }} /> {t.clearPin}
+            </button>
+          </div>
+        )}
         {busy ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -876,6 +976,37 @@ export default function SearchPage() {
             ))}
           </div>
         )}
+        </div>
+
+        {/* ── map column ── */}
+        <aside className="pfx-mapcol" aria-label={t.mapTitle}>
+          <div className="pfx-maphead">
+            <span className="pfx-mapbadge">
+              <PlaceOutlinedIcon sx={{ fontSize: 16, color: GOLD }} />
+              {(mapProjects.length === 1 ? t.pinsOne : t.pins).replace('{n}', localizeDigits(mapProjects.length, lang))}
+            </span>
+            {selectedProject && (
+              <button type="button" className="pfx-mapclear" onClick={() => setParam('project', null, null)}>
+                <CloseRoundedIcon sx={{ fontSize: 15 }} /> {t.clearPin}
+              </button>
+            )}
+          </div>
+          <div className="pfx-mapwrap">
+            {/* mapbox-gl is 1.76 MB: only mount it once the data that decides
+                the pins has arrived, so it never competes with the first paint. */}
+            {mapProjects.length > 0 && (
+              <Suspense fallback={null}>
+                <SearchMap projects={mapProjects} selectedId={projectId} onSelect={selectPin} />
+              </Suspense>
+            )}
+          </div>
+          {!selectedProject && <div className="pfx-mapnote">{t.mapHint}</div>}
+        </aside>
+
+        <button type="button" className="pfx-maptoggle" onClick={() => setShowMap((v) => !v)}>
+          {showMap ? <FormatListBulletedRoundedIcon sx={{ fontSize: 18 }} /> : <PlaceRoundedIcon sx={{ fontSize: 18 }} />}
+          {showMap ? t.showList : t.showMap}
+        </button>
       </section>
 
       {/* ── crawlable SEO copy + FAQ + internal links ──────────────────────
