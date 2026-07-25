@@ -194,10 +194,8 @@ plus ~160 image files.
 
 ## 6. Still open, ranked
 
-1. **Oman property price index page** — the linkable asset for the backlink
-   strategy. Per-m² by area from `project_units.price_per_sqm_omr` (the column
-   already exists), `Dataset` schema, auto-refreshing. **Must** state "based on
-   Irfan's ~400-unit portfolio", not "the Oman market".
+1. ~~**Oman property price index page**~~ — **SHIPPED, commit `495bffd`.**
+   `/property-prices-in-oman` ×4 langs. See §8 below.
 2. **Per-area landing pages** — the 7 "Buy by community" footer anchors
    (Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah, Yiti,
    Hawana Salalah) all canonicalize to `/project`. High-intent head terms with
@@ -215,6 +213,56 @@ plus ~160 image files.
    Organization (no Person E-E-A-T); dead components `LuxuryShowcase.jsx`,
    `HeroSection.jsx` (the latter owns the 1.9 MB `team.png`); hero-poster
    preload fires on every prerendered page that never shows it.
+
+---
+
+## 8. Price index — `/property-prices-in-oman` (commit `495bffd`)
+
+The first page here built to be **cited** rather than browsed. Oman publishes
+no official per-square-metre index, so this turns the live ~400-unit inventory
+into one. Not deployed yet at time of writing — `git push` + `vercel deploy
+--prod --yes`.
+
+**Files** — `src/priceIndexData.mjs` (maths, shared with the prerenderer),
+`src/priceIndexContent.mjs` (copy ×4 langs + `Dataset`/`FAQPage` JSON-LD),
+`src/pages/PriceIndexPage.jsx` (live tables + pure-CSS bar chart, `.pi-*`
+scoped, mirrors CityLandingPage). Wired into `seoRoutes.mjs`, `App.jsx`,
+`prerender-routes.mjs`, `api/sitemap.js`, `footerSeoLinks.mjs`.
+
+**Output** — four breakdowns (community / type / bedrooms / development), each
+row carrying its sample size `n`, all four summing to the same **393** units.
+Community rows link to `/project?area=…`, development rows to `/buy/{slug}`, so
+it is also a linking hub (13 facet + 18 project links). Prerendered body ~1,920
+words with build-time figures + `Dataset` + `FAQPage` + `BreadcrumbList`.
+Sitemap **531 → 535**. Sixth link in the site-wide footer block.
+
+**Headline at build time:** 393 units · median **991 OMR/m²** · Al Mouj 2,279
+down to Sultan Haitham City 848 (~4× spread) · entry OMR 35,625.
+
+### Two data traps — read before touching the maths
+
+1. **`project_units.price_per_sqm_omr` is unusable.** NULL for 87 of 395 units
+   (all of Yenaier) and inconsistent where it *is* filled: it matches
+   `price / total_area` for 285 of 308, but Vistal stores hand-rounded
+   marketing rates (2,000 / 2,300 / 2,600) that are 5-19% **above** the
+   arithmetic, and the plot-heavy homes store `price / internal`. The index
+   computes instead — which is also the only definition a reader can
+   **reproduce** from our own unit pages, since those display `total_area_sqm`
+   as the built-up area. An index nobody can check is not citable.
+2. **`total_area_sqm` follows two conventions.** Wadi Zaha records the plot
+   *alongside* a covered-only total (`total == internal`, garden in its own
+   column); Hawana Salalah villas and the Jebel Sifah farm houses *fold it in*
+   (`total ≈ internal + garden`). Dividing by the latter prices land and floor
+   at the same rate and produced **297 OMR/m² next to a 950 median**.
+   `isPlotDominant()` therefore needs **both** `total > internal` **and**
+   `garden / total > 50%` — a garden-share test on its own wrongly excludes the
+   seven Wadi Zaha villas. It currently catches exactly 5 units, which are
+   dropped from the per-m² columns only (they keep their unit and price
+   columns) and the exclusion is stated on the page with its live count.
+
+Also: `prerender-routes.mjs` had its own `fmtOmr`, which collided with the
+imported one — the local was removed. Its unit fetch needed `total_garden_sqm`
+adding to the select.
 
 ---
 
