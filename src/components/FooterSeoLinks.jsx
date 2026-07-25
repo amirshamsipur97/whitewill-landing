@@ -11,7 +11,7 @@
 import { LocalizedLink } from '../lib/localize.js'
 import { useI18n } from '../i18n.jsx'
 import { FONT, OLIVE_BRIGHT } from './invest/ui.jsx'
-import { POPULAR, COMMUNITIES, PROJECTS, footerSeoCopy } from '../footerSeoLinks.mjs'
+import { POPULAR, COMMUNITIES, PROJECTS, SERVICES, footerSeoCopy } from '../footerSeoLinks.mjs'
 
 const INK = 'rgba(255,255,255,0.86)'
 const SUB = 'rgba(255,255,255,0.52)'
@@ -67,6 +67,10 @@ export default function FooterSeoLinks() {
             to: `/buy/${p.slug}`,
             label: c.project.replace('{name}', p.name),
           })),
+        )}
+        {col(
+          c.headings.services,
+          SERVICES.map((s) => ({ to: s.to, label: c.services[s.key] })),
         )}
       </div>
     </section>

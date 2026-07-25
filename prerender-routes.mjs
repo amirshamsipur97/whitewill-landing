@@ -19,7 +19,7 @@ import { ROUTES, projectMeta } from './src/seoRoutes.mjs'
 import { BUY_SEO, buyFaqJsonLd } from './src/buySeoContent.mjs'
 import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
-import { POPULAR, COMMUNITIES, PROJECTS, footerSeoCopy } from './src/footerSeoLinks.mjs'
+import { POPULAR, COMMUNITIES, PROJECTS, SERVICES, footerSeoCopy } from './src/footerSeoLinks.mjs'
 import { buildPriceIndex, fmtInt, fmtOmr, fmtRange, fmtSqm } from './src/priceIndexData.mjs'
 import { priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill } from './src/priceIndexContent.mjs'
 
@@ -338,7 +338,9 @@ function footerLinksHtml(lang) {
     list(PROJECTS.map((p) => ({
       href: `${prefix}/buy/${p.slug}`,
       label: c.project.replace('{name}', p.name),
-    })))
+    }))) +
+    `<h2>${esc(c.headings.services)}</h2>` +
+    list(SERVICES.map((s) => ({ href: `${prefix}${s.to}`, label: c.services[s.key] })))
   )
 }
 

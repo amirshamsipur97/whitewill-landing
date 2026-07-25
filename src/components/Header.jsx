@@ -85,12 +85,88 @@ function VerticalDivider() {
   )
 }
 
+/**
+ * A header dropdown. Every entry is a real RouterLink and the Menu is
+ * `keepMounted`, so the sub-links exist in the DOM even while it is closed —
+ * otherwise a crawler never sees them linked from the nav. One instance per
+ * menu (rather than one shared Menu swapping its children) for the same
+ * reason: both link sets must be mounted at all times.
+ */
+function NavDropdown({ anchorEl, onClose, items }) {
+  return (
+    <Menu
+      keepMounted
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      slotProps={{
+        list: { onMouseLeave: onClose, sx: { py: 1 } },
+        paper: {
+          sx: {
+            mt: 1,
+            minWidth: 262,
+            bgcolor: 'rgba(18,18,19,0.97)',
+            backdropFilter: 'blur(14px)',
+            border: '1px solid rgba(255,255,255,0.10)',
+            borderRadius: '12px',
+            boxShadow: '0 22px 60px rgba(0,0,0,0.5)',
+          },
+        },
+      }}
+    >
+      {items.map((child, i) =>
+        child.group ? (
+          <ListSubheader
+            key={`g-${i}`}
+            sx={{
+              bgcolor: 'transparent',
+              color: 'rgba(255,255,255,0.42)',
+              fontSize: 10.5,
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              lineHeight: 1,
+              pt: 1.7,
+              pb: 0.9,
+              px: 2,
+            }}
+          >
+            {child.group}
+          </ListSubheader>
+        ) : (
+          <MenuItem
+            key={child.to}
+            component={RouterLink}
+            to={child.to}
+            onClick={onClose}
+            sx={{
+              color: 'rgba(255,255,255,0.88)',
+              fontSize: 14.5,
+              py: 1.05,
+              px: 2,
+              mx: 0.75,
+              borderRadius: '8px',
+              transition: 'background-color 160ms ease, color 160ms ease',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', color: '#fff' },
+            }}
+          >
+            {child.label}
+          </MenuItem>
+        ),
+      )}
+    </Menu>
+  )
+}
+
 export default function Header() {
   const { t, lang, setLang } = useI18n()
   const navigate = useLocalizedNavigate()
   const [langAnchor, setLangAnchor] = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [portalAnchor, setPortalAnchor] = useState(null)
+  const [servicesAnchor, setServicesAnchor] = useState(null)
   const headerRef = useRef(null)
 
   // ── Hide / show navbar around pinned project sections ─────────────
@@ -139,19 +215,32 @@ export default function Header() {
     { label: pm.propSalalah, to: '/buy-property-in-salalah' },
   ]
 
+  // Services dropdown. International Schools used to be a top-level item; the
+  // price index took that slot, so /schools now hangs off Company Registration
+  // (both are relocation services). It keeps its site-wide nav link that way —
+  // nothing else on the site links to /schools, so dropping it outright would
+  // have orphaned an indexed page.
+  const servicesChildren = [
+    { label: t.nav.invest, to: '/invest' },
+    { label: t.nav.schools, to: '/schools' },
+  ]
+
   const navLinks = [
     { label: t.nav.buy, to: '/buy' },
-    { label: t.nav.project, to: '/project', children: portalChildren },
+    { label: t.nav.project, to: '/project', children: portalChildren, menu: 'portal' },
     { label: t.nav.maison, to: '/maison-shirdel' },
-    { label: t.nav.invest, to: '/invest' },
+    { label: t.nav.invest, to: '/invest', children: servicesChildren, menu: 'services' },
     // These pages exist only in the Persian site.
     ...(lang === 'fa' ? [{ label: t.nav.investment, to: '/investment' }, { label: t.nav.carImport, to: '/car-import' }] : []),
-    // International Schools (Education & Family Relocation hub) sits right
-    // before Insights in every language.
-    { label: t.nav.schools, to: '/schools' },
+    // The per-m² price index, the site's linkable data asset. Sits right before
+    // Insights in every language.
+    { label: t.nav.prices, to: '/property-prices-in-oman' },
     { label: t.nav.insights, to: '/insights' },
     { label: t.nav.about, to: '/about' },
   ]
+
+  const menuAnchor = { portal: portalAnchor, services: servicesAnchor }
+  const openMenu = { portal: setPortalAnchor, services: setServicesAnchor }
 
   const current = LANGS.find((l) => l.code === lang) || LANGS[0]
 
@@ -226,7 +315,7 @@ export default function Header() {
                 key={item.label}
                 component={RouterLink}
                 to={item.to}
-                onMouseEnter={(e) => setPortalAnchor(e.currentTarget)}
+                onMouseEnter={(e) => openMenu[item.menu](e.currentTarget)}
                 sx={{
                   ...NAV_FONT,
                   color: '#fff',
@@ -245,7 +334,7 @@ export default function Header() {
                   sx={{
                     fontSize: 17,
                     transition: 'transform 200ms ease',
-                    transform: portalAnchor ? 'rotate(180deg)' : 'none',
+                    transform: menuAnchor[item.menu] ? 'rotate(180deg)' : 'none',
                   }}
                 />
               </Box>
@@ -270,74 +359,18 @@ export default function Header() {
           )}
         </Stack>
 
-        {/* Property-portal dropdown (desktop). Every entry is a real
-            RouterLink, so the SEO landings stay crawlable from the nav. */}
-        <Menu
-          // keepMounted: the sub-links must exist in the DOM even while the
-          // menu is closed, otherwise a crawler never sees the three SEO
-          // landings linked from the nav.
-          keepMounted
+        {/* Desktop dropdowns. Both stay mounted so the SEO landings and
+            /schools are crawlable from the nav while closed. */}
+        <NavDropdown
           anchorEl={portalAnchor}
-          open={Boolean(portalAnchor)}
           onClose={() => setPortalAnchor(null)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          slotProps={{
-            list: { onMouseLeave: () => setPortalAnchor(null), sx: { py: 1 } },
-            paper: {
-              sx: {
-                mt: 1,
-                minWidth: 262,
-                bgcolor: 'rgba(18,18,19,0.97)',
-                backdropFilter: 'blur(14px)',
-                border: '1px solid rgba(255,255,255,0.10)',
-                borderRadius: '12px',
-                boxShadow: '0 22px 60px rgba(0,0,0,0.5)',
-              },
-            },
-          }}
-        >
-          {portalChildren.map((child, i) =>
-            child.group ? (
-              <ListSubheader
-                key={`g-${i}`}
-                sx={{
-                  bgcolor: 'transparent',
-                  color: 'rgba(255,255,255,0.42)',
-                  fontSize: 10.5,
-                  fontWeight: 700,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  lineHeight: 1,
-                  pt: 1.7,
-                  pb: 0.9,
-                  px: 2,
-                }}
-              >
-                {child.group}
-              </ListSubheader>
-            ) : (
-              <MenuItem
-                key={child.to}
-                component={RouterLink}
-                to={child.to}
-                onClick={() => setPortalAnchor(null)}
-                sx={{
-                  color: 'rgba(255,255,255,0.88)',
-                  fontSize: 14.5,
-                  py: 1.05,
-                  px: 2,
-                  mx: 0.75,
-                  borderRadius: '8px',
-                  transition: 'background-color 160ms ease, color 160ms ease',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.07)', color: '#fff' },
-                }}
-              >
-                {child.label}
-              </MenuItem>
-            ),
-          )}
-        </Menu>
+          items={portalChildren}
+        />
+        <NavDropdown
+          anchorEl={servicesAnchor}
+          onClose={() => setServicesAnchor(null)}
+          items={servicesChildren}
+        />
 
         {/* Pushes everything after to the right */}
         <Box sx={{ flexGrow: 1 }} />

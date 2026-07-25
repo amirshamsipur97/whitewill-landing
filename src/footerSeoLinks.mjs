@@ -36,6 +36,20 @@ export const COMMUNITIES = [
   { area: 'Hawana Salalah', label: 'Hawana Salalah' },
 ]
 
+// Service / guide pages. All four are prerendered, indexable and submitted in
+// the sitemap, yet before this column NONE of them had a single static
+// internal link: the header nav is React-rendered, and /investment plus
+// /investment/legal only ever appeared in the Persian nav. /schools in
+// particular had exactly one inbound link on the whole site (its nav item),
+// which is why it gets a permanent home here now that the nav slot went to the
+// price index.
+export const SERVICES = [
+  { to: '/invest', key: 'company' },
+  { to: '/schools', key: 'schools' },
+  { to: '/investment', key: 'banking' },
+  { to: '/investment/legal', key: 'legal' },
+]
+
 // The nine projects that currently hold available stock.
 export const PROJECTS = [
   { slug: 'vistal', name: 'Vistal' },
@@ -51,7 +65,7 @@ export const PROJECTS = [
 
 export const FOOTER_SEO = {
   en: {
-    headings: { popular: 'Popular searches', communities: 'Buy by community', projects: 'Featured projects' },
+    headings: { popular: 'Popular searches', communities: 'Buy by community', projects: 'Featured projects', services: 'Moving to Oman' },
     popular: {
       oman: 'Buy property in Oman',
       allOman: 'Properties for sale in Oman',
@@ -62,9 +76,15 @@ export const FOOTER_SEO = {
     },
     community: 'Property for sale in {area}',
     project: '{name}: prices & available units',
+    services: {
+      company: 'Company registration in Oman',
+      schools: 'International schools in Oman',
+      banking: 'Banking and financing in Oman',
+      legal: 'Legal requirements for financing',
+    },
   },
   fa: {
-    headings: { popular: 'جستجوهای پرطرفدار', communities: 'خرید بر اساس منطقه', projects: 'پروژه‌های منتخب' },
+    headings: { popular: 'جستجوهای پرطرفدار', communities: 'خرید بر اساس منطقه', projects: 'پروژه‌های منتخب', services: 'مهاجرت به عمان' },
     popular: {
       oman: 'خرید ملک در عمان',
       allOman: 'املاک برای فروش در عمان',
@@ -75,9 +95,15 @@ export const FOOTER_SEO = {
     },
     community: 'ملک برای فروش در {area}',
     project: '{name}: قیمت‌ها و واحدهای موجود',
+    services: {
+      company: 'ثبت شرکت در عمان',
+      schools: 'مدارس بین‌المللی در عمان',
+      banking: 'بانکداری و تامین مالی در عمان',
+      legal: 'الزامات قانونی تامین مالی',
+    },
   },
   ar: {
-    headings: { popular: 'عمليات البحث الشائعة', communities: 'الشراء حسب المنطقة', projects: 'مشاريع مختارة' },
+    headings: { popular: 'عمليات البحث الشائعة', communities: 'الشراء حسب المنطقة', projects: 'مشاريع مختارة', services: 'الانتقال إلى عُمان' },
     popular: {
       oman: 'شراء عقار في عُمان',
       allOman: 'عقارات للبيع في عُمان',
@@ -88,9 +114,15 @@ export const FOOTER_SEO = {
     },
     community: 'عقارات للبيع في {area}',
     project: '{name}: الأسعار والوحدات المتاحة',
+    services: {
+      company: 'تأسيس شركة في عُمان',
+      schools: 'المدارس الدولية في عُمان',
+      banking: 'الخدمات المصرفية والتمويل في عُمان',
+      legal: 'المتطلبات القانونية للتمويل',
+    },
   },
   ru: {
-    headings: { popular: 'Популярные запросы', communities: 'Покупка по районам', projects: 'Избранные проекты' },
+    headings: { popular: 'Популярные запросы', communities: 'Покупка по районам', projects: 'Избранные проекты', services: 'Переезд в Оман' },
     popular: {
       oman: 'Купить недвижимость в Омане',
       allOman: 'Недвижимость на продажу в Омане',
@@ -101,6 +133,12 @@ export const FOOTER_SEO = {
     },
     community: 'Недвижимость на продажу в {area}',
     project: '{name}: цены и доступные лоты',
+    services: {
+      company: 'Регистрация компании в Омане',
+      schools: 'Международные школы в Омане',
+      banking: 'Банкинг и финансирование в Омане',
+      legal: 'Юридические требования к финансированию',
+    },
   },
 }
 

@@ -15,7 +15,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { dirname, join } from 'path'
 import { marked } from 'marked'
-import { POPULAR, COMMUNITIES, PROJECTS, footerSeoCopy } from './src/footerSeoLinks.mjs'
+import { POPULAR, COMMUNITIES, PROJECTS, SERVICES, footerSeoCopy } from './src/footerSeoLinks.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const SUPABASE_URL = 'https://owgvrxipqlusepozlujv.supabase.co'
@@ -134,7 +134,9 @@ function footerLinksHtml(lang) {
     `<h2>${esc(c.headings.communities)}</h2>` +
     list(COMMUNITIES.map((a) => ({ href: `${prefix}/project?area=${encodeURIComponent(a.area)}`, label: c.community.replace('{area}', a.label) }))) +
     `<h2>${esc(c.headings.projects)}</h2>` +
-    list(PROJECTS.map((x) => ({ href: `${prefix}/buy/${x.slug}`, label: c.project.replace('{name}', x.name) })))
+    list(PROJECTS.map((x) => ({ href: `${prefix}/buy/${x.slug}`, label: c.project.replace('{name}', x.name) }))) +
+    `<h2>${esc(c.headings.services)}</h2>` +
+    list(SERVICES.map((s) => ({ href: `${prefix}${s.to}`, label: c.services[s.key] })))
   )
 }
 
