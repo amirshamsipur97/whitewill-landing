@@ -201,8 +201,9 @@ html,body,#root{background:${N0} !important}
   color:${N900};margin:6px 0 10px;font-variant-numeric:tabular-nums}
 .pi-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
 /* Communities within budget, as photo cards instead of text chips. */
-.pi-budget-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));
-  gap:12px;margin-top:24px}
+/* Sits in the wider text column now, so the cards can breathe. */
+.pi-budget-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));
+  gap:16px;margin-top:30px}
 .pi-btile{display:block;text-align:start;padding:0;background:transparent;border:0;
   font-family:inherit;cursor:pointer}
 .pi-btile-img{display:block;position:relative;aspect-ratio:4/3;overflow:hidden;
@@ -627,6 +628,26 @@ export default function PriceIndexPage() {
                   <div>
                     <h2 className="pi-h2">{t.budgetHeading}</h2>
                     <p className="pi-p">{t.budgetSub}</p>
+                    {/* The reachable communities live HERE, in the text
+                        column, rather than inside the panel: the panel was
+                        getting tall while this half sat empty. They still
+                        react to the slider, and each opens that community's
+                        listings pre-filtered to the chosen budget. */}
+                    {affordable?.n > 0 && affordable.areas.length > 0 && (
+                      <div className="pi-budget-tiles">
+                        {affordable.areas.map((a) => (
+                          <button
+                            type="button" key={a} className="pi-btile"
+                            onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
+                          >
+                            <span className="pi-btile-img">
+                              <img src={areaImg[a] || FALLBACK_IMG} alt={`Property for sale in ${a}, Oman`} loading="lazy" />
+                            </span>
+                            <span className="pi-btile-name">{a}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="pi-panel">
@@ -665,25 +686,6 @@ export default function PriceIndexPage() {
                             <div className="pi-stat" key={label}>
                               <b style={{ fontSize: 26 }}>{v}</b><span>{label}</span>
                             </div>
-                          ))}
-                        </div>
-
-                        {/* Photo cards rather than text chips: the same
-                            language as the communities strip above, so a
-                            budget result is something you can look at. Each
-                            opens that community's listings already filtered
-                            to the chosen budget. */}
-                        <div className="pi-budget-tiles">
-                          {affordable.areas.map((a) => (
-                            <button
-                              type="button" key={a} className="pi-btile"
-                              onClick={() => navLocal(`/project?area=${encodeURIComponent(a)}&price=${bucketFor(budget)}`)}
-                            >
-                              <span className="pi-btile-img">
-                                <img src={areaImg[a] || FALLBACK_IMG} alt={`Property for sale in ${a}, Oman`} loading="lazy" />
-                              </span>
-                              <span className="pi-btile-name">{a}</span>
-                            </button>
                           ))}
                         </div>
 
