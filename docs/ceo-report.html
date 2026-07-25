@@ -1,0 +1,453 @@
+<title>گزارش ارتقای وب‌سایت و سئو — Irfan Investment Group</title>
+
+<style>
+  :root{
+    --ground:#faf9f4;
+    --raised:#ffffff;
+    --ink:#1a1a17;
+    --ink-2:#4a4a41;
+    --muted:#6f6e62;
+    --hair:#e0dfd4;
+    --hair-2:#c9c8ba;
+    --olive:#7a7b1f;
+    --olive-soft:rgba(140,141,37,.12);
+    --indigo:#351D93;
+    --indigo-soft:rgba(53,29,147,.10);
+    --good:#4a6b2a;
+    --warn:#8a6a12;
+    --shadow:0 1px 2px rgba(26,26,23,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#121211; --raised:#191918; --ink:#f1f0e8; --ink-2:#c9c8bc;
+      --muted:#8d8c80; --hair:#2b2b28; --hair-2:#3d3d38;
+      --olive:#b6b73a; --olive-soft:rgba(182,183,58,.13);
+      --indigo:#9b86ff; --indigo-soft:rgba(155,134,255,.12);
+      --good:#8fbf5c; --warn:#d3a83c; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#121211; --raised:#191918; --ink:#f1f0e8; --ink-2:#c9c8bc;
+    --muted:#8d8c80; --hair:#2b2b28; --hair-2:#3d3d38;
+    --olive:#b6b73a; --olive-soft:rgba(182,183,58,.13);
+    --indigo:#9b86ff; --indigo-soft:rgba(155,134,255,.12);
+    --good:#8fbf5c; --warn:#d3a83c; --shadow:none;
+  }
+  :root[data-theme="light"]{
+    --ground:#faf9f4; --raised:#ffffff; --ink:#1a1a17; --ink-2:#4a4a41;
+    --muted:#6f6e62; --hair:#e0dfd4; --hair-2:#c9c8ba;
+    --olive:#7a7b1f; --olive-soft:rgba(140,141,37,.12);
+    --indigo:#351D93; --indigo-soft:rgba(53,29,147,.10);
+    --good:#4a6b2a; --warn:#8a6a12; --shadow:0 1px 2px rgba(26,26,23,.05);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Vazirmatn","IRANSansX","IRANSans","Segoe UI",Tahoma,"Geeza Pro","Noto Naskh Arabic",sans-serif;
+    font-size:16px; line-height:1.85; direction:rtl; text-align:right;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 26px 120px}
+  .num{font-variant-numeric:tabular-nums; font-feature-settings:"tnum"; direction:ltr; unicode-bidi:isolate; display:inline-block}
+
+  /* ── masthead ── */
+  header.top{padding:76px 0 34px; border-bottom:2px solid var(--ink)}
+  .eyebrow{
+    font-size:11.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--olive); font-weight:700; margin:0 0 20px;
+  }
+  h1{
+    margin:0; font-size:clamp(30px,5vw,46px); line-height:1.25; font-weight:800;
+    letter-spacing:-.015em; text-wrap:balance;
+  }
+  .thesis{
+    margin:20px 0 0; font-size:clamp(16px,2vw,19px); line-height:1.75;
+    color:var(--ink-2); max-width:60ch;
+  }
+  .meta{
+    margin-top:28px; display:flex; flex-wrap:wrap; gap:8px 26px;
+    font-size:13px; color:var(--muted);
+  }
+  .meta b{color:var(--ink-2); font-weight:600}
+
+  /* ── sections ── */
+  section{padding-top:62px}
+  h2{
+    margin:0 0 6px; font-size:clamp(21px,2.6vw,27px); font-weight:800;
+    letter-spacing:-.01em; text-wrap:balance;
+  }
+  .lede{margin:0 0 30px; color:var(--muted); font-size:15px; max-width:62ch}
+  h3{margin:0 0 10px; font-size:16.5px; font-weight:700}
+  p{margin:0 0 16px; max-width:64ch}
+
+  /* ── headline metrics ── */
+  .metrics{
+    display:grid; gap:1px; background:var(--hair);
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    border:1px solid var(--hair); margin-top:8px;
+  }
+  .metric{background:var(--raised); padding:22px 20px 20px}
+  .metric .k{font-size:12px; color:var(--muted); letter-spacing:.04em; margin-bottom:12px}
+  .metric .v{
+    font-size:34px; font-weight:800; line-height:1; color:var(--olive);
+    letter-spacing:-.02em;
+  }
+  .metric .was{
+    margin-top:9px; font-size:12.5px; color:var(--muted);
+  }
+  .metric .was s{text-decoration-color:var(--hair-2); opacity:.85}
+
+  /* ── workstream list ── */
+  .streams{display:grid; gap:0; margin-top:6px; border-top:1px solid var(--hair)}
+  .stream{
+    display:grid; grid-template-columns:auto 1fr; gap:0 20px;
+    padding:22px 0; border-bottom:1px solid var(--hair); align-items:start;
+  }
+  .tag{
+    font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    padding:5px 10px; border-radius:2px; white-space:nowrap; margin-top:3px;
+    background:var(--olive-soft); color:var(--olive);
+  }
+  .stream p{margin:6px 0 0; color:var(--ink-2); font-size:15px}
+
+  /* ── table ── */
+  .scroll{overflow-x:auto; margin-top:8px; border:1px solid var(--hair); background:var(--raised)}
+  table{border-collapse:collapse; width:100%; min-width:520px; font-size:15px}
+  th,td{padding:13px 18px; text-align:right; border-bottom:1px solid var(--hair)}
+  thead th{
+    font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); font-weight:700; background:var(--ground);
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.before{color:var(--muted)}
+  td.after{color:var(--olive); font-weight:700}
+
+  /* ── timeline (a real sequence, so it gets a spine) ── */
+  .tl{margin-top:10px; border-inline-start:2px solid var(--hair); padding-inline-start:0}
+  .phase{position:relative; padding:0 30px 30px 0; margin-inline-start:-1px; border-inline-start:2px solid transparent}
+  .phase::before{
+    content:""; position:absolute; inset-inline-start:-7px; top:9px;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--ground); border:2px solid var(--hair-2);
+  }
+  .phase.live::before{background:var(--olive); border-color:var(--olive)}
+  .when{
+    font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:5px;
+  }
+  .phase.live .when{color:var(--olive)}
+  .phase h3{margin-bottom:5px}
+  .phase p{margin:0; font-size:14.5px; color:var(--ink-2); max-width:58ch}
+
+  /* ── competitor tiers ── */
+  .tier{
+    border:1px solid var(--hair); background:var(--raised);
+    padding:24px 24px 20px; margin-bottom:16px;
+  }
+  .tier-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px 14px; margin-bottom:6px}
+  .tier-head h3{margin:0; font-size:18px}
+  .verdict{
+    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:4px 9px; border-radius:2px;
+  }
+  .v-avoid{background:var(--indigo-soft); color:var(--indigo)}
+  .v-fight{background:var(--olive-soft); color:var(--olive)}
+  .v-watch{background:rgba(138,106,18,.12); color:var(--warn)}
+  .tier > p{margin:8px 0 16px; font-size:14.5px; color:var(--ink-2)}
+  .rivals{display:grid; gap:1px; background:var(--hair); border:1px solid var(--hair)}
+  .rival{
+    background:var(--raised); padding:12px 16px; display:flex;
+    flex-wrap:wrap; gap:4px 14px; align-items:baseline; font-size:14.5px;
+  }
+  .rival b{font-weight:700}
+  .rival span{color:var(--muted); font-size:13.5px}
+
+  /* ── callout ── */
+  .note{
+    border-inline-start:3px solid var(--olive); background:var(--olive-soft);
+    padding:18px 22px; margin:26px 0; font-size:15px;
+  }
+  .note.warn{border-inline-start-color:var(--warn); background:rgba(138,106,18,.09)}
+  .note p{margin:0; max-width:62ch}
+  .note p + p{margin-top:10px}
+  .note strong{font-weight:700}
+
+  ul.plain{margin:0; padding-inline-start:19px}
+  ul.plain li{margin-bottom:9px; color:var(--ink-2); font-size:15px; max-width:62ch}
+
+  footer{margin-top:74px; padding-top:24px; border-top:1px solid var(--hair); font-size:13px; color:var(--muted)}
+
+  @media (max-width:620px){
+    .stream{grid-template-columns:1fr; gap:10px}
+    .metric .v{font-size:29px}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    section{animation:rise .5s ease-out both}
+    @keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <p class="eyebrow">گزارش فنی و بازاریابی · Irfan Investment Group</p>
+    <h1>ارتقای وب‌سایت و زیرساخت سئو</h1>
+    <p class="thesis">
+      بزرگ‌ترین دارایی سایت — اینونتوری ۴۰۰ واحدی املاک — برای گوگل نامرئی بود.
+      این گزارش توضیح می‌دهد چه چیزی درست شد، چه زمانی نتیجه‌اش دیده می‌شود،
+      و در هر مرحله با چه کسانی رقابت می‌کنیم.
+    </p>
+    <div class="meta">
+      <span>تاریخ <b class="num">2026-07-25</b></span>
+      <span>دامنه <b>irfaninvest.com</b></span>
+      <span>وضعیت <b>روی پروداکشن، تأییدشده</b></span>
+    </div>
+  </header>
+
+  <section>
+    <h2>خلاصه مدیریتی</h2>
+    <p class="lede">چهار عددی که بیشترین اهمیت را دارند.</p>
+    <div class="metrics">
+      <div class="metric">
+        <div class="k">صفحات ملک قابل ایندکس</div>
+        <div class="v num">316</div>
+        <div class="was">پیش از این <s class="num">0</s> — همه با کد ۳۰۱ مسدود بودند</div>
+      </div>
+      <div class="metric">
+        <div class="k">آدرس‌های معرفی‌شده به گوگل</div>
+        <div class="v num">531</div>
+        <div class="was">پیش از این <s class="num">224</s></div>
+      </div>
+      <div class="metric">
+        <div class="k">مقالات متصل به صفحات فروش</div>
+        <div class="v num">116</div>
+        <div class="was">پیش از این <s class="num">0</s> از ۱۱۹ مقاله</div>
+      </div>
+      <div class="metric">
+        <div class="k">کاهش حجم تصاویر</div>
+        <div class="v num">−43%</div>
+        <div class="was">از <s class="num">54</s> به ۳۰.۹ مگابایت</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>مهم‌ترین یافته:</strong> یک خط تنظیمات باقی‌مانده از سایت قدیمی، هر ۳۹۵ صفحه‌ی ملک را
+      با ریدایرکت دائمی به صفحه‌ی دیگری می‌فرستاد. یعنی گوگل هرگز حتی یک آگهی ملک ما را ندید.
+      این تنها مشکل، عملاً کل سرمایه‌گذاری روی اینونتوری را از دید موتور جستجو حذف کرده بود.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>چه کاری انجام شد</h2>
+    <p class="lede">شش جبهه‌ی کاری، همه اجرا و روی سایت زنده تأیید شده.</p>
+
+    <div class="streams">
+      <div class="stream">
+        <span class="tag">زیرساخت</span>
+        <div>
+          <h3>آزادسازی اینونتوری</h3>
+          <p>ریدایرکت مخرب حذف شد و هر ملک صفحه‌ی مستقل و ایندکس‌پذیر خود را گرفت،
+          با عنوان کیوردمحور و داده‌ی ساختاریافته‌ای که گوگل برای نمایش قیمت در نتایج می‌خواند.
+          واحدهای تقریباً یکسان به‌درستی ادغام شدند تا محتوای تکراری جریمه نشود.</p>
+        </div>
+      </div>
+      <div class="stream">
+        <span class="tag">صفحات جدید</span>
+        <div>
+          <h3>سه صفحه‌ی فرود برای کیوردهای اصلی</h3>
+          <p>خرید ملک در مسقط، خرید آپارتمان در مسقط، و خرید ملک در صلاله.
+          هرکدام با موجودی زنده، جستجوی داخلی، محتوای اختصاصی و پرسش‌های متداول —
+          دقیقاً همان الگویی که پورتال‌های بزرگ با آن رتبه می‌گیرند.</p>
+        </div>
+      </div>
+      <div class="stream">
+        <span class="tag">فروش</span>
+        <div>
+          <h3>ثبت لید در صفحات املاک</h3>
+          <p>پیش از این بازدیدکننده می‌توانست هر ۴۰۰ ملک را ببیند و بدون هیچ ردی خارج شود.
+          حالا روی هر آگهی فرم تماس هست و مشخصات دقیق همان ملک را برای تیم فروش ثبت می‌کند.
+          فرم گفتگومحور قبلی هم با فرم ساده و سریع جایگزین شد.</p>
+        </div>
+      </div>
+      <div class="stream">
+        <span class="tag">اتصال</span>
+        <div>
+          <h3>شبکه‌ی لینک داخلی</h3>
+          <p>صفحات فروش پیش از این از بیشتر سایت دو پرش فاصله داشتند.
+          حالا از هر صفحه یک پرش فاصله دارند، با متن لینک توصیفی به‌جای کلمات خنثی.</p>
+        </div>
+      </div>
+      <div class="stream">
+        <span class="tag">محتوا</span>
+        <div>
+          <h3>بازسازی ۱۱۹ مقاله‌ی وبلاگ</h3>
+          <p>هیچ‌کدام از مقالات به صفحات فروش لینک نمی‌دادند، چون هنگام نوشتنشان آن صفحات وجود نداشت.
+          همه اصلاح شدند و سیستم تولید خودکار محتوا هم به‌روزرسانی شد تا مقالات آینده از ابتدا درست بنویسند.</p>
+        </div>
+      </div>
+      <div class="stream">
+        <span class="tag">سرعت</span>
+        <div>
+          <h3>سبک‌سازی صفحات</h3>
+          <p>کتابخانه‌ی نقشه که ۵۲۸ کیلوبایت روی هر صفحه‌ی پروژه بار می‌کرد، حالا فقط وقتی
+          کاربر به نقشه می‌رسد بارگذاری می‌شود. تصاویر هم ۴۳ درصد سبک‌تر شدند.
+          سرعت یکی از فاکتورهای رتبه‌بندی گوگل است.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>قبل و بعد</h2>
+    <p class="lede">همه‌ی اعداد روی سایت زنده اندازه‌گیری شده‌اند، نه تخمین.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>سنجه</th><th>قبل</th><th>بعد</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>صفحات ملک قابل ایندکس</td><td class="before num">0</td><td class="after num">316</td></tr>
+          <tr><td>آدرس‌های معرفی‌شده به گوگل</td><td class="before num">224</td><td class="after num">531</td></tr>
+          <tr><td>محتوای قابل‌خواندن صفحه‌ی جستجو</td><td class="before">۴۰ کلمه</td><td class="after">۴۷۹ کلمه</td></tr>
+          <tr><td>مقالات متصل به صفحات فروش</td><td class="before num">0</td><td class="after">۱۱۶ از ۱۱۹</td></tr>
+          <tr><td>میانگین لینک داخلی هر مقاله</td><td class="before num">3.8</td><td class="after num">6.5</td></tr>
+          <tr><td>حجم تصاویر سایت</td><td class="before">۵۴ مگابایت</td><td class="after">۳۰.۹ مگابایت</td></tr>
+          <tr><td>بار اضافی صفحات پروژه</td><td class="before">۵۲۸ کیلوبایت</td><td class="after">صفر</td></tr>
+          <tr><td>فرم تماس روی صفحات ملک</td><td class="before">نداشت</td><td class="after">دارد</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>چه زمانی نتیجه را می‌بینیم</h2>
+    <p class="lede">
+      سئو کند است. این جدول انتظار واقع‌بینانه است، نه خوش‌بینانه.
+      نکته‌ی مهم: تمام کار انجام‌شده روی زیرساخت بوده و گوگل هنوز آن را ندیده است.
+    </p>
+
+    <div class="tl">
+      <div class="phase live">
+        <div class="when">هم‌اکنون</div>
+        <h3>زیرساخت آماده و زنده</h3>
+        <p>همه‌ی تغییرات روی سایت اعمال و تست شده‌اند. از این لحظه توپ در زمین گوگل است.</p>
+      </div>
+      <div class="phase">
+        <div class="when">۱ تا ۲ هفته</div>
+        <h3>کشف</h3>
+        <p>گوگل فهرست ۵۳۱ آدرس را می‌خواند و شروع به بازدید از صفحات ملک می‌کند.
+        در این مرحله هنوز ترافیکی اضافه نمی‌شود.</p>
+      </div>
+      <div class="phase">
+        <div class="when">۲ تا ۶ هفته</div>
+        <h3>ایندکس</h3>
+        <p>تعداد صفحات ثبت‌شده در گوگل جهش می‌کند. هدف: رسیدن از حدود ۷۵ صفحه به ۲۵۰ تا ۳۵۰ صفحه.
+        این نخستین شاخص قابل اندازه‌گیری موفقیت است.</p>
+      </div>
+      <div class="phase">
+        <div class="when">۲ تا ۴ ماه</div>
+        <h3>نخستین ترافیک و لید ارگانیک</h3>
+        <p>رتبه گرفتن روی جستجوهای دقیق و کم‌رقابت مانند «آپارتمان دوخوابه برای فروش در مسقط».
+        حجم کم ولی کیفیت بالا، چون نیت خرید مشخص است.</p>
+      </div>
+      <div class="phase">
+        <div class="when">۴ تا ۸ ماه</div>
+        <h3>رقابت روی کیوردهای اصلی</h3>
+        <p>عبارت‌های پرجستجو مانند «خرید ملک در مسقط». اینجا رقابت با پورتال‌های بزرگ است
+        و نتیجه به اعتبار دامنه بستگی دارد، نه فقط به کیفیت فنی.</p>
+      </div>
+      <div class="phase">
+        <div class="when">۶ تا ۱۲ ماه</div>
+        <h3>اعتبار دامنه</h3>
+        <p>نیازمند کار جداگانه روی بک‌لینک است. بدون آن، سقف رشد ما محدود می‌ماند.
+        این تنها بخشی است که هنوز شروع نشده.</p>
+      </div>
+    </div>
+
+    <div class="note warn">
+      <p><strong>یک انتظار که باید تعدیل شود:</strong> کل حجم جستجوی ماهانه برای خرید ملک در عمان
+      حدود ۳٬۷۰۰ بار است. حتی با بهترین اجرا، سقف واقع‌بینانه‌ی جستجوی ارگانیک و تبلیغات گوگل
+      روی هم چیزی حدود ۲۰ تا ۴۰ لید در ماه است.</p>
+      <p>برای حجم بالاتر، کانال درست تبلیغات شبکه‌های اجتماعی است که بر پایه‌ی علاقه هدف‌گیری می‌کند
+      نه جستجو. صفحه‌ی مخصوص آن از قبل ساخته شده و منتظر فعال‌سازی است.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>رقبای ما در هر مرحله</h2>
+    <p class="lede">
+      همه‌ی رقبا یکسان نیستند. با بعضی نباید جنگید، با بعضی می‌شود و باید برد.
+    </p>
+
+    <div class="tier">
+      <div class="tier-head">
+        <h3>لایه ۱ — پورتال‌های منطقه‌ای</h3>
+        <span class="verdict v-avoid">رقابت مستقیم نکنیم</span>
+      </div>
+      <p>غول‌های ده‌ساله با هزاران دامنه‌ی ارجاع‌دهنده. از نظر اعتبار دامنه غیرقابل‌رقابت‌اند.
+      استراتژی درست: به‌جای جنگیدن، روی خودشان پروفایل آژانس بسازیم تا هم لینک بگیریم هم لید.</p>
+      <div class="rivals">
+        <div class="rival"><b>Bayut</b><span>۱٬۴۲۵ آگهی ایندکس‌شده در عمان</span></div>
+        <div class="rival"><b>Dubizzle / OLX Oman</b><span>بیش از ۶۰۰ آپارتمان در مسقط</span></div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <h3>لایه ۲ — آژانس‌های عمانی</h3>
+        <span class="verdict v-fight">زمین بازی واقعی ما</span>
+      </div>
+      <p>هم‌اندازه‌ی ما یا کمی جلوتر. اینجا جایی است که کار امروز مستقیماً نتیجه می‌دهد،
+      چون تفاوت در کیفیت فنی و محتوا تعیین‌کننده است نه اعتبار تاریخی.</p>
+      <div class="rivals">
+        <div class="rival"><b>Vista Oman</b><span>۲۶۴ آگهی فروش · قوی‌ترین رقیب مستقیم</span></div>
+        <div class="rival"><b>Mawa.om</b><span>روی هر آگهی تماس، ایمیل و واتساپ دارد</span></div>
+        <div class="rival"><b>homelist.om</b><span>پروفایل گوگلش را دقیقاً به نام «خرید ملک در عمان» ثبت کرده</span></div>
+        <div class="rival"><b>MK Muscat · Oman Developments</b><span>حضور در تبلیغات، سایت ضعیف‌تر</span></div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <h3>لایه ۳ — بروکرهای بین‌المللی</h3>
+        <span class="verdict v-watch">تحت نظر</span>
+      </div>
+      <p>اعتبار دامنه‌ی بالا دارند ولی عمان برایشان یک بخش فرعی است.
+      عمق موجودی و تخصص محلی ندارند — و این دقیقاً نقطه‌ی قوت ماست.</p>
+      <div class="rivals">
+        <div class="rival"><b>Imtilak Global</b><span>بخش عمان · قوی در بازار عربی</span></div>
+        <div class="rival"><b>Savills</b><span>برند جهانی · موجودی محدود در عمان</span></div>
+        <div class="rival"><b>LuxuryProperty.com</b><span>تمرکز روی بخش لوکس</span></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>مزیت رقابتی ما:</strong> سه چیز که هیچ‌کدام از رقبا هم‌زمان ندارند —
+      قیمت واقعی و لحظه‌ای از سازنده (نه تخمین)، پشتیبانی کامل چهار زبان،
+      و خدمات مشاوره‌ی اقامت و ثبت شرکت در کنار فروش ملک.
+      ما مشاور سرمایه‌گذاری هستیم، نه فقط تابلوی آگهی.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>قدم‌های بعدی</h2>
+    <p class="lede">به‌ترتیب بازدهی.</p>
+    <ul class="plain">
+      <li><b>ثبت پروفایل کسب‌وکار گوگل</b> — رایگان، سریع‌ترین نتیجه، و همین حالا یک رقیب
+      جای ما را در نقشه گرفته است. این فوری‌ترین اقدام است.</li>
+      <li><b>دریافت لینک از سازنده‌ها</b> — ما نماینده‌ی رسمی فروش چند پروژه هستیم؛
+      درخواست درج در فهرست نمایندگان مجازشان، معتبرترین نوع لینک را برایمان می‌آورد.</li>
+      <li><b>ساخت صفحه‌ی شاخص قیمت ملک عمان</b> — از دیتای ۴۰۰ واحدی خودمان.
+      هیچ‌کس در عمان چنین چیزی منتشر نکرده؛ منبعی می‌شود که رسانه‌ها به آن ارجاع می‌دهند.</li>
+      <li><b>صفحات اختصاصی مناطق</b> — الموج، خلیج مسقط و پنج منطقه‌ی دیگر
+      که هرکدام یک کیورد پرارزش‌اند و هنوز صفحه‌ی مخصوص ندارند.</li>
+    </ul>
+  </section>
+
+  <footer>
+    همه‌ی اعداد این گزارش روی سایت زنده اندازه‌گیری شده‌اند.
+    مستندات فنی کامل در فایل <span class="num" dir="ltr">HANDOFF-SEO-2026-07-25.md</span> در مخزن پروژه موجود است.
+  </footer>
+
+</div>
