@@ -7,6 +7,7 @@ import { localizePath, stripLang } from '../lib/localize.js'
 import { submitForm } from '../supabase.js'
 import { DIAL_CODES, DEFAULT_DIAL } from '../data/dialCodes.js'
 import { galleryFor } from '../projectGallery.js'
+import { isPaidVisit } from '../lib/attribution.js'
 
 /**
  * SalalahPopup — THE single site-wide lead popup (Muscat / Oman-focused).
@@ -171,7 +172,12 @@ export default function SalalahPopup() {
   const rtl = lang === 'fa' || lang === 'ar'
   const logical = stripLang(pathname)
   // Pages where the popup auto-opens (launcher works everywhere).
-  const onAutoOpenPage = logical === '/' || logical === '/buy'
+  // NOT on ad clicks: / and /buy are both Google Ads landing pages, and an
+  // interstitial covering the page on arrival costs Quality Score (which costs
+  // CPC) and trips the mobile intrusive-interstitial signal on the same pages
+  // we rank organically. Organic visitors still get it; the launcher button
+  // stays for everyone, so nobody loses the offer, they just have to ask.
+  const onAutoOpenPage = (logical === '/' || logical === '/buy') && !isPaidVisit()
 
   // Muscat visuals: Muscat Bay (Zen Residences) + Al Mouj (Vistal) renders.
   const slides = [...galleryFor('zen-residences'), ...galleryFor('vistal').slice(0, 3)]

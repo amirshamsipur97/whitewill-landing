@@ -39,6 +39,7 @@ import { coverForSlug, galleryFor } from '../projectGallery.js'
 import { OPEN_EVENT as SALALAH_OPEN_EVENT } from '../components/SalalahPopup.jsx'
 import { LocalizedLink } from '../lib/localize.js'
 import { BUY_SEO, buyFaqJsonLd } from '../buySeoContent.mjs'
+import ContactCTA from '../components/ContactCTA.jsx'
 
 // ── Salalah featured banner (above the listings; SEO copy in the DOM) ──
 const SALALAH_BANNER = {
@@ -1031,6 +1032,12 @@ export default function BuyPage() {
           )
         })()}
       </Container>
+
+      {/* Always-visible lead form. /buy is a Google Ads landing page and its
+          only capture used to be the auto-popup, which no longer opens on a
+          paid click. Inline forms have produced 49 of this site's leads
+          against the popup's 2, so this is the stronger half of the trade. */}
+      <ContactCTA source="buy_page_cta" />
 
       <BuyFiltersModal
         open={filtersOpen}

@@ -14,6 +14,10 @@ const HERO_SEARCH = {
   fa: { ph: 'جستجوی املاک در عمان…', btn: 'جستجو' },
 }
 const OLIVE_BRIGHT = '#8c8d25'
+// The AI Assistant launcher's green (components/chat/CtaPill.jsx). The hero
+// Search button borrows it so the page's two green CTAs match.
+const CTA_GREEN = '#797A51'
+const CTA_GREEN_HOVER = '#5d5e3e'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -596,10 +600,14 @@ export default function ScrollVideoHero() {
               fontWeight: 700,
               textTransform: 'none',
               fontSize: { xs: 14.5, md: 16 },
-              bgcolor: OLIVE_BRIGHT,
-              color: '#0d0e0c',
+              // Matches the AI Assistant pill (components/chat/CtaPill.jsx)
+              // rather than the brighter #8c8d25 olive: the two are the only
+              // green CTAs on the page and they were reading as different
+              // brands sitting next to each other.
+              bgcolor: CTA_GREEN,
+              color: '#fff',
               whiteSpace: 'nowrap',
-              '&:hover': { bgcolor: '#9c9d2e' },
+              '&:hover': { bgcolor: CTA_GREEN_HOVER },
             }}
           >
             {hs.btn}

@@ -65,6 +65,27 @@ export function captureAttribution() {
  * Attribution fields to attach to a lead submit — the persisted campaign tags
  * plus landing_page/referrer/first_seen, minus the internal `_tagged` flag.
  */
+/**
+ * True when this visit arrived from a paid ad click.
+ *
+ * WHY it exists: Google scores "landing page experience" as part of Quality
+ * Score and marks down a page whose content is covered on arrival, and the
+ * same interstitial signal hits mobile organic rankings. Our own numbers say
+ * the same thing from the other side: across three versions the auto-popup has
+ * produced 2 leads in 3+ weeks while inline forms produced 49. So paid
+ * visitors get a clean page and organic visitors keep the popup.
+ *
+ * Reads the stored snapshot rather than the URL, so it still holds after the
+ * first client-side navigation has dropped the query string.
+ */
+export function isPaidVisit() {
+  const a = getAttribution()
+  return Boolean(
+    a.gclid || a.gbraid || a.wbraid || a.msclkid ||
+    a.utm_medium === 'cpc' || a.utm_medium === 'ppc' || a.utm_medium === 'paid',
+  )
+}
+
 export function getAttribution() {
   const s = readStore() || captureAttribution()
   if (!s) return {}
