@@ -8,6 +8,7 @@ export default {
     investment: "سرمایه‌گذاری",
     carImport: "واردات خودرو",
     schools: "مدارس بین‌المللی",
+    goldenVisa: "گلدن ویزای عمان",
     prices: "قیمت ملک",
     insights: "بلاگ",
     about: "درباره ما",

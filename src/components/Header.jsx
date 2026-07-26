@@ -222,6 +222,7 @@ export default function Header() {
   // have orphaned an indexed page.
   const servicesChildren = [
     { label: t.nav.invest, to: '/invest' },
+    { label: t.nav.goldenVisa, to: '/oman-golden-visa' },
     { label: t.nav.schools, to: '/schools' },
   ]
 

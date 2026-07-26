@@ -22,6 +22,8 @@ import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingConten
 import { POPULAR, COMMUNITIES, PROJECTS, SERVICES, footerSeoCopy } from './src/footerSeoLinks.mjs'
 import { buildPriceIndex, fmtInt, fmtOmr, fmtRange, fmtSqm } from './src/priceIndexData.mjs'
 import { priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill } from './src/priceIndexContent.mjs'
+import { buildGoldenVisa, TIER_5_OMR, TIER_10_OMR } from './src/goldenVisaData.mjs'
+import { goldenVisaCopy, goldenVisaFaqJsonLd, goldenVisaJsonLd, fill as gvFill } from './src/goldenVisaContent.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const LANGS = ['en', 'ru', 'ar', 'fa']
@@ -83,7 +85,7 @@ function pageFor(route, lang) {
   // Minimal real content for the crawler's first fetch; React wipes it on mount.
   // The price index is the one LIGHT page on the site (Perumnas Figma kit), so
   // its shell must not flash a black box before React takes over.
-  const light = route === PRICE_INDEX_ROUTE
+  const light = route === PRICE_INDEX_ROUTE || route === GOLDEN_VISA_ROUTE
   const inner = light
     ? 'max-width:1100px;margin:0 auto;padding:96px 24px'
     : 'max-width:760px;margin:0 auto;padding:96px 20px'
@@ -92,7 +94,8 @@ function pageFor(route, lang) {
     (route === '/buy' ? buySeoHtml(lang) : '') +
     (route === '/project' ? projectSeoHtml(lang) : '') +
     (LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : '') +
-    (light ? priceIndexHtml(lang) : '') +
+    (route === PRICE_INDEX_ROUTE ? priceIndexHtml(lang) : '') +
+    (route === GOLDEN_VISA_ROUTE ? goldenVisaHtml(lang) : '') +
     footerLinksHtml(lang)
   // The light page needs a FULL-BLEED white backdrop: the global stylesheet
   // paints body black, so a centred max-width block alone would sit between
@@ -171,6 +174,14 @@ function pageFor(route, lang) {
       `    <script type="application/ld+json" id="price-index-dataset-jsonld">${JSON.stringify(priceIndexJsonLd(lang, priceIndex, BUILD_DAY))}</script>\n  </head>`,
     )
   }
+  if (route === GOLDEN_VISA_ROUTE && goldenVisa.units > 0) {
+    const v = gvVars(lang)
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="gv-faq-jsonld">${JSON.stringify(goldenVisaFaqJsonLd(lang, v))}</script>\n` +
+      `    <script type="application/ld+json" id="gv-howto-jsonld">${JSON.stringify(goldenVisaJsonLd(lang, v))}</script>\n  </head>`,
+    )
+  }
   return html
 }
 
@@ -233,6 +244,7 @@ function landingSeoHtml(slug, lang) {
 // asset. Computed from the SAME module the React page uses, over the SAME
 // inventory fetch that feeds the /buy/:slug AggregateOffer.
 const PRICE_INDEX_ROUTE = '/property-prices-in-oman'
+const GOLDEN_VISA_ROUTE = '/oman-golden-visa'
 const BUILD_DAY = (process.env.VERCEL_DEPLOYMENT_CREATED_AT
   ? new Date(Number(process.env.VERCEL_DEPLOYMENT_CREATED_AT))
   : new Date()
@@ -354,6 +366,82 @@ function priceIndexHtml(lang) {
   )
 }
 
+// Static twin of GoldenVisaPage. Same module, same build-time figures, so the
+// crawler's first fetch and the hydrated page can never quote different
+// numbers. The honest split between the two residency routes is preserved
+// here too: it is the reason the page is worth ranking.
+function gvVars(lang) {
+  return {
+    units: fmtInt(goldenVisa.units),
+    qualify5: fmtInt(goldenVisa.qualify5),
+    qualify10: fmtInt(goldenVisa.qualify10),
+    areas: goldenVisa.areas,
+    projects: goldenVisa.projects,
+    entry: fmtOmr(goldenVisa.entryPrice),
+    tier5: fmtOmr(TIER_5_OMR),
+    tier10: fmtOmr(TIER_10_OMR),
+    updated: BUILD_DAY,
+  }
+}
+
+function goldenVisaHtml(lang) {
+  const gv = goldenVisa
+  if (!gv.units) return ''
+  const c = goldenVisaCopy(lang)
+  const prefix = langPrefix(lang)
+  const v = gvVars(lang)
+  const F = (x) => esc(gvFill(x, v))
+
+  const stats =
+    `<ul><li><strong>${fmtInt(gv.qualify5)}</strong> ${esc(c.stats.qualify5)}</li>` +
+    `<li><strong>${fmtInt(gv.qualify10)}</strong> ${esc(c.stats.qualify10)}</li>` +
+    `<li><strong>${esc(fmtOmr(TIER_5_OMR))}</strong> ${esc(c.stats.tier5)}</li>` +
+    `<li><strong>${esc(fmtOmr(gv.lowestQualifying))}</strong> ${esc(c.stats.entry)}</li></ul>`
+
+  const routes = c.routes
+    .map((r) => `<h3>${esc(r.name)}</h3><p><em>${esc(r.sub)}</em></p><p>${F(r.body)}</p>`)
+    .join('')
+
+  const table =
+    `<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;font-size:15px">` +
+    `<thead><tr>${[c.cols.area, c.cols.city, c.tier5Label, c.tier10Label, c.cols.from, c.cols.median]
+      .map((h) => `<th style="text-align:start;padding:12px 14px;color:#61656E;font-weight:400;border-bottom:2px solid #12161D">${esc(h)}</th>`)
+      .join('')}</tr></thead><tbody>` +
+    gv.byArea
+      .map((a) => `<tr>${[
+        `<a href="${prefix}/project?area=${encodeURIComponent(a.key)}" style="color:#6f7020">${esc(a.label)}</a>`,
+        esc(a.city || '–'), fmtInt(a.n), a.tenYear > 0 ? fmtInt(a.tenYear) : '–',
+        esc(fmtOmr(a.minPrice)), esc(fmtOmr(a.medianPrice)),
+      ].map((cell) => `<td style="padding:15px 14px;border-bottom:1px solid #E5E5E6">${cell}</td>`).join('')}</tr>`)
+      .join('') +
+    `</tbody></table></div>`
+
+  const steps = c.steps
+    .map((st) => `<h3>${esc(st.n)} ${esc(st.t)}</h3><p>${esc(st.d)}</p>`)
+    .join('')
+
+  const links = c.links
+    .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+
+  return (
+    `<p>${F(c.lead)}</p>` + stats +
+    `<h2 id="routes">${esc(c.routesHeading)}</h2><p>${esc(c.routesSub)}</p>${routes}` +
+    `<h2 id="qualifying">${esc(c.qualifyHeading)}</h2><p>${esc(c.qualifySub)}</p>${table}` +
+    `<p>${F(c.tableNote)}</p>` +
+    `<h2 id="ownership">${esc(c.ownershipHeading)}</h2>` +
+    c.ownershipParas.map((x) => `<p>${esc(x)}</p>`).join('') +
+    `<h2 id="process">${esc(c.processHeading)}</h2><p>${esc(c.processSub)}</p>${steps}` +
+    `<h2 id="analysis">${esc(c.heading)}</h2>` +
+    c.paras.map((x) => `<p>${esc(x)}</p>`).join('') +
+    `<h2 id="faq">${esc(c.faqHeading)}</h2>` +
+    c.faq.map((f) => `<h3>${F(f.q)}</h3><p>${F(f.a)}</p>`).join('') +
+    `<h2>${esc(c.ctaHeading)}</h2><p>${esc(c.ctaText)}</p>` +
+    `<p><a href="${prefix}/project" style="color:#8c8d25">${esc(c.ctaBtn)}</a></p>` +
+    `<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+  )
+}
+
 // The site-wide keyword-anchored link block, mirrored into EVERY prerendered
 // page. The React component (components/FooterSeoLinks.jsx) renders the same
 // links for users; emitting them here too means a crawler gets them on the
@@ -435,6 +523,11 @@ for (const a of aggBySlug.values()) if (a.min === Infinity) a.min = 0
 
 // …and the same fetch feeds the price index. Must be initialised before the
 // route loop below, which is what calls pageFor().
+const goldenVisa = buildGoldenVisa(inventory)
+console.log(
+  `prerender-routes: golden visa — ${goldenVisa.qualify5} of ${goldenVisa.units} units clear OMR ${TIER_5_OMR}, ${goldenVisa.qualify10} clear OMR ${TIER_10_OMR}`,
+)
+
 const priceIndex = buildPriceIndex(inventory)
 console.log(
   `prerender-routes: price index over ${priceIndex.units} units — median ${priceIndex.overall.medianPpsm} OMR/m² across ${priceIndex.areas} communities`,

@@ -126,6 +126,22 @@ export const ROUTES = {
       fa: 'میزون شیردل، مجموعه‌ای از اقامتگاه‌های لوکس برای فروش در عمان از Irfan Investment Group.',
     },
   },
+  // Residency intent. 260/mo in the Oman geo at LOW competition and +175% YoY
+  // (GKP 2026-07-23), and until this page the site had nothing for it.
+  '/oman-golden-visa': {
+    title: {
+      en: 'Oman Golden Visa 2026: Residency by Buying Property | Irfan',
+      ru: 'Золотая виза Омана 2026: ВНЖ за покупку недвижимости | Irfan',
+      ar: 'الإقامة الذهبية في عُمان 2026: الإقامة عبر شراء عقار | Irfan',
+      fa: 'گلدن ویزای عمان ۲۰۲۶: اقامت با خرید ملک | Irfan',
+    },
+    desc: {
+      en: 'How to get Oman residency by buying property: the OMR 250,000 five year and OMR 500,000 ten year thresholds, which freehold homes qualify today, ITC ownership rules for foreign buyers, and the step by step process.',
+      ru: 'Как получить ВНЖ Омана за покупку недвижимости: пороги OMR 250 000 на пять лет и OMR 500 000 на десять, какие объекты подходят сегодня, правила фрихолда в зонах ITC и пошаговый процесс.',
+      ar: 'كيف تحصل على الإقامة في عُمان عبر شراء عقار: حدّا 250,000 ر.ع لخمس سنوات و500,000 ر.ع لعشر سنوات، وأي الوحدات مؤهلة اليوم، وقواعد التملّك الحر في المجمعات السياحية، والخطوات كاملة.',
+      fa: 'دریافت اقامت عمان با خرید ملک: آستانه ۲۵۰٬۰۰۰ ریالی پنج‌ساله و ۵۰۰٬۰۰۰ ریالی ده‌ساله، اینکه امروز کدام واحدها واجد شرایط‌اند، قوانین مالکیت فری‌هولد در مناطق ITC، و مراحل گام‌به‌گام.',
+    },
+  },
   '/invest': {
     title: {
       en: 'Company Registration & Investment in Oman | Irfan Investment Group',

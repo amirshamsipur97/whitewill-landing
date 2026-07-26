@@ -26,6 +26,9 @@ const STATIC = [
   // Per-m² price index — the linkable data asset. Recomputed from live
   // inventory on every load, so it genuinely changes weekly.
   { path: '/property-prices-in-oman', priority: '0.8', changefreq: 'weekly' },
+  // Low competition + 175% YoY growth on the golden-visa cluster, and the
+  // only page on the site targeting residency intent.
+  { path: '/oman-golden-visa', priority: '0.9', changefreq: 'weekly' },
   { path: '/invest', priority: '0.8', changefreq: 'monthly' },
   { path: '/schools', priority: '0.8', changefreq: 'monthly' },
   { path: '/investment', priority: '0.7', changefreq: 'monthly' },

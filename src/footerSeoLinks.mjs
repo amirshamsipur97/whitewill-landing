@@ -44,6 +44,7 @@ export const COMMUNITIES = [
 // which is why it gets a permanent home here now that the nav slot went to the
 // price index.
 export const SERVICES = [
+  { to: '/oman-golden-visa', key: 'goldenVisa' },
   { to: '/invest', key: 'company' },
   { to: '/schools', key: 'schools' },
   { to: '/investment', key: 'banking' },
@@ -77,6 +78,7 @@ export const FOOTER_SEO = {
     community: 'Property for sale in {area}',
     project: '{name}: prices & available units',
     services: {
+      goldenVisa: 'Oman golden visa by property',
       company: 'Company registration in Oman',
       schools: 'International schools in Oman',
       banking: 'Banking and financing in Oman',
@@ -96,6 +98,7 @@ export const FOOTER_SEO = {
     community: 'ملک برای فروش در {area}',
     project: '{name}: قیمت‌ها و واحدهای موجود',
     services: {
+      goldenVisa: 'گلدن ویزای عمان با خرید ملک',
       company: 'ثبت شرکت در عمان',
       schools: 'مدارس بین‌المللی در عمان',
       banking: 'بانکداری و تامین مالی در عمان',
@@ -115,6 +118,7 @@ export const FOOTER_SEO = {
     community: 'عقارات للبيع في {area}',
     project: '{name}: الأسعار والوحدات المتاحة',
     services: {
+      goldenVisa: 'الإقامة الذهبية في عُمان بالعقار',
       company: 'تأسيس شركة في عُمان',
       schools: 'المدارس الدولية في عُمان',
       banking: 'الخدمات المصرفية والتمويل في عُمان',
@@ -134,6 +138,7 @@ export const FOOTER_SEO = {
     community: 'Недвижимость на продажу в {area}',
     project: '{name}: цены и доступные лоты',
     services: {
+      goldenVisa: 'Золотая виза Омана через недвижимость',
       company: 'Регистрация компании в Омане',
       schools: 'Международные школы в Омане',
       banking: 'Банкинг и финансирование в Омане',
