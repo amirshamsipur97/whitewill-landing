@@ -72,10 +72,10 @@ export const ROUTES = {
       fa: 'خرید آپارتمان در مسقط: آپارتمان فری‌هولد از ۳۵٬۶۲۵ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Freehold apartments for sale in Muscat: studios from OMR 35,625 and apartments from OMR 48,125 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, up to 8% rental yield, investor residency included.',
-      ru: 'Квартиры во фрихолд на продажу в Маскате: студии от 35 625 OMR и квартиры от 48 125 OMR в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, доходность до 8%, резиденция инвестора.',
-      ar: 'شقق تملّك حر للبيع في مسقط: استوديوهات من 35,625 ر.ع وشقق من 48,125 ر.ع في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي. لجميع الجنسيات، عائد يصل إلى 8%، مع إقامة المستثمر.',
-      fa: 'آپارتمان فری‌هولد برای فروش در مسقط: استودیو از ۳۵٬۶۲۵ و آپارتمان از ۴۸٬۱۲۵ ریال عمان در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی. همه ملیت‌ها، بازده تا ۸٪، همراه با اقامت سرمایه‌گذاری.',
+      en: 'Freehold apartments for sale in Muscat: studios from OMR 35,625 and apartments from OMR 48,125 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, no tax on rental income, investor residency included.',
+      ru: 'Квартиры во фрихолд на продажу в Маскате: студии от 35 625 OMR и квартиры от 48 125 OMR в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, без налога на доход от аренды, резиденция инвестора.',
+      ar: 'شقق تملّك حر للبيع في مسقط: استوديوهات من 35,625 ر.ع وشقق من 48,125 ر.ع في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي. لجميع الجنسيات، بدون ضريبة على دخل الإيجار، مع إقامة المستثمر.',
+      fa: 'آپارتمان فری‌هولد برای فروش در مسقط: استودیو از ۳۵٬۶۲۵ و آپارتمان از ۴۸٬۱۲۵ ریال عمان در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی. همه ملیت‌ها، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
     },
   },
   '/buy-property-in-salalah': {
