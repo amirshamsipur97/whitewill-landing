@@ -35,6 +35,11 @@ const DONE_KEY = 'irfan_popup_muscat_done'
 export const OPEN_EVENT = 'irfan:open-salalah-popup'
 
 // ── geo-currency ─────────────────────────────────────────────────────
+// ⚠️ DO NOT name communities next to this price. It is the entry price of ONE
+// development (Wadi Zaha, OMR 48,125). Al Mouj starts at OMR 133,634 and
+// Muscat Bay at OMR 138,000, so listing them beside a $12,500 deposit implied
+// a deposit ~2.8x lower than reality. Same class of error as the "up to 8%
+// yield" claim removed on 2026-07-26: a true number attached to the wrong thing.
 // Cheapest available Muscat apartment: Wadi Zaha, Sultan Haitham City
 // from OMR 48,125 (10% down = OMR 4,813). OMR is pegged at 1 = $2.6008,
 // AED (3.6725/$) and SAR (3.75/$) are pegged to USD, so those three are
@@ -67,7 +72,7 @@ const STRINGS = {
     badge: 'Muscat & Oman · Freehold Release',
     title: 'Own a Freehold Apartment in Muscat',
     subBold: 'Start with only {DOWN} down payment (10%)',
-    sub2: ' and own an apartment in Muscat. Al Mouj, Muscat Bay and Sultan Haitham City, freehold for all nationalities with investor residency.',
+    sub2: ' and own an apartment in Muscat. Full freehold title for all nationalities, with investor residency included.',
     chips: ['From {PRICE}', 'No tax on rental income', 'Only 10% down payment', 'Freehold + residency visa'],
     urgency: 'Muscat freehold apartments at these prices are limited. Leave your details and get the full Muscat & Oman price list + payment plan within 10 minutes.',
     firstName: 'First name',
@@ -83,7 +88,7 @@ const STRINGS = {
     badge: 'Маскат и Оман · Фрихолд',
     title: 'Своя квартира в Маскате во фрихолд',
     subBold: 'Первый взнос от {DOWN} (10%)',
-    sub2: ', и вы владеете квартирой в Маскате. Al Mouj, Muscat Bay и Sultan Haitham City, фрихолд для всех национальностей с визой резидента.',
+    sub2: ', и вы владеете квартирой в Маскате. Полный фрихолд для всех национальностей, с визой резидента.',
     chips: ['От {PRICE}', 'Без налога на доход от аренды', 'Первый взнос всего 10%', 'Фрихолд + виза резидента'],
     urgency: 'Квартиры во фрихолд в Маскате по таким ценам ограничены. Оставьте контакты — пришлём полный прайс-лист по Маскату и Оману и план оплаты в течение 10 минут.',
     firstName: 'Имя',
@@ -99,7 +104,7 @@ const STRINGS = {
     badge: 'مسقط وعُمان · تملّك حر',
     title: 'تملّك شقة في مسقط بتملّك حر',
     subBold: 'ابدأ بدفعة أولى {DOWN} فقط (10%)',
-    sub2: ' وتملّك شقة في مسقط. الموج ومسقط باي ومدينة السلطان هيثم، تملّك حر لجميع الجنسيات مع إقامة المستثمر.',
+    sub2: ' وتملّك شقة في مسقط. تملّك حر كامل لجميع الجنسيات مع إقامة المستثمر.',
     chips: ['من {PRICE}', 'بدون ضريبة على دخل الإيجار', 'دفعة أولى 10% فقط', 'تملّك حر + إقامة'],
     urgency: 'شقق التملّك الحر في مسقط بهذه الأسعار محدودة. اترك بياناتك واحصل على قائمة أسعار مسقط وعُمان كاملة وخطة الدفع خلال 10 دقائق.',
     firstName: 'الاسم الأول',
@@ -115,7 +120,7 @@ const STRINGS = {
     badge: 'مسقط و عمان · فروش فری‌هولد',
     title: 'در مسقط صاحب آپارتمان فری‌هولد شوید',
     subBold: 'با پیش‌پرداخت فقط {DOWN} (۱۰٪)',
-    sub2: ' در مسقط صاحب آپارتمان شوید. الموج، مسقط بی و شهر سلطان هیثم؛ مالکیت کامل برای همه ملیت‌ها همراه با اقامت سرمایه‌گذار.',
+    sub2: ' در مسقط صاحب آپارتمان شوید. مالکیت کامل برای همه ملیت‌ها همراه با اقامت سرمایه‌گذار.',
     chips: ['از {PRICE}', 'بدون مالیات بر درآمد اجاره', 'فقط ۱۰٪ پیش‌پرداخت', 'فری‌هولد + ویزای اقامت'],
     urgency: 'آپارتمان‌های فری‌هولد مسقط با این قیمت‌ها محدود است. مشخصات خود را بگذارید تا لیست کامل قیمت مسقط و عمان و طرح پرداخت را تا ۱۰ دقیقه دیگر دریافت کنید.',
     firstName: 'نام',
