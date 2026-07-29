@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>گزارش عملکرد بازاریابی — ایرفان اینوست</title>
+<style>
+@font-face{font-family:Peyda;src:url('Peyda-Regular.ttf');font-weight:400}
+@font-face{font-family:Peyda;src:url('Peyda-Bold.ttf');font-weight:700}
+
+:root{
+  --ink:#12161D; --muted:#61656E; --line:#E5E5E6; --bg:#FAFAFB;
+  --olive:#6f7020; --gold:#B98C52; --red:#B3261E; --green:#1E6B3A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+@page{size:A4;margin:14mm 12mm}
+body{font-family:Peyda,"Geeza Pro",Tahoma,sans-serif;color:var(--ink);
+  font-size:10.5pt;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+.page{page-break-after:always}
+.page:last-child{page-break-after:auto}
+
+/* ── cover ─────────────────────────────────────────────── */
+.cover{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:26px}
+.brand{font-size:9pt;letter-spacing:.16em;color:var(--olive);font-weight:700;margin-bottom:10px}
+h1{font-size:26pt;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+.sub{margin-top:10px;color:var(--muted);font-size:11pt}
+
+h2{font-size:15pt;font-weight:700;margin:20px 0 4px;padding-bottom:6px;
+  border-bottom:2px solid var(--ink)}
+h2:first-of-type{margin-top:0}
+h3{font-size:11.5pt;font-weight:700;margin:18px 0 6px}
+p{margin:0 0 9px}
+.lead{color:var(--muted);margin-bottom:16px;font-size:10pt}
+
+/* ── stat row ──────────────────────────────────────────── */
+.stats{display:flex;gap:0;margin:18px 0 24px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stat{flex:1;padding:14px 12px;border-left:1px solid var(--line);text-align:center}
+.stat:last-child{border-left:0}
+.stat b{display:block;font-size:20pt;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:5px;font-size:8.5pt;color:var(--muted);line-height:1.35}
+.stat.good b{color:var(--green)} .stat.warn b{color:var(--red)} .stat.acc b{color:var(--olive)}
+
+/* ── tables ────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse;margin:10px 0 6px;font-size:9.5pt}
+th{text-align:right;padding:6px 9px;color:var(--muted);font-weight:400;
+  border-bottom:2px solid var(--ink);white-space:nowrap;font-size:9pt}
+td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even){background:var(--bg)}
+td.n{font-variant-numeric:tabular-nums;direction:ltr;text-align:right}
+td b{font-weight:700}
+tfoot td{border-top:2px solid var(--ink);border-bottom:0;font-weight:700;background:#fff}
+
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:8pt;font-weight:700}
+.pill.ok{background:#E3F5E9;color:var(--green)}
+.pill.bad{background:#FBE0E0;color:var(--red)}
+.pill.mid{background:#FCF3DC;color:#7A5C13}
+.pill.new{background:#E8E9F5;color:#3D4270}
+
+/* ── callouts ──────────────────────────────────────────── */
+.box{border:1px solid var(--line);border-right:4px solid var(--olive);
+  border-radius:8px;padding:11px 14px;margin:12px 0;background:var(--bg)}
+.box.alert{border-right-color:var(--red)}
+.box.win{border-right-color:var(--green)}
+.box h4{font-size:10.5pt;font-weight:700;margin-bottom:5px}
+.box p{font-size:9.5pt;color:var(--muted);margin:0}
+.box p+p{margin-top:6px}
+
+/* ── bars ──────────────────────────────────────────────── */
+.bars{margin:14px 0}
+.bar{display:grid;grid-template-columns:90px 1fr 54px;align-items:center;gap:10px;margin-bottom:8px}
+.bar-l{font-size:9.5pt}
+.bar-t{display:block;height:16px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar-f{display:block;height:100%;background:var(--olive);border-radius:4px}
+.bar-v{font-size:9.5pt;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;text-align:left}
+
+.foot{margin-top:16px;padding-top:10px;border-top:1px solid var(--line);
+  font-size:8pt;color:var(--muted);display:flex;justify-content:space-between}
+.note{font-size:8.5pt;color:var(--muted);margin-top:6px;line-height:1.5}
+ul{margin:6px 20px 10px 0}
+li{margin-bottom:5px;font-size:9.5pt}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ PAGE 1 ══════════════ -->
+<section class="page">
+  <div class="cover">
+    <div class="brand">IRFAN INVESTMENT GROUP</div>
+    <h1>گزارش عملکرد بازاریابی</h1>
+    <p class="sub">تبلیغات گوگل، لیدها و سئو &nbsp;·&nbsp; ۲۹ ژوئیه ۲۰۲۶</p>
+  </div>
+
+  <h2>خلاصه مدیریتی</h2>
+  <div class="stats">
+    <div class="stat warn"><b>$1,410</b><span>کل هزینه تبلیغات</span></div>
+    <div class="stat"><b>20</b><span>لید واقعی دوره</span></div>
+    <div class="stat good"><b>6.90%</b><span>نرخ تبدیل کمپین اصلی</span></div>
+    <div class="stat acc"><b>472</b><span>صفحه ایندکس‌شده</span></div>
+  </div>
+
+  <p>در این دوره پنج کمپین گوگل مدیریت شد. سه کمپین پس از ارزیابی متوقف شدند، یکی با بودجه کاهش‌یافته
+  ادامه یافت، و کمپین جدید عمان راه‌اندازی شد و اکنون روز سوم فاز یادگیری است.</p>
+
+  <p>مهم‌ترین دستاورد دوره در بخش تبلیغات نبود. با رفع یک خطای فنی که کل موجودی ۴۰۰ واحدی سایت را
+  از گوگل پنهان کرده بود، تعداد صفحات ایندکس‌شده از ۷۵ به ۴۷۲ رسید.</p>
+
+  <div class="box win">
+    <h4>سه یافته کلیدی</h4>
+    <p><b>۱. قیف فروش سالم است.</b> نرخ تبدیل ۶٫۹۰٪ کمپین امارات برای صنعت املاک عدد خوبی است.
+    یعنی صفحه، پیام و فرم درست کار می‌کنند و مشکل در اجرا نبوده است.</p>
+    <p><b>۲. مشکل، گرانی بازار امارات بود.</b> هزینه هر کلیک ۵٫۸۲ دلار. همان نیت خرید در عمان با
+    حدود یک‌سوم این قیمت در دسترس است. این پایه تصمیم برای کمپین جدید عمان است.</p>
+    <p><b>۳. عمان بیشترین تقاضا را دارد، بدون آنکه تبلیغی رویش شده باشد.</b> ۸ لید از ۲۰ لید دوره
+    شماره عمانی دارند، در حالی که تا امروز هیچ بودجه‌ای صرف بازار عمان نشده بود.</p>
+  </div>
+
+  <div class="foot"><span>ایرفان اینوست · گزارش داخلی</span><span>صفحه ۱ از ۴</span></div>
+</section>
+
+<!-- ══════════════ PAGE 2 ══════════════ -->
+<section class="page">
+  <h2>عملکرد کمپین‌ها</h2>
+  <p class="lead">کمپین امارات در بازه ۳۰ روزه و سه کمپین دیگر در بازه هفتگی ۲۰ تا ۲۶ ژوئیه سنجیده شده‌اند.</p>
+
+  <table>
+    <thead>
+      <tr><th>کمپین</th><th>بازار</th><th>کلیک</th><th>هزینه</th><th>هر کلیک</th><th>لید</th><th>وضعیت</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>C1</b> — املاک و سرمایه‌گذاری</td><td>امارات</td>
+        <td class="n">232</td><td class="n">$1,350</td><td class="n">$5.82</td><td class="n"><b>6</b></td>
+        <td><span class="pill mid">بودجه کاهش یافت</span></td>
+      </tr>
+      <tr>
+        <td><b>C6</b> — خانه‌های ساحلی صلاله</td><td>امارات و عربستان</td>
+        <td class="n">160</td><td class="n">$221</td><td class="n">$1.38</td><td class="n">0</td>
+        <td><span class="pill bad">متوقف</span></td>
+      </tr>
+      <tr>
+        <td><b>C7</b> — ملک و گلدن ویزا</td><td>هند</td>
+        <td class="n">21</td><td class="n">$87</td><td class="n">$4.14</td><td class="n">0</td>
+        <td><span class="pill bad">متوقف</span></td>
+      </tr>
+      <tr>
+        <td><b>C8</b> — ملک عمان فارسی</td><td>عمان (فارسی)</td>
+        <td class="n">5</td><td class="n">$61</td><td class="n"><b>$12.18</b></td><td class="n">0</td>
+        <td><span class="pill bad">متوقف</span></td>
+      </tr>
+      <tr>
+        <td><b>C2</b> — ملک و سرمایه‌گذاری عمان</td><td>عمان</td>
+        <td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td>
+        <td><span class="pill new">روز ۳ یادگیری</span></td>
+      </tr>
+    </tbody>
+    <tfoot><tr><td colspan="3">مجموع هزینه دوره</td><td class="n">$1,410</td><td colspan="3"></td></tr></tfoot>
+  </table>
+  <p class="note">بازه زمانی کمپین‌ها یکسان نیست، بنابراین جمع ستون هزینه با رقم کل برابر نمی‌شود.
+  رقم کل، مبلغ تأییدشده حساب برای این دوره است.</p>
+
+  <h3>هزینه هر کلیک، مقایسه بازارها</h3>
+  <div class="bars">
+    <div class="bar"><span class="bar-l">فارسی عمان</span><span class="bar-t"><span class="bar-f" style="width:100%;background:#B3261E"></span></span><span class="bar-v">$12.18</span></div>
+    <div class="bar"><span class="bar-l">امارات</span><span class="bar-t"><span class="bar-f" style="width:48%"></span></span><span class="bar-v">$5.82</span></div>
+    <div class="bar"><span class="bar-l">هند</span><span class="bar-t"><span class="bar-f" style="width:34%"></span></span><span class="bar-v">$4.14</span></div>
+    <div class="bar"><span class="bar-l">صلاله</span><span class="bar-t"><span class="bar-f" style="width:11%"></span></span><span class="bar-v">$1.38</span></div>
+  </div>
+
+  <div class="box alert">
+    <h4>چرا سه کمپین متوقف شدند</h4>
+    <p><b>کمپین فارسی عمان</b> قاطع‌ترین نتیجه را داد: ۶۱ دلار برای تنها ۵ کلیک. حجم جست‌وجوی فارسی
+    داخل عمان آن‌قدر کم است که هزینه هر کلیک به بیش از ۱۲ دلار می‌رسد. این مسیر بسته شد.</p>
+    <p><b>کمپین صلاله</b> با استراتژی «حداکثر کلیک» ۱۶۰ کلیک ارزان خرید و هیچ لیدی نداد. این نشان داد
+    که کلیک ارزان لزوماً کلیک باکیفیت نیست؛ درسی که در کمپین جدید عمان با انتخاب استراتژی
+    «حداکثر کانورژن» اعمال شده است.</p>
+    <p><b>کمپین هند</b> به دلیل مشکل پرداخت حساب هرگز فرصت اجرای واقعی پیدا نکرد و ارزیابی درباره
+    آن معتبر نیست.</p>
+  </div>
+
+  <div class="box">
+    <h4>اصلاحات فنی انجام‌شده روی کمپین امارات</h4>
+    <p>صفحه فرود یکی از سه گروه آگهی به آدرسی اشاره می‌کرد که در سایت وجود نداشت و کاربران را به
+    صفحه خطا می‌برد. این خطا از ابتدای کمپین فعال بود و چون آن آدرس پاسخ موفق برمی‌گرداند، در
+    بررسی‌های معمول دیده نمی‌شد. اکنون اصلاح شده است.</p>
+    <p>همچنین یک خطای شمارش در سیستم ردیابی برطرف شد که باعث می‌شد هر لید دو بار ثبت شود. ارقام
+    این گزارش بر اساس داده اصلاح‌شده است.</p>
+  </div>
+
+  <div class="foot"><span>ایرفان اینوست · گزارش داخلی</span><span>صفحه ۲ از ۴</span></div>
+</section>
+
+<!-- ══════════════ PAGE 3 ══════════════ -->
+<section class="page">
+  <h2>تفکیک لیدها</h2>
+  <p class="lead">۲۰ لید واقعی این دوره، بر اساس کد کشور شماره تماس.</p>
+
+  <table>
+    <thead><tr><th>کد</th><th>کشور</th><th>تعداد</th><th>سهم</th><th>نسبت</th></tr></thead>
+    <tbody>
+      <tr><td class="ltr">+968</td><td><b>عمان</b></td><td class="n"><b>8</b></td><td class="n">40%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:100%"></span></span></td></tr>
+      <tr><td class="ltr">+971</td><td><b>امارات</b></td><td class="n"><b>6</b></td><td class="n">30%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:75%"></span></span></td></tr>
+      <tr><td class="ltr">+44</td><td>بریتانیا</td><td class="n">1</td><td class="n">5%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:12.5%"></span></span></td></tr>
+      <tr><td class="ltr">+966</td><td>عربستان</td><td class="n">1</td><td class="n">5%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:12.5%"></span></span></td></tr>
+      <tr><td class="ltr">+967</td><td>یمن</td><td class="n">1</td><td class="n">5%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:12.5%"></span></span></td></tr>
+      <tr><td class="ltr">+92</td><td>پاکستان</td><td class="n">1</td><td class="n">5%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:12.5%"></span></span></td></tr>
+      <tr><td class="ltr">+46</td><td>سوئد</td><td class="n">1</td><td class="n">5%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:12.5%"></span></span></td></tr>
+      <tr><td class="ltr">+43</td><td>اتریش</td><td class="n">1</td><td class="n">5%</td>
+        <td><span class="bar-t" style="display:block;width:100%"><span class="bar-f" style="display:block;width:12.5%"></span></span></td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="2">مجموع</td><td class="n">20</td><td class="n">100%</td><td></td></tr></tfoot>
+  </table>
+
+  <p><b>عمان و امارات روی هم ۷۰٪ کل لیدها را می‌سازند.</b> سهم عمان با وجود نبود هرگونه تبلیغات
+  در این بازار به دست آمده که استدلال اصلی برای راه‌اندازی کمپین جدید عمان است.</p>
+
+  <h3>پروژه‌های مورد علاقه</h3>
+  <table>
+    <thead><tr><th>پروژه</th><th>تعداد درخواست</th></tr></thead>
+    <tbody>
+      <tr><td>وادی زها</td><td class="n">2</td></tr>
+      <tr><td>جبل سیفه</td><td class="n">1</td></tr>
+      <tr><td>ینایر</td><td class="n">1</td></tr>
+      <tr><td>گلف هیلز</td><td class="n">1</td></tr>
+      <tr><td>آپارتمان یک‌خوابه مسقط</td><td class="n">1</td></tr>
+    </tbody>
+  </table>
+  <p class="note">۶ نفر از ۲۰ نفر پروژه مورد نظر خود را مشخص کرده‌اند.</p>
+
+  <div class="box alert">
+    <h4>یادداشت کیفیت داده</h4>
+    <p>یک رکورد از فهرست خام حذف شد: ثبت با نام «<span class="ltr">J K</span>»، ایمیل
+    «<span class="ltr">jk@gmail.com</span>» و شماره «<span class="ltr">+968 99999999</span>».
+    نام دو حرفی، ایمیل عمومی و شماره‌ای که تماماً از رقم ۹ تشکیل شده نشان می‌دهد این یک
+    <b>ثبت جعلی</b> بوده و در آمار این گزارش شمرده نشده است.</p>
+    <p>دو رکورد دیگر خطای فرم دارند: کد کشور انتخاب‌شده با پیش‌شماره واقعی شماره تماس هم‌خوان نیست.
+    این موارد در آمار نگه داشته شده‌اند اما پیش از تماس باید اصلاح شوند.</p>
+  </div>
+
+  <div class="foot"><span>ایرفان اینوست · گزارش داخلی</span><span>صفحه ۳ از ۴</span></div>
+</section>
+
+<!-- ══════════════ PAGE 4 ══════════════ -->
+<section class="page">
+  <h2>نتیجه سئو</h2>
+  <div class="stats">
+    <div class="stat"><b>75</b><span>صفحه ایندکس‌شده، پیش از اصلاح</span></div>
+    <div class="stat good"><b>472</b><span>صفحه ایندکس‌شده، اکنون</span></div>
+    <div class="stat acc"><b>6.3×</b><span>رشد</span></div>
+  </div>
+  <p>یک قانون هدایت قدیمی در تنظیمات سایت، تمام ۳۹۵ صفحه واحد مسکونی را به صفحه دیگری منتقل
+  می‌کرد و آنها را عملاً برای گوگل نامرئی کرده بود. با رفع آن و افزودن دو صفحه محتوایی تازه
+  (شاخص قیمت ملک عمان و راهنمای اقامت از طریق خرید ملک)، تعداد نشانی‌های ثبت‌شده در نقشه سایت
+  از ۲۲۴ به ۵۳۹ رسید.</p>
+  <p class="note">این آمار تا ۲۴ ژوئیه است و صفحات منتشرشده پس از آن تاریخ هنوز در آن لحاظ نشده‌اند.</p>
+
+  <h2>گام‌های بعدی</h2>
+  <ul>
+    <li>کمپین عمان تا پایان دوره یادگیری (حدود ۱۴ روز) بدون تغییر بماند تا داده قابل اتکا تولید شود.</li>
+    <li>ثبت پروفایل کسب‌وکار در گوگل؛ پرهزینه‌ترین فرصت از دست رفته و تنها اقدامی که در بازه چند روزه اثر می‌گذارد.</li>
+    <li>افزودن برچسب ردیابی به کمپین امارات تا مشخص شود کدام کلیدواژه‌ها لید تولید می‌کنند.</li>
+    <li>ارزیابی بازار بریتانیا پس از مشخص شدن هزینه واقعی هر لید در عمان.</li>
+  </ul>
+
+  <div class="foot"><span>ایرفان اینوست · گزارش داخلی</span><span>صفحه ۴ از ۴</span></div>
+</section>
+
+</body>
+</html>
