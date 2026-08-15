@@ -12,14 +12,15 @@
 //
 // Facts must stay consistent with live inventory (see HANDOFF-SEARCH-ENGINE.md):
 // Jebel Sifah apartments from OMR 63,500, Muscat apartments (Wadi Zaha, Sultan
-// Haitham City) from OMR 61,635, Hawana Salalah chalets from OMR 98,000.
+// Haitham City) from OMR 61,635, Hawana Salalah chalets from OMR 98,000,
+// The Arc (Yiti) from OMR 423,883.
 
 export const PROJECT_SEO = {
   en: {
     heading: 'Buy Apartments and Villas for Sale in Muscat and Across Oman',
     paras: [
       'This is the full Irfan Investment Group property portal: more than 400 apartments, villas, townhouses, chalets and studios for sale across Oman, each one priced from live developer inventory rather than an estimate. Filter by area, property type, bedrooms, size and budget to find exactly what you want, then open any listing for its floor area, view, floor level and current price in Omani rial.',
-      'Most of the inventory sits in Muscat, inside the freehold communities foreign buyers can actually own in: Al Mouj on the marina, Muscat Bay, Muscat Hills, the new Sultan Haitham City district and Yiti. Apartments for sale in Muscat currently start from about OMR 61,635, apartments at Jebel Sifah from OMR 63,500, and beachfront chalets in Hawana Salalah from OMR 98,000. Every one of these communities is a government approved Integrated Tourism Complex, so the title is full freehold for all nationalities and the purchase qualifies you for an Oman investor residency permit.',
+      'Most of the inventory sits in Muscat, inside the freehold communities foreign buyers can actually own in: Al Mouj on the marina, Muscat Bay, Muscat Hills, the new Sultan Haitham City district and Yiti. Apartments for sale in Muscat currently start from about OMR 61,635, apartments at Jebel Sifah from OMR 63,500, beachfront chalets in Hawana Salalah from OMR 98,000, and waterfront residences at The Arc in Yiti from OMR 423,883. Every one of these communities is a government approved Integrated Tourism Complex, so the title is full freehold for all nationalities and the purchase qualifies you for an Oman investor residency permit.',
     ],
     areasHeading: 'Where to buy in Oman',
     faq: [
@@ -57,7 +58,7 @@ export const PROJECT_SEO = {
     heading: 'خرید آپارتمان و ویلا در مسقط و سراسر عمان',
     paras: [
       'این پورتال کامل املاک گروه سرمایه‌گذاری ایرفان است: بیش از ۴۰۰ آپارتمان، ویلا، تاون‌هاوس، شاله و استودیو برای فروش در سراسر عمان، همه با قیمت واقعی از اینونتوری سازنده و نه تخمین. با فیلتر منطقه، نوع ملک، تعداد خواب، متراژ و بودجه دقیقاً همان چیزی را که می‌خواهید پیدا کنید و بعد هر آگهی را برای دیدن متراژ، ویو، طبقه و قیمت روز به ریال عمان باز کنید.',
-      'بیشتر موجودی در مسقط است؛ داخل همان مناطقی که خارجی‌ها واقعاً می‌توانند مالک شوند: الموج در مارینا، خلیج مسقط، مسقط هیلز، شهر جدید سلطان هیثم و ییتی. قیمت آپارتمان در مسقط در حال حاضر از حدود ۶۱٬۶۳۵ ریال عمان شروع می‌شود، آپارتمان جبل سیفه از ۶۳٬۵۰۰ ریال و شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال. همه این مجموعه‌ها مجتمع گردشگری یکپارچه (ITC) مورد تأیید دولت هستند، پس سند کاملاً فری‌هولد و برای همه ملیت‌ها است و خرید، اقامت سرمایه‌گذاری عمان را هم برای شما می‌آورد.',
+      'بیشتر موجودی در مسقط است؛ داخل همان مناطقی که خارجی‌ها واقعاً می‌توانند مالک شوند: الموج در مارینا، خلیج مسقط، مسقط هیلز، شهر جدید سلطان هیثم و ییتی. قیمت آپارتمان در مسقط در حال حاضر از حدود ۶۱٬۶۳۵ ریال عمان شروع می‌شود، آپارتمان جبل سیفه از ۶۳٬۵۰۰ ریال شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال و رزیدنس‌های ساحلی د آرک در یتی از ۴۲۳٬۸۸۳ ریال. همه این مجموعه‌ها مجتمع گردشگری یکپارچه (ITC) مورد تأیید دولت هستند، پس سند کاملاً فری‌هولد و برای همه ملیت‌ها است و خرید، اقامت سرمایه‌گذاری عمان را هم برای شما می‌آورد.',
     ],
     areasHeading: 'کجای عمان بخریم',
     faq: [
@@ -95,7 +96,7 @@ export const PROJECT_SEO = {
     heading: 'شقق وفلل للبيع في مسقط وجميع أنحاء عُمان',
     paras: [
       'هذه بوابة العقارات الكاملة لمجموعة عرفان للاستثمار: أكثر من 400 شقة وفيلا وتاون هاوس وشاليه واستوديو للبيع في عُمان، بأسعار مأخوذة مباشرة من مخزون المطورين وليست تقديرية. صفِّ النتائج حسب المنطقة ونوع العقار وعدد الغرف والمساحة والميزانية، ثم افتح أي إعلان لمعرفة المساحة والإطلالة والدور والسعر الحالي بالريال العُماني.',
-      'معظم المخزون في مسقط، داخل مجتمعات التملّك الحر التي يستطيع الأجانب تملّكها فعلياً: الموج على المارينا، وخليج مسقط، ومسقط هيلز، ومدينة السلطان هيثم الجديدة، وييتي. تبدأ أسعار الشقق للبيع في مسقط حالياً من نحو 61,635 ر.ع، وشقق جبل سيفة من 63,500 ر.ع، والشاليهات الشاطئية في هوانا صلالة من 98,000 ر.ع. جميع هذه المجتمعات مجمعات سياحية متكاملة معتمدة من الحكومة، لذا فالملكية حرة كاملة لجميع الجنسيات ويؤهل الشراء لإقامة المستثمر العُمانية.',
+      'معظم المخزون في مسقط، داخل مجتمعات التملّك الحر التي يستطيع الأجانب تملّكها فعلياً: الموج على المارينا، وخليج مسقط، ومسقط هيلز، ومدينة السلطان هيثم الجديدة، وييتي. تبدأ أسعار الشقق للبيع في مسقط حالياً من نحو 61,635 ر.ع، وشقق جبل سيفة من 63,500 ر.ع، والشاليهات الشاطئية في هوانا صلالة من 98,000 ر.ع، وإقامات ذا آرك على واجهة يتي من 423,883 ر.ع. جميع هذه المجتمعات مجمعات سياحية متكاملة معتمدة من الحكومة، لذا فالملكية حرة كاملة لجميع الجنسيات ويؤهل الشراء لإقامة المستثمر العُمانية.',
     ],
     areasHeading: 'أين تشتري في عُمان',
     faq: [
@@ -133,7 +134,7 @@ export const PROJECT_SEO = {
     heading: 'Квартиры и виллы на продажу в Маскате и по всему Оману',
     paras: [
       'Это полный портал недвижимости Irfan Investment Group: более 400 квартир, вилл, таунхаусов, шале и студий на продажу в Омане, каждая с ценой из живого инвентаря застройщика, а не с оценки. Фильтруйте по району, типу, спальням, площади и бюджету, затем откройте любой лот, чтобы увидеть площадь, вид, этаж и текущую цену в оманских риалах.',
-      'Большая часть инвентаря, в Маскате, внутри фрихолд-сообществ, где иностранцы действительно могут владеть: Al Mouj на марине, Muscat Bay, Muscat Hills, новый район Sultan Haitham City и Yiti. Квартиры на продажу в Маскате сейчас начинаются примерно от 61 635 OMR, квартиры в Jebel Sifah от 63 500 OMR, пляжные шале в Hawana Salalah от 98 000 OMR. Все эти комплексы, одобренные государством ITC, поэтому право собственности полностью фрихолд для всех национальностей, а покупка даёт право на инвесторскую резиденцию Омана.',
+      'Большая часть инвентаря, в Маскате, внутри фрихолд-сообществ, где иностранцы действительно могут владеть: Al Mouj на марине, Muscat Bay, Muscat Hills, новый район Sultan Haitham City и Yiti. Квартиры на продажу в Маскате сейчас начинаются примерно от 61 635 OMR, квартиры в Jebel Sifah от 63 500 OMR, пляжные шале в Hawana Salalah от 98 000 OMR, резиденции The Arc на набережной Yiti от 423 883 OMR. Все эти комплексы, одобренные государством ITC, поэтому право собственности полностью фрихолд для всех национальностей, а покупка даёт право на инвесторскую резиденцию Омана.',
     ],
     areasHeading: 'Где покупать в Омане',
     faq: [

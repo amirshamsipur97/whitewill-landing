@@ -61,6 +61,7 @@ export const PROJECTS = [
   { slug: 'wadi-zaha', name: 'Wadi Zaha' },
   { slug: 'yenaier', name: 'Yenaier' },
   { slug: 'hay-al-wafa', name: 'Hay Al Wafa' },
+  { slug: 'the-arc-residences', name: 'The Arc Residences' },
   { slug: 'hawana-salalah', name: 'Hawana Salalah' },
 ]
 

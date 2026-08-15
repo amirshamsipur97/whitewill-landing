@@ -274,10 +274,33 @@ export const ROUTES = {
   },
 }
 
+// Per-project overrides for the generic template below. Worth adding when a
+// project has a distinctive hook the template cannot express: a price anchor in
+// the title reliably beats "Prices, Available Units & Payment Plan" on CTR, the
+// same reason the /buy and Muscat landing titles carry the entry price. Keyed by
+// the exact projects.name. Keep the numbers in sync with live inventory.
+const PROJECT_META_OVERRIDES = {
+  'The Arc Residences': {
+    title: {
+      en: 'The Arc Residences Yiti: Apartments & Penthouses from OMR 423,883 | Irfan',
+      ru: 'The Arc Residences в Yiti: квартиры и пентхаусы от 423 883 OMR | Irfan',
+      ar: 'ذا آرك ريزيدنسز يتي: شقق وبنتهاوس من 423,883 ر.ع | Irfan',
+      fa: 'د آرک رزیدنسز یتی: آپارتمان و پنت‌هاوس از ۴۲۳٬۸۸۳ ریال عمان | ایرفان',
+    },
+    desc: {
+      en: 'The Arc Residences on the Yiti waterfront: 2 to 4-bedroom signature apartments, duplexes, sky terraces and full-floor penthouses across the Opal, Oria and Onda collections, from OMR 423,883 excluding VAT. Freehold for all nationalities, with Oman owner residency.',
+      ru: 'The Arc Residences на набережной Yiti: сигнатурные квартиры с 2-4 спальнями, дуплексы, sky terrace и пентхаусы во весь этаж в коллекциях Opal, Oria и Onda, от 423 883 OMR без НДС. Фрихолд для всех национальностей и резидентская виза собственника.',
+      ar: 'ذا آرك ريزيدنسز على واجهة يتي البحرية: شقق مُوقَّعة من غرفتين إلى أربع غرف نوم ودوبلكس وسكاي تراس وبنتهاوس بطابق كامل ضمن مجموعات أوبال وأوريا وأوندا، من 423,883 ر.ع غير شاملة الضريبة. تملّك حر لجميع الجنسيات مع إقامة مالك العقار.',
+      fa: 'د آرک رزیدنسز روی ساحل یتی: آپارتمان‌های دو تا چهار خوابه، دوبلکس، اسکای‌تراس و پنت‌هاوس تمام‌طبقه در سه کالکشن اوپال، اوریا و اوندا، از ۴۲۳٬۸۸۳ ریال عمان بدون مالیات. فری‌هولد برای همه ملیت‌ها همراه اقامت مالک ملک عمان.',
+    },
+  },
+}
+
 // CTR-optimized meta for /buy/:slug project pages. `name` is the display name
 // (title-cased slug client-side; the real projects.name at prerender time).
 // Shared by SeoManager and prerender-routes.mjs so crawler and client agree.
 export function projectMeta(name) {
+  if (PROJECT_META_OVERRIDES[name]) return PROJECT_META_OVERRIDES[name]
   return {
     title: {
       en: `${name}: Prices, Available Units & Payment Plan | Buy in Oman`,
