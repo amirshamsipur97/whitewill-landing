@@ -17,40 +17,40 @@
 
   <line x1="770" y1="130" x2="770" y2="560" stroke="rgba(255,255,255,0.14)"/>
 
-  <!-- Solaris -->
-  <rect x="574" y="142" width="196" height="34" rx="7" fill="url(#barHot)"/>
-  <text x="1150" y="166" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">سولاریس · جبل سیفه (استودیو)</text>
-  <text x="560" y="166" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#e8d9b0">۳۵٬۶۲۵</text>
-
   <!-- Wadi Zaha -->
-  <rect x="506" y="204" width="264" height="34" rx="7" fill="url(#bar)"/>
-  <text x="1150" y="228" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">وادی زها · مسقط (آپارتمان)</text>
-  <text x="492" y="228" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۴۸٬۱۲۵</text>
+  <rect x="502" y="142" width="268" height="34" rx="7" fill="url(#barHot)"/>
+  <text x="1150" y="166" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">وادی زها · مسقط (استودیو)</text>
+  <text x="488" y="166" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#e8d9b0">۶۱٬۶۳۵</text>
 
   <!-- Yenaier -->
-  <rect x="471" y="266" width="299" height="34" rx="7" fill="url(#bar)"/>
-  <text x="1150" y="290" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">ینایر · مسقط (آپارتمان)</text>
-  <text x="457" y="290" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۵۴٬۶۰۰</text>
+  <rect x="478" y="204" width="292" height="34" rx="7" fill="url(#bar)"/>
+  <text x="1150" y="228" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">ینایر · مسقط (استودیو)</text>
+  <text x="464" y="228" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۶۷٬۲۰۰</text>
 
-  <!-- Olive Farms -->
-  <rect x="347" y="328" width="423" height="34" rx="7" fill="url(#bar)"/>
-  <text x="1150" y="352" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">مزارع اولیو · جبل سیفه (خانه باغی)</text>
-  <text x="333" y="352" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۷۷٬۲۵۰</text>
+  <!-- Solaris -->
+  <rect x="418" y="266" width="352" height="34" rx="7" fill="url(#bar)"/>
+  <text x="1150" y="290" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">سولاریس · جبل سیفه (آپارتمان ۲ خوابه)</text>
+  <text x="404" y="290" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۸۱٬۰۳۵</text>
 
   <!-- Aida -->
-  <rect x="299" y="390" width="471" height="34" rx="7" fill="url(#bar)"/>
-  <text x="1150" y="414" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">آیدا · یتی مسقط (آپارتمان برند)</text>
-  <text x="285" y="414" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۸۵٬۹۷۱</text>
+  <rect x="397" y="328" width="373" height="34" rx="7" fill="url(#bar)"/>
+  <text x="1150" y="352" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">آیدا · یتی مسقط (آپارتمان برند)</text>
+  <text x="383" y="352" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۸۵٬۹۷۱</text>
 
   <!-- Hay Al Wafa -->
-  <rect x="265" y="452" width="505" height="34" rx="7" fill="url(#bar)"/>
-  <text x="1150" y="476" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">های الوفا · مسقط (آپارتمان ۲ خوابه)</text>
-  <text x="251" y="476" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۹۲٬۰۸۸</text>
+  <rect x="370" y="390" width="400" height="34" rx="7" fill="url(#bar)"/>
+  <text x="1150" y="414" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">های الوفا · مسقط (آپارتمان ۲ خوابه)</text>
+  <text x="356" y="414" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۹۲٬۰۸۸</text>
 
   <!-- Amazi -->
-  <rect x="233" y="514" width="537" height="34" rx="7" fill="url(#bar)"/>
-  <text x="1150" y="538" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">آمازی · هوانا صلاله (شاله ساحلی)</text>
-  <text x="219" y="538" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۹۸٬۰۰۰</text>
+  <rect x="344" y="452" width="426" height="34" rx="7" fill="url(#bar)"/>
+  <text x="1150" y="476" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">آمازی · هوانا صلاله (شاله ساحلی)</text>
+  <text x="330" y="476" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۹۸٬۰۰۰</text>
 
-  <text x="1150" y="600" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">منبع: موجودی زنده پروژه‌ها در irfaninvest.com · تیر ۱۴۰۵</text>
+  <!-- Olive Farms -->
+  <rect x="233" y="514" width="537" height="34" rx="7" fill="url(#bar)"/>
+  <text x="1150" y="538" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" fill="rgba(255,255,255,0.92)">مزارع اولیو · جبل سیفه (خانه باغی ۳ خوابه)</text>
+  <text x="219" y="538" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="20" font-weight="700" fill="#ffffff">۱۲۳٬۶۰۰</text>
+
+  <text x="1150" y="600" text-anchor="end" font-family="Peyda, Vazirmatn, 'Segoe UI', Tahoma, sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">منبع: موجودی زنده پروژه‌ها در irfaninvest.com · مرداد ۱۴۰۵</text>
 </svg>

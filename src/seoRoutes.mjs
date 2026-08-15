@@ -19,13 +19,13 @@ export const ROUTES = {
   },
   '/buy': {
     title: {
-      en: 'Buy Property in Oman 2026: Apartments & Villas from OMR 54,600 | Irfan',
+      en: 'Buy Property in Oman 2026: Apartments & Villas from OMR 61,635 | Irfan',
       ru: 'Купить недвижимость в Омане: квартиры и виллы | Irfan Investment',
       ar: 'شراء عقار في عُمان: شقق وفلل للبيع | Irfan Investment',
       fa: 'خرید ملک در عمان ۲۰۲۶ | لیست آپارتمان و ویلا با قیمت | ایرفان',
     },
     desc: {
-      en: 'Browse freehold apartments, villas and chalets for sale in Muscat, Salalah and Jebel Sifah. Live prices from OMR 54,600, full unit inventory and Oman investor residency with your purchase.',
+      en: 'Browse freehold apartments, villas and chalets for sale in Muscat, Salalah and Jebel Sifah. Live prices from OMR 61,635, full unit inventory and Oman investor residency with your purchase.',
       ru: 'Подборка недвижимости на продажу в Омане: квартиры, виллы и элитные резиденции в Маскате и Салале от ведущих застройщиков, с правом собственности для иностранцев.',
       ar: 'تصفح عقارات مختارة للبيع في عُمان: شقق وفلل ومساكن فاخرة في مسقط وصلالة من كبار المطورين، بتملك حر للأجانب.',
       fa: 'مجموعه‌ای منتخب از املاک برای فروش در عمان: آپارتمان، ویلا و اقامتگاه‌های لوکس در مسقط و صلاله از معتبرترین سازندگان، با مالکیت آزاد برای خارجی‌ها.',
@@ -39,10 +39,10 @@ export const ROUTES = {
       fa: 'جستجوی ملک در عمان: آپارتمان و ویلا برای فروش | ایرفان',
     },
     desc: {
-      en: 'Search 400+ freehold apartments, villas and studios for sale across Muscat, Al Mouj, Muscat Bay, Jebel Sifah, Yiti and Salalah. Filter by type, bedrooms and price. Live developer prices from OMR 54,600 with Oman investor residency.',
-      ru: 'Поиск более 400 объектов недвижимости на продажу в Омане: квартиры, виллы и студии в Маскате, Аль-Мудж, Джебель-Сифа и Салале. Фильтры по типу, спальням и цене. Актуальные цены от 54 600 OMR.',
-      ar: 'ابحث في أكثر من 400 عقار تملّك حر للبيع في عُمان: شقق وفلل واستوديوهات في مسقط والموج وجبل سيفة وصلالة. فلترة حسب النوع والغرف والسعر. أسعار مباشرة من 54,600 ر.ع مع إقامة المستثمر.',
-      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان: آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۵۴٬۶۰۰ ریال عمان با اقامت سرمایه‌گذار.',
+      en: 'Search 400+ freehold apartments, villas and studios for sale across Muscat, Al Mouj, Muscat Bay, Jebel Sifah, Yiti and Salalah. Filter by type, bedrooms and price. Live developer prices from OMR 61,635 with Oman investor residency.',
+      ru: 'Поиск более 400 объектов недвижимости на продажу в Омане: квартиры, виллы и студии в Маскате, Аль-Мудж, Джебель-Сифа и Салале. Фильтры по типу, спальням и цене. Актуальные цены от 61 635 OMR.',
+      ar: 'ابحث في أكثر من 400 عقار تملّك حر للبيع في عُمان: شقق وفلل واستوديوهات في مسقط والموج وجبل سيفة وصلالة. فلترة حسب النوع والغرف والسعر. أسعار مباشرة من 61,635 ر.ع مع إقامة المستثمر.',
+      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان: آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۶۱٬۶۳۵ ریال عمان با اقامت سرمایه‌گذار.',
     },
   },
   // ── head-term city/type landing pages ──────────────────────────────────
@@ -52,30 +52,30 @@ export const ROUTES = {
   // only the min price, which is stable.
   '/buy-property-in-muscat': {
     title: {
-      en: 'Buy Property in Muscat: Freehold Apartments & Villas from OMR 54,600 | Irfan',
-      ru: 'Купить недвижимость в Маскате: фрихолд от 54 600 OMR | Irfan',
-      ar: 'شراء عقار في مسقط: تملّك حر من 54,600 ر.ع | Irfan Investment',
-      fa: 'خرید ملک در مسقط: فری‌هولد از ۵۴٬۶۰۰ ریال عمان | ایرفان',
+      en: 'Buy Property in Muscat: Freehold Apartments & Villas from OMR 61,635 | Irfan',
+      ru: 'Купить недвижимость в Маскате: фрихолд от 61 635 OMR | Irfan',
+      ar: 'شراء عقار في مسقط: تملّك حر من 61,635 ر.ع | Irfan Investment',
+      fa: 'خرید ملک در مسقط: فری‌هولد از ۶۱٬۶۳۵ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Buy freehold property in Muscat: apartments, villas and townhouses in Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah and Yiti. Open to all nationalities, from OMR 54,600, with Oman investor residency.',
-      ru: 'Купить недвижимость в Маскате во фрихолд: квартиры, виллы и таунхаусы в Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, от 54 600 OMR, с инвесторской резиденцией.',
-      ar: 'شراء عقار بتملّك حر في مسقط: شقق وفلل وتاون هاوس في الموج وخليج مسقط ومسقط هيلز ومدينة السلطان هيثم وجبل سيفة وييتي. متاح لجميع الجنسيات من 54,600 ر.ع مع إقامة المستثمر.',
-      fa: 'خرید ملک فری‌هولد در مسقط: آپارتمان، ویلا و تاون‌هاوس در الموج، خلیج مسقط، مسقط هیلز، شهر سلطان هیثم، جبل سیفه و ییتی. برای همه ملیت‌ها، از ۵۴٬۶۰۰ ریال عمان همراه با اقامت سرمایه‌گذاری.',
+      en: 'Buy freehold property in Muscat: apartments, villas and townhouses in Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah and Yiti. Open to all nationalities, from OMR 61,635, with Oman investor residency.',
+      ru: 'Купить недвижимость в Маскате во фрихолд: квартиры, виллы и таунхаусы в Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, от 61 635 OMR, с инвесторской резиденцией.',
+      ar: 'شراء عقار بتملّك حر في مسقط: شقق وفلل وتاون هاوس في الموج وخليج مسقط ومسقط هيلز ومدينة السلطان هيثم وجبل سيفة وييتي. متاح لجميع الجنسيات من 61,635 ر.ع مع إقامة المستثمر.',
+      fa: 'خرید ملک فری‌هولد در مسقط: آپارتمان، ویلا و تاون‌هاوس در الموج، خلیج مسقط، مسقط هیلز، شهر سلطان هیثم، جبل سیفه و ییتی. برای همه ملیت‌ها، از ۶۱٬۶۳۵ ریال عمان همراه با اقامت سرمایه‌گذاری.',
     },
   },
   '/buy-apartment-in-muscat': {
     title: {
-      en: 'Buy an Apartment in Muscat: Freehold Apartments for Sale from OMR 54,600 | Irfan',
-      ru: 'Купить квартиру в Маскате: фрихолд-квартиры от 54 600 OMR | Irfan',
-      ar: 'شراء شقة في مسقط: شقق تملّك حر للبيع من 54,600 ر.ع | Irfan Investment',
-      fa: 'خرید آپارتمان در مسقط: آپارتمان فری‌هولد از ۵۴٬۶۰۰ ریال عمان | ایرفان',
+      en: 'Buy an Apartment in Muscat: Freehold Apartments for Sale from OMR 61,635 | Irfan',
+      ru: 'Купить квартиру в Маскате: фрихолд-квартиры от 61 635 OMR | Irfan',
+      ar: 'شراء شقة في مسقط: شقق تملّك حر للبيع من 61,635 ر.ع | Irfan Investment',
+      fa: 'خرید آپارتمان در مسقط: آپارتمان فری‌هولد از ۶۱٬۶۳۵ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Freehold apartments for sale in Muscat: apartments from OMR 54,600 and one-bedroom homes from OMR 63,500 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, no tax on rental income, investor residency included.',
-      ru: 'Квартиры во фрихолд на продажу в Маскате: квартиры от 54 600 OMR и дома с одной спальней от 63 500 OMR в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, без налога на доход от аренды, резиденция инвестора.',
-      ar: 'شقق تملّك حر للبيع في مسقط: شقق من 54,600 ر.ع ومساكن بغرفة نوم من 63,500 ر.ع في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي. لجميع الجنسيات، بدون ضريبة على دخل الإيجار، مع إقامة المستثمر.',
-      fa: 'آپارتمان فری‌هولد برای فروش در مسقط: آپارتمان از ۵۴٬۶۰۰ و واحد یک‌خوابه از ۶۳٬۵۰۰ ریال عمان در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی. همه ملیت‌ها، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
+      en: 'Freehold apartments for sale in Muscat: apartments from OMR 61,635 and one-bedroom homes from OMR 63,500 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, no tax on rental income, investor residency included.',
+      ru: 'Квартиры во фрихолд на продажу в Маскате: квартиры от 61 635 OMR и дома с одной спальней от 63 500 OMR в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, без налога на доход от аренды, резиденция инвестора.',
+      ar: 'شقق تملّك حر للبيع في مسقط: شقق من 61,635 ر.ع ومساكن بغرفة نوم من 63,500 ر.ع في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي. لجميع الجنسيات، بدون ضريبة على دخل الإيجار، مع إقامة المستثمر.',
+      fa: 'آپارتمان فری‌هولد برای فروش در مسقط: آپارتمان از ۶۱٬۶۳۵ و واحد یک‌خوابه از ۶۳٬۵۰۰ ریال عمان در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی. همه ملیت‌ها، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
     },
   },
   '/buy-property-in-salalah': {

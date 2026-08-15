@@ -78,7 +78,7 @@ function resolve(pathname, lang = 'en') {
   if (pathname.startsWith('/lp/')) {
     return {
       title: 'Freehold Homes in Oman | Irfan Investment Group',
-      desc: 'Beachfront apartments and chalets from OMR 54,600 with a 99-year freehold title and Oman residency visa.',
+      desc: 'Beachfront apartments and chalets from OMR 61,635 with a 99-year freehold title and Oman residency visa.',
       index: false,
     }
   }

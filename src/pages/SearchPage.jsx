@@ -596,10 +596,10 @@ export default function SearchPage() {
   // Hero strip = the brand catalogue promise. The unit feed only loads
   // *available* stock (a subset), so the headline counts use the confirmed
   // full-catalogue facts (407 units / 22 projects / 11 areas) while the entry
-  // price stays live-derived from the loaded inventory (falls back to 54,600).
+  // price stays live-derived from the loaded inventory (falls back to 61,635).
   const minPrice = useMemo(() => {
     const m = units.reduce((min, u) => (Number(u.price_omr) > 0 ? Math.min(min, Number(u.price_omr)) : min), Infinity)
-    return Number.isFinite(m) ? m : 54600
+    return Number.isFinite(m) ? m : 61635
   }, [units])
   const CATALOGUE = { props: 400, projects: 22, areas: 11 }
 

@@ -13,7 +13,7 @@
 //
 // Inventory facts (verified against Supabase 2026-07-25 — keep in sync):
 //   Muscat governorate = cities "Muscat" (193) + "Al Seeb" (196) = 389 units,
-//     from OMR 54,600 (Sultan Haitham City); Jebel Sifah from OMR 63,500.
+//     from OMR 61,635 (Sultan Haitham City); Jebel Sifah from OMR 63,500.
 //     Areas: Al Mouj (The Wave), Muscat Bay, Muscat Hills, Shatti Al Qurum,
 //     Yiti, Jebel Sifah, Sultan Haitham City.
 //   Salalah (Dhofar) = 6 units (4 villas + 2 chalets) from OMR 98,000, all in
@@ -40,7 +40,7 @@ export const LANDINGS = {
       heading: 'Buying property in Muscat as a foreigner',
       paras: [
         'Muscat is where almost all of Oman\'s freehold stock sits. Foreign buyers of any nationality can take full freehold title inside the government approved Integrated Tourism Complexes that ring the capital: Al Mouj on the marina, Muscat Bay, Muscat Hills, Shatti Al Qurum on the beach, Yiti and Jebel Sifah down the coast, and the new Sultan Haitham City district in Al Seeb. Outside those zones foreign ownership is limited to usufruct rights of up to 99 years, which is why every listing on this page sits inside an ITC.',
-        'Entry prices in Muscat currently start from about OMR 54,600 for an apartment in Sultan Haitham City and OMR 63,500 for a one-bedroom home at Jebel Sifah, with marina and beachfront homes at Al Mouj and Muscat Bay running well into six figures. A purchase also qualifies you for an Oman investor residency permit that stays renewable for as long as you own the property, and Oman charges no annual property tax and no tax on rental income. Irfan Investment Group runs the whole transaction, from reservation and sale agreement to Ministry of Housing registration and handover.',
+        'Entry prices in Muscat currently start from about OMR 61,635 for an apartment in Sultan Haitham City and OMR 63,500 for a one-bedroom home at Jebel Sifah, with marina and beachfront homes at Al Mouj and Muscat Bay running well into six figures. A purchase also qualifies you for an Oman investor residency permit that stays renewable for as long as you own the property, and Oman charges no annual property tax and no tax on rental income. Irfan Investment Group runs the whole transaction, from reservation and sale agreement to Ministry of Housing registration and handover.',
       ],
       areasHeading: 'Freehold communities in Muscat',
       faq: [
@@ -50,7 +50,7 @@ export const LANDINGS = {
         },
         {
           q: 'How much does it cost to buy property in Muscat?',
-          a: 'Apartments start from about OMR 54,600 in Sultan Haitham City and one-bedroom homes from about OMR 63,500 at Jebel Sifah. Mid-market two bedroom apartments in the ITC districts typically sit between OMR 90,000 and 150,000, while marina and beachfront villas at Al Mouj, Muscat Bay and Muscat Hills run considerably higher.',
+          a: 'Apartments start from about OMR 61,635 in Sultan Haitham City and one-bedroom homes from about OMR 63,500 at Jebel Sifah. Mid-market two bedroom apartments in the ITC districts typically sit between OMR 90,000 and 150,000, while marina and beachfront villas at Al Mouj, Muscat Bay and Muscat Hills run considerably higher.',
         },
         {
           q: 'Does buying property in Muscat give residency?',
@@ -76,7 +76,7 @@ export const LANDINGS = {
       heading: 'خرید ملک در مسقط برای خارجی‌ها',
       paras: [
         'تقریباً همه موجودی فری‌هولد عمان در مسقط است. خریداران خارجی از هر ملیتی می‌توانند داخل مجتمع‌های گردشگری یکپارچه (ITC) مورد تأیید دولت سند کامل مالکیت بگیرند: الموج در مارینا، خلیج مسقط، مسقط هیلز، شاطئ القرم در ساحل، ییتی و جبل سیفه در امتداد ساحل، و شهر جدید سلطان هیثم در السیب. بیرون از این مناطق، مالکیت خارجی فقط به شکل حق انتفاع تا ۹۹ سال است؛ به همین دلیل همه واحدهای این صفحه داخل مناطق ITC هستند.',
-        'قیمت‌های ورودی در مسقط از حدود ۵۴٬۶۰۰ ریال عمان برای آپارتمان در شهر سلطان هیثم و ۶۳٬۵۰۰ ریال برای واحد یک‌خوابه در جبل سیفه شروع می‌شود، و خانه‌های ساحلی و مارینا در الموج و خلیج مسقط بسیار بالاتر می‌روند. خرید، اقامت سرمایه‌گذاری عمان را هم به همراه دارد که تا زمان مالکیت قابل تمدید است. عمان نه مالیات سالانه ملک دارد و نه مالیات بر درآمد اجاره. گروه سرمایه‌گذاری ایرفان کل معامله را از رزرو و قرارداد تا ثبت در وزارت مسکن و تحویل، به فارسی انجام می‌دهد.',
+        'قیمت‌های ورودی در مسقط از حدود ۶۱٬۶۳۵ ریال عمان برای آپارتمان در شهر سلطان هیثم و ۶۳٬۵۰۰ ریال برای واحد یک‌خوابه در جبل سیفه شروع می‌شود، و خانه‌های ساحلی و مارینا در الموج و خلیج مسقط بسیار بالاتر می‌روند. خرید، اقامت سرمایه‌گذاری عمان را هم به همراه دارد که تا زمان مالکیت قابل تمدید است. عمان نه مالیات سالانه ملک دارد و نه مالیات بر درآمد اجاره. گروه سرمایه‌گذاری ایرفان کل معامله را از رزرو و قرارداد تا ثبت در وزارت مسکن و تحویل، به فارسی انجام می‌دهد.',
       ],
       areasHeading: 'مجموعه‌های فری‌هولد در مسقط',
       faq: [
@@ -86,7 +86,7 @@ export const LANDINGS = {
         },
         {
           q: 'خرید ملک در مسقط چقدر هزینه دارد؟',
-          a: 'آپارتمان از حدود ۵۴٬۶۰۰ ریال عمان در شهر سلطان هیثم و واحد یک‌خوابه از حدود ۶۳٬۵۰۰ ریال در جبل سیفه شروع می‌شود. آپارتمان دوخوابه در مناطق ITC معمولاً بین ۹۰ تا ۱۵۰ هزار ریال است و ویلاهای ساحلی الموج و خلیج مسقط بسیار بالاتر.',
+          a: 'آپارتمان از حدود ۶۱٬۶۳۵ ریال عمان در شهر سلطان هیثم و واحد یک‌خوابه از حدود ۶۳٬۵۰۰ ریال در جبل سیفه شروع می‌شود. آپارتمان دوخوابه در مناطق ITC معمولاً بین ۹۰ تا ۱۵۰ هزار ریال است و ویلاهای ساحلی الموج و خلیج مسقط بسیار بالاتر.',
         },
         {
           q: 'آیا خرید ملک در مسقط اقامت می‌دهد؟',
@@ -112,7 +112,7 @@ export const LANDINGS = {
       heading: 'شراء عقار في مسقط للأجانب',
       paras: [
         'تضم مسقط تقريباً كل مخزون التملّك الحر في عُمان. يستطيع المشترون الأجانب من أي جنسية الحصول على ملكية حرة كاملة داخل المجمعات السياحية المتكاملة المعتمدة من الحكومة: الموج على المارينا، وخليج مسقط، ومسقط هيلز، وشاطئ القرم، وييتي وجبل سيفة على الساحل، ومدينة السلطان هيثم الجديدة في السيب. خارج هذه المناطق تقتصر ملكية الأجانب على حق الانتفاع حتى 99 عاماً، ولهذا فإن جميع الوحدات في هذه الصفحة داخل مناطق ITC.',
-        'تبدأ أسعار الدخول في مسقط من نحو 54,600 ر.ع لشقة في مدينة السلطان هيثم و63,500 ر.ع لمسكن بغرفة نوم في جبل سيفة، بينما ترتفع منازل المارينا والواجهة البحرية في الموج وخليج مسقط كثيراً. كما يؤهل الشراء لإقامة مستثمر عُمانية قابلة للتجديد طوال فترة التملك، ولا توجد ضريبة سنوية على العقار ولا ضريبة على دخل الإيجار. تدير مجموعة عرفان للاستثمار الصفقة بالكامل من الحجز والعقد حتى التسجيل في وزارة الإسكان والتسليم.',
+        'تبدأ أسعار الدخول في مسقط من نحو 61,635 ر.ع لشقة في مدينة السلطان هيثم و63,500 ر.ع لمسكن بغرفة نوم في جبل سيفة، بينما ترتفع منازل المارينا والواجهة البحرية في الموج وخليج مسقط كثيراً. كما يؤهل الشراء لإقامة مستثمر عُمانية قابلة للتجديد طوال فترة التملك، ولا توجد ضريبة سنوية على العقار ولا ضريبة على دخل الإيجار. تدير مجموعة عرفان للاستثمار الصفقة بالكامل من الحجز والعقد حتى التسجيل في وزارة الإسكان والتسليم.',
       ],
       areasHeading: 'مجتمعات التملّك الحر في مسقط',
       faq: [
@@ -122,7 +122,7 @@ export const LANDINGS = {
         },
         {
           q: 'كم تكلفة شراء عقار في مسقط؟',
-          a: 'تبدأ الشقق من نحو 54,600 ر.ع في مدينة السلطان هيثم والمساكن بغرفة نوم من نحو 63,500 ر.ع في جبل سيفة. وتتراوح الشقق بغرفتي نوم في مناطق ITC عادة بين 90,000 و150,000 ر.ع، بينما ترتفع فلل الموج وخليج مسقط ومسقط هيلز أكثر.',
+          a: 'تبدأ الشقق من نحو 61,635 ر.ع في مدينة السلطان هيثم والمساكن بغرفة نوم من نحو 63,500 ر.ع في جبل سيفة. وتتراوح الشقق بغرفتي نوم في مناطق ITC عادة بين 90,000 و150,000 ر.ع، بينما ترتفع فلل الموج وخليج مسقط ومسقط هيلز أكثر.',
         },
         {
           q: 'هل يمنح شراء عقار في مسقط الإقامة؟',
@@ -148,7 +148,7 @@ export const LANDINGS = {
       heading: 'Покупка недвижимости в Маскате иностранцем',
       paras: [
         'В Маскате сосредоточен практически весь фрихолд-фонд Омана. Иностранцы любой национальности получают полное право собственности внутри одобренных государством интегрированных туристических комплексов: Al Mouj на марине, Muscat Bay, Muscat Hills, Shatti Al Qurum на пляже, Yiti и Jebel Sifah на побережье, а также новый район Sultan Haitham City в Эс-Сибе. Вне этих зон иностранцам доступен только узуфрукт до 99 лет, поэтому все лоты на этой странице находятся внутри ITC.',
-        'Стартовые цены в Маскате начинаются примерно от 54 600 OMR за квартиру в Sultan Haitham City и 63 500 OMR за дом с одной спальней в Jebel Sifah; дома у марины и на первой линии в Al Mouj и Muscat Bay стоят существенно дороже. Покупка также даёт право на инвесторскую резиденцию Омана, продлеваемую всё время владения. Ежегодного налога на недвижимость и налога на арендный доход в Омане нет. Irfan Investment Group ведёт сделку целиком, от брони и договора до регистрации в министерстве жилья и передачи ключей.',
+        'Стартовые цены в Маскате начинаются примерно от 61 635 OMR за квартиру в Sultan Haitham City и 63 500 OMR за дом с одной спальней в Jebel Sifah; дома у марины и на первой линии в Al Mouj и Muscat Bay стоят существенно дороже. Покупка также даёт право на инвесторскую резиденцию Омана, продлеваемую всё время владения. Ежегодного налога на недвижимость и налога на арендный доход в Омане нет. Irfan Investment Group ведёт сделку целиком, от брони и договора до регистрации в министерстве жилья и передачи ключей.',
       ],
       areasHeading: 'Фрихолд-сообщества Маската',
       faq: [
@@ -158,7 +158,7 @@ export const LANDINGS = {
         },
         {
           q: 'Сколько стоит недвижимость в Маскате?',
-          a: 'Квартиры от примерно 54 600 OMR в Sultan Haitham City, дома с одной спальней от 63 500 OMR в Jebel Sifah. Двухспальные квартиры в районах ITC обычно 90 000–150 000 OMR, виллы у марины и на первой линии в Al Mouj, Muscat Bay и Muscat Hills, заметно дороже.',
+          a: 'Квартиры от примерно 61 635 OMR в Sultan Haitham City, дома с одной спальней от 63 500 OMR в Jebel Sifah. Двухспальные квартиры в районах ITC обычно 90 000–150 000 OMR, виллы у марины и на первой линии в Al Mouj, Muscat Bay и Muscat Hills, заметно дороже.',
         },
         {
           q: 'Даёт ли покупка в Маскате резиденцию?',
@@ -194,14 +194,14 @@ export const LANDINGS = {
       lead: 'Freehold studios, apartments and penthouses for sale across Muscat, with live developer pricing and Oman investor residency included.',
       heading: 'Apartments for sale in Muscat: prices and communities',
       paras: [
-        'Apartments are the entry point to Muscat property for most foreign buyers, and every one on this page is freehold: full ownership, registered at the Ministry of Housing, available to any nationality because it sits inside an Integrated Tourism Complex. The cheapest freehold apartment ticket in the capital region is currently an apartment at Sultan Haitham City in Al Seeb from about OMR 54,600, followed by a one-bedroom home at Jebel Sifah from about OMR 63,500.',
+        'Apartments are the entry point to Muscat property for most foreign buyers, and every one on this page is freehold: full ownership, registered at the Ministry of Housing, available to any nationality because it sits inside an Integrated Tourism Complex. The cheapest freehold apartment ticket in the capital region is currently an apartment at Sultan Haitham City in Al Seeb from about OMR 61,635, followed by a one-bedroom home at Jebel Sifah from about OMR 63,500.',
         'Above that entry band, one and two bedroom apartments at Al Mouj, Muscat Bay and Yiti give you marina, beach or bay frontage and the most liquid resale market in Oman, with penthouses at the top of each building. Rental yields on well-placed Muscat apartments run to roughly 8 percent gross, helped by the fact that Oman charges no tax on rental income and no annual property tax. Buying also opens the Oman investor residency route for you and your family.',
       ],
       areasHeading: 'Where to buy an apartment in Muscat',
       faq: [
         {
           q: 'How much is an apartment in Muscat?',
-          a: 'Apartments start from about OMR 54,600 in Sultan Haitham City and one-bedroom homes from about OMR 63,500 at Jebel Sifah. Two bedroom apartments inside the ITC districts typically sit between OMR 90,000 and 150,000, and apartments at Al Mouj and Muscat Bay go higher again depending on view and floor.',
+          a: 'Apartments start from about OMR 61,635 in Sultan Haitham City and one-bedroom homes from about OMR 63,500 at Jebel Sifah. Two bedroom apartments inside the ITC districts typically sit between OMR 90,000 and 150,000, and apartments at Al Mouj and Muscat Bay go higher again depending on view and floor.',
         },
         {
           q: 'Can foreigners buy an apartment in Muscat?',
@@ -230,14 +230,14 @@ export const LANDINGS = {
       lead: 'استودیو، آپارتمان و پنت‌هاوس فری‌هولد برای فروش در سراسر مسقط، با قیمت روز سازنده و همراه با اقامت سرمایه‌گذاری عمان.',
       heading: 'آپارتمان برای فروش در مسقط: قیمت‌ها و مناطق',
       paras: [
-        'آپارتمان نقطه ورود بیشتر خریداران خارجی به بازار مسقط است و همه واحدهای این صفحه فری‌هولد هستند: مالکیت کامل، ثبت‌شده در وزارت مسکن و در دسترس هر ملیتی، چون داخل مجتمع گردشگری یکپارچه قرار دارند. ارزان‌ترین بلیت ورود فری‌هولد در منطقه پایتخت در حال حاضر آپارتمان شهر سلطان هیثم در السیب از حدود ۵۴٬۶۰۰ ریال عمان است و بعد از آن واحد یک‌خوابه جبل سیفه از حدود ۶۳٬۵۰۰ ریال.',
+        'آپارتمان نقطه ورود بیشتر خریداران خارجی به بازار مسقط است و همه واحدهای این صفحه فری‌هولد هستند: مالکیت کامل، ثبت‌شده در وزارت مسکن و در دسترس هر ملیتی، چون داخل مجتمع گردشگری یکپارچه قرار دارند. ارزان‌ترین بلیت ورود فری‌هولد در منطقه پایتخت در حال حاضر آپارتمان شهر سلطان هیثم در السیب از حدود ۶۱٬۶۳۵ ریال عمان است و بعد از آن واحد یک‌خوابه جبل سیفه از حدود ۶۳٬۵۰۰ ریال.',
         'بالاتر از این باند ورودی، آپارتمان‌های یک و دوخوابه در الموج، خلیج مسقط و ییتی مشرف به مارینا، ساحل یا خلیج هستند و نقدشونده‌ترین بازار فروش مجدد عمان را دارند؛ پنت‌هاوس‌ها هم در بالاترین طبقه هر ساختمان. بازده اجاره آپارتمان‌های خوش‌موقعیت مسقط تا حدود ۸ درصد ناخالص می‌رسد، به کمک این واقعیت که عمان نه مالیات بر درآمد اجاره دارد و نه مالیات سالانه ملک. خرید، مسیر اقامت سرمایه‌گذاری را هم برای شما و خانواده‌تان باز می‌کند.',
       ],
       areasHeading: 'کجای مسقط آپارتمان بخریم',
       faq: [
         {
           q: 'قیمت آپارتمان در مسقط چقدر است؟',
-          a: 'آپارتمان یک‌خوابه از حدود ۵۴٬۶۰۰ ریال عمان در شهر سلطان هیثم و واحدهای جبل سیفه از حدود ۶۳٬۵۰۰ ریال در شهر سلطان هیثم شروع می‌شود. آپارتمان دوخوابه داخل مناطق ITC معمولاً بین ۹۰ تا ۱۵۰ هزار ریال است و آپارتمان‌های الموج و خلیج مسقط بسته به ویو و طبقه بالاتر می‌روند.',
+          a: 'آپارتمان از حدود ۶۱٬۶۳۵ ریال عمان در شهر سلطان هیثم و واحد یک‌خوابه از حدود ۶۳٬۵۰۰ ریال در جبل سیفه شروع می‌شود. آپارتمان دوخوابه داخل مناطق ITC معمولاً بین ۹۰ تا ۱۵۰ هزار ریال است و آپارتمان‌های الموج و خلیج مسقط بسته به ویو و طبقه بالاتر می‌روند.',
         },
         {
           q: 'آیا خارجی‌ها می‌توانند در مسقط آپارتمان بخرند؟',
@@ -266,14 +266,14 @@ export const LANDINGS = {
       lead: 'استوديوهات وشقق وبنتهاوس بتملّك حر للبيع في مسقط، بأسعار محدثة من المطورين ومع إقامة المستثمر العُمانية.',
       heading: 'شقق للبيع في مسقط: الأسعار والمجتمعات',
       paras: [
-        'الشقق هي نقطة الدخول إلى سوق مسقط لمعظم المشترين الأجانب، وكل شقة في هذه الصفحة بتملّك حر: ملكية كاملة مسجلة في وزارة الإسكان ومتاحة لأي جنسية لأنها داخل مجمع سياحي متكامل. أرخص دخول للتملك الحر في منطقة العاصمة حالياً هو شقة في مدينة السلطان هيثم في السيب من نحو 54,600 ر.ع، يليها مسكن بغرفة نوم في جبل سيفة من نحو 63,500 ر.ع.',
+        'الشقق هي نقطة الدخول إلى سوق مسقط لمعظم المشترين الأجانب، وكل شقة في هذه الصفحة بتملّك حر: ملكية كاملة مسجلة في وزارة الإسكان ومتاحة لأي جنسية لأنها داخل مجمع سياحي متكامل. أرخص دخول للتملك الحر في منطقة العاصمة حالياً هو شقة في مدينة السلطان هيثم في السيب من نحو 61,635 ر.ع، يليها مسكن بغرفة نوم في جبل سيفة من نحو 63,500 ر.ع.',
         'وفوق هذه الفئة، توفر الشقق بغرفة وغرفتي نوم في الموج وخليج مسقط وييتي إطلالة على المارينا أو الشاطئ أو الخليج، وأكثر أسواق إعادة البيع سيولة في عُمان، مع بنتهاوس في أعلى كل مبنى. ولا تفرض عُمان ضريبة على دخل الإيجار ولا ضريبة سنوية على العقار، فيبقى ما تحصّله من إيجار لك بعد رسوم الخدمات. كما يفتح الشراء مسار إقامة المستثمر لك ولعائلتك.',
       ],
       areasHeading: 'أين تشتري شقة في مسقط',
       faq: [
         {
           q: 'كم سعر الشقة في مسقط؟',
-          a: 'تبدأ الشقق بغرفة نوم من نحو 54,600 ر.ع في مدينة السلطان هيثم، ومساكن جبل سيفة من نحو 63,500 ر.ع. الشقق بغرفتي نوم داخل مناطق ITC عادة بين 90,000 و150,000 ر.ع، وترتفع شقق الموج وخليج مسقط حسب الإطلالة والدور.',
+          a: 'تبدأ الشقق من نحو 61,635 ر.ع في مدينة السلطان هيثم، والمساكن بغرفة نوم من نحو 63,500 ر.ع في جبل سيفة. الشقق بغرفتي نوم داخل مناطق ITC عادة بين 90,000 و150,000 ر.ع، وترتفع شقق الموج وخليج مسقط حسب الإطلالة والدور.',
         },
         {
           q: 'هل يمكن للأجانب شراء شقة في مسقط؟',
@@ -302,14 +302,14 @@ export const LANDINGS = {
       lead: 'Студии, квартиры и пентхаусы во фрихолд на продажу в Маскате, актуальные цены застройщиков и инвесторская резиденция Омана.',
       heading: 'Квартиры на продажу в Маскате: цены и районы',
       paras: [
-        'Квартира остаётся точкой входа в рынок Маската для большинства иностранных покупателей, и каждая на этой странице во фрихолд: полная собственность, регистрируемая в министерстве жилья, доступная любой национальности, потому что находится внутри интегрированного туристического комплекса. Самый доступный фрихолд в столичном регионе сейчас это квартира в Sultan Haitham City в Эс-Сибе от примерно 54 600 OMR, затем дом с одной спальней в Jebel Sifah от 63 500 OMR.',
+        'Квартира остаётся точкой входа в рынок Маската для большинства иностранных покупателей, и каждая на этой странице во фрихолд: полная собственность, регистрируемая в министерстве жилья, доступная любой национальности, потому что находится внутри интегрированного туристического комплекса. Самый доступный фрихолд в столичном регионе сейчас это квартира в Sultan Haitham City в Эс-Сибе от примерно 61 635 OMR, затем дом с одной спальней в Jebel Sifah от 63 500 OMR.',
         'Выше этого уровня квартиры с одной и двумя спальнями в Al Mouj, Muscat Bay и Yiti дают вид на марину, пляж или залив и самый ликвидный вторичный рынок Омана, с пентхаусами на верхних этажах. В Омане нет налога на арендный доход и нет ежегодного налога на недвижимость, поэтому арендная плата остаётся у собственника за вычетом сервисных сборов. Покупка также открывает путь к инвесторской резиденции для вас и семьи.',
       ],
       areasHeading: 'Где купить квартиру в Маскате',
       faq: [
         {
           q: 'Сколько стоит квартира в Маскате?',
-          a: 'Квартиры с одной спальней от примерно 54 600 OMR в Sultan Haitham City, дома Jebel Sifah от 63 500 OMR в Sultan Haitham City. Двухспальные внутри районов ITC обычно 90 000–150 000 OMR, в Al Mouj и Muscat Bay дороже в зависимости от вида и этажа.',
+          a: 'Квартиры от примерно 61 635 OMR в Sultan Haitham City, дома с одной спальней от 63 500 OMR в Jebel Sifah. Двухспальные внутри районов ITC обычно 90 000–150 000 OMR, в Al Mouj и Muscat Bay дороже в зависимости от вида и этажа.',
         },
         {
           q: 'Могут ли иностранцы купить квартиру в Маскате?',

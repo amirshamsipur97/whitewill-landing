@@ -405,7 +405,7 @@ export default function MetaLandingPage() {
       <section style={{ padding: '24px 18px 20px' }}>
         <SectionTitle>Muscat Apartments</SectionTitle>
         <p style={{ color: 'rgba(0,0,0,0.6)', fontFamily: BODY_FONT, fontSize: 15.5, lineHeight: 1.6, textAlign: 'center', maxWidth: 560, margin: '-8px auto 24px' }}>
-          Modern apartments and studios in Muscat and the Jebel Sifah marina town, from OMR 54,600.
+          Modern apartments and studios in Muscat and the Jebel Sifah marina town, from OMR 61,635.
         </p>
         <PhotoSlider images={muscatImages} alt="Apartments in Muscat, Oman" />
       </section>

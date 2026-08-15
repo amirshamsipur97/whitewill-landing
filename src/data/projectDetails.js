@@ -201,7 +201,7 @@ const D = {
       'A vertical neighbourhood inside Sultan Haitham City — Loggia Studios and 1- to 3-bedroom Sky Residences and Sky Villas, plus two full-floor Sky Palace penthouses, all over a plaza-level retail and F&B podium.',
     units: ['Studio', 'Apartment', 'Penthouse'],
     bedrooms: 'Studio – 3',
-    priceFrom: 'OMR 54,600',
+    priceFrom: 'OMR 67,200',
     handover: '2027',
     features: ['skyViews', 'retailDining', 'infinityPool', 'gym', 'concierge', 'smartHome', 'landscapedGardens', 'parking', 'freehold'],
     sections: [
@@ -219,7 +219,7 @@ const D = {
       },
       {
         title: 'Investment & ownership',
-        body: 'With prices from OMR 54,600 and handover in 2027, Yenaier is one of the most accessible entry points into Sultan Haitham City’s long-term growth story — appealing to first-time owners and investors seeking off-plan upside in a government-backed masterplan.',
+        body: 'With prices from OMR 67,200 and handover in 2027, Yenaier is one of the most accessible entry points into Sultan Haitham City’s long-term growth story — appealing to first-time owners and investors seeking off-plan upside in a government-backed masterplan.',
       },
     ],
   },
@@ -515,7 +515,7 @@ const AR_OVERLAY = {
       },
       {
         title: 'الاستثمار والتملّك',
-        body: 'بأسعار من 54,600 ر.ع وتسليم في 2027، يُعدّ ينيِر من أيسر نقاط الدخول إلى قصة نمو مدينة السلطان هيثم — جاذب للمالكين الجدد والمستثمرين الباحثين عن فرص المخطط ضمن تطوير مدعوم حكومياً.',
+        body: 'بأسعار من 67,200 ر.ع وتسليم في 2027، يُعدّ ينيِر من أيسر نقاط الدخول إلى قصة نمو مدينة السلطان هيثم — جاذب للمالكين الجدد والمستثمرين الباحثين عن فرص المخطط ضمن تطوير مدعوم حكومياً.',
       },
     ],
   },
@@ -787,7 +787,7 @@ const FA_OVERLAY = {
       { title: 'درباره پروژه', body: 'ینایر محله‌ای مسکونی میان‌مرتبه و چندکاربری داخل شهر سلطان هیثم، شهر جدید پرچم‌دار عمان در شرق مسقط است. استودیوهای Loggia، اسکای‌رزیدنس و اسکای‌ویلاهای ۱ تا ۳ خوابه و دو پنت‌هاوس تمام‌طبقه Sky Palace روی پودیومی سرزنده از خرید و رستوران در سطح پلازا چیده شده‌اند.' },
       { title: 'موقعیت و دسترسی', body: 'شهر سلطان هیثم شهری هوشمند و کاملاً برنامه‌ریزی‌شده برای حدود ۱۰۰ هزار نفر است که با بزرگراه‌های جدید به مسقط وصل می‌شود و چند دقیقه با کریدور فرودگاه فاصله دارد. ساکنان ینایر بدون خروج از محله به بلوارهای سبز، پارک‌ها و خرید روزمره دسترسی دارند.' },
       { title: 'واحدها و طراحی', body: 'خانه‌ها از استودیوهای بهینه Loggia تا اسکای‌ویلاها و پنت‌هاوس‌های جادار؛ همه با متریال مدرن، بالکن‌های بزرگ و ویو مرتفع شهر و پارک. پودیوم پلازا کافه، فروشگاه و خدمات روزمره را جلوی در می‌آورد و دک‌های مشترک، استخر و باشگاه و لانژ اضافه می‌کنند.' },
-      { title: 'سرمایه‌گذاری و مالکیت', body: 'با قیمت از ۵۴٬۶۰۰ ریال عمان و تحویل ۲۰۲۷، ینایر یکی از در دسترس‌ترین نقاط ورود به داستان رشد بلندمدت شهر سلطان هیثم است؛ جذاب برای خریداران اولین خانه و سرمایه‌گذارانی که رشد پیش‌فروش در مسترپلن دولتی می‌خواهند.' },
+      { title: 'سرمایه‌گذاری و مالکیت', body: 'با قیمت از ۶۷٬۲۰۰ ریال عمان و تحویل ۲۰۲۷، ینایر یکی از در دسترس‌ترین نقاط ورود به داستان رشد بلندمدت شهر سلطان هیثم است؛ جذاب برای خریداران اولین خانه و سرمایه‌گذارانی که رشد پیش‌فروش در مسترپلن دولتی می‌خواهند.' },
     ],
   },
   'Azura': {
