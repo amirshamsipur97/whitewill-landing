@@ -100,6 +100,16 @@
       "source": "/ru/oman",
       "destination": "/ru/buy",
       "permanent": true
+    },
+    {
+      "source": "/fa/insights/car-import-oman-to-iran",
+      "destination": "/fa/insights/iranians-abroad-car-import-oman-law-1405",
+      "permanent": true
+    },
+    {
+      "source": "/insights/car-import-oman-to-iran",
+      "destination": "/insights/iranians-abroad-car-import-oman-law-1405",
+      "permanent": true
     }
   ],
   "rewrites": [

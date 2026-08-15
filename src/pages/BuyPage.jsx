@@ -135,7 +135,7 @@ function fmtOmr(n) {
 const SALALAH_RELEASES = [
   { key: 'Amazi', name: 'Lubana Island', location: 'Amazi · Hawana Salalah', gallerySlug: 'amazi', from: '98,000', to: '/buy/hawana-salalah?release=Amazi' },
   { key: 'Muscat Bay', name: 'Muscat Bay', location: 'Zen Residences · Muscat Bay', gallerySlug: 'muscat-bay', from: '138,000', by: 'Zen Development and Investment', to: '/buy/zen-residences' },
-  { key: 'Olive Farms', name: 'Olive Farms', location: 'Raya · Jebel Sifah', gallerySlug: 'olive-farms', from: '77,250', to: '/buy/jebel-sifah?release=Olive%20Farms' },
+  { key: 'Olive Farms', name: 'Olive Farms', location: 'Raya · Jebel Sifah', gallerySlug: 'olive-farms', from: '123,600', to: '/buy/jebel-sifah?release=Olive%20Farms' },
 ]
 const RELEASES_L = {
   en: { title: 'Special Releases', from: 'From OMR {p}', onRequest: 'Prices on request', by: 'Muriya (Orascom Development)' },

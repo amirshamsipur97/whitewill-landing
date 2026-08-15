@@ -4,14 +4,14 @@
 //
 // Targets: "buy property in oman" (en) / «خرید ملک در عمان» (fa) plus the
 // ar/ru equivalents already used in seoRoutes.mjs titles. Facts must stay
-// consistent with live inventory: Jebel Sifah studios from OMR 35,625,
+// consistent with live inventory: Jebel Sifah apartments from OMR 63,500,
 // Hawana Salalah chalets from OMR 98,000, Hay Al Wafa 2BHK from OMR 92,088.
 
 export const BUY_SEO = {
   en: {
     heading: 'Buy Property in Oman: Freehold Homes for Foreign Investors',
     paras: [
-      'Foreigners of all nationalities can buy property in Oman with full freehold ownership inside government approved Integrated Tourism Complexes (ITC) such as Al Mouj and Muscat Bay in Muscat, Hawana Salalah on the Dhofar coast and Jebel Sifah near the capital. Every listing on this page comes straight from developer inventory with live prices: studios at Jebel Sifah start from about OMR 35,625, beachfront chalets in Hawana Salalah from OMR 98,000 and furnished two bedroom apartments in Sultan Haitham City from OMR 92,088.',
+      'Foreigners of all nationalities can buy property in Oman with full freehold ownership inside government approved Integrated Tourism Complexes (ITC) such as Al Mouj and Muscat Bay in Muscat, Hawana Salalah on the Dhofar coast and Jebel Sifah near the capital. Every listing on this page comes straight from developer inventory with live prices: apartments at Jebel Sifah start from about OMR 63,500, beachfront chalets in Hawana Salalah from OMR 98,000 and furnished two bedroom apartments in Sultan Haitham City from OMR 92,088.',
       'Buying property in Oman can also qualify you for an investor residency permit that stays renewable while you own the home, with a long term Golden Residency tier at higher investment levels. There is no annual property tax and no tax on rental income. Irfan Investment Group manages the whole purchase for you, from reservation and the sale and purchase agreement to Ministry of Housing registration and handover, in English, Arabic, Russian and Persian.',
     ],
     faq: [
@@ -21,7 +21,7 @@ export const BUY_SEO = {
       },
       {
         q: 'How much does it cost to buy property in Oman?',
-        a: 'Entry prices in 2026: studios at Jebel Sifah from about OMR 35,625, one bedroom chalets at Hawana Salalah from OMR 98,000, furnished two bedroom apartments in Sultan Haitham City from OMR 92,088, and resale apartments in Muscat ITC districts typically between OMR 60,000 and 150,000.',
+        a: 'Entry prices in 2026: apartments at Jebel Sifah from about OMR 63,500, one bedroom chalets at Hawana Salalah from OMR 98,000, furnished two bedroom apartments in Sultan Haitham City from OMR 92,088, and resale apartments in Muscat ITC districts typically between OMR 60,000 and 150,000.',
       },
       {
         q: 'Does buying property in Oman give you residency?',
@@ -47,7 +47,7 @@ export const BUY_SEO = {
   fa: {
     heading: 'خرید ملک در عمان: مالکیت آزاد برای ایرانیان و خارجی‌ها',
     paras: [
-      'خرید ملک در عمان برای همه ملیت‌ها، از جمله ایرانیان، در مجتمع‌های گردشگری یکپارچه (ITC) مانند الموج و خلیج مسقط در پایتخت، هوانا صلاله در ساحل ظفار و جبل سیفه در نزدیکی مسقط با سند مالکیت آزاد (فری‌هولد) ممکن است. همه واحدهای این صفحه مستقیم از اینونتوری سازنده و با قیمت به‌روز هستند: استودیو در جبل سیفه از حدود ۳۵٬۶۲۵ ریال عمان، شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال و آپارتمان دوخوابه مبله در شهر سلطان هیثم از ۹۲٬۰۸۸ ریال عمان.',
+      'خرید ملک در عمان برای همه ملیت‌ها، از جمله ایرانیان، در مجتمع‌های گردشگری یکپارچه (ITC) مانند الموج و خلیج مسقط در پایتخت، هوانا صلاله در ساحل ظفار و جبل سیفه در نزدیکی مسقط با سند مالکیت آزاد (فری‌هولد) ممکن است. همه واحدهای این صفحه مستقیم از اینونتوری سازنده و با قیمت به‌روز هستند: آپارتمان در جبل سیفه از حدود ۶۳٬۵۰۰ ریال عمان، شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال و آپارتمان دوخوابه مبله در شهر سلطان هیثم از ۹۲٬۰۸۸ ریال عمان.',
       'خرید ملک در عمان می‌تواند اقامت سرمایه‌گذاری هم برای شما بیاورد؛ اقامتی که تا زمان مالکیت قابل تمدید است و در سطوح بالاتر سرمایه‌گذاری به اقامت طلایی بلندمدت می‌رسد. در عمان نه مالیات سالانه ملک وجود دارد و نه مالیات بر درآمد اجاره. گروه سرمایه‌گذاری ایرفان کل مسیر خرید، از رزرو و قرارداد تا ثبت در وزارت مسکن و تحویل، را به فارسی برای شما انجام می‌دهد.',
     ],
     faq: [
@@ -57,7 +57,7 @@ export const BUY_SEO = {
       },
       {
         q: 'قیمت خرید ملک در عمان چقدر است؟',
-        a: 'قیمت‌های شروع در ۲۰۲۶: استودیو در جبل سیفه از حدود ۳۵٬۶۲۵ ریال عمان، شاله یک‌خوابه در هوانا صلاله از ۹۸٬۰۰۰ ریال، آپارتمان دوخوابه مبله در شهر سلطان هیثم از ۹۲٬۰۸۸ ریال و آپارتمان‌های بازفروش در مناطق ITC مسقط معمولاً بین ۶۰ تا ۱۵۰ هزار ریال عمان.',
+        a: 'قیمت‌های شروع در ۲۰۲۶: آپارتمان در جبل سیفه از حدود ۶۳٬۵۰۰ ریال عمان، شاله یک‌خوابه در هوانا صلاله از ۹۸٬۰۰۰ ریال، آپارتمان دوخوابه مبله در شهر سلطان هیثم از ۹۲٬۰۸۸ ریال و آپارتمان‌های بازفروش در مناطق ITC مسقط معمولاً بین ۶۰ تا ۱۵۰ هزار ریال عمان.',
       },
       {
         q: 'آیا خرید ملک در عمان اقامت می‌دهد؟',
@@ -83,7 +83,7 @@ export const BUY_SEO = {
   ar: {
     heading: 'شراء عقار في عُمان: تملّك حر للمستثمرين الأجانب',
     paras: [
-      'يمكن للأجانب من جميع الجنسيات شراء عقار في عُمان بتملّك حر كامل داخل المجمعات السياحية المتكاملة (ITC) مثل الموج وخليج مسقط في العاصمة، وهوانا صلالة على ساحل ظفار، وجبل سيفة قرب مسقط. جميع الوحدات في هذه الصفحة من مخزون المطورين مباشرة وبأسعار محدثة: استوديوهات جبل سيفة من نحو 35,625 ر.ع، وشاليهات هوانا صلالة الشاطئية من 98,000 ر.ع، وشقق مفروشة بغرفتي نوم في مدينة السلطان هيثم من 92,088 ر.ع.',
+      'يمكن للأجانب من جميع الجنسيات شراء عقار في عُمان بتملّك حر كامل داخل المجمعات السياحية المتكاملة (ITC) مثل الموج وخليج مسقط في العاصمة، وهوانا صلالة على ساحل ظفار، وجبل سيفة قرب مسقط. جميع الوحدات في هذه الصفحة من مخزون المطورين مباشرة وبأسعار محدثة: شقق جبل سيفة من نحو 63,500 ر.ع، وشاليهات هوانا صلالة الشاطئية من 98,000 ر.ع، وشقق مفروشة بغرفتي نوم في مدينة السلطان هيثم من 92,088 ر.ع.',
       'شراء عقار في عُمان قد يؤهلك أيضاً لإقامة مستثمر قابلة للتجديد طوال فترة التملك، مع فئة الإقامة الذهبية طويلة الأمد عند مستويات استثمار أعلى. لا توجد ضريبة سنوية على العقار ولا ضريبة على دخل الإيجار. تتولى مجموعة عرفان للاستثمار رحلة الشراء كاملة، من الحجز والعقد حتى التسجيل في وزارة الإسكان والتسليم.',
     ],
     faq: [
@@ -93,7 +93,7 @@ export const BUY_SEO = {
       },
       {
         q: 'كم تكلفة شراء عقار في عُمان؟',
-        a: 'أسعار الدخول في 2026: استوديو في جبل سيفة من نحو 35,625 ر.ع، شاليه بغرفة نوم في هوانا صلالة من 98,000 ر.ع، شقة مفروشة بغرفتي نوم في مدينة السلطان هيثم من 92,088 ر.ع، وشقق إعادة البيع في مناطق ITC بمسقط عادة بين 60,000 و150,000 ر.ع.',
+        a: 'أسعار الدخول في 2026: شقة في جبل سيفة من نحو 63,500 ر.ع، شاليه بغرفة نوم في هوانا صلالة من 98,000 ر.ع، شقة مفروشة بغرفتي نوم في مدينة السلطان هيثم من 92,088 ر.ع، وشقق إعادة البيع في مناطق ITC بمسقط عادة بين 60,000 و150,000 ر.ع.',
       },
       {
         q: 'هل يمنح شراء العقار في عُمان الإقامة؟',
@@ -119,7 +119,7 @@ export const BUY_SEO = {
   ru: {
     heading: 'Купить недвижимость в Омане: фрихолд для иностранных инвесторов',
     paras: [
-      'Иностранцы любых национальностей могут купить недвижимость в Омане в полную собственность (фрихолд) внутри интегрированных туристических комплексов (ITC): Al Mouj и Muscat Bay в Маскате, Hawana Salalah на побережье Дофара и Jebel Sifah рядом со столицей. Все лоты на этой странице идут напрямую из инвентаря застройщиков с актуальными ценами: студии в Jebel Sifah от примерно 35 625 OMR, пляжные шале в Hawana Salalah от 98 000 OMR, меблированные квартиры с 2 спальнями в Sultan Haitham City от 92 088 OMR.',
+      'Иностранцы любых национальностей могут купить недвижимость в Омане в полную собственность (фрихолд) внутри интегрированных туристических комплексов (ITC): Al Mouj и Muscat Bay в Маскате, Hawana Salalah на побережье Дофара и Jebel Sifah рядом со столицей. Все лоты на этой странице идут напрямую из инвентаря застройщиков с актуальными ценами: квартиры в Jebel Sifah от примерно 63 500 OMR, пляжные шале в Hawana Salalah от 98 000 OMR, меблированные квартиры с 2 спальнями в Sultan Haitham City от 92 088 OMR.',
       'Покупка недвижимости в Омане также даёт право на инвесторскую резиденцию, продлеваемую всё время владения, а при более высоких уровнях инвестиций доступна долгосрочная золотая резиденция. Ежегодного налога на недвижимость и налога на арендный доход нет. Irfan Investment Group сопровождает сделку целиком: бронирование, договор, регистрация в министерстве жилья и передача ключей, на русском языке.',
     ],
     faq: [
@@ -129,7 +129,7 @@ export const BUY_SEO = {
       },
       {
         q: 'Сколько стоит недвижимость в Омане?',
-        a: 'Входные цены 2026 года: студии в Jebel Sifah от ~35 625 OMR, шале с 1 спальней в Hawana Salalah от 98 000 OMR, меблированные квартиры с 2 спальнями в Sultan Haitham City от 92 088 OMR, вторичные квартиры в ITC-районах Маската обычно 60 000–150 000 OMR.',
+        a: 'Входные цены 2026 года: квартиры в Jebel Sifah от ~63 500 OMR, шале с 1 спальней в Hawana Salalah от 98 000 OMR, меблированные квартиры с 2 спальнями в Sultan Haitham City от 92 088 OMR, вторичные квартиры в ITC-районах Маската обычно 60 000–150 000 OMR.',
       },
       {
         q: 'Даёт ли покупка недвижимости в Омане резиденцию?',

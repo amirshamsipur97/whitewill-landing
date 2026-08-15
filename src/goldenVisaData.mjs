@@ -10,7 +10,7 @@
 // than sprinkled through the copy so that a rule change is a one line edit.
 //
 // HONESTY NOTE that the page depends on: most of our stock does NOT clear
-// these thresholds. Our entry price is around OMR 35,625. The page's job is to
+// these thresholds. Our entry price is around OMR 54,600. The page's job is to
 // say that plainly and point those buyers at the separate ITC investor
 // residency, not to imply every purchase is a golden visa.
 

@@ -48,10 +48,10 @@ const D = {
   'Jebel Sifah': {
     tagline: 'Mountain & marina escape — 45 min from Muscat',
     description:
-      'An integrated marina town by Muriya — apartments, townhouses and villas wrapped around a championship golf course, beach, and Sifawy Boutique Hotel. Now selling in the new Raya district: Solaris golf-view studios and apartments, and Olive Farms freehold farm houses.',
-    units: ['Studio', 'Apartment', 'Farm House', 'Townhouse', 'Villa'],
-    bedrooms: 'Studio – 5',
-    priceFrom: 'OMR 35,625',
+      'An integrated marina town by Muriya — apartments, townhouses and villas wrapped around a championship golf course, beach, and Sifawy Boutique Hotel. Now selling in the new Raya district: Solaris golf-view apartments and Olive Farms farm houses at Raya, ready apartments at Golf Lake and Jebel Sifah Heights, and Raya standalone villas.',
+    units: ['Apartment', 'Farm House', 'Villa'],
+    bedrooms: '1 – 5',
+    priceFrom: 'OMR 63,500',
     handover: 'Ready & off-plan',
     subProjects: [
       {
@@ -60,10 +60,10 @@ const D = {
         gallerySlug: 'solaris',
         location: 'Raya · Jebel Sifah',
         blurb: {
-          en: 'Golf-view studios and apartments in Raya at Jebel Sifah — studios from OMR 35,625 (38 m²) and 2-bed apartments from OMR 81,035, off-plan with 10% down and a ~2-year plan, delivery from Q4 2027.',
-          ru: 'Студии и апартаменты с видом на гольф в Рая, Джебель-Сифа — студии от 35 625 OMR (38 м²), 2-спальные от 81 035 OMR; офф-план: 10% взнос, план ~2 года, передача с Q4 2027.',
-          ar: 'استوديوهات وشقق بإطلالة على الغولف في رايا بجبل صيفة: استوديوهات من 35,625 ر.ع (38 م²) وشقق بغرفتين من 81,035 ر.ع، على الخارطة بدفعة أولى 10% وخطة نحو سنتين، والتسليم من الربع الأخير 2027.',
-          fa: 'استودیو و آپارتمان با منظره گلف در رایا در جبل سیفه؛ استودیو از ۳۵٬۶۲۵ ریال عمان (۳۸ متر) و دوخوابه از ۸۱٬۰۳۵ ریال. پیش‌فروش با ۱۰٪ پیش‌پرداخت و طرح حدود دوساله، تحویل از پایان ۲۰۲۷.',
+          en: 'Golf-view studios and apartments in Raya at Jebel Sifah — 2-bed apartments from OMR 81,035 with golf-front gardens on the ground floor, off-plan with 10% down and a ~2-year plan, delivery from Q4 2027.',
+          ru: 'Студии и апартаменты с видом на гольф в Рая, Джебель-Сифа — 2-спальные апартаменты от 81 035 OMR, часть с садами у гольф-поля; офф-план: 10% взнос, план ~2 года, передача с Q4 2027.',
+          ar: 'استوديوهات وشقق بإطلالة على الغولف في رايا بجبل صيفة: شقق بغرفتين من 81,035 ر.ع وبعضها بحدائق مطلة على الغولف، على الخارطة بدفعة أولى 10% وخطة نحو سنتين، والتسليم من الربع الأخير 2027.',
+          fa: 'استودیو و آپارتمان با منظره گلف در رایا در جبل سیفه؛ آپارتمان دوخوابه از ۸۱٬۰۳۵ ریال که برخی باغچه رو به گلف دارند. پیش‌فروش با ۱۰٪ پیش‌پرداخت و طرح حدود دوساله، تحویل از پایان ۲۰۲۷.',
         },
       },
       {
@@ -72,10 +72,10 @@ const D = {
         gallerySlug: 'olive-farms',
         location: 'Raya · Jebel Sifah',
         blurb: {
-          en: 'Freehold farm houses in Raya at Jebel Sifah — 1 to 3 bedrooms on 260–350 m² plots with private gardens, from OMR 77,250. Off-plan, 10% down + 7.5% quarterly over 3 years.',
-          ru: 'Фермерские дома (фрихолд) в Рая, Джебель-Сифа — 1–3 спальни на участках 260–350 м² с садом, от 77 250 OMR. Офф-план: 10% взнос + 7,5% ежеквартально, 3 года.',
-          ar: 'بيوت مزارع تملّك حر في رايا بجبل صيفة: من غرفة إلى ثلاث غرف على قطع 260 إلى 350 م² بحدائق خاصة، من 77,250 ر.ع. على الخارطة: 10% دفعة أولى ثم 7.5% كل ثلاثة أشهر لثلاث سنوات.',
-          fa: 'خانه‌مزرعه‌های فری‌هولد در رایا در جبل سیفه؛ یک تا سه‌خوابه روی زمین ۲۶۰ تا ۳۵۰ متری با باغ اختصاصی، از ۷۷٬۲۵۰ ریال عمان. پیش‌فروش با ۱۰٪ پیش‌پرداخت و ۷.۵٪ فصلی در سه سال.',
+          en: 'Freehold farm houses in Raya at Jebel Sifah — three-bedroom farm houses on 350 m² plots with private gardens, from OMR 123,600. Off-plan, 10% down + 7.5% quarterly over 3 years.',
+          ru: 'Фермерские дома (фрихолд) в Рая, Джебель-Сифа — 1–3 спальни на участках 260–350 м² с садом, от 123 600 OMR. Офф-план: 10% взнос + 7,5% ежеквартально, 3 года.',
+          ar: 'بيوت مزارع تملّك حر في رايا بجبل صيفة: ثلاث غرف نوم على قطع 350 م² بحدائق خاصة، من 123,600 ر.ع. على الخارطة: 10% دفعة أولى ثم 7.5% كل ثلاثة أشهر لثلاث سنوات.',
+          fa: 'خانه‌مزرعه‌های فری‌هولد در رایا در جبل سیفه؛ یک تا سه‌خوابه روی زمین ۲۶۰ تا ۳۵۰ متری با باغ اختصاصی، از ۱۲۳٬۶۰۰ ریال عمان. پیش‌فروش با ۱۰٪ پیش‌پرداخت و ۷.۵٪ فصلی در سه سال.',
         },
       },
     ],
@@ -122,18 +122,18 @@ const D = {
     handover: 'Ready',
   },
   'Hay Al Wafa': {
-    tagline: 'Furnished 2-bedroom apartments · Sultan Haitham City',
+    tagline: 'Apartments, townhouses & villas · Sultan Haitham City',
     description:
-      'Fully furnished two-bedroom apartments by Al Abrar Real Estate in Hay Al Wafa, one of the first residential neighbourhoods of Sultan Haitham City, with pool, boulevard or side views.',
-    units: ['Apartment'],
-    bedrooms: '2',
+      'Furnished two-bedroom apartments plus three and four-bedroom townhouses and five-bedroom villas by Al Abrar Real Estate in Hay Al Wafa, one of the first residential neighbourhoods of Sultan Haitham City.',
+    units: ['Apartment', 'Townhouse', 'Villa'],
+    bedrooms: '2 – 5',
     priceFrom: 'OMR 92,088',
     handover: '2026',
     features: ['pool', 'centralPark', 'retailDining', 'gym', 'cyclingPaths', 'schools', 'parking', 'smartHome'],
     sections: [
       {
         title: 'The development',
-        body: 'Hay Al Wafa is one of the first residential neighbourhoods of Sultan Haitham City, developed by Al Abrar Real Estate. The current release offers fully furnished two-bedroom apartments in Buildings 59 and 61, low-rise blocks arranged around the neighbourhood swimming pool and tree-lined boulevard.',
+        body: 'Hay Al Wafa is one of the first residential neighbourhoods of Sultan Haitham City, developed by Al Abrar Real Estate. The current release spans fully furnished two-bedroom apartments in Buildings 59 and 61, low-rise blocks arranged around the neighbourhood swimming pool and tree-lined boulevard, together with garden-row and courtyard townhouses from Phase 3 and five-bedroom villas from Phase 2.',
       },
       {
         title: 'Location & connectivity',
@@ -141,27 +141,27 @@ const D = {
       },
       {
         title: 'Residences & design',
-        body: 'Two efficient two-bedroom layouts of about 127 to 128 sqm built-up area (158 to 161 sqm gross) across floors one to five. Every apartment is handed over fully furnished, with a pool, boulevard or side aspect depending on the unit.',
+        body: 'Two efficient two-bedroom apartment layouts of about 127 to 128 sqm built-up area (158 to 161 sqm gross) across floors one to five, handed over fully furnished with a pool, boulevard or side aspect. The townhouse release adds three-bedroom garden-row homes of about 230 sqm and four-bedroom courtyard townhouses of about 256 sqm, while the villas offer five bedrooms across roughly 430 sqm on 400 sqm plots.',
       },
       {
         title: 'Investment & ownership',
-        body: 'Handover prices start from OMR 92,088 with furniture included, and extended 60-month payment options are available at adjusted pricing. Contact us for the live availability list and eligibility details.',
+        body: 'Apartments start from OMR 92,088 with furniture included, townhouses from OMR 149,500 and five-bedroom villas from OMR 242,000. Extended 60-month payment options are available at adjusted pricing; contact us for the live availability list and eligibility details.',
       },
     ],
   },
   'Wadi Zaha': {
     tagline: 'Wadi-front community · Sultan Haitham City',
     description:
-      'A mixed-use district at SHC — studios, 1–3 BR apartments, garden villas, sky villas and rooftop penthouses with central park, boulevard and mountain views.',
-    units: ['Apartment', 'Sky Villa', 'Penthouse', 'Townhouse', 'Villa'],
-    bedrooms: 'Studio – 4',
-    priceFrom: 'OMR 48,125',
+      'A mixed-use district at SHC — studios, 1–3 BR apartments, sky villas and rooftop penthouses with central park, boulevard and mountain views.',
+    units: ['Apartment', 'Sky Villa', 'Penthouse'],
+    bedrooms: 'Studio – 3',
+    priceFrom: 'OMR 61,635',
     handover: '2026 – 2027',
     features: ['mountainView', 'centralPark', 'pool', 'cyclingPaths', 'retailDining', 'gym', 'smartHome', 'schools', 'freehold'],
     sections: [
       {
         title: 'The development',
-        body: 'Wadi Zaha is a wadi-front residential district inside Sultan Haitham City, blending studios and 1- to 3-bedroom apartments with garden villas, sky villas and rooftop penthouses. The community is organised around a central park and tree-lined boulevard, framed by dramatic mountain and wadi views.',
+        body: 'Wadi Zaha is a wadi-front residential district inside Sultan Haitham City, blending studios and 1- to 3-bedroom apartments with sky villas and rooftop penthouses. The community is organised around a central park and tree-lined boulevard, framed by dramatic mountain and wadi views.',
       },
       {
         title: 'Location & connectivity',
@@ -173,7 +173,7 @@ const D = {
       },
       {
         title: 'Investment & ownership',
-        body: 'Starting from OMR 48,125 with handover in 2026–2027, Wadi Zaha is among the most affordable freehold-eligible launches in Oman’s new capital district — an attractive off-plan position as Sultan Haitham City matures.',
+        body: 'Starting from OMR 61,635 with handover in 2026–2027, Wadi Zaha is among the most affordable freehold-eligible launches in Oman’s new capital district — an attractive off-plan position as Sultan Haitham City matures.',
       },
     ],
   },
@@ -238,7 +238,7 @@ const D = {
       'A low-rise residential community at Al Mouj — 1- and 2-bedroom apartments plus beachfront duplexes with sea, pool and golf-course views.',
     units: ['Apartment', 'Duplex'],
     bedrooms: '1 – 3',
-    priceFrom: 'OMR 133,634',
+    priceFrom: 'OMR 140,316',
     handover: '2026 – 2027',
     features: ['seaView', 'beachAccess', 'golfCourse', 'pool', 'marina', 'gym', 'landscapedGardens', 'freehold'],
     sections: [
@@ -256,7 +256,7 @@ const D = {
       },
       {
         title: 'Investment & ownership',
-        body: 'Al Mouj is a freehold Integrated Tourism Complex open to all nationalities, with title that carries Omani residency. Priced from OMR 133,634 with handover in 2026–2027, Vistal offers off-plan beachfront ownership in a proven, rental-strong location.',
+        body: 'Al Mouj is a freehold Integrated Tourism Complex open to all nationalities, with title that carries Omani residency. Priced from OMR 140,316 with handover in 2026–2027, Vistal offers off-plan beachfront ownership in a proven, rental-strong location.',
       },
     ],
   },
@@ -458,13 +458,13 @@ const AR_OVERLAY = {
     description: 'قائمة منتقاة من الفلل والشقق المكتملة داخل خليج مسقط — مفاتيح بالأيدي، تملك حر، مع عضوية كاملة للنادي الشاطئي.',
   },
   'Hay Al Wafa': {
-    tagline: 'شقق مفروشة بغرفتي نوم · مدينة السلطان هيثم',
-    description: 'شقق بغرفتي نوم مفروشة بالكامل من العبرار العقارية في حي الوفاء، أحد أوائل الأحياء السكنية في مدينة السلطان هيثم، بإطلالات على المسبح أو الجادة أو جانبية.',
+    tagline: 'شقق وتاون هاوس وفلل · مدينة السلطان هيثم',
+    description: 'شقق مفروشة بغرفتي نوم مع تاون هاوس بثلاث وأربع غرف وفلل بخمس غرف من العبرار العقارية في حي الوفاء، أحد أوائل الأحياء السكنية في مدينة السلطان هيثم.',
     sections: [
-      { title: 'عن المشروع', body: 'حي الوفاء من أوائل الأحياء السكنية في مدينة السلطان هيثم، من تطوير شركة العبرار العقارية. يضم الطرح الحالي شققاً مفروشة بالكامل بغرفتي نوم في المبنيين 59 و61، وهي مبانٍ منخفضة الارتفاع تلتف حول مسبح الحي والجادة المشجّرة.' },
+      { title: 'عن المشروع', body: 'حي الوفاء من أوائل الأحياء السكنية في مدينة السلطان هيثم، من تطوير شركة العبرار العقارية. يشمل الطرح الحالي شققاً مفروشة بالكامل بغرفتي نوم في المبنيين 59 و61 حول مسبح الحي والجادة المشجّرة، إضافة إلى تاون هاوس من المرحلة الثالثة وفلل بخمس غرف من المرحلة الثانية.' },
       { title: 'الموقع والوصول', body: 'مدينة السلطان هيثم في السيب هي المدينة الذكية الرائدة في عُمان، بروابط مباشرة عبر الطريق السريع إلى وسط مسقط ومطار مسقط الدولي. المدارس والعيادات والمساجد والحدائق والتجزئة كلها مخطّطة على مسافة قريبة داخل المدينة.' },
-      { title: 'الوحدات والتصميم', body: 'تصميمان عمليان بغرفتي نوم بمساحة بناء نحو 127 إلى 128 م² (158 إلى 161 م² إجمالية) موزعة على الطوابق من الأول إلى الخامس. تُسلَّم كل شقة مفروشة بالكامل، بإطلالة على المسبح أو الجادة أو جانبية بحسب الوحدة.' },
-      { title: 'الاستثمار والتملّك', body: 'تبدأ أسعار التسليم من 92,088 ر.ع شاملة الأثاث، مع خيارات سداد ممتدة حتى 60 شهراً بأسعار معدّلة. تواصل معنا للحصول على قائمة التوفر المحدثة وتفاصيل الأهلية.' },
+      { title: 'الوحدات والتصميم', body: 'تصميمان عمليان للشقق بغرفتي نوم بمساحة بناء نحو 127 إلى 128 م² (158 إلى 161 م² إجمالية) على الطوابق من الأول إلى الخامس، تُسلَّم مفروشة بالكامل. ويضيف طرح التاون هاوس منازل صف حدائقية بثلاث غرف بنحو 230 م² وتاون هاوس بفناء بأربع غرف بنحو 256 م²، بينما تقدم الفلل خمس غرف نوم على نحو 430 م² فوق قطع بمساحة 400 م².' },
+      { title: 'الاستثمار والتملّك', body: 'تبدأ الشقق من 92,088 ر.ع شاملة الأثاث، والتاون هاوس من 149,500 ر.ع، والفلل بخمس غرف من 242,000 ر.ع. تتوفر خيارات سداد ممتدة حتى 60 شهراً بأسعار معدّلة؛ تواصل معنا لقائمة التوفر المحدثة وتفاصيل الأهلية.' },
     ],
   },
   'Wadi Zaha': {
@@ -485,7 +485,7 @@ const AR_OVERLAY = {
       },
       {
         title: 'الاستثمار والتملّك',
-        body: 'ابتداءً من 48,125 ر.ع وتسليم 2026–2027، يُعدّ وادي زاها من أكثر الإطلاقات المؤهّلة للتملّك الحر اقتصاداً في العاصمة الجديدة — موقع مخطط قوي مع نضوج مدينة السلطان هيثم.',
+        body: 'ابتداءً من 61,635 ر.ع وتسليم 2026–2027، يُعدّ وادي زاها من أكثر الإطلاقات المؤهّلة للتملّك الحر اقتصاداً في العاصمة الجديدة — موقع مخطط قوي مع نضوج مدينة السلطان هيثم.',
       },
     ],
   },
@@ -541,7 +541,7 @@ const AR_OVERLAY = {
       },
       {
         title: 'الاستثمار والتملّك',
-        body: 'الموج مجمّع سياحي متكامل تملّك حر مفتوح لجميع الجنسيات مع إقامة عُمانية. بسعر من 133,634 ر.ع وتسليم 2026–2027، يقدّم فيستال تملّكاً شاطئياً على المخطط في موقع مثبت قوي الإيجار.',
+        body: 'الموج مجمّع سياحي متكامل تملّك حر مفتوح لجميع الجنسيات مع إقامة عُمانية. بسعر من 140,316 ر.ع وتسليم 2026–2027، يقدّم فيستال تملّكاً شاطئياً على المخطط في موقع مثبت قوي الإيجار.',
       },
     ],
   },
@@ -685,13 +685,13 @@ const RU_OVERLAY = {
     description: 'Смесь апартаментов и таунхаусов с продуманными деталями дизайна, видом на драматичное вади и в нескольких минутах от Маската.',
   },
   'Hay Al Wafa': {
-    tagline: 'Меблированные апартаменты с 2 спальнями · Sultan Haitham City',
-    description: 'Полностью меблированные апартаменты с 2 спальнями от Al Abrar Real Estate в Hay Al Wafa, одном из первых жилых кварталов Sultan Haitham City, с видом на бассейн, бульвар или боковым видом.',
+    tagline: 'Апартаменты, таунхаусы и виллы · Sultan Haitham City',
+    description: 'Меблированные апартаменты с 2 спальнями, таунхаусы с 3 и 4 спальнями и виллы с 5 спальнями от Al Abrar Real Estate в Hay Al Wafa, одном из первых жилых кварталов Sultan Haitham City.',
     sections: [
-      { title: 'О проекте', body: 'Hay Al Wafa — один из первых жилых кварталов Sultan Haitham City, девелопер Al Abrar Real Estate. Текущий релиз включает полностью меблированные апартаменты с 2 спальнями в корпусах 59 и 61, малоэтажных зданиях вокруг квартального бассейна и зелёного бульвара.' },
+      { title: 'О проекте', body: 'Hay Al Wafa — один из первых жилых кварталов Sultan Haitham City, девелопер Al Abrar Real Estate. Текущий релиз включает меблированные апартаменты с 2 спальнями в корпусах 59 и 61 вокруг квартального бассейна и зелёного бульвара, а также таунхаусы третьей очереди и виллы с 5 спальнями второй очереди.' },
       { title: 'Расположение и транспорт', body: 'Sultan Haitham City в Сибе — флагманский умный городской район Омана с прямыми скоростными трассами до центра Маската и международного аэропорта Маската. Школы, клиники, мечети, парки и магазины запланированы в пешей доступности по всему городу.' },
-      { title: 'Резиденции и дизайн', body: 'Две практичные планировки с 2 спальнями площадью около 127–128 кв. м застройки (158–161 кв. м брутто) на этажах с первого по пятый. Каждая квартира передаётся полностью меблированной, с видом на бассейн, бульвар или боковым видом в зависимости от юнита.' },
-      { title: 'Инвестиции и собственность', body: 'Цены при передаче начинаются от 92 088 OMR с учётом мебели; доступна рассрочка до 60 месяцев по скорректированным ценам. Свяжитесь с нами для актуального списка наличия и условий покупки.' },
+      { title: 'Резиденции и дизайн', body: 'Две практичные планировки квартир с 2 спальнями площадью около 127–128 кв. м застройки (158–161 кв. м брутто) на этажах с первого по пятый, передаются меблированными. Таунхаусы добавляют садовые дома с 3 спальнями около 230 кв. м и таунхаусы с внутренним двором с 4 спальнями около 256 кв. м, а виллы предлагают 5 спален примерно на 430 кв. м на участках 400 кв. м.' },
+      { title: 'Инвестиции и собственность', body: 'Квартиры от 92 088 OMR с мебелью, таунхаусы от 149 500 OMR, виллы с 5 спальнями от 242 000 OMR. Доступна рассрочка до 60 месяцев по скорректированным ценам; свяжитесь с нами для актуального списка наличия.' },
     ],
   },
 }
@@ -723,13 +723,13 @@ const FA_OVERLAY = {
     ],
   },
   'Hay Al Wafa': {
-    tagline: 'آپارتمان‌های دوخوابه مبله · شهر سلطان هیثم',
-    description: 'آپارتمان‌های دوخوابه کاملاً مبله از Al Abrar Real Estate در حی الوفاء، یکی از نخستین محله‌های مسکونی شهر سلطان هیثم، با چشم‌انداز استخر، بلوار یا نمای جانبی.',
+    tagline: 'آپارتمان، تاون‌هاوس و ویلا · شهر سلطان هیثم',
+    description: 'آپارتمان‌های دوخوابه مبله به‌همراه تاون‌هاوس‌های سه و چهارخوابه و ویلاهای پنج‌خوابه از Al Abrar Real Estate در حی الوفاء، یکی از نخستین محله‌های مسکونی شهر سلطان هیثم.',
     sections: [
-      { title: 'درباره پروژه', body: 'حی الوفاء یکی از نخستین محله‌های مسکونی شهر سلطان هیثم است که Al Abrar Real Estate آن را توسعه داده است. عرضه فعلی شامل آپارتمان‌های دوخوابه کاملاً مبله در ساختمان‌های ۵۹ و ۶۱ است؛ بلوک‌های کم‌ارتفاعی که دور استخر محله و بلوار درخت‌کاری‌شده چیده شده‌اند.' },
+      { title: 'درباره پروژه', body: 'حی الوفاء یکی از نخستین محله‌های مسکونی شهر سلطان هیثم است که Al Abrar Real Estate آن را توسعه داده است. عرضه فعلی شامل آپارتمان‌های دوخوابه کاملاً مبله در ساختمان‌های ۵۹ و ۶۱ دور استخر محله و بلوار درخت‌کاری‌شده، به‌علاوه تاون‌هاوس‌های فاز ۳ و ویلاهای پنج‌خوابه فاز ۲ است.' },
       { title: 'موقعیت و دسترسی', body: 'شهر سلطان هیثم در السیب، شهر هوشمند پیشتاز عمان است؛ با اتصال مستقیم بزرگراهی به مرکز مسقط و فرودگاه بین‌المللی مسقط. مدرسه، درمانگاه، مسجد، پارک و مراکز خرید همگی در فاصله پیاده‌روی در سطح شهر برنامه‌ریزی شده‌اند.' },
-      { title: 'واحدها و طراحی', body: 'دو تیپ کارآمد دوخوابه با زیربنای حدود ۱۲۷ تا ۱۲۸ مترمربع (۱۵۸ تا ۱۶۱ مترمربع ناخالص) در طبقات یک تا پنج. هر آپارتمان کاملاً مبله تحویل می‌شود و بسته به واحد، چشم‌انداز استخر، بلوار یا نمای جانبی دارد.' },
-      { title: 'سرمایه‌گذاری و مالکیت', body: 'قیمت تحویل از ۹۲٬۰۸۸ ریال عمان شامل مبلمان آغاز می‌شود و گزینه پرداخت اقساطی تا ۶۰ ماه با قیمت تعدیل‌شده نیز در دسترس است. برای فهرست به‌روز موجودی و شرایط خرید با ما تماس بگیرید.' },
+      { title: 'واحدها و طراحی', body: 'دو تیپ کارآمد آپارتمان دوخوابه با زیربنای حدود ۱۲۷ تا ۱۲۸ مترمربع (۱۵۸ تا ۱۶۱ مترمربع ناخالص) در طبقات یک تا پنج که کاملاً مبله تحویل می‌شوند. تاون‌هاوس‌ها شامل خانه‌های ردیفی باغ‌دار سه‌خوابه حدود ۲۳۰ مترمربع و تاون‌هاوس‌های حیاط‌دار چهارخوابه حدود ۲۵۶ مترمربع‌اند و ویلاها پنج خواب در حدود ۴۳۰ مترمربع بنا روی قطعات ۴۰۰ متری دارند.' },
+      { title: 'سرمایه‌گذاری و مالکیت', body: 'آپارتمان‌ها از ۹۲٬۰۸۸ ریال عمان با مبلمان، تاون‌هاوس‌ها از ۱۴۹٬۵۰۰ ریال و ویلاهای پنج‌خوابه از ۲۴۲٬۰۰۰ ریال شروع می‌شوند. پرداخت اقساطی تا ۶۰ ماه با قیمت تعدیل‌شده هم در دسترس است؛ برای فهرست به‌روز موجودی با ما تماس بگیرید.' },
     ],
   },
   'TSCY': {
@@ -761,7 +761,7 @@ const FA_OVERLAY = {
       { title: 'درباره پروژه', body: 'وادی زاها محله‌ای مسکونی در کنار وادی داخل شهر سلطان هیثم است؛ ترکیبی از استودیو و آپارتمان‌های ۱ تا ۳ خوابه با ویلاهای باغی، اسکای‌ویلا و پنت‌هاوس‌های بام. محله دور یک پارک مرکزی و بلوار درخت‌کاری‌شده شکل گرفته و قاب آن چشم‌انداز کوه و وادی است.' },
       { title: 'موقعیت و دسترسی', body: 'به‌عنوان بخشی از شهر سلطان هیثم، شهر جدید پرچم‌دار عمان در شرق مسقط، وادی زاها از زیرساخت شهر هوشمند، اتصال بزرگراهی جدید به پایتخت و دسترسی پیاده به مدارس، درمان و مراکز خرید برنامه‌ریزی‌شده در سطح شهر بهره می‌برد.' },
       { title: 'واحدها و طراحی', body: 'ترکیب واحدها از استودیوهای جمع‌وجور تا اسکای‌ویلاهای خانوادگی و پنت‌هاوس؛ فضاهای داخلی پرنور، فضای باز اختصاصی و ویو وادی و تپه‌های اطراف. خیابان‌های پیاده‌محور، پارک‌های کوچک و مسیر دوچرخه سبک زندگی اجتماعی و روباز می‌سازند.' },
-      { title: 'سرمایه‌گذاری و مالکیت', body: 'با شروع از ۴۸٬۱۲۵ ریال عمان و تحویل ۲۰۲۶ تا ۲۰۲۷، وادی زاها از اقتصادی‌ترین عرضه‌های واجد فری‌هولد در پایتخت جدید عمان است؛ موقعیت پیش‌فروش جذابی همگام با بلوغ شهر سلطان هیثم.' },
+      { title: 'سرمایه‌گذاری و مالکیت', body: 'با شروع از ۶۱٬۶۳۵ ریال عمان و تحویل ۲۰۲۶ تا ۲۰۲۷، وادی زاها از اقتصادی‌ترین عرضه‌های واجد فری‌هولد در پایتخت جدید عمان است؛ موقعیت پیش‌فروش جذابی همگام با بلوغ شهر سلطان هیثم.' },
     ],
   },
   'Sarooj Apartments': {

@@ -36,23 +36,23 @@ export const OPEN_EVENT = 'irfan:open-salalah-popup'
 
 // ── geo-currency ─────────────────────────────────────────────────────
 // ⚠️ DO NOT name communities next to this price. It is the entry price of ONE
-// development (Wadi Zaha, OMR 48,125). Al Mouj starts at OMR 133,634 and
+// development (Yenaier, OMR 54,600). Al Mouj starts at OMR 133,634 and
 // Muscat Bay at OMR 138,000, so listing them beside a $12,500 deposit implied
 // a deposit ~2.8x lower than reality. Same class of error as the "up to 8%
 // yield" claim removed on 2026-07-26: a true number attached to the wrong thing.
-// Cheapest available Muscat apartment: Wadi Zaha, Sultan Haitham City
-// from OMR 48,125 (10% down = OMR 4,813). OMR is pegged at 1 = $2.6008,
+// Cheapest available Muscat apartment: Yenaier, Sultan Haitham City
+// from OMR 54,600 (10% down = OMR 5,460). OMR is pegged at 1 = $2.6008,
 // AED (3.6725/$) and SAR (3.75/$) are pegged to USD, so those three are
 // stable. RUB floats — values are marked approximate; refresh ~quarterly
 // (rate used: ~90 ₽/$). Visitor country comes from /api/geo (Vercel edge
 // header). Everything except AE/SA/RU sees USD.
 const GEO_CURRENCY = {
-  OM: { price: 'OMR 48,125', down: 'OMR 4,813' },
-  AE: { price: 'AED 459,000', down: 'AED 45,900' },
-  SA: { price: 'SAR 469,000', down: 'SAR 46,900' },
-  RU: { price: '≈11 млн RUB', down: '≈1,1 млн RUB' },
+  OM: { price: 'OMR 54,600', down: 'OMR 5,460' },
+  AE: { price: 'AED 521,000', down: 'AED 52,100' },
+  SA: { price: 'SAR 532,000', down: 'SAR 53,200' },
+  RU: { price: '≈13 млн RUB', down: '≈1,3 млн RUB' },
 }
-const DEFAULT_CURRENCY = { price: '$125,000 USD', down: '$12,500 USD' }
+const DEFAULT_CURRENCY = { price: '$142,000 USD', down: '$14,200 USD' }
 
 const PURPLE = '#351D93'
 const TEAL = '#0E8E85'
