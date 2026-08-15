@@ -178,21 +178,21 @@ const D = {
     ],
   },
   'Sarooj Apartments': {
-    tagline: 'Lifestyle apartments · Al Mouj',
+    tagline: 'Lifestyle apartments · Sultan Haitham City',
     description:
-      'Sarooj is Al Mouj\'s new low-rise apartment district — sea-view residences with retail, F&B and a residents\' beach club at street level.',
+      'Sarooj Oasis is a low-rise apartment district inside Sultan Haitham City, Oman\'s flagship new urban development near Muscat. The current release covers 1- and 2-bedroom homes across two G+5 blocks.',
     units: ['Apartment'],
-    bedrooms: '1 – 3',
-    priceFrom: 'OMR 110,000',
+    bedrooms: '1 – 2',
+    priceFrom: 'OMR 66,593',
     handover: '2027',
   },
   'Sarooj Villas': {
-    tagline: 'Coastal villas · Al Mouj',
+    tagline: 'Family villas · Sultan Haitham City',
     description:
-      'Beach-edge villas in the Sarooj district — private gardens, rooftop terraces and unobstructed sea views.',
+      'Sarooj\'s villa release spans attached and stand-alone family homes, from 4-bedroom attached villas on 214 sqm plots to 5- and 6-bedroom stand-alone villas on plots of up to 630 sqm.',
     units: ['Villa'],
-    bedrooms: '3 – 5',
-    priceFrom: 'OMR 290,000',
+    bedrooms: '4 – 6',
+    priceFrom: 'OMR 172,200',
     handover: '2027',
   },
   'Yenaier': {
@@ -490,12 +490,12 @@ const AR_OVERLAY = {
     ],
   },
   'Sarooj Apartments': {
-    tagline: 'شقق على الواجهة البحرية — حي السروج',
-    description: 'مبانٍ منخفضة الارتفاع على الواجهة البحرية مع إطلالات على البحر ووصول للمنتجعات، استوديوهات إلى 3 غرف بأسعار في المتناول.',
+    tagline: 'شقق سكنية · مدينة السلطان هيثم',
+    description: 'حي «واحة ساروج» السكني منخفض الارتفاع داخل مدينة السلطان هيثم، ويضم في الإطلاق الحالي شققاً من غرفة إلى غرفتي نوم موزّعة على مبنيين بارتفاع أرضي و5 طوابق.',
   },
   'Sarooj Villas': {
-    tagline: 'فلل بحرية — حي السروج',
-    description: 'فلل على حافة الشاطئ في حي السروج — حدائق خاصة وشرفات على السطح وإطلالات بحرية غير محجوبة.',
+    tagline: 'فلل عائلية · مدينة السلطان هيثم',
+    description: 'إطلاق الفلل من ساروج يشمل فللاً متلاصقة ومستقلة، من فلل 4 غرف نوم على أراضٍ بمساحة 214 م² إلى فلل 5 و6 غرف مستقلة على أراضٍ تصل إلى 630 م².',
   },
   'Yenaier': {
     tagline: 'إقامات متعددة الاستخدامات متوسطة الارتفاع · مدينة السلطان هيثم',
@@ -680,6 +680,14 @@ const RU_OVERLAY = {
     tagline: 'Резиденции у воды · Al Mouj',
     description: 'Малоэтажное жилое сообщество в Al Mouj — 1- и 2-комнатные апартаменты плюс пляжные дуплексы с видами на море, бассейн и поле для гольфа.',
   },
+  'Sarooj Apartments': {
+    tagline: 'Жилые апартаменты · Sultan Haitham City',
+    description: 'Малоэтажный жилой квартал Sarooj Oasis расположен внутри Sultan Haitham City. В текущем релизе апартаменты с 1 и 2 спальнями в двух корпусах высотой в пять этажей над первым.',
+  },
+  'Sarooj Villas': {
+    tagline: 'Семейные виллы · Sultan Haitham City',
+    description: 'Виллы Sarooj включают сблокированные и отдельно стоящие дома: от вилл с 4 спальнями на участках 214 м² до отдельно стоящих вилл с 5 и 6 спальнями на участках до 630 м².',
+  },
   'Wadi Zaha': {
     tagline: 'Резиденции премиум-класса с видом на горы',
     description: 'Смесь апартаментов и таунхаусов с продуманными деталями дизайна, видом на драматичное вади и в нескольких минутах от Маската.',
@@ -765,12 +773,12 @@ const FA_OVERLAY = {
     ],
   },
   'Sarooj Apartments': {
-    tagline: 'آپارتمان‌های سبک زندگی · الموج',
-    description: 'سروج، محله جدید آپارتمانی کم‌ارتفاع الموج؛ واحدهایی با ویو دریا و خرده‌فروشی، رستوران و باشگاه ساحلی ساکنان در طبقه خیابان.',
+    tagline: 'آپارتمان‌های مسکونی · شهر سلطان هیثم',
+    description: 'واحه ساروج، محله‌ای آپارتمانی و کم‌ارتفاع داخل شهر سلطان هیثم؛ عرضه فعلی شامل واحدهای یک و دو خوابه در دو بلوک همکف به‌اضافه ۵ طبقه است.',
   },
   'Sarooj Villas': {
-    tagline: 'ویلاهای ساحلی · الموج',
-    description: 'ویلاهای لبه ساحل در محله سروج؛ باغ اختصاصی، تراس بام و ویو باز و بدون مانع دریا.',
+    tagline: 'ویلاهای خانوادگی · شهر سلطان هیثم',
+    description: 'عرضه ویلایی ساروج شامل ویلاهای چسبیده و مستقل است؛ از ویلاهای ۴ خوابه روی زمین ۲۱۴ مترمربع تا ویلاهای ۵ و ۶ خوابه مستقل روی زمین‌های تا ۶۳۰ مترمربع.',
   },
   'Yenaier': {
     tagline: 'برج‌های میان‌مرتبه چندکاربری · شهر سلطان هیثم',
