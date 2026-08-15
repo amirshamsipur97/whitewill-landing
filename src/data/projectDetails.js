@@ -17,6 +17,33 @@ const D = {
     priceFrom: 'OMR 165,000',
     handover: '2026 – 2027',
   },
+  'The Arc Residences': {
+    tagline: 'Signature residences · Yiti',
+    description:
+      'A single curved tower on the Yiti waterfront, split into three collections: Opal, Oria and Onda. The release runs from 2-bedroom signature apartments to duplexes, sky terraces and full-floor penthouses, with private pools on most of the upper homes.',
+    units: ['Apartment', 'Duplex', 'Penthouse'],
+    bedrooms: '2 – 4',
+    priceFrom: 'OMR 423,883',
+    features: ['seaView', 'marina', 'mountainView', 'waterfront', 'privatePool', 'concierge', 'gym', 'parking', 'freehold'],
+    sections: [
+      {
+        title: 'The development',
+        body: 'The Arc Residences takes its name from its plan: one curved building on the Yiti waterfront, divided into three collections. Opal faces the sea and the marina, Oria looks to the mountains and the marina, and Onda sits between them. The current release spans 27 homes, from 2-bedroom apartments of about 166 sqm to a 1,086 sqm penthouse.',
+      },
+      {
+        title: 'Residences & design',
+        body: 'Five formats share the tower. Signature apartments run from 2 to 4 bedrooms with covered terraces; duplexes stack living and sleeping levels across two floors; Sky Terrace and Sky Garden homes add outdoor rooms of 90 to 840 sqm; and two seventh-floor penthouses take a full plate each. Private pools come with the Sky Garden, Sky Terrace and penthouse homes.',
+      },
+      {
+        title: 'Location & connectivity',
+        body: 'Yiti sits on the coast south of Muscat, reached by the new coastal road past Bandar Jissah and Muscat Bay. Homes look out over the marina, the Sea of Oman and the hills behind the bay.',
+      },
+      {
+        title: 'Investment & ownership',
+        body: 'Yiti is open to buyers of every nationality on a freehold title that carries eligibility for the renewable Oman property owner residency. Prices in this release start at OMR 423,883 excluding VAT and reach OMR 2,168,938 for the largest penthouse.',
+      },
+    ],
+  },
   'Aida': {
     tagline: 'Cliffside resort living — Yenkit',
     description:
@@ -412,6 +439,16 @@ const D = {
 // Numeric / structural fields (priceFrom, units, bedrooms, handover)
 // stay shared since they're the same in every language.
 const AR_OVERLAY = {
+  'The Arc Residences': {
+    tagline: 'إقامات مُوقَّعة · يتي',
+    description: 'برج واحد منحني على واجهة يتي البحرية، مقسّم إلى ثلاث مجموعات: أوبال وأوريا وأوندا. يمتد الإطلاق من شقق بغرفتي نوم إلى دوبلكس وسكاي تراس وبنتهاوس بطابق كامل، مع مسابح خاصة في معظم الوحدات العلوية.',
+    sections: [
+      { title: 'عن المشروع', body: 'يستمد The Arc Residences اسمه من مخططه: مبنى واحد منحني على واجهة يتي البحرية، مقسّم إلى ثلاث مجموعات. تطل أوبال على البحر والمارينا، وتنظر أوريا إلى الجبال والمارينا، وتقع أوندا بينهما. يضم الإطلاق الحالي 27 مسكناً، من شقق بغرفتي نوم بنحو 166 م² إلى بنتهاوس بمساحة 1,086 م².' },
+      { title: 'الوحدات والتصميم', body: 'خمس صيغ داخل البرج نفسه. شقق Signature من غرفتين إلى أربع غرف نوم مع تراسات مغطّاة، ودوبلكس يوزّع المعيشة والنوم على طابقين، ووحدات Sky Terrace وSky Garden تضيف مساحات خارجية من 90 إلى 840 م²، وبنتهاوسان في الطابق السابع يشغل كل منهما طابقاً كاملاً. المسابح الخاصة ترافق وحدات Sky Garden وSky Terrace والبنتهاوس.' },
+      { title: 'الموقع والوصول', body: 'تقع يتي على الساحل جنوب مسقط، ويصلها الطريق الساحلي الجديد عبر بندر الجصة وخليج مسقط. تطل المساكن على المارينا وبحر عُمان وتلال الخليج.' },
+      { title: 'الاستثمار والتملّك', body: 'يتي مفتوحة لجميع الجنسيات بتملّك حر يؤهّل لإقامة مالك العقار العمانية القابلة للتجديد. تبدأ أسعار هذا الإطلاق من 423,883 ر.ع غير شاملة الضريبة وتصل إلى 2,168,938 ر.ع لأكبر بنتهاوس.' },
+    ],
+  },
   'TSCY': {
     tagline: 'المدينة المستدامة — يتي',
     description: 'أول مجتمع رئيسي بصافي انبعاثات صفرية في عُمان على ساحل يتي — فلل وتاون هاوس بالطاقة الشمسية، شوارع خضراء مظلّلة، مزارع عضوية وتخطيط حضري يعطي الأولوية للدراجة.',
@@ -628,6 +665,16 @@ const AR_OVERLAY = {
 }
 
 const RU_OVERLAY = {
+  'The Arc Residences': {
+    tagline: 'Сигнатурные резиденции · Yiti',
+    description: 'Одна изогнутая башня на набережной Yiti, разделённая на три коллекции: Opal, Oria и Onda. В релизе всё, от сигнатурных квартир с 2 спальнями до дуплексов, sky terrace и пентхаусов во весь этаж, причём у большинства верхних домов есть частный бассейн.',
+    sections: [
+      { title: 'О проекте', body: 'The Arc Residences назван по своей планировке: одно изогнутое здание на набережной Yiti, разделённое на три коллекции. Opal смотрит на море и марину, Oria на горы и марину, Onda находится между ними. Текущий релиз включает 27 домов, от квартир с 2 спальнями площадью около 166 кв. м до пентхауса в 1 086 кв. м.' },
+      { title: 'Резиденции и дизайн', body: 'В башне пять форматов. Сигнатурные квартиры от 2 до 4 спален с крытыми террасами; дуплексы разносят гостиную и спальни по двум уровням; дома Sky Terrace и Sky Garden добавляют открытые пространства от 90 до 840 кв. м; два пентхауса на седьмом этаже занимают по целому этажу каждый. Частные бассейны идут с домами Sky Garden, Sky Terrace и пентхаусами.' },
+      { title: 'Расположение и транспорт', body: 'Yiti расположен на побережье к югу от Маската, к нему ведёт новая прибрежная дорога мимо Бандар-Джиссы и Muscat Bay. Из домов открывается вид на марину, Оманское море и холмы за бухтой.' },
+      { title: 'Инвестиции и собственность', body: 'Yiti открыт для покупателей всех национальностей: фрихолд с правом на продлеваемую резидентскую визу собственника недвижимости. Цены этого релиза начинаются от 423 883 OMR без НДС и доходят до 2 168 938 OMR за самый большой пентхаус.' },
+    ],
+  },
   'TSCY': {
     tagline: 'The Sustainable City — Yiti',
     description: 'Первое в Омане устойчивое сообщество с нулевыми выбросами на побережье Йити — виллы и таунхаусы на солнечной энергии, тенистые зелёные улицы, органические фермы и приоритет велосипедов в планировке.',
@@ -707,6 +754,16 @@ const RU_OVERLAY = {
 // Persian (fa) overlay. Added with Zen Residences; other projects fall back
 // to the English base until their fa copy is written.
 const FA_OVERLAY = {
+  'The Arc Residences': {
+    tagline: 'رزیدنس‌های شاخص · یتی',
+    description: 'یک برج منحنی روی ساحل یتی که به سه کالکشن تقسیم شده است: اوپال، اوریا و اوندا. این عرضه از آپارتمان‌های دوخوابه تا دوبلکس، اسکای‌تراس و پنت‌هاوس تمام‌طبقه را در بر می‌گیرد و بیشتر واحدهای طبقات بالا استخر اختصاصی دارند.',
+    sections: [
+      { title: 'درباره پروژه', body: 'نام The Arc Residences از پلان آن می‌آید: یک ساختمان منحنی روی ساحل یتی که به سه کالکشن تقسیم شده است. اوپال رو به دریا و مارینا، اوریا رو به کوه و مارینا، و اوندا میان این دو. عرضه فعلی ۲۷ واحد دارد؛ از آپارتمان دوخوابه حدود ۱۶۶ مترمربع تا پنت‌هاوس ۱٬۰۸۶ مترمربعی.' },
+      { title: 'واحدها و طراحی', body: 'پنج قالب در یک برج. آپارتمان‌های Signature از دو تا چهار خوابه با تراس سرپوشیده؛ دوبلکس‌ها که فضای نشیمن و خواب را در دو طبقه پخش می‌کنند؛ واحدهای Sky Terrace و Sky Garden با فضای باز ۹۰ تا ۸۴۰ مترمربع؛ و دو پنت‌هاوس طبقه هفتم که هرکدام یک طبقه کامل را می‌گیرند. استخر اختصاصی همراه واحدهای Sky Garden و Sky Terrace و پنت‌هاوس است.' },
+      { title: 'موقعیت و دسترسی', body: 'یتی روی ساحل جنوب مسقط است و جاده ساحلی جدید از کنار بندر جصه و خلیج مسقط به آن می‌رسد. واحدها رو به مارینا، دریای عمان و تپه‌های پشت خلیج باز می‌شوند.' },
+      { title: 'سرمایه‌گذاری و مالکیت', body: 'یتی برای خریداران هر ملیتی باز است؛ سند فری‌هولد که واجد شرایط اقامت قابل تمدید مالک ملک عمان است. قیمت این عرضه از ۴۲۳٬۸۸۳ ریال عمان بدون احتساب مالیات شروع می‌شود و تا ۲٬۱۶۸٬۹۳۸ ریال برای بزرگ‌ترین پنت‌هاوس می‌رسد.' },
+    ],
+  },
   'Zen Residences': {
     tagline: 'استودیو، آپارتمان و لافت · خلیج مسقط',
     description: 'پروژه‌ای جدید از Zen Development and Investment داخل مجتمع محصور خلیج مسقط در بندر جصه؛ استودیو، آپارتمان و لافت‌های دوطبقه بر فراز خلیجی خصوصی، در همسایگی اقامتگاه پنج‌ستاره جمیرا، مارینا و ساحل.',
