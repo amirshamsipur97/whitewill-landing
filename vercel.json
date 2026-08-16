@@ -134,8 +134,184 @@
       "destination": "/api/gone"
     },
     {
-      "source": "/((?!api|assets|images|video|icons|favicon|robots|sitemap).*)",
+      "source": "/property/:id(\\d+)",
+      "destination": "/api/unit-status?id=:id"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/property/:id(\\d+)",
+      "destination": "/api/unit-status?id=:id&lang=:lang"
+    },
+    {
+      "source": "/",
       "destination": "/app.html"
+    },
+    {
+      "source": "/buy",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/project",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/buy-property-in-muscat",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/buy-apartment-in-muscat",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/buy-property-in-salalah",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/property-prices-in-oman",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/oman-golden-visa",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/maison-shirdel",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/invest",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/investment",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/investment/legal",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/car-import",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/schools",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/insights",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/insights-admin",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/lp/oman",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/buy/:slug",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/insights/:slug",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/buy",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/project",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/buy-property-in-muscat",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/buy-apartment-in-muscat",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/buy-property-in-salalah",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/property-prices-in-oman",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/oman-golden-visa",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/maison-shirdel",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/invest",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/investment",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/investment/legal",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/car-import",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/schools",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/insights",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/insights-admin",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/about",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/privacy",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/lp/oman",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/buy/:slug",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/insights/:slug",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/((?!api|assets|images|video|icons|favicon|robots|sitemap).*)",
+      "destination": "/api/not-found"
     }
   ]
 }

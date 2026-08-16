@@ -12,21 +12,21 @@ export const ROUTES = {
     },
     desc: {
       en: 'Premium real estate brokerage in Oman. Buy apartments, villas and off-plan property in Muscat with freehold ownership and Oman residency for foreign investors.',
-      ru: 'Премиальное агентство недвижимости в Омане. Купите квартиру, виллу или строящийся объект в Маскате: полное право собственности и резидентство Омана для иностранных инвесторов.',
+      ru: 'Премиальное агентство недвижимости в Омане: квартиры, виллы и строящиеся объекты в Маскате, полное право собственности и резидентство для иностранцев.',
       ar: 'وساطة عقارية فاخرة في سلطنة عُمان. اشترِ شققاً وفللاً وعقارات على الخريطة في مسقط بتملك حر وإقامة عُمان للمستثمرين الأجانب.',
       fa: 'مشاور املاک لوکس در عمان. خرید آپارتمان، ویلا و پروژه‌های پیش‌فروش در مسقط با سند مالکیت آزاد و اقامت عمان برای سرمایه‌گذاران خارجی.',
     },
   },
   '/buy': {
     title: {
-      en: 'Buy Property in Oman 2026: Apartments & Villas from OMR 61,635 | Irfan',
-      ru: 'Купить недвижимость в Омане: квартиры и виллы | Irfan Investment',
-      ar: 'شراء عقار في عُمان: شقق وفلل للبيع | Irfan Investment',
-      fa: 'خرید ملک در عمان ۲۰۲۶ | لیست آپارتمان و ویلا با قیمت | ایرفان',
+      en: 'Buy Property in Oman from OMR 61,635 | Irfan Investment',
+      ru: 'Купить недвижимость в Омане от 61 635 OMR | Irfan Investment',
+      ar: 'شراء عقار في عُمان من 61,635 ر.ع | Irfan Investment',
+      fa: 'خرید ملک در عمان از ۶۱٬۶۳۵ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Browse freehold apartments, villas and chalets for sale in Muscat, Salalah and Jebel Sifah. Live prices from OMR 61,635, full unit inventory and Oman investor residency with your purchase.',
-      ru: 'Подборка недвижимости на продажу в Омане: квартиры, виллы и элитные резиденции в Маскате и Салале от ведущих застройщиков, с правом собственности для иностранцев.',
+      en: 'Freehold apartments, villas and chalets for sale in Oman from OMR 61,635. Live developer prices, full unit inventory, investor residency with your purchase.',
+      ru: 'Апартаменты, виллы и шале во фрихолд в Омане от 61 635 OMR. Актуальные цены застройщиков, полный список юнитов и резиденция инвестора при покупке.',
       ar: 'تصفح عقارات مختارة للبيع في عُمان: شقق وفلل ومساكن فاخرة في مسقط وصلالة من كبار المطورين، بتملك حر للأجانب.',
       fa: 'مجموعه‌ای منتخب از املاک برای فروش در عمان: آپارتمان، ویلا و اقامتگاه‌های لوکس در مسقط و صلاله از معتبرترین سازندگان، با مالکیت آزاد برای خارجی‌ها.',
     },
@@ -39,10 +39,10 @@ export const ROUTES = {
       fa: 'جستجوی ملک در عمان: آپارتمان و ویلا برای فروش | ایرفان',
     },
     desc: {
-      en: 'Search 400+ freehold apartments, villas and studios for sale across Muscat, Al Mouj, Muscat Bay, Jebel Sifah, Yiti and Salalah. Filter by type, bedrooms and price. Live developer prices from OMR 61,635 with Oman investor residency.',
-      ru: 'Поиск более 400 объектов недвижимости на продажу в Омане: квартиры, виллы и студии в Маскате, Аль-Мудж, Джебель-Сифа и Салале. Фильтры по типу, спальням и цене. Актуальные цены от 61 635 OMR.',
-      ar: 'ابحث في أكثر من 400 عقار تملّك حر للبيع في عُمان: شقق وفلل واستوديوهات في مسقط والموج وجبل سيفة وصلالة. فلترة حسب النوع والغرف والسعر. أسعار مباشرة من 61,635 ر.ع مع إقامة المستثمر.',
-      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد برای فروش در عمان: آپارتمان، ویلا و استودیو در مسقط، الموج، جبل سیفه و صلاله. فیلتر بر اساس نوع، خواب و قیمت. قیمت زنده از ۶۱٬۶۳۵ ریال عمان با اقامت سرمایه‌گذار.',
+      en: 'Search 400+ freehold apartments, villas and studios for sale in Oman from OMR 61,635. Filter by area, type, bedrooms and price. Live developer inventory.',
+      ru: 'Поиск более 400 объектов во фрихолд в Омане от 61 635 OMR: квартиры, виллы, студии. Фильтры по району, типу, спальням и цене. Живые цены застройщиков.',
+      ar: 'ابحث في أكثر من 400 عقار تملّك حر في عُمان من 61,635 ر.ع: شقق وفلل واستوديوهات. فلترة حسب المنطقة والنوع والغرف والسعر، بأسعار مباشرة من المطوّرين.',
+      fa: 'جستجو در بیش از ۴۰۰ ملک فری‌هولد در عمان از ۶۱٬۶۳۵ ریال عمان: آپارتمان، ویلا و استودیو. فیلتر منطقه، نوع، خواب و قیمت با قیمت زنده سازنده.',
     },
   },
   // ── head-term city/type landing pages ──────────────────────────────────
@@ -52,42 +52,42 @@ export const ROUTES = {
   // only the min price, which is stable.
   '/buy-property-in-muscat': {
     title: {
-      en: 'Buy Property in Muscat: Freehold Apartments & Villas from OMR 61,635 | Irfan',
+      en: 'Buy Property in Muscat from OMR 61,635 | Freehold | Irfan',
       ru: 'Купить недвижимость в Маскате: фрихолд от 61 635 OMR | Irfan',
       ar: 'شراء عقار في مسقط: تملّك حر من 61,635 ر.ع | Irfan Investment',
       fa: 'خرید ملک در مسقط: فری‌هولد از ۶۱٬۶۳۵ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Buy freehold property in Muscat: apartments, villas and townhouses in Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah and Yiti. Open to all nationalities, from OMR 61,635, with Oman investor residency.',
-      ru: 'Купить недвижимость в Маскате во фрихолд: квартиры, виллы и таунхаусы в Al Mouj, Muscat Bay, Muscat Hills, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, от 61 635 OMR, с инвесторской резиденцией.',
-      ar: 'شراء عقار بتملّك حر في مسقط: شقق وفلل وتاون هاوس في الموج وخليج مسقط ومسقط هيلز ومدينة السلطان هيثم وجبل سيفة وييتي. متاح لجميع الجنسيات من 61,635 ر.ع مع إقامة المستثمر.',
-      fa: 'خرید ملک فری‌هولد در مسقط: آپارتمان، ویلا و تاون‌هاوس در الموج، خلیج مسقط، مسقط هیلز، شهر سلطان هیثم، جبل سیفه و ییتی. برای همه ملیت‌ها، از ۶۱٬۶۳۵ ریال عمان همراه با اقامت سرمایه‌گذاری.',
+      en: 'Buy freehold property in Muscat from OMR 61,635: apartments, villas and townhouses in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti.',
+      ru: 'Купить недвижимость в Маскате во фрихолд от 61 635 OMR: квартиры, виллы и таунхаусы в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti.',
+      ar: 'شراء عقار بتملّك حر في مسقط من 61,635 ر.ع: شقق وفلل وتاون هاوس في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي.',
+      fa: 'خرید ملک فری‌هولد در مسقط از ۶۱٬۶۳۵ ریال عمان: آپارتمان، ویلا و تاون‌هاوس در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی.',
     },
   },
   '/buy-apartment-in-muscat': {
     title: {
-      en: 'Buy an Apartment in Muscat: Freehold Apartments for Sale from OMR 61,635 | Irfan',
+      en: 'Buy an Apartment in Muscat from OMR 61,635 | Irfan Investment',
       ru: 'Купить квартиру в Маскате: фрихолд-квартиры от 61 635 OMR | Irfan',
       ar: 'شراء شقة في مسقط: شقق تملّك حر للبيع من 61,635 ر.ع | Irfan Investment',
       fa: 'خرید آپارتمان در مسقط: آپارتمان فری‌هولد از ۶۱٬۶۳۵ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Freehold apartments for sale in Muscat: apartments from OMR 61,635 and one-bedroom homes from OMR 63,500 in Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah and Yiti. All nationalities, no tax on rental income, investor residency included.',
-      ru: 'Квартиры во фрихолд на продажу в Маскате: квартиры от 61 635 OMR и дома с одной спальней от 63 500 OMR в Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti. Для всех национальностей, без налога на доход от аренды, резиденция инвестора.',
-      ar: 'شقق تملّك حر للبيع في مسقط: شقق من 61,635 ر.ع ومساكن بغرفة نوم من 63,500 ر.ع في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي. لجميع الجنسيات، بدون ضريبة على دخل الإيجار، مع إقامة المستثمر.',
-      fa: 'آپارتمان فری‌هولد برای فروش در مسقط: آپارتمان از ۶۱٬۶۳۵ و واحد یک‌خوابه از ۶۳٬۵۰۰ ریال عمان در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی. همه ملیت‌ها، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
+      en: 'Freehold apartments for sale in Muscat from OMR 61,635, one-bedroom homes from OMR 63,500. Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah, Yiti.',
+      ru: 'Квартиры во фрихолд в Маскате от 61 635 OMR, дома с одной спальней от 63 500 OMR. Al Mouj, Muscat Bay, Sultan Haitham City, Jebel Sifah и Yiti.',
+      ar: 'شقق تملّك حر للبيع في مسقط من 61,635 ر.ع، ومساكن بغرفة نوم من 63,500 ر.ع، في الموج وخليج مسقط ومدينة السلطان هيثم وجبل سيفة وييتي.',
+      fa: 'آپارتمان فری‌هولد در مسقط از ۶۱٬۶۳۵ و واحد یک‌خوابه از ۶۳٬۵۰۰ ریال عمان، در الموج، خلیج مسقط، شهر سلطان هیثم، جبل سیفه و ییتی.',
     },
   },
   '/buy-property-in-salalah': {
     title: {
-      en: 'Buy Property in Salalah: Freehold Beachfront Villas & Chalets from OMR 98,000 | Irfan',
+      en: 'Buy Property in Salalah from OMR 98,000 | Beachfront Freehold',
       ru: 'Купить недвижимость в Салале: фрихолд у моря от 98 000 OMR | Irfan',
       ar: 'شراء عقار في صلالة: فلل وشاليهات شاطئية تملّك حر من 98,000 ر.ع | Irfan',
       fa: 'خرید ملک در صلاله: ویلا و شاله ساحلی فری‌هولد از ۹۸٬۰۰۰ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'Buy freehold property in Salalah, Oman: beachfront villas and chalets in Hawana Salalah from OMR 98,000. Open to all nationalities, strong khareef season rental demand, no tax on rental income, Oman investor residency included.',
-      ru: 'Купить недвижимость в Салале во фрихолд: пляжные виллы и шале в Hawana Salalah от 98 000 OMR. Для всех национальностей, сильный арендный сезон хариф, без налога на аренду, с инвесторской резиденцией Омана.',
+      en: 'Buy freehold property in Salalah from OMR 98,000: beachfront villas and chalets at Hawana Salalah. All nationalities, two rental seasons, investor residency.',
+      ru: 'Купить недвижимость в Салале во фрихолд от 98 000 OMR: пляжные виллы и шале в Hawana Salalah. Для всех национальностей, с резиденцией инвестора.',
       ar: 'شراء عقار بتملّك حر في صلالة: فلل وشاليهات شاطئية في هوانا صلالة من 98,000 ر.ع. متاح لجميع الجنسيات، طلب إيجار قوي في موسم الخريف، بلا ضريبة على دخل الإيجار، مع إقامة المستثمر.',
       fa: 'خرید ملک فری‌هولد در صلاله عمان: ویلا و شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال عمان. برای همه ملیت‌ها، تقاضای قوی اجاره در فصل خریف، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
     },
@@ -106,8 +106,8 @@ export const ROUTES = {
       fa: 'شاخص قیمت ملک در عمان: قیمت هر متر بر اساس منطقه ۲۰۲۶ | ایرفان',
     },
     desc: {
-      en: 'How much property costs in Oman, area by area: median price per square metre for Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah and Hawana Salalah, computed from live freehold inventory and updated continuously.',
-      ru: 'Сколько стоит недвижимость в Омане по районам: медианная цена за квадратный метр в Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah и Hawana Salalah. Расчёт по актуальному фрихолд-предложению.',
+      en: 'What property costs in Oman, area by area: median price per square metre across Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah and Salalah.',
+      ru: 'Сколько стоит недвижимость в Омане по районам: медианная цена за м² в Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah и Салале.',
       ar: 'كم تكلّف العقارات في عُمان منطقة بمنطقة: وسيط سعر المتر المربع في الموج وخليج مسقط ومدينة السلطان هيثم وييتي وجبل سيفة وهوانا صلالة، محتسب من مخزون التملّك الحر المتاح ويُحدَّث باستمرار.',
       fa: 'قیمت ملک در عمان منطقه به منطقه: میانه قیمت هر مترمربع در الموج، خلیج مسقط، شهر سلطان هیثم، ییتی، جبل سیفه و هوانا صلاله، محاسبه‌شده از موجودی زنده فری‌هولد و به‌روزرسانی پیوسته.',
     },
@@ -136,10 +136,10 @@ export const ROUTES = {
       fa: 'گلدن ویزای عمان ۲۰۲۶: اقامت با خرید ملک | Irfan',
     },
     desc: {
-      en: 'How to get Oman residency by buying property: the OMR 250,000 five year and OMR 500,000 ten year thresholds, which freehold homes qualify today, ITC ownership rules for foreign buyers, and the step by step process.',
-      ru: 'Как получить ВНЖ Омана за покупку недвижимости: пороги OMR 250 000 на пять лет и OMR 500 000 на десять, какие объекты подходят сегодня, правила фрихолда в зонах ITC и пошаговый процесс.',
-      ar: 'كيف تحصل على الإقامة في عُمان عبر شراء عقار: حدّا 250,000 ر.ع لخمس سنوات و500,000 ر.ع لعشر سنوات، وأي الوحدات مؤهلة اليوم، وقواعد التملّك الحر في المجمعات السياحية، والخطوات كاملة.',
-      fa: 'دریافت اقامت عمان با خرید ملک: آستانه ۲۵۰٬۰۰۰ ریالی پنج‌ساله و ۵۰۰٬۰۰۰ ریالی ده‌ساله، اینکه امروز کدام واحدها واجد شرایط‌اند، قوانین مالکیت فری‌هولد در مناطق ITC، و مراحل گام‌به‌گام.',
+      en: 'Oman residency by property: the OMR 250,000 five year and OMR 500,000 ten year thresholds, which homes qualify today, and the step by step process.',
+      ru: 'ВНЖ Омана за недвижимость: пороги 250 000 и 500 000 OMR на пять и десять лет, какие объекты подходят сегодня и пошаговый процесс оформления.',
+      ar: 'الإقامة في عُمان عبر العقار: حدّا 250,000 و500,000 ر.ع لخمس وعشر سنوات، وأي الوحدات مؤهلة اليوم، والخطوات كاملة.',
+      fa: 'اقامت عمان با خرید ملک: آستانه‌های ۲۵۰٬۰۰۰ و ۵۰۰٬۰۰۰ ریالی پنج و ده‌ساله، اینکه کدام واحدها واجد شرایط‌اند و مراحل گام‌به‌گام.',
     },
   },
   '/invest': {
@@ -150,7 +150,7 @@ export const ROUTES = {
       fa: 'ثبت شرکت و سرمایه‌گذاری در عمان | Irfan Investment Group',
     },
     desc: {
-      en: 'Company formation & business setup in Oman with up to 100% foreign ownership: LLC, SPC & joint-stock registration, Commercial Registration (CR), licensing, corporate banking, investor visas and tax. Updated 2026 framework.',
+      en: 'Company formation in Oman with up to 100% foreign ownership: LLC and SPC registration, Commercial Registration, licensing, banking and investor visas.',
       ru: 'Регистрация компании в Омане со 100% иностранным владением: LLC, SPC, коммерческая регистрация (CR), лицензии, корпоративный банкинг, инвесторские визы и налоги.',
       ar: 'تأسيس الشركات في عُمان بملكية أجنبية تصل إلى 100%: تسجيل LLC وSPC والشركات المساهمة، والسجل التجاري، والتراخيص، والخدمات المصرفية للشركات، وتأشيرات المستثمرين.',
       fa: 'ثبت شرکت و راه‌اندازی کسب‌وکار در عمان با مالکیت خارجی تا ۱۰۰٪: ثبت LLC و SPC، ثبت تجاری (CR)، مجوزها، بانکداری شرکتی، ویزای سرمایه‌گذار و مالیات.',
@@ -220,10 +220,10 @@ export const ROUTES = {
       fa: 'مقالات: املاک و سرمایه‌گذاری در عمان | Irfan Investment Group',
     },
     desc: {
-      en: 'Guides, market analysis and updates on real estate, investment, company formation and doing business in Oman.',
-      ru: 'Гиды, анализ рынка и новости о недвижимости, инвестициях, регистрации компаний и ведении бизнеса в Омане.',
-      ar: 'أدلة وتحليلات سوقية وتحديثات حول العقارات والاستثمار وتأسيس الشركات وممارسة الأعمال في عُمان.',
-      fa: 'راهنماها، تحلیل بازار و به‌روزرسانی‌ها درباره املاک، سرمایه‌گذاری، ثبت شرکت و کسب‌وکار در عمان.',
+      en: 'Oman property and investment guides: market analysis, freehold ownership rules, residency by investment and company formation, updated continuously.',
+      ru: 'Гиды по недвижимости и инвестициям в Омане: анализ рынка, правила фрихолда, резиденция за инвестиции и регистрация компаний. Обновляется постоянно.',
+      ar: 'أدلة العقارات والاستثمار في عُمان: تحليل السوق، وقواعد التملّك الحر، والإقامة عبر الاستثمار، وتأسيس الشركات. تُحدَّث باستمرار.',
+      fa: 'راهنمای املاک و سرمایه‌گذاری عمان: تحلیل بازار، قوانین مالکیت فری‌هولد، اقامت از راه سرمایه‌گذاری و ثبت شرکت. به‌روزرسانی پیوسته.',
     },
   },
   // Salalah flagship landing — hand-tuned meta targeting the Salalah keyword
@@ -237,7 +237,7 @@ export const ROUTES = {
       fa: 'هوانا صلاله: ویلا و خانه برای فروش در صلاله عمان | مالکیت آزاد',
     },
     desc: {
-      en: 'Buy property in Salalah: freehold waterfront chalets and villas at Hawana Salalah from OMR 98,000. Two rental seasons, Omani residency eligibility, 3-year payment plans. New Lubana Island release.',
+      en: 'Freehold waterfront chalets and villas at Hawana Salalah from OMR 98,000. Two rental seasons, Oman residency eligibility, 3-year payment plans.',
       ru: 'Купите недвижимость в Салале: шале у воды и виллы во фрихолде в Hawana Salalah от 98 000 OMR. Два арендных сезона, право на резидентство Омана, рассрочка до 3 лет.',
       ar: 'اشترِ عقاراً في صلالة: شاليهات وفلل بتملك حر في هوانا صلالة من 98,000 ر.ع. موسمان إيجاريان، أهلية إقامة المستثمر، وخطط دفع 3 سنوات. إصدار جزيرة لوبانا الجديد.',
       fa: 'خرید ملک در صلاله: شاله‌های رو به آب و ویلا با مالکیت آزاد در هوانا صلاله از ۹۸٬۰۰۰ ریال عمانی. دو فصل اجاره در سال، واجد شرایط اقامت عمان و طرح پرداخت ۳ ساله.',
@@ -252,10 +252,10 @@ export const ROUTES = {
       fa: 'مدارس بین‌المللی عمان | راهنمای کامل برای خانواده‌های مهاجر',
     },
     desc: {
-      en: 'International schools in Muscat and Oman: British, Cambridge, IB and American curricula, fees and admissions. Irfan Investment helps your family relocate, invest and settle in Oman.',
-      ru: 'Международные школы Маската и Омана: британская, кембриджская, IB и американская программы, стоимость и поступление. Irfan Investment помогает вашей семье переехать, инвестировать и обустроиться.',
-      ar: 'المدارس الدولية في مسقط وعُمان: المناهج البريطانية وكامبريدج والبكالوريا الدولية والأمريكية، والرسوم والقبول. تساعد Irfan Investment عائلتك على الانتقال والاستثمار والاستقرار.',
-      fa: 'مدارس بین‌المللی مسقط و عمان؛ برنامه‌های بریتانیایی، کمبریج، IB و آمریکایی، شهریه و پذیرش. Irfan Investment به خانواده شما برای مهاجرت، سرمایه‌گذاری و اسکان کمک می‌کند.',
+      en: 'International schools in Muscat and Oman: British, Cambridge, IB and American curricula, fees and admissions, for families relocating to Oman.',
+      ru: 'Международные школы Маската и Омана: британская, кембриджская, IB и американская программы, стоимость и поступление для переезжающих семей.',
+      ar: 'المدارس الدولية في مسقط وعُمان: المناهج البريطانية وكامبريدج والبكالوريا الدولية والأمريكية، والرسوم والقبول، للعائلات المنتقلة إلى عُمان.',
+      fa: 'مدارس بین‌المللی مسقط و عمان: برنامه‌های بریتانیایی، کمبریج، IB و آمریکایی، شهریه و پذیرش، برای خانواده‌هایی که به عمان می‌آیند.',
     },
   },
   '/privacy': {
@@ -288,10 +288,10 @@ const PROJECT_META_OVERRIDES = {
       fa: 'د آرک رزیدنسز یتی: آپارتمان و پنت‌هاوس از ۴۲۳٬۸۸۳ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'The Arc Residences on the Yiti waterfront: 2 to 4-bedroom signature apartments, duplexes, sky terraces and full-floor penthouses across the Opal, Oria and Onda collections, from OMR 423,883 excluding VAT. Freehold for all nationalities, with Oman owner residency.',
-      ru: 'The Arc Residences на набережной Yiti: сигнатурные квартиры с 2-4 спальнями, дуплексы, sky terrace и пентхаусы во весь этаж в коллекциях Opal, Oria и Onda, от 423 883 OMR без НДС. Фрихолд для всех национальностей и резидентская виза собственника.',
-      ar: 'ذا آرك ريزيدنسز على واجهة يتي البحرية: شقق مُوقَّعة من غرفتين إلى أربع غرف نوم ودوبلكس وسكاي تراس وبنتهاوس بطابق كامل ضمن مجموعات أوبال وأوريا وأوندا، من 423,883 ر.ع غير شاملة الضريبة. تملّك حر لجميع الجنسيات مع إقامة مالك العقار.',
-      fa: 'د آرک رزیدنسز روی ساحل یتی: آپارتمان‌های دو تا چهار خوابه، دوبلکس، اسکای‌تراس و پنت‌هاوس تمام‌طبقه در سه کالکشن اوپال، اوریا و اوندا، از ۴۲۳٬۸۸۳ ریال عمان بدون مالیات. فری‌هولد برای همه ملیت‌ها همراه اقامت مالک ملک عمان.',
+      en: 'The Arc Residences on the Yiti waterfront from OMR 423,883: 2 to 4-bedroom apartments, duplexes, sky terraces and full-floor penthouses. Freehold, all nationalities.',
+      ru: 'The Arc Residences на набережной Yiti от 423 883 OMR: квартиры с 2-4 спальнями, дуплексы, sky terrace и пентхаусы во весь этаж. Фрихолд для всех национальностей.',
+      ar: 'ذا آرك ريزيدنسز على واجهة يتي من 423,883 ر.ع: شقق من غرفتين إلى أربع غرف نوم ودوبلكس وسكاي تراس وبنتهاوس بطابق كامل. تملّك حر لجميع الجنسيات.',
+      fa: 'د آرک رزیدنسز روی ساحل یتی از ۴۲۳٬۸۸۳ ریال عمان: آپارتمان دو تا چهار خوابه، دوبلکس، اسکای‌تراس و پنت‌هاوس تمام‌طبقه. فری‌هولد برای همه ملیت‌ها.',
     },
   },
 }
