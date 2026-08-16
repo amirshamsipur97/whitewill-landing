@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n.jsx'
 import { submitForm } from '../supabase.js'
 import { trackLead, trackQuizStart, trackContactClick } from '../analytics.js'
 import { DIAL_CODES, DEFAULT_DIAL } from '../data/dialCodes.js'
-import { galleryFor } from '../projectGallery.js'
 
 /**
  * MetaLandingPage — /lp/oman
  *
- * Deliberately MINIMAL Meta-ads quiz funnel (v3, decluttered on request):
- * hero -> 5 one-question steps -> contact form -> Salalah photo slider.
- * No site chrome (App.jsx hides Header/Footer/launchers on /lp/*), not in
- * seo.jsx ROUTES so SeoManager emits noindex with a proper /lp/ title.
+ * Deliberately MINIMAL Meta-ads quiz funnel (v4, text-only on request):
+ * hero -> nationality dropdown -> 3 one-question steps -> contact form.
+ * No photos, banners or gallery copy at all. No site chrome (App.jsx hides
+ * Header/Footer/launchers on /lp/*), not in seo.jsx ROUTES so SeoManager
+ * emits noindex with a proper /lp/ title.
  *
  * Pixel funnel: PageView -> InitiateCheckout (first answer) -> Lead
  * (form submit) + Contact (WhatsApp tap). Answers ride in `message`
@@ -21,22 +21,26 @@ import { galleryFor } from '../projectGallery.js'
 const WHATSAPP_URL = 'https://wa.me/message/L22KC3L6RYINE1'
 const PURPLE = '#351D93'
 const GOLD = '#A09958'
-const NAVY = '#06080F'
 const PAPER = '#f2f1ec'
 const INK = '#232323'
-const CARD_BG = 'rgba(255,255,255,0.045)'
-const BORDER = '1px solid rgba(255,255,255,0.14)'
 const TITLE_FONT = '"Arsenal SC", "Peyda", "Inter", sans-serif'
 const BODY_FONT = '"Inter", "Peyda", sans-serif'
 
 // ── quiz steps (exact wording supplied by the client) ────────────────
+// Step 0 is the nationality dropdown, then these three option steps.
 const QUESTIONS = [
-  { key: 'type', q: 'What type of property are you looking for?', options: ['Apartment', 'Villa'] },
-  { key: 'bedrooms', q: 'How many bedrooms are you looking for?', options: ['1 Bedroom', '2 Bedrooms', '3 Bedrooms', '4 Bedrooms', '5+ Bedrooms'] },
-  { key: 'budget', q: 'What is your expected budget?', options: ['Under $200,000', '$200,000 - $300,000', '$300,000 - $500,000', 'Above $500,000'] },
-  { key: 'readiness', q: 'Which type of property are you interested in?', options: ['Ready to Move In', 'Off-Plan'] },
-  { key: 'timeline', q: 'When are you planning to buy?', options: ['Within 1 month', 'Within 3 months', 'Within 6 months'] },
+  { key: 'lifestyle', q: 'What type of property lifestyle are you looking for?', options: ['Affordable & Practical', 'Premium Living', 'Luxury Living', 'Ultra-Luxury Living'] },
+  { key: 'purpose', q: 'What is your main purpose for buying?', options: ['Investment', 'Primary Residence', 'Second Home', 'Holiday Home'] },
+  { key: 'property_type', q: 'What is your preferred property type?', options: ['Apartment', 'Villa', 'Townhouse', 'Penthouse'] },
 ]
+
+// Every country we already ship in the phone selector: GCC first (our
+// market), then the rest of the world alphabetically. Reused so the two
+// dropdowns can never drift apart.
+const COUNTRIES = DIAL_CODES.map((d) => d.label)
+const TOTAL_STEPS = 1 + QUESTIONS.length // nationality + option questions
+const FORM_STEP = TOTAL_STEPS           // 4
+const DONE_STEP = TOTAL_STEPS + 1       // 5
 
 // ── shared css: CTA light sweep + chip pulse + slider fade ───────────
 const LP_CSS = `
@@ -153,8 +157,9 @@ function DealChip() {
 
 // ── quiz funnel: 5 one-question steps, then the contact form ─────────
 function QuizFunnel({ lang }) {
-  const [step, setStep] = useState(0) // 0..4 questions, 5 form, 6 done
+  const [step, setStep] = useState(0) // 0 nationality, 1..3 questions, 4 form, 5 done
   const [answers, setAnswers] = useState({})
+  const [nationality, setNationality] = useState('')
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [dial, setDial] = useState(DEFAULT_DIAL)
@@ -172,11 +177,23 @@ function QuizFunnel({ lang }) {
     setTimeout(() => { setStep(next); setLeaving(false) }, 220)
   }
 
+  const start = () => {
+    if (!startedRef.current) { startedRef.current = true; trackQuizStart({ language: lang }) }
+  }
+
   const pick = (key, value) => {
     if (leaving) return
-    if (!startedRef.current) { startedRef.current = true; trackQuizStart({ language: lang }) }
+    start()
     setAnswers((a) => ({ ...a, [key]: value }))
     goTo(step + 1)
+  }
+
+  const confirmNationality = () => {
+    if (leaving) return
+    if (!nationality) { setError('Please select your nationality'); return }
+    setError('')
+    start()
+    goTo(1)
   }
 
   const submit = async (e) => {
@@ -187,7 +204,10 @@ function QuizFunnel({ lang }) {
     setError('')
     setSending(true)
     try {
-      const summary = QUESTIONS.map((q) => `${q.key}: ${answers[q.key] || 'n/a'}`).join(', ')
+      const summary = [
+        `nationality: ${nationality || 'n/a'}`,
+        ...QUESTIONS.map((q) => `${q.key}: ${answers[q.key] || 'n/a'}`),
+      ].join(', ')
       await submitForm({
         source: 'meta_lp',
         full_name: fullName.trim(),
@@ -199,7 +219,7 @@ function QuizFunnel({ lang }) {
         message: `Meta LP quiz - ${summary}`,
       })
       trackLead({ source: 'meta_lp', language: lang })
-      goTo(6)
+      goTo(DONE_STEP)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -213,19 +233,54 @@ function QuizFunnel({ lang }) {
     fontFamily: BODY_FONT, fontSize: 16, outline: 'none',
   }
 
-  const q = QUESTIONS[step]
+  const q = QUESTIONS[step - 1]
+
+  const stepHead = (
+    <>
+      <p style={{ textAlign: 'center', color: GOLD, fontFamily: BODY_FONT, fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', margin: '0 0 6px' }}>
+        Question {step + 1} of {TOTAL_STEPS}
+      </p>
+      {/* progress bar */}
+      <div style={{ maxWidth: 260, height: 3, margin: '0 auto 24px', background: 'rgba(0,0,0,0.12)', borderRadius: 2 }}>
+        <div style={{ width: `${((step + 1) / (TOTAL_STEPS + 1)) * 100}%`, height: '100%', background: GOLD, borderRadius: 2, transition: 'width 0.3s' }} />
+      </div>
+    </>
+  )
 
   return (
     <div id="quiz" style={{ maxWidth: 620, margin: '0 auto', padding: '0 18px', minHeight: 340 }}>
-      {step <= 4 && (
-        <div key={step} className={`lp-step${leaving ? ' lp-step--out' : ''}`}>
-          <p style={{ textAlign: 'center', color: GOLD, fontFamily: BODY_FONT, fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', margin: '0 0 6px' }}>
-            Question {step + 1} of {QUESTIONS.length}
-          </p>
-          {/* progress bar */}
-          <div style={{ maxWidth: 260, height: 3, margin: '0 auto 24px', background: 'rgba(0,0,0,0.12)', borderRadius: 2 }}>
-            <div style={{ width: `${((step + 1) / (QUESTIONS.length + 1)) * 100}%`, height: '100%', background: GOLD, borderRadius: 2, transition: 'width 0.3s' }} />
+      {step === 0 && (
+        <div className={`lp-step${leaving ? ' lp-step--out' : ''}`}>
+          {stepHead}
+          <SectionTitle>What is your nationality?</SectionTitle>
+          <div style={{ display: 'grid', gap: 12, maxWidth: 460, margin: '0 auto' }}>
+            <select
+              value={nationality}
+              onChange={(e) => { setNationality(e.target.value); setError('') }}
+              style={{
+                ...field,
+                appearance: 'none', cursor: 'pointer', paddingRight: 44,
+                color: nationality ? INK : 'rgba(0,0,0,0.45)',
+                // caret drawn in, since appearance:none drops the native one
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23232323' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 16px center',
+              }}
+            >
+              <option value="">Select your country</option>
+              {COUNTRIES.map((c) => (
+                <option key={c} value={c} style={{ color: '#000' }}>{c}</option>
+              ))}
+            </select>
+            {error && <div style={{ color: '#b00020', fontFamily: BODY_FONT, fontSize: 14 }}>{error}</div>}
+            <Cta onClick={confirmNationality}>Continue</Cta>
           </div>
+        </div>
+      )}
+
+      {step >= 1 && step <= QUESTIONS.length && (
+        <div key={step} className={`lp-step${leaving ? ' lp-step--out' : ''}`}>
+          {stepHead}
           <SectionTitle>{q.q}</SectionTitle>
           <div style={{ display: 'grid', gap: 12, maxWidth: 460, margin: '0 auto' }}>
             {q.options.map((o) => (
@@ -234,15 +289,13 @@ function QuizFunnel({ lang }) {
               </button>
             ))}
           </div>
-          {step > 0 && (
-            <button onClick={() => goTo(step - 1)} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'rgba(0,0,0,0.5)', fontFamily: BODY_FONT, fontSize: 14, cursor: 'pointer' }}>
-              Back
-            </button>
-          )}
+          <button onClick={() => goTo(step - 1)} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'rgba(0,0,0,0.5)', fontFamily: BODY_FONT, fontSize: 14, cursor: 'pointer' }}>
+            Back
+          </button>
         </div>
       )}
 
-      {step === 5 && (
+      {step === FORM_STEP && (
         <div className={`lp-step${leaving ? ' lp-step--out' : ''}`}>
           <p style={{ textAlign: 'center', color: GOLD, fontFamily: BODY_FONT, fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', margin: '0 0 24px' }}>
             Last step
@@ -271,13 +324,13 @@ function QuizFunnel({ lang }) {
               By submitting you agree to our <a href="/privacy" style={{ color: 'rgba(0,0,0,0.65)' }}>privacy policy</a>. No spam, ever.
             </p>
           </form>
-          <button onClick={() => goTo(4)} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'rgba(0,0,0,0.5)', fontFamily: BODY_FONT, fontSize: 14, cursor: 'pointer' }}>
+          <button onClick={() => goTo(QUESTIONS.length)} style={{ display: 'block', margin: '16px auto 0', background: 'none', border: 'none', color: 'rgba(0,0,0,0.5)', fontFamily: BODY_FONT, fontSize: 14, cursor: 'pointer' }}>
             Back
           </button>
         </div>
       )}
 
-      {step === 6 && (
+      {step === DONE_STEP && (
         <div className="lp-step" style={{ textAlign: 'center', maxWidth: 520, margin: '0 auto' }}>
           <SectionTitle>Thank you. Your options are on the way.</SectionTitle>
           <p style={{ color: 'rgba(0,0,0,0.65)', fontFamily: BODY_FONT, fontSize: 16, lineHeight: 1.6 }}>
@@ -299,71 +352,10 @@ function QuizFunnel({ lang }) {
   )
 }
 
-// ── photo slider (auto-advance + arrows + dots), one per community ───
-function PhotoSlider({ images, alt }) {
-  const [i, setI] = useState(0)
-  const timer = useRef(null)
-
-  useEffect(() => {
-    timer.current = setInterval(() => setI((v) => (v + 1) % images.length), 3500)
-    return () => clearInterval(timer.current)
-  }, [images.length])
-
-  const go = (n) => {
-    clearInterval(timer.current)
-    setI(((n % images.length) + images.length) % images.length)
-  }
-
-  if (!images.length) return null
-
-  const arrow = {
-    position: 'absolute', top: '50%', transform: 'translateY(-50%)', zIndex: 2,
-    background: 'rgba(6,8,15,0.55)', color: '#fff', border: BORDER,
-    borderRadius: '50%', width: 40, height: 40, cursor: 'pointer',
-    fontSize: 18, lineHeight: 1,
-  }
-
-  return (
-    <div style={{ position: 'relative', maxWidth: 760, margin: '0 auto', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.14)', boxShadow: '0 14px 34px rgba(0,0,0,0.12)' }}>
-      <div style={{ position: 'relative', aspectRatio: '16 / 10', background: '#0a0d16' }}>
-        {images.map((src, k) => (
-          <img
-            key={src}
-            src={src}
-            alt={alt}
-            loading={k === 0 ? 'eager' : 'lazy'}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: k === i ? 1 : 0, transition: 'opacity 0.6s ease' }}
-          />
-        ))}
-      </div>
-      <button aria-label="Previous photo" onClick={() => go(i - 1)} style={{ ...arrow, left: 10 }}>&#8249;</button>
-      <button aria-label="Next photo" onClick={() => go(i + 1)} style={{ ...arrow, right: 10 }}>&#8250;</button>
-      <div style={{ position: 'absolute', bottom: 12, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 7 }}>
-        {images.map((_, k) => (
-          <button key={k} aria-label={`Photo ${k + 1}`} onClick={() => go(k)} style={{ width: k === i ? 18 : 7, height: 7, borderRadius: 4, border: 'none', cursor: 'pointer', background: k === i ? GOLD : 'rgba(255,255,255,0.45)', transition: 'width 0.25s' }} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
 // ── page ─────────────────────────────────────────────────────────────
 export default function MetaLandingPage() {
   const { lang } = useI18n()
   const scrollToQuiz = () => document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-
-  // Apartments = Muscat inventory (Zen, Sarooj, Muscat Bay + Solaris at
-  // Sifah); chalets/villas = Salalah (Hawana + Amazi). 8 images each.
-  const muscatImages = useMemo(() => [
-    ...galleryFor('zen-residences'),
-    ...galleryFor('sarooj-apartments'),
-    ...galleryFor('solaris'),
-    ...galleryFor('muscat-bay'),
-  ].slice(0, 8), [])
-  const salalahImages = useMemo(() => [
-    ...galleryFor('hawana-salalah'),
-    ...galleryFor('amazi'),
-  ].slice(0, 8), [])
 
   return (
     <div dir="ltr" style={{ background: `${PAPER} url(/images/lp-paper.jpg)`, backgroundSize: '1100px', minHeight: '100vh', paddingBottom: 90 }}>
@@ -398,27 +390,6 @@ export default function MetaLandingPage() {
       {/* quiz — the whole funnel, one question at a time */}
       <section style={{ padding: '38px 0 8px' }}>
         <QuizFunnel lang={lang} />
-      </section>
-
-      {/* communities — apartments live in Muscat, chalets/villas in Salalah,
-          so each quiz answer has a real matching inventory section */}
-      <section style={{ padding: '24px 18px 20px' }}>
-        <SectionTitle>Muscat Apartments</SectionTitle>
-        <p style={{ color: 'rgba(0,0,0,0.6)', fontFamily: BODY_FONT, fontSize: 15.5, lineHeight: 1.6, textAlign: 'center', maxWidth: 560, margin: '-8px auto 24px' }}>
-          Modern apartments and studios in Muscat and the Jebel Sifah marina town, from OMR 61,635.
-        </p>
-        <PhotoSlider images={muscatImages} alt="Apartments in Muscat, Oman" />
-      </section>
-
-      <section style={{ padding: '48px 18px 20px' }}>
-        <SectionTitle>Salalah Chalets &amp; Villas</SectionTitle>
-        <p style={{ color: 'rgba(0,0,0,0.6)', fontFamily: BODY_FONT, fontSize: 15.5, lineHeight: 1.6, textAlign: 'center', maxWidth: 560, margin: '-8px auto 24px' }}>
-          Beachfront chalets and lagoon villas in Oman&apos;s largest resort community, from OMR 98,000.
-        </p>
-        <PhotoSlider images={salalahImages} alt="Chalets and villas at Hawana Salalah, Oman" />
-        <div style={{ marginTop: 28 }}>
-          <Cta onClick={scrollToQuiz}>Get Prices &amp; Floor Plans</Cta>
-        </div>
       </section>
 
       {/* mini footer */}
