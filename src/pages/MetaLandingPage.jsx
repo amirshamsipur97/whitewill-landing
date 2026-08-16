@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useI18n } from '../i18n.jsx'
 import { submitForm } from '../supabase.js'
 import { trackLead, trackQuizStart, trackContactClick } from '../analytics.js'
@@ -60,11 +60,6 @@ const LP_CSS = `
   animation: lpShine 2.6s ease-in-out infinite;
   pointer-events: none;
 }
-@keyframes lpPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%      { transform: scale(0.72); opacity: 0.65; }
-}
-.lp-deal-dot { animation: lpPulse 1.4s ease-in-out infinite; }
 @keyframes lpWaPulse {
   0%, 100% { transform: scale(1); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
   50%      { transform: scale(1.14); box-shadow: 0 12px 30px rgba(37,211,102,0.45); }
@@ -102,56 +97,6 @@ function SectionTitle({ children, size = 'clamp(22px, 5vw, 34px)' }) {
     }}>
       {children}
     </h2>
-  )
-}
-
-/** Floating "Limited-Time Deal" chip — right-aligned (balances the Oman
- *  flag on the left) with a per-visitor evergreen countdown. First visit
- *  arms a deadline just under 23h from now, persisted in localStorage so
- *  refreshes keep ticking; when it hits zero it re-arms for the next day. */
-const DEAL_KEY = 'lp_deal_deadline'
-
-function armDeadline() {
-  const end = Date.now() + 23 * 3600 * 1000 - 1000
-  try { localStorage.setItem(DEAL_KEY, String(end)) } catch {}
-  return end
-}
-
-function DealChip() {
-  const [shown, setShown] = useState(true)
-  const [left, setLeft] = useState(null)
-
-  useEffect(() => {
-    let end
-    try { end = Number(localStorage.getItem(DEAL_KEY)) || 0 } catch { end = 0 }
-    if (!end || end <= Date.now()) end = armDeadline()
-    const tick = () => {
-      let ms = end - Date.now()
-      if (ms <= 0) { end = armDeadline(); ms = end - Date.now() }
-      setLeft(ms)
-    }
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  if (!shown) return null
-  const fmt = (ms) => {
-    const t = Math.max(0, Math.floor(ms / 1000))
-    const h = String(Math.floor(t / 3600)).padStart(2, '0')
-    const m = String(Math.floor((t % 3600) / 60)).padStart(2, '0')
-    const sec = String(t % 60).padStart(2, '0')
-    return `${h}:${m}:${sec}`
-  }
-  return (
-    <div style={{ position: 'fixed', top: 14, right: 14, zIndex: 60, background: '#fff', borderRadius: 999, padding: '9px 12px 9px 12px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 10px 28px rgba(0,0,0,0.45)' }}>
-      <span className="lp-deal-dot" style={{ width: 11, height: 11, borderRadius: '50%', background: '#A0153E', display: 'inline-block' }} />
-      <span style={{ fontFamily: BODY_FONT, fontWeight: 600, fontSize: 13.5, color: '#1b1b1b', whiteSpace: 'nowrap' }}>Limited-Time Deal</span>
-      {left !== null && (
-        <span style={{ fontFamily: BODY_FONT, fontWeight: 700, fontSize: 13.5, color: '#A0153E', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{fmt(left)}</span>
-      )}
-      <button onClick={() => setShown(false)} aria-label="Dismiss" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 15, lineHeight: 1, padding: '0 2px' }}>✕</button>
-    </div>
   )
 }
 
@@ -360,7 +305,6 @@ export default function MetaLandingPage() {
   return (
     <div dir="ltr" style={{ background: `${PAPER} url(/images/lp-paper.jpg)`, backgroundSize: '1100px', minHeight: '100vh', paddingBottom: 90 }}>
       <style>{LP_CSS}</style>
-      <DealChip />
 
       {/* hero — logo, one promise, one CTA (no photo: clean paper, per Figma) */}
       <section style={{ position: 'relative', textAlign: 'center', padding: '86px 18px 46px' }}>
