@@ -95,8 +95,69 @@ function doPost(e) {
   }
 }
 
-function doGet() {
-  return _json({ ok: true, service: 'meta-lp-leads-ingest' });
+/**
+ * GET ?token=<secret>&action=read[&limit=50]  -> the sheet contents as JSON.
+ * Read-only; lets the pipeline be verified from outside without opening the
+ * sheet. Without a valid token it only reports that the service is alive.
+ */
+function doGet(e) {
+  const p = (e && e.parameter) || {};
+  if (p.action !== 'read') return _json({ ok: true, service: 'meta-lp-leads-ingest' });
+  if (SHARED_SECRET && p.token !== SHARED_SECRET) return _json({ ok: false, error: 'unauthorized' });
+
+  const sheet = _ensureSheet();
+  const lastRow = sheet.getLastRow();
+  const lastCol = sheet.getLastColumn();
+  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  const limit = Math.min(Number(p.limit) || 50, 200);
+  const dataRows = Math.max(0, lastRow - 1);
+  const take = Math.min(limit, dataRows);
+  const rows = take
+    ? sheet.getRange(lastRow - take + 1, 1, take, lastCol).getDisplayValues()
+    : [];
+
+  return _json({ ok: true, tab: SHEET_NAME, total_rows: dataRows, headers: headers, rows: rows });
+}
+
+/**
+ * Run this ONCE from the Apps Script editor (pick setupSheet -> Run) to build
+ * the header row and format the tab. Safe to re-run: it never touches data,
+ * it only rewrites row 1 and the cosmetics. Running it from the editor takes
+ * effect immediately, no redeploy needed.
+ */
+function setupSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
+
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  sheet.setFrozenRows(1);
+
+  const head = sheet.getRange(1, 1, 1, HEADERS.length);
+  head.setFontWeight('bold').setBackground('#351D93').setFontColor('#ffffff')
+      .setVerticalAlignment('middle');
+  sheet.setRowHeight(1, 34);
+
+  // Widths tuned for the columns that actually carry long values.
+  const WIDTHS = {
+    received_at: 150, lead_id: 190, full_name: 170, country_code: 100,
+    phone: 140, email: 210, nationality: 140, lifestyle: 170, purpose: 150,
+    property_type: 140, language: 90, utm_source: 120, utm_medium: 120,
+    utm_campaign: 150, page_url: 220, raw_answers: 380, supabase_id: 110
+  };
+  HEADERS.forEach(function (h, i) {
+    if (WIDTHS[h]) sheet.setColumnWidth(i + 1, WIDTHS[h]);
+  });
+
+  if (sheet.getLastRow() > 1) {
+    sheet.getRange(2, 1, sheet.getLastRow() - 1, HEADERS.length).setVerticalAlignment('top');
+  }
+  const existing = sheet.getFilter();
+  if (existing) existing.remove();
+  sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 1), HEADERS.length).createFilter();
+
+  ss.setActiveSheet(sheet);
+  return 'ready: ' + SHEET_NAME;
 }
 
 /** "Meta LP quiz - nationality: India, lifestyle: Luxury Living, ..." -> object */
