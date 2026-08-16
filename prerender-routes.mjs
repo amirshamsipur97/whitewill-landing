@@ -494,14 +494,51 @@ async function fetchProjects() {
   return (await r.json()).map((p) => p.name).filter(Boolean)
 }
 
+// Copies a project's gallery cover to a stable, unhashed public path so the
+// project page can point og:image at it.
+//
+// WHY a copy and not the bundled asset: the gallery is a Vite import.meta.glob,
+// so the real filenames are content-hashed and only known inside the bundle,
+// which this node script cannot resolve. The source file is still on disk at
+// build time, so copying it to a predictable name is both simpler and stable
+// across deploys, which matters because social platforms and WhatsApp cache
+// og:image by URL.
+function ogImageFor(slug) {
+  for (const ext of ['jpg', 'jpeg', 'png', 'webp']) {
+    const src = join('src', 'assets', 'projects', slug, `1.${ext}`)
+    if (!existsSync(src)) continue
+    const rel = `/images/og/${slug}.${ext}`
+    const out = join('dist', 'images', 'og', `${slug}.${ext}`)
+    mkdirSync(dirname(out), { recursive: true })
+    writeFileSync(out, readFileSync(src))
+    return SITE + rel
+  }
+  return null
+}
+
 function projectPageFor(name, lang) {
   const pm = projectMeta(name)
-  const route = `/buy/${slugify(name)}`
+  const slug = slugify(name)
+  const route = `/buy/${slug}`
   const fake = { title: pm.title, desc: pm.desc }
   // Reuse pageFor by temporarily registering the route meta.
   ROUTES[route] = fake
-  const html = pageFor(route, lang)
+  let html = pageFor(route, lang)
   delete ROUTES[route]
+
+  // Point the share card at the project's own cover instead of the site-wide
+  // peninsula.jpg default from index.html. src/projectGallery.js always meant
+  // the first gallery image to be the og:image; only the article prerenderer
+  // ever implemented it, so every project link shared to WhatsApp, LinkedIn or
+  // a Meta ad previewed the same generic photo.
+  const og = ogImageFor(slug)
+  if (og) {
+    html = html
+      .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${og}$2`)
+      .replace(/(<meta property="og:image:width" content=")[^"]*(")/, '$11600$2')
+      .replace(/(<meta property="og:image:height" content=")[^"]*(")/, '$1900$2')
+      .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${og}$2`)
+  }
 
   return html
 }
