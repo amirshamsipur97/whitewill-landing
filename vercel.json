@@ -214,6 +214,10 @@
       "destination": "/app.html"
     },
     {
+      "source": "/terms",
+      "destination": "/app.html"
+    },
+    {
       "source": "/lp/oman",
       "destination": "/app.html"
     },
@@ -295,6 +299,10 @@
     },
     {
       "source": "/:lang(ru|ar|fa)/privacy",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/:lang(ru|ar|fa)/terms",
       "destination": "/app.html"
     },
     {

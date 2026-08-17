@@ -272,6 +272,20 @@ export const ROUTES = {
       fa: 'نحوه جمع‌آوری، استفاده و حفاظت از داده‌های شخصی شما در وب‌سایت Irfan Investment Group.',
     },
   },
+  '/terms': {
+    title: {
+      en: 'Terms of Use | Irfan Investment Group',
+      ru: 'Условия использования | Irfan Investment Group',
+      ar: 'شروط الاستخدام | Irfan Investment Group',
+      fa: 'شرایط استفاده | Irfan Investment Group',
+    },
+    desc: {
+      en: 'Terms of use for www.irfaninvest.com: how listings, prices and areas are sourced, what our brokerage role is, and the limits of the information published here.',
+      ru: 'Условия использования www.irfaninvest.com: откуда берутся объекты, цены и площади, какова наша брокерская роль и каковы границы публикуемой информации.',
+      ar: 'شروط استخدام www.irfaninvest.com: مصدر العقارات والأسعار والمساحات، ودورنا كوسيط، وحدود المعلومات المنشورة هنا.',
+      fa: 'شرایط استفاده از www.irfaninvest.com: منبع املاک و قیمت و متراژ، نقش ما به‌عنوان واسط، و محدوده اطلاعات منتشرشده.',
+    },
+  },
 }
 
 // Per-project overrides for the generic template below. Worth adding when a

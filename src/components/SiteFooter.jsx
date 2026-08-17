@@ -50,7 +50,7 @@ const PAGE_LINKS = [
 
 const LEGAL_LINKS = [
   { label: 'Privacy', to: '/privacy', legalKey: 'privacy' },
-  { label: 'Terms', to: '/', legalKey: 'userAgreement' },
+  { label: 'Terms', to: '/terms', legalKey: 'userAgreement' },
   { label: 'Cookies', to: '/', legalKey: 'cookie' },
 ]
 

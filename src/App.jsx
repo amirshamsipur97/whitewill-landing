@@ -145,6 +145,7 @@ const CarImportPage = lazy(() => import('./pages/CarImportPage'))
 const SchoolsPage = lazy(() => import('./pages/SchoolsPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const TermsPage = lazy(() => import('./pages/TermsPage'))
 const MetaLandingPage = lazy(() => import('./pages/MetaLandingPage'))
 const InsightsPage = lazy(() => import('./pages/InsightsPage'))
 const InsightDetailPage = lazy(() => import('./pages/InsightDetailPage'))
@@ -281,6 +282,7 @@ function PageRoutes() {
       <Route path="insights-admin" element={<InsightsAdminPage />} />
       <Route path="about" element={<AboutPage />} />
       <Route path="privacy" element={<PrivacyPage />} />
+      <Route path="terms" element={<TermsPage />} />
       {/* Meta-ads landing (quiz funnel). Deliberately NOT in seo.jsx, so
           SeoManager emits noindex; App hides site chrome on /lp/*. */}
       <Route path="lp/oman" element={<MetaLandingPage />} />
