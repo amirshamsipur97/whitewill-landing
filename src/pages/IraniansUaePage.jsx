@@ -35,9 +35,11 @@ import {
   FONT, OLIVE_BRIGHT, HAIR, HAIR_SOFT,
   SectionHeading, DataTable, FaqAccordion, MarkerList,
 } from '../components/invest/ui.jsx'
-import { copy, faqJsonLd } from '../data/iraniansUaeContent.mjs'
+import { copy, links, faqJsonLd, breadcrumbJsonLd } from '../data/iraniansUaeContent.mjs'
 
-const JSONLD_ID = 'iranians-uae-faq-jsonld'
+// Same ids the prerenderer writes, so hydration replaces rather than duplicates.
+const FAQ_ID = 'iranians-uae-faq-jsonld'
+const CRUMB_ID = 'iranians-uae-breadcrumb-jsonld'
 
 // Verdict tint on the comparison table: green where Oman genuinely wins, amber
 // where it does not. The amber row is the golden-visa threshold and it stays.
@@ -102,16 +104,19 @@ function BandCard({ range, omr, count, body }) {
 }
 
 export default function IraniansUaePage() {
-  // FAQPage schema. Same id the prerenderer would use, so a hydrating page
-  // replaces rather than duplicates. Removed on unmount like every other
-  // page-scoped JSON-LD on this site.
+  // FAQPage + BreadcrumbList. Both are also written into the static shell, and
+  // both reuse that shell's id so hydration replaces instead of duplicating.
+  // Removed on unmount like every other page-scoped JSON-LD on this site.
   useEffect(() => {
-    const el = document.getElementById(JSONLD_ID) || document.createElement('script')
-    el.id = JSONLD_ID
-    el.type = 'application/ld+json'
-    el.textContent = JSON.stringify(faqJsonLd())
-    if (!el.parentNode) document.head.appendChild(el)
-    return () => { el.parentNode?.removeChild(el) }
+    const nodes = [[FAQ_ID, faqJsonLd()], [CRUMB_ID, breadcrumbJsonLd()]].map(([id, data]) => {
+      const el = document.getElementById(id) || document.createElement('script')
+      el.id = id
+      el.type = 'application/ld+json'
+      el.textContent = JSON.stringify(data)
+      if (!el.parentNode) document.head.appendChild(el)
+      return el
+    })
+    return () => { nodes.forEach((el) => el.parentNode?.removeChild(el)) }
   }, [])
 
   return (
@@ -236,6 +241,34 @@ export default function IraniansUaePage() {
       <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 14 } }}>
         <SectionHeading title={copy.faqTitle} />
         <FaqAccordion items={copy.faq} />
+      </Container>
+
+      {/* Keyword-anchored internal links. Same list the static shell renders. */}
+      <Container maxWidth="lg" sx={{ mt: { xs: 7, md: 11 } }}>
+        <Typography component="h2" sx={{ fontFamily: FONT, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.16em', color: OLIVE_BRIGHT, mb: 2.5 }}>
+          {links.heading}
+        </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 1.2, md: 1.6 } }}>
+          {links.items.map((l) => (
+            <LocalizedLink
+              key={l.href}
+              to={l.href}
+              style={{ textDecoration: 'none' }}
+            >
+              <Box
+                sx={{
+                  border: HAIR, borderRadius: '12px', px: { xs: 2, md: 2.4 }, py: { xs: 1.5, md: 1.8 },
+                  bgcolor: 'rgba(255,255,255,0.02)', transition: 'border-color .2s',
+                  '&:hover': { borderColor: 'rgba(140,141,37,0.45)' },
+                }}
+              >
+                <Typography sx={{ fontFamily: FONT, fontSize: { xs: 14, md: 15 }, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7 }}>
+                  {l.label}
+                </Typography>
+              </Box>
+            </LocalizedLink>
+          ))}
+        </Box>
       </Container>
 
       {/* Lead form. Own source so these leads are separable downstream. */}

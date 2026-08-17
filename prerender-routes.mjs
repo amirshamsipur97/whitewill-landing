@@ -17,6 +17,10 @@ import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { ROUTES, projectMeta } from './src/seoRoutes.mjs'
 import { BUY_SEO, buyFaqJsonLd } from './src/buySeoContent.mjs'
+import {
+  copy as uaeCopy, links as uaeLinks,
+  faqJsonLd as uaeFaqJsonLd, breadcrumbJsonLd as uaeBreadcrumbJsonLd,
+} from './src/data/iraniansUaeContent.mjs'
 import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
 import { POPULAR, COMMUNITIES, PROJECTS, SERVICES, footerSeoCopy } from './src/footerSeoLinks.mjs'
@@ -100,6 +104,7 @@ function pageFor(route, lang) {
     (LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : '') +
     (route === PRICE_INDEX_ROUTE ? priceIndexHtml(lang) : '') +
     (route === GOLDEN_VISA_ROUTE ? goldenVisaHtml(lang) : '') +
+    (route === UAE_ROUTE ? iraniansUaeHtml() : '') +
     footerLinksHtml(lang)
   // The light page needs a FULL-BLEED white backdrop: the global stylesheet
   // paints body black, so a centred max-width block alone would sit between
@@ -178,6 +183,13 @@ function pageFor(route, lang) {
       `    <script type="application/ld+json" id="price-index-dataset-jsonld">${JSON.stringify(priceIndexJsonLd(lang, priceIndex, BUILD_DAY))}</script>\n  </head>`,
     )
   }
+  if (route === UAE_ROUTE) {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="iranians-uae-faq-jsonld">${JSON.stringify(uaeFaqJsonLd())}</script>\n` +
+      `    <script type="application/ld+json" id="iranians-uae-breadcrumb-jsonld">${JSON.stringify(uaeBreadcrumbJsonLd())}</script>\n  </head>`,
+    )
+  }
   if (route === GOLDEN_VISA_ROUTE && goldenVisa.units > 0) {
     const v = gvVars(lang)
     html = html.replace(
@@ -249,6 +261,41 @@ function landingSeoHtml(slug, lang) {
 // inventory fetch that feeds the /buy/:slug AggregateOffer.
 const PRICE_INDEX_ROUTE = '/property-prices-in-oman'
 const GOLDEN_VISA_ROUTE = '/oman-golden-visa'
+const UAE_ROUTE = '/oman-property-for-iranians-in-uae'
+
+// Crawlable body for the Persian-only UAE landing. The React page is a stack
+// of MUI cards, so without this the crawler's first fetch would be an h1, a
+// meta description and a footer: no comparison table, no FAQ, no outbound
+// links. Everything here is the SAME data the page renders, never a second
+// version of it. Persian only, so it takes no `lang` argument.
+function iraniansUaeHtml() {
+  const p = langPrefix('fa')
+  const why = uaeCopy.why.map((w) => `<h3>${esc(w.title)}</h3><p>${esc(w.body)}</p>`).join('')
+  const rows = uaeCopy.compareRows
+    .map((r) => `<tr><td>${esc(r.k)}</td><td>${esc(r.uae)}</td><td>${esc(r.om)}</td></tr>`)
+    .join('')
+  const table =
+    `<table><thead><tr>${uaeCopy.compareCols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead>` +
+    `<tbody>${rows}</tbody></table>`
+  const bands = uaeCopy.bands
+    .map((b) => `<h3>${esc(b.range)}</h3><p>${esc(b.omr)} · ${esc(b.count)}. ${esc(b.body)}</p>`)
+    .join('')
+  const steps = uaeCopy.steps.map((s) => `<li>${esc(s)}</li>`).join('')
+  const faq = uaeCopy.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
+  const items = uaeLinks.items
+    .map((l) => `<li><a href="${p}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+  return (
+    `<p>${esc(uaeCopy.lead)}</p>` +
+    `<h2>${esc(uaeCopy.whyTitle)}</h2><p>${esc(uaeCopy.whyIntro)}</p>${why}` +
+    `<h2>${esc(uaeCopy.compareTitle)}</h2><p>${esc(uaeCopy.compareNote)}</p>${table}` +
+    `<p>${esc(uaeCopy.compareSource)}</p>` +
+    `<h2>${esc(uaeCopy.bandsTitle)}</h2>${bands}` +
+    `<h2>${esc(uaeCopy.stepsTitle)}</h2><ol>${steps}</ol><p>${esc(uaeCopy.stepsNote)}</p>` +
+    `<h2>${esc(uaeCopy.faqTitle)}</h2>${faq}` +
+    `<h2>${esc(uaeLinks.heading)}</h2><ul>${items}</ul>`
+  )
+}
 const BUILD_DAY = (process.env.VERCEL_DEPLOYMENT_CREATED_AT
   ? new Date(Number(process.env.VERCEL_DEPLOYMENT_CREATED_AT))
   : new Date()

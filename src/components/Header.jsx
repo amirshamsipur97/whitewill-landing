@@ -213,6 +213,16 @@ export default function Header() {
     { label: pm.aptMuscat, to: '/buy-apartment-in-muscat' },
     { group: pm.salalah },
     { label: pm.propSalalah, to: '/buy-property-in-salalah' },
+    // Persian only: the UAE segment landing. It is a BUYER group, not a city,
+    // so it gets its own heading instead of hanging under Muscat or Salalah.
+    // This is also the page's only site-wide internal link, so it must not be
+    // dropped when the menu is next reshuffled.
+    ...(lang === 'fa'
+      ? [
+          { group: 'بر اساس خریدار' },
+          { label: 'ایرانیان مقیم امارات', to: '/oman-property-for-iranians-in-uae' },
+        ]
+      : []),
   ]
 
   // Services dropdown. International Schools used to be a top-level item; the

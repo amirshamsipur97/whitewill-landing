@@ -229,6 +229,29 @@ export const copy = {
   ],
 }
 
+// Outbound internal links. Rendered by BOTH the React page and the static
+// shell (prerender-routes.mjs), because a landing whose only crawlable link
+// is a CTA button is a dead end for a crawler. hrefs are LOGICAL, unprefixed;
+// each renderer adds /fa itself.
+export const links = {
+  heading: 'ادامه مسیر',
+  items: [
+    { href: '/project', label: 'جستجوی ۴۷۳ ملک موجود در عمان با قیمت زنده' },
+    { href: '/buy-property-in-muscat', label: 'خرید ملک در مسقط' },
+    { href: '/property-prices-in-oman', label: 'شاخص قیمت ملک عمان، متری و به تفکیک منطقه' },
+    { href: '/oman-golden-visa', label: 'ویزای طلایی و ویزای مالک ملک عمان' },
+    { href: '/insights/kharid-melk-dar-oman-2026', label: 'راهنمای گام به گام خرید ملک در عمان' },
+    { href: '/insights/cheap-property-for-sale-oman-muscat-2026', label: 'خرید خانه ارزان در عمان' },
+  ],
+}
+
+// Breadcrumb: home → properties portal → this page.
+export const breadcrumb = [
+  { name: 'خانه', href: '/' },
+  { name: 'املاک', href: '/project' },
+  { name: 'ایرانیان مقیم امارات', href: '/oman-property-for-iranians-in-uae' },
+]
+
 export function faqJsonLd() {
   return {
     '@context': 'https://schema.org',
@@ -237,6 +260,21 @@ export function faqJsonLd() {
       '@type': 'Question',
       name: f.q,
       acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
+}
+
+const SITE = 'https://www.irfaninvest.com'
+
+export function breadcrumbJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumb.map((b, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: b.name,
+      item: `${SITE}/fa${b.href === '/' ? '' : b.href}`,
     })),
   }
 }
