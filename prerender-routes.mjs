@@ -23,7 +23,7 @@ import {
 } from './src/data/iraniansUaeContent.mjs'
 import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
-import { POPULAR, COMMUNITIES, PROJECTS, SERVICES, footerSeoCopy } from './src/footerSeoLinks.mjs'
+import { POPULAR, COMMUNITIES, PROJECTS, servicesFor, footerSeoCopy } from './src/footerSeoLinks.mjs'
 import { buildPriceIndex, fmtInt, fmtOmr, fmtRange, fmtSqm } from './src/priceIndexData.mjs'
 import { priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill } from './src/priceIndexContent.mjs'
 import { buildGoldenVisa, TIER_5_OMR, TIER_10_OMR } from './src/goldenVisaData.mjs'
@@ -515,7 +515,7 @@ function footerLinksHtml(lang) {
       label: c.project.replace('{name}', p.name),
     }))) +
     `<h2>${esc(c.headings.services)}</h2>` +
-    list(SERVICES.map((s) => ({ href: `${prefix}${s.to}`, label: c.services[s.key] })))
+    list(servicesFor(lang).map((s) => ({ href: `${prefix}${s.to}`, label: c.services[s.key] })))
   )
 }
 

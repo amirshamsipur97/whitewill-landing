@@ -43,13 +43,24 @@ export const COMMUNITIES = [
 // particular had exactly one inbound link on the whole site (its nav item),
 // which is why it gets a permanent home here now that the nav slot went to the
 // price index.
+// An entry may carry `langs` to appear in some languages only. Use
+// servicesFor(lang) rather than mapping SERVICES directly, or a language
+// without the label key renders an empty <a>.
 export const SERVICES = [
   { to: '/oman-golden-visa', key: 'goldenVisa' },
   { to: '/invest', key: 'company' },
   { to: '/schools', key: 'schools' },
   { to: '/investment', key: 'banking' },
   { to: '/investment/legal', key: 'legal' },
+  // The Persian-only UAE landing. Its only other site-wide link is the header
+  // nav, which is React-rendered and therefore invisible on a crawler's first
+  // fetch. That is the exact gap this whole module exists to close.
+  { to: '/oman-property-for-iranians-in-uae', key: 'iraniansUae', langs: ['fa'] },
 ]
+
+export function servicesFor(lang) {
+  return SERVICES.filter((s) => !s.langs || s.langs.includes(lang))
+}
 
 // The nine projects that currently hold available stock.
 export const PROJECTS = [
@@ -104,6 +115,7 @@ export const FOOTER_SEO = {
       schools: 'مدارس بین‌المللی در عمان',
       banking: 'بانکداری و تامین مالی در عمان',
       legal: 'الزامات قانونی تامین مالی',
+      iraniansUae: 'خرید ملک در عمان برای ایرانیان مقیم امارات',
     },
   },
   ar: {
