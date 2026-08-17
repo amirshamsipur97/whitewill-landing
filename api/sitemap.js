@@ -29,6 +29,10 @@ const STATIC = [
   // Low competition + 175% YoY growth on the golden-visa cluster, and the
   // only page on the site targeting residency intent.
   { path: '/oman-golden-visa', priority: '0.9', changefreq: 'weekly' },
+  // Persian-only segment landing (Iranians resident in the UAE). `langs`
+  // keeps the other three out of the sitemap — they are not served either,
+  // see the vercel.json allowlist.
+  { path: '/oman-property-for-iranians-in-uae', priority: '0.8', changefreq: 'monthly', langs: ['fa'] },
   { path: '/invest', priority: '0.8', changefreq: 'monthly' },
   { path: '/schools', priority: '0.8', changefreq: 'monthly' },
   { path: '/investment', priority: '0.7', changefreq: 'monthly' },

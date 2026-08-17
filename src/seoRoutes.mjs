@@ -272,6 +272,21 @@ export const ROUTES = {
       fa: 'نحوه جمع‌آوری، استفاده و حفاظت از داده‌های شخصی شما در وب‌سایت Irfan Investment Group.',
     },
   },
+  // Persian-only segment landing for Iranians resident in the UAE.
+  // `langs` restricts BOTH the prerenderer and the sitemap to fa; an en/ar/ru
+  // edition would be a thin duplicate of pages that already exist. The en
+  // strings below exist only so pick() stays total, they are never emitted.
+  '/oman-property-for-iranians-in-uae': {
+    langs: ['fa'],
+    title: {
+      fa: 'خرید ملک در عمان برای ایرانیان مقیم امارات | ایرفان',
+      en: 'Oman Property for Iranians Living in the UAE | Irfan Investment',
+    },
+    desc: {
+      fa: 'خرید ملک فری‌هولد در عمان برای ایرانیان مقیم امارات، از ۵۸۸٬۷۰۰ درهم با اقامت قابل تمدید. مقایسه با دبی، بودجه درهمی و ۴۷۳ واحد موجود.',
+      en: 'Freehold property in Oman for Iranians based in the UAE, from about AED 588,700 with renewable owner residency. Dirham budgets, live inventory.',
+    },
+  },
   '/terms': {
     title: {
       en: 'Terms of Use | Irfan Investment Group',

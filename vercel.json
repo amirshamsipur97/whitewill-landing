@@ -262,6 +262,10 @@
       "destination": "/app.html"
     },
     {
+      "source": "/fa/oman-property-for-iranians-in-uae",
+      "destination": "/app.html"
+    },
+    {
       "source": "/:lang(ru|ar|fa)/maison-shirdel",
       "destination": "/app.html"
     },

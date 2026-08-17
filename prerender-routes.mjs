@@ -75,10 +75,14 @@ function pageFor(route, lang) {
   // Strip the template's homepage canonical, then emit this page's own
   // canonical + the full hreflang cluster (mirrors SeoManager.setAlternates).
   html = html.replace(/<link rel="canonical"[^>]*>\s*/g, '')
+  // A route may declare `langs` to restrict itself to a subset (the Persian-only
+  // UAE landing does). The hreflang cluster must then advertise only those
+  // languages, and x-default falls to the first of them when en is not one.
+  const routeLangs = r.langs?.length ? r.langs : LANGS
   const links = [
     `<link rel="canonical" href="${url}">`,
-    ...LANGS.map((l) => `<link rel="alternate" hreflang="${l}" href="${urlFor(l, route)}">`),
-    `<link rel="alternate" hreflang="x-default" href="${urlFor('en', route)}">`,
+    ...routeLangs.map((l) => `<link rel="alternate" hreflang="${l}" href="${urlFor(l, route)}">`),
+    `<link rel="alternate" hreflang="x-default" href="${urlFor(routeLangs.includes('en') ? 'en' : routeLangs[0], route)}">`,
   ].join('\n    ')
   html = html.replace('</head>', `    ${links}\n  </head>`)
 
@@ -573,7 +577,8 @@ console.log(
 let count = 0
 let skipped = 0
 for (const route of Object.keys(ROUTES)) {
-  for (const lang of LANGS) {
+  // Routes that declare `langs` are emitted only in those languages.
+  for (const lang of (ROUTES[route].langs?.length ? ROUTES[route].langs : LANGS)) {
     const segs = route === '/' ? [] : route.split('/').filter(Boolean)
     const out = join('dist', ...(lang === 'en' ? [] : [lang]), ...segs, 'index.html')
     // The EN homepage is the one file that MUST be overwritten (it starts life
