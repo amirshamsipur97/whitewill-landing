@@ -132,6 +132,21 @@ export default function IraniansUaePage() {
         >
           {copy.h1}
         </Typography>
+        <Box
+          sx={{
+            mt: { xs: 3, md: 4 }, maxWidth: 820, border: HAIR, borderRadius: '16px',
+            borderInlineStartWidth: 3, borderInlineStartColor: OLIVE_BRIGHT,
+            bgcolor: 'rgba(140,141,37,0.06)', px: { xs: 2.4, md: 3.2 }, py: { xs: 2, md: 2.6 },
+          }}
+        >
+          <Typography sx={{ fontFamily: FONT, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.14em', color: OLIVE_BRIGHT, mb: 1 }}>
+            {copy.answerLabel}
+          </Typography>
+          <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 16.5 }, color: 'rgba(255,255,255,0.88)', lineHeight: 2 }}>
+            {copy.answer}
+          </Typography>
+        </Box>
+
         <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15.5, md: 17.5 }, color: 'rgba(255,255,255,0.72)', lineHeight: 2, mt: { xs: 2.5, md: 3.5 }, maxWidth: 780 }}>
           {copy.lead}
         </Typography>
@@ -172,6 +187,17 @@ export default function IraniansUaePage() {
         </Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
           {copy.why.map((w) => <WhyCard key={w.title} {...w} />)}
+        </Box>
+      </Container>
+
+      {/* Eligibility. This is the actual intent behind the query: can I buy. */}
+      <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 14 } }}>
+        <SectionHeading title={copy.termsTitle} />
+        <Box sx={{ maxWidth: 860 }}>
+          <Typography sx={{ fontFamily: FONT, fontSize: { xs: 15, md: 16.5 }, color: 'rgba(255,255,255,0.72)', lineHeight: 2, mb: 3 }}>
+            {copy.termsIntro}
+          </Typography>
+          <MarkerList items={copy.terms} />
         </Box>
       </Container>
 

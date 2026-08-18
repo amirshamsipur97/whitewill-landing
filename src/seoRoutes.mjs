@@ -279,11 +279,11 @@ export const ROUTES = {
   '/oman-property-for-iranians-in-uae': {
     langs: ['fa'],
     title: {
-      fa: 'خرید ملک در عمان برای ایرانیان مقیم امارات | ایرفان',
+      fa: 'خرید ملک در عمان برای ساکنین امارات ۲۰۲۶ | ایرفان',
       en: 'Oman Property for Iranians Living in the UAE | Irfan Investment',
     },
     desc: {
-      fa: 'خرید ملک فری‌هولد در عمان برای ایرانیان مقیم امارات، از ۵۸۸٬۷۰۰ درهم با اقامت قابل تمدید. مقایسه با دبی، بودجه درهمی و ۴۷۳ واحد موجود.',
+      fa: 'خرید ملک در عمان برای ساکنین امارات: فری‌هولد برای هر ملیتی از ۵۸۸٬۷۰۰ درهم، اقامت قابل تمدید، مقایسه قیمت با دبی و ۴۷۳ واحد موجود.',
       en: 'Freehold property in Oman for Iranians based in the UAE, from about AED 588,700 with renewable owner residency. Dirham budgets, live inventory.',
     },
   },

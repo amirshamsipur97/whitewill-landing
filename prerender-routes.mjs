@@ -285,9 +285,12 @@ function iraniansUaeHtml() {
   const items = uaeLinks.items
     .map((l) => `<li><a href="${p}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
     .join('')
+  const terms = uaeCopy.terms.map((t) => `<li>${esc(t)}</li>`).join('')
   return (
+    `<p><strong>${esc(uaeCopy.answerLabel)}:</strong> ${esc(uaeCopy.answer)}</p>` +
     `<p>${esc(uaeCopy.lead)}</p>` +
     `<h2>${esc(uaeCopy.whyTitle)}</h2><p>${esc(uaeCopy.whyIntro)}</p>${why}` +
+    `<h2>${esc(uaeCopy.termsTitle)}</h2><p>${esc(uaeCopy.termsIntro)}</p><ul>${terms}</ul>` +
     `<h2>${esc(uaeCopy.compareTitle)}</h2><p>${esc(uaeCopy.compareNote)}</p>${table}` +
     `<p>${esc(uaeCopy.compareSource)}</p>` +
     `<h2>${esc(uaeCopy.bandsTitle)}</h2>${bands}` +
