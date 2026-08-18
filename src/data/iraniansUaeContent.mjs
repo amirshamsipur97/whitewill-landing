@@ -27,13 +27,13 @@
  *
  * ══ FIGURES ══
  * OMR figures are live from project_units (availability_status ilike
- * '%avail%'), read 2026-08-17: 473 units, entry OMR 61,635 (Wadi Zaha studio,
+ * '%avail%'), read 2026-08-17: 478 units, entry OMR 61,635 (Wadi Zaha studio,
  * 56 sqm, Sultan Haitham City), 146 units at or under OMR 100,000, 145 units
  * at or above the OMR 250,000 golden threshold.
  *
  * The median per sqm is deliberately taken from the site's OWN price index
- * (OMR 1,107/m², printed by prerender-routes on every build) and NOT from a
- * fresh median over project_units, which returns 1,083 because it counts rows
+ * (OMR 1,103/m², printed by prerender-routes on every build) and NOT from a
+ * fresh median over project_units, which counts rows
  * the index excludes. Two pages publishing two different medians for the same
  * inventory is the kind of thing a buyer notices, so this one follows
  * /property-prices-in-oman. Re-read the build log when refreshing it.
@@ -61,12 +61,12 @@ export const OMR_TO_AED = 9.5514
 
 // Live inventory snapshot, 2026-08-17.
 export const LIVE = {
-  units: 473,
+  units: 478,
   entryOmr: 61635,
   entryAed: 588700,
   entryArea: 56,
-  medianPpsmOmr: 1107, // from the site price index, see header
-  medianPpsmAed: 10573,
+  medianPpsmOmr: 1103, // from the site price index, see header
+  medianPpsmAed: 10535,
   underMidBand: 146, // units at or under OMR 100,000 (~AED 955,000)
   goldenEligible: 145, // units at or above OMR 250,000
 }
@@ -99,7 +99,7 @@ export const copy = {
   ctaSecondary: 'دریافت لیست قیمت',
 
   stats: [
-    { value: '۴۷۳', label: 'واحد موجود در ۱۲ پروژه' },
+    { value: '۴۷۸', label: 'واحد موجود در ۱۲ پروژه' },
     { value: '۵۸۸٬۷۰۰ درهم', label: 'کمترین قیمت ورود، فری‌هولد' },
     { value: '۱ ساعت و ۱۵ دقیقه', label: 'پرواز دبی به مسقط' },
     { value: 'اقامت قابل تمدید', label: 'با هر خرید در منطقه ITC' },
@@ -112,7 +112,7 @@ export const copy = {
     {
       title: 'بودجه درهمی، بازار ارزان‌تر',
       body:
-        'میانه قیمت هر مترمربع در موجودی زنده ما حدود ۱۰٬۵۷۰ درهم است. میانگین آپارتمان در دبی در میانه ۲۰۲۶ حدود ۲۱٬۲۰۰ درهم برای هر مترمربع گزارش می‌شود. یعنی همان بودجه، تقریباً دو برابر متراژ. عدد سمت عمان مال ماست، عدد سمت دبی مرجع بازار است.',
+        'میانه قیمت هر مترمربع در موجودی زنده ما حدود ۱۰٬۵۴۰ درهم است. میانگین آپارتمان در دبی در میانه ۲۰۲۶ حدود ۲۱٬۲۰۰ درهم برای هر مترمربع گزارش می‌شود. یعنی همان بودجه، تقریباً دو برابر متراژ. عدد سمت عمان مال ماست، عدد سمت دبی مرجع بازار است.',
     },
     {
       title: 'اقامتی که با خرید کوچک هم می‌آید',
@@ -158,7 +158,7 @@ export const copy = {
     {
       k: 'میانه قیمت هر مترمربع',
       uae: 'حدود ۲۱٬۲۰۰ درهم، میانگین آپارتمان دبی در میانه ۲۰۲۶',
-      om: 'حدود ۱۰٬۵۷۰ درهم، میانه موجودی زنده ما',
+      om: 'حدود ۱۰٬۵۴۰ درهم، میانه موجودی زنده ما',
       good: true,
     },
     {
@@ -243,7 +243,7 @@ export const copy = {
     },
     {
       q: 'قیمت‌های این صفحه چقدر واقعی است؟',
-      a: 'ارقام ریالی از موجودی زنده ۴۷۳ واحد ما می‌آید و با هر به‌روزرسانی انبار عوض می‌شود. تبدیل درهم با نرخ ثابت انجام شده، چون هم ریال عمان و هم درهم به دلار میخکوب‌اند. ارقام سمت امارات مرجع بازار است و روی صفحه هم همین‌طور علامت خورده.',
+      a: 'ارقام ریالی از موجودی زنده ۴۷۸ واحد ما می‌آید و با هر به‌روزرسانی انبار عوض می‌شود. تبدیل درهم با نرخ ثابت انجام شده، چون هم ریال عمان و هم درهم به دلار میخکوب‌اند. ارقام سمت امارات مرجع بازار است و روی صفحه هم همین‌طور علامت خورده.',
     },
   ],
 }
@@ -255,7 +255,7 @@ export const copy = {
 export const links = {
   heading: 'ادامه مسیر',
   items: [
-    { href: '/project', label: 'جستجوی ۴۷۳ ملک موجود در عمان با قیمت زنده' },
+    { href: '/project', label: 'جستجوی ۴۷۸ ملک موجود در عمان با قیمت زنده' },
     { href: '/buy-property-in-muscat', label: 'خرید ملک در مسقط' },
     { href: '/property-prices-in-oman', label: 'شاخص قیمت ملک عمان، متری و به تفکیک منطقه' },
     { href: '/oman-golden-visa', label: 'ویزای طلایی و ویزای مالک ملک عمان' },
