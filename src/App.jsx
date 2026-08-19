@@ -104,6 +104,7 @@ function ScrollManager() {
 
   return null
 }
+import ChunkErrorBoundary from './components/ChunkErrorBoundary'
 import ScrollVideoHero from './components/ScrollVideoHero'
 import LiveUnitCount from './components/LiveUnitCount'
 import AboutFounder from './components/AboutFounder'
@@ -327,6 +328,9 @@ export default function App() {
       <AnalyticsManager />
       {!isLp && <Header />}
       <main>
+        {/* Catches a lazy route chunk that no longer exists after a deploy.
+            Without it the tree unmounts and the visitor gets a black page. */}
+        <ChunkErrorBoundary>
         <Suspense fallback={<RouteFallback />}>
           {/* Localized URL prefixes (ar/ru/fa). English is prefix-less under /*. */}
           <Routes>
@@ -336,6 +340,7 @@ export default function App() {
             <Route path="/*" element={<PageRoutes />} />
           </Routes>
         </Suspense>
+        </ChunkErrorBoundary>
       </main>
       {/* The footer's 4-office grid is a big DOM subtree that no route shows
           above the fold — mounting it lazily trims initial style/layout work
