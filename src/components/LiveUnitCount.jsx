@@ -25,6 +25,16 @@
  *
  * No pinning anywhere here, deliberately: the pin-spacer crash on route change
  * is a known hazard in this repo.
+ *
+ * ══ WHY THIS SAYS 478 WHILE /project SAYS 373 ══
+ * Both are correct and they measure different things. This counts UNITS. The
+ * portal collapses near-identical units into one card, keyed
+ * `project_id|typeGroup|bedrooms|round(price)` (SearchPage.jsx), and shows a
+ * count badge on the card, so 478 units render as 373 listings.
+ * The owner chose on 2026-08-18 to keep the true unit count here and make the
+ * sub-line say what the portal does, rather than shrink this number.
+ * 🚨 Do NOT "fix" 478 down to 373: it is not a bug, and the sub-line is what
+ * keeps the pair honest. If you change one, change the other.
  */
 import { useEffect, useRef, useState } from 'react'
 import { Box, Typography, Button } from '@mui/material'
@@ -48,25 +58,25 @@ const COPY = {
   en: {
     eyebrow: 'Live inventory',
     lead: 'units available right now',
-    sub: 'Every price below comes straight from the developer inventory, updated as units sell.',
+    sub: 'Straight from the developer inventory, updated as units sell. Identical units share one listing in the portal, so you will see fewer cards than units.',
     cta: 'Choose your unit now',
   },
   ru: {
     eyebrow: 'Живой фонд',
     lead: 'объектов доступно прямо сейчас',
-    sub: 'Каждая цена берётся напрямую из фонда застройщика и обновляется по мере продаж.',
+    sub: 'Напрямую из фонда застройщика, обновляется по мере продаж. В портале одинаковые объекты объединены в одну карточку, поэтому карточек меньше, чем объектов.',
     cta: 'Выберите свой объект',
   },
   ar: {
     eyebrow: 'المخزون الحي',
     lead: 'وحدة متاحة الآن',
-    sub: 'كل سعر هنا يأتي مباشرة من مخزون المطوّر ويُحدَّث مع بيع الوحدات.',
+    sub: 'مباشرة من مخزون المطوّر ويُحدَّث مع بيع الوحدات. في البوابة تُجمع الوحدات المتطابقة في إعلان واحد، فيظهر عدد البطاقات أقل من عدد الوحدات.',
     cta: 'اختر وحدتك الآن',
   },
   fa: {
     eyebrow: 'موجودی زنده',
     lead: 'واحد همین الان موجود است',
-    sub: 'هر قیمت مستقیم از انبار سازنده می‌آید و با فروش هر واحد به‌روز می‌شود.',
+    sub: 'مستقیم از انبار سازنده و با فروش هر واحد به‌روز می‌شود. در پورتال، واحدهای یکسان زیر یک آگهی جمع می‌شوند، پس تعداد کارت‌ها از تعداد واحدها کمتر است.',
     cta: 'همین الان واحد خود را انتخاب کنید',
   },
 }
