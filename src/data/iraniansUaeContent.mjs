@@ -259,6 +259,7 @@ export const links = {
     { href: '/buy-property-in-muscat', label: 'خرید ملک در مسقط' },
     { href: '/property-prices-in-oman', label: 'شاخص قیمت ملک عمان، متری و به تفکیک منطقه' },
     { href: '/oman-golden-visa', label: 'ویزای طلایی و ویزای مالک ملک عمان' },
+    { href: '/insights/oman-vs-dubai-property-2026', label: 'عمان یا دبی برای خرید ملک: مقایسه قیمت، هزینه و اقامت' },
     { href: '/insights/kharid-melk-dar-oman-2026', label: 'راهنمای گام به گام خرید ملک در عمان' },
     { href: '/insights/cheap-property-for-sale-oman-muscat-2026', label: 'خرید خانه ارزان در عمان' },
   ],
