@@ -105,6 +105,7 @@ function ScrollManager() {
   return null
 }
 import ScrollVideoHero from './components/ScrollVideoHero'
+import LiveUnitCount from './components/LiveUnitCount'
 import AboutFounder from './components/AboutFounder'
 import LogosMarquee from './components/LogosMarquee'
 import DiscoverProperties from './components/DiscoverProperties'
@@ -198,6 +199,10 @@ function LandingPage() {
     <>
       <ScrollVideoHero />
       <div id="after-video-hero" />
+      {/* Live availability counter + the "choose your unit" CTA. NOT deferred:
+          it is the first thing after the hero and its count request is a
+          head-only query, so there is nothing here worth delaying. */}
+      <LiveUnitCount />
       {/* The hero pins for 500vh, so even AboutFounder sits five viewports
           below the first paint — deferring it keeps its DOM, GSAP work and
           the founder portrait out of the critical load. */}

@@ -194,6 +194,25 @@ export async function fetchAllUnits() {
 }
 
 /**
+ * How many units are available site-wide, as a COUNT ONLY.
+ *
+ * The landing hero counter needs one integer, not the inventory. fetchAllUnits
+ * pulls every column of every available row (hundreds of rows) and would be an
+ * absurd payload to ship above the fold, so this uses PostgREST's
+ * `head: true` + `count: 'exact'`: no body at all, just the Content-Range
+ * header. Returns null on failure so the caller can fall back rather than
+ * render a zero.
+ */
+export async function fetchAvailableUnitCount() {
+  const { count, error } = await supabase
+    .from('project_units')
+    .select('id', { count: 'exact', head: true })
+    .eq('availability_status', 'available')
+  if (error) return null
+  return typeof count === 'number' ? count : null
+}
+
+/**
  * Fetch all available units for a single project. Sorted by floor then unit_no.
  * Returns an empty array if the project has no inventory rows.
  *
