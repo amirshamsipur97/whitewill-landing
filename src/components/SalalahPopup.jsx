@@ -17,8 +17,8 @@ import { isPaidVisit } from '../lib/attribution.js'
  * Muscat" / "buy property in Oman" demand.) One popup model across the
  * whole site. Same lead pipeline (first/last name + phone → `submit-form`
  * edge fn → Supabase `leads` + Google Sheet + GA4 `generate_lead`):
- *  - mounted once in App.jsx; auto-opens on the landing page and /buy,
- *    re-opens after 45s until a lead is submitted (session flag);
+ *  - mounted once in App.jsx; auto-opens ONCE PER PAGE PER USER on the landing
+ *    page and /buy, and never re-opens by itself;
  *  - a purple "Investment plan" launcher pill (bottom-left, every page)
  *    toggles it;
  *  - opens via the `irfan:open-salalah-popup` window event (name kept so the
@@ -30,7 +30,22 @@ import { isPaidVisit } from '../lib/attribution.js'
 
 const SLIDE_MS = 2600
 const FIRST_MS = 5000
-const REOPEN_MS = 45000
+// ONE auto-open per page per user, and that is the whole rule.
+//
+// It used to re-arm a 45s timer every time the visitor closed it, so somebody
+// reading the landing page got the same interstitial thrown at them again and
+// again. That is the behaviour people describe as "the site keeps popping up",
+// and on a page we also rank organically it is the mobile intrusive-interstitial
+// signal handed over for free.
+//
+// SEEN is per LOGICAL path (so / and /buy each get one shot, language prefix
+// ignored) and lives in localStorage, because "per user" has to survive a new
+// tab. DONE is global and set only when a lead is actually submitted: after
+// that the popup never auto-opens anywhere again.
+//
+// Neither flag touches the launcher pill or the OPEN_EVENT. A visitor who WANTS
+// the offer can always open it, as many times as they like.
+const SEEN_PREFIX = 'irfan_popup_seen:'
 const DONE_KEY = 'irfan_popup_muscat_done'
 export const OPEN_EVENT = 'irfan:open-salalah-popup'
 
@@ -220,7 +235,17 @@ export default function SalalahPopup() {
   const doneRef = useRef(false)
 
   const isDone = () => {
-    try { return doneRef.current || sessionStorage.getItem(DONE_KEY) === '1' } catch { return doneRef.current }
+    try {
+      return doneRef.current
+        || localStorage.getItem(DONE_KEY) === '1'
+        || sessionStorage.getItem(DONE_KEY) === '1' // legacy flag, still honoured
+    } catch { return doneRef.current }
+  }
+  const hasSeen = (path) => {
+    try { return localStorage.getItem(SEEN_PREFIX + path) === '1' } catch { return false }
+  }
+  const markSeen = (path) => {
+    try { localStorage.setItem(SEEN_PREFIX + path, '1') } catch { /* private mode */ }
   }
 
   const animateClose = useCallback((after) => {
@@ -242,20 +267,20 @@ export default function SalalahPopup() {
     animateClose(() => {
       setOpen(false)
       clearTimeout(timerRef.current)
-      const p = stripLang(window.location.pathname)
-      if (!isDone() && (p === '/' || p === '/buy')) {
-        timerRef.current = setTimeout(() => setOpen(true), REOPEN_MS)
-      }
+      // Deliberately nothing else. Closing it means closing it.
     })
   }, [animateClose])
 
-  // Auto-open ~5s after arriving on the landing page or /buy
-  // (once per session until a lead is submitted).
+  // Auto-open ~5s after arriving, once per page per user, then never again.
+  // `logical` is in the deps so navigating / → /buy gets its own single shot.
   useEffect(() => {
-    if (!onAutoOpenPage || isDone()) return
-    timerRef.current = setTimeout(() => setOpen(true), FIRST_MS)
+    if (!onAutoOpenPage || isDone() || hasSeen(logical)) return
+    timerRef.current = setTimeout(() => {
+      markSeen(logical)   // marked on SHOW, not on close, so a reload cannot re-trigger it
+      setOpen(true)
+    }, FIRST_MS)
     return () => clearTimeout(timerRef.current)
-  }, [onAutoOpenPage])
+  }, [onAutoOpenPage, logical])
 
   // The Salalah banner (and anything else) can open it via a window event.
   // Explicit opens always work, even after a submitted lead.
@@ -322,7 +347,7 @@ export default function SalalahPopup() {
 
   const handleDone = useCallback(() => {
     doneRef.current = true
-    try { sessionStorage.setItem(DONE_KEY, '1') } catch { /* private mode */ }
+    try { localStorage.setItem(DONE_KEY, '1') } catch { /* private mode */ }
     clearTimeout(timerRef.current)
     setOpen(false)
     if (overlayRef.current) gsap.set(overlayRef.current, { display: 'none' })
