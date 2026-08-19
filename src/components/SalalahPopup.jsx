@@ -271,6 +271,37 @@ export default function SalalahPopup() {
     })
   }, [animateClose])
 
+  // ROUTE CHANGE HARD-CLOSES THE POPUP.
+  //
+  // SalalahPopup is mounted ONCE in App.jsx, OUTSIDE <Routes>, so navigating
+  // does not unmount it. An open popup therefore used to ride along to the next
+  // page: its full-screen overlay stayed on top and the scroll lock stayed
+  // applied. The visitor clicked a CTA, the router navigated correctly, and
+  // they landed on a shaded page that would not scroll and swallowed every
+  // click, which reads as "the button is broken". Reproduced on production
+  // 2026-08-18: after navigating with it open, body and html overflow were both
+  // `hidden`, Lenis was stopped, and the overlay was still on screen.
+  //
+  // No animation here on purpose. The card is gone before the next page paints.
+  // The timer is NOT cleared here: the auto-open effect below owns it and its
+  // own cleanup clears it on every route change, so touching it from here would
+  // race and could cancel the new page's legitimate auto-open.
+  useEffect(() => {
+    setDialOpen(false)
+    setOpen(false)
+    // display ONLY, exactly like the close animation's completion does.
+    // Setting autoAlpha here left the overlay pinned at visibility:hidden and
+    // the next open's fromTo never took, so the popup could be opened (state
+    // flipped, scroll locked) while staying invisible. Removing it from the
+    // page is a display concern; the open effect owns the fade.
+    if (overlayRef.current) gsap.set(overlayRef.current, { display: 'none' })
+    // Belt and braces: the lock effect's cleanup restores these too, but the
+    // next page must be scrollable even if effect ordering ever changes.
+    document.documentElement.style.overflow = ''
+    document.body.style.overflow = ''
+    if (typeof window !== 'undefined') window.__lenis?.start?.()
+  }, [pathname])
+
   // Auto-open ~5s after arriving, once per page per user, then never again.
   // `logical` is in the deps so navigating / → /buy gets its own single shot.
   useEffect(() => {
