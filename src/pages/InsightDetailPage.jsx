@@ -17,6 +17,7 @@ import { FONT, OLIVE_BRIGHT, HAIR } from '../components/invest/ui.jsx'
 import { INSIGHTS_UI, formatDate, RTL_LANGS } from './insights/strings.js'
 import { localizePath } from '../lib/localize.js'
 import { setAlternates } from '../seo.jsx'
+import ContactCTA from '../components/ContactCTA'
 
 const SITE = 'https://www.irfaninvest.com'
 
@@ -317,6 +318,18 @@ export default function InsightDetailPage() {
 
         <Box sx={{ maxWidth: 760, mx: 'auto', mt: 6, pt: 4, borderTop: HAIR }}>{BackLink}</Box>
       </Container>
+
+      {/* THE LEAD FORM. Until 2026-08-20 the 154 article pages, which are the
+          site's largest organic surface, had no way to convert at all: the only
+          form in the DOM belonged to the popup, which renders 0x0 and hidden and
+          does not auto-open on articles. A reader arrived from Google, read the
+          whole guide and left, because there was nothing to fill in. With paid
+          campaigns switched off and organic carrying the whole funnel, that gap
+          was the funnel.
+          `source` is its own value so article leads are separable in the leads
+          table; ContactCTA already sends page_url, so the exact article is
+          recorded without inventing 154 source strings. */}
+      <ContactCTA source="insight_article" />
     </Box>
   )
 }
