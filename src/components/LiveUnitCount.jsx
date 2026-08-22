@@ -43,7 +43,7 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useI18n } from '../i18n'
-import { LocalizedLink } from '../lib/localize'
+import { LocalizedLink, localizePath, useLocalizedNavigate } from '../lib/localize'
 import { fetchAvailableUnitCount } from '../supabase'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -92,6 +92,31 @@ export default function LiveUnitCount() {
   const { lang } = useI18n()
   const c = COPY[lang] || COPY.en
   const isRTL = lang === 'ar' || lang === 'fa'
+  const localizedNavigate = useLocalizedNavigate()
+
+  // BULLETPROOF CTA. The anchor and its href stay exactly as they were, so
+  // crawlers, middle-click and "open in new tab" all keep working. What this
+  // adds is a guarantee for the plain left click: navigate through the router
+  // ourselves, then verify a moment later that the URL actually moved and fall
+  // back to a full page load if it did not.
+  //
+  // WHY: the owner reported this button doing nothing, twice, on a page where
+  // a synthetic click navigated correctly every time I tested it, on dev and on
+  // production. That mismatch means something in the real click path can
+  // swallow it, and this band sits under a 500vh pinned hero whose route-change
+  // handler kills every ScrollTrigger and rips out pin-spacers mid-navigation.
+  // Rather than keep hunting a reproduction I cannot trigger, this makes the
+  // outcome the same whatever intercepts the event.
+  const goToPortal = (e) => {
+    // Never hijack a modified click: those are the user asking for a new tab.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+    e.preventDefault()
+    const target = localizePath('/project', lang)
+    try { localizedNavigate('/project') } catch { /* fall through to the hard load */ }
+    window.setTimeout(() => {
+      if (window.location.pathname !== target) window.location.assign(target)
+    }, 260)
+  }
 
   const [target, setTarget] = useState(null)
   const sectionRef = useRef(null)
@@ -226,6 +251,7 @@ export default function LiveUnitCount() {
         <Button
           component={LocalizedLink}
           to="/project"
+          onClick={goToPortal}
           endIcon={<Arrow />}
           sx={{
             mt: { xs: 3.5, md: 5 },
