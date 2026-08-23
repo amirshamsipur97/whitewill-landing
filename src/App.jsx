@@ -50,6 +50,16 @@ function AnalyticsManager() {
   return null
 }
 
+// On every route change, check whether a newer build has been deployed and, if
+// so, reload once. A tab left open for hours otherwise keeps running the code
+// it arrived with, which is how a shipped fix can look broken to the person
+// testing it. See src/lib/buildVersion.js.
+function BuildVersionManager() {
+  const { pathname } = useLocation()
+  useEffect(() => { reloadIfStaleBuild() }, [pathname])
+  return null
+}
+
 function ScrollManager() {
   const { pathname, hash } = useLocation()
 
@@ -105,6 +115,7 @@ function ScrollManager() {
   return null
 }
 import ChunkErrorBoundary from './components/ChunkErrorBoundary'
+import { reloadIfStaleBuild } from './lib/buildVersion.js'
 import ScrollVideoHero from './components/ScrollVideoHero'
 import LiveUnitCount from './components/LiveUnitCount'
 import AboutFounder from './components/AboutFounder'
@@ -326,6 +337,7 @@ export default function App() {
       <ScrollManager />
       <SeoManager />
       <AnalyticsManager />
+      <BuildVersionManager />
       {!isLp && <Header />}
       <main>
         {/* Catches a lazy route chunk that no longer exists after a deploy.
