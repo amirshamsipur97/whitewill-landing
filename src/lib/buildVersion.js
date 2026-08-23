@@ -14,8 +14,11 @@
  * keep in sync, and it is exactly the thing that changes on every deploy.
  *
  * SAFETY, because a self-reloading page is a foot-gun:
- *  - it only ever checks on a ROUTE CHANGE, never on a timer, so it cannot
- *    reload out from under somebody filling in a form;
+ *  - it checks on ARRIVAL and on every ROUTE CHANGE, never on a timer, so it
+ *    cannot reload out from under somebody filling in a form. Arrival matters:
+ *    the owner's stale tab failed on the FIRST click because the lazy chunk for
+ *    the new route was requested under its old hash. Catching it at mount means
+ *    the tab corrects itself before anything can be clicked;
  *  - version.json is fetched no-store, so the check itself is never cached;
  *  - it reloads AT MOST ONCE per tab, guarded in sessionStorage;
  *  - every failure path is silent. A missing or unreachable version.json must

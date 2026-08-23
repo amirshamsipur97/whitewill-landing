@@ -51,7 +51,17 @@ export default class ChunkErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    if (!isChunkError(error)) return
+    // Reload for ANY caught error, not only chunk-shaped ones.
+    //
+    // The first version gated this on isChunkError(). The owner then hit the
+    // fallback MESSAGE on a real stale-chunk failure and had to press Reload by
+    // hand, which means the matcher did not recognise whatever the browser
+    // actually threw. Guessing at error strings across browsers is a losing
+    // game, and a single reload is harmless for any error: if the problem is
+    // real and not a stale asset, the reload fails the same way and the message
+    // appears, exactly as before. isChunkError is kept only to label the case
+    // in telemetry-free debugging.
+    void isChunkError(error)
     let alreadyTried = true
     try {
       alreadyTried = sessionStorage.getItem(RELOAD_FLAG) === '1'
