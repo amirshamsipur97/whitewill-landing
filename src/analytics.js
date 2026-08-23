@@ -66,7 +66,18 @@ function pickName(names, lang) {
 }
 
 // Resolve a pathname (incl. dynamic routes) to a { title, group } for GA4.
+//
+// 🚨 THE LANGUAGE PREFIX MUST COME OFF FIRST. Every key in PAGES and every
+// regex below is a LOGICAL path, so until 2026-08-22 a URL like
+// /fa/insights/<slug> matched nothing and fell through to the default, which
+// reported it to GA4 as page_title "خانه | FA" and content_group "Home".
+// Three of the site's four languages were therefore filed as homepage views:
+// every ar, ru and fa article, project page and landing. Anyone reading
+// "views per article" in GA4 was reading English only, with the rest piled
+// onto Home. Verified live on production before the fix.
 export function resolvePage(pathname, lang) {
+  // /fa/insights/x → /insights/x ; /fa → /
+  pathname = String(pathname || '/').replace(/^\/(ar|ru|fa)(?=\/|$)/, '') || '/'
   if (PAGES[pathname]) {
     const p = PAGES[pathname]
     return { title: pickName(p.names, lang), group: p.group }
