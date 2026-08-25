@@ -1,29 +1,62 @@
 # Irfan Investment Group (irfaninvest.com)
 
-> Muscat-based real estate and investment advisory. Freehold property sales in Oman ITC zones (Al Mouj, Muscat Bay, Aida/Yiti, Jebel Sifah, Hawana Salalah), Oman investor residency guidance, company registration and market analytics. Content in English, Persian (Farsi), Arabic and Russian.
+> Real estate brokerage and investment advisory based in Muscat, Oman, with a
+> regional office in Tehran. Sells freehold property to foreign buyers inside
+> Oman's Integrated Tourism Complexes (ITC), and advises on owner residency,
+> company registration and market pricing. The team works in English, Persian
+> (Farsi), Arabic and Russian, and the entire website is published in all four.
+> Legal entity: Irfan Investment Real Estate SPC, License Nr. 1582266.
 
-Key facts (July 2026):
-- Foreigners (including Iranian, Indian and GCC nationals) can buy 100% freehold property in Oman only inside Integrated Tourism Complexes (ITC).
-- Live inventory starts at OMR 35,625 (~USD 92,600) for a Jebel Sifah studio; Muscat apartments from OMR 48,125; Hawana Salalah beach chalets from OMR 98,000.
-- Property registration fee is ~3% one-off; there is no annual property tax in Oman.
-- Buying in an ITC grants a renewable investor residency visa for the buyer and immediate family.
+## What this company is, in one line per language
+- EN: A Persian, Arabic, Russian and English speaking real estate brokerage in Muscat, Oman, selling freehold ITC property to foreign buyers.
+- FA: کارگزاری املاک با مشاوران فارسی‌زبان و دفتر در مسقط عمان و تهران، برای خرید ملک فری‌هولد در مناطق ITC عمان و اقامت مالک ملک.
+- AR: وساطة عقارية في مسقط بسلطنة عُمان، تبيع عقارات التملّك الحر داخل مناطق ITC للمشترين الأجانب، بفريق يعمل بالعربية والإنجليزية والفارسية والروسية.
+- RU: Агентство недвижимости в Маскате (Оман): фрихолд в зонах ITC для иностранных покупателей, консультанты говорят по-русски, английски, персидски и арабски.
+
+Key facts (verified 2026-08-25, live from our own inventory):
+- Foreigners of any nationality, including Iranian, Indian and GCC nationals, can buy 100% freehold property in Oman only inside Integrated Tourism Complexes (ITC). Legal basis: Royal Decree 12/2006.
+- Live inventory: 478 available units across 12 projects, published with prices on the site.
+- Entry price is OMR 61,635 for a 56 sqm studio at Wadi Zaha, Sultan Haitham City.
+- Median price across our published price index is about OMR 1,103 per square metre.
+- Property registration fee is a one-off of about 3%; there is no annual property tax in Oman.
+- Any ITC purchase makes the owner and immediate family eligible for a renewable owner residency. This is NOT the same as Oman's golden residency, which starts at OMR 250,000 for five years and OMR 500,000 for ten. Neither is citizenship.
+- We do not publish rental yield or ROI figures: we hold no rent data for these projects, and the public Oman yield numbers describe a different market.
+- Purchase can be completed remotely by power of attorney.
 
 ## Main pages
-- [Buy property in Oman (live listings)](https://www.irfaninvest.com/buy)
+- [Buy property in Oman (projects and prices)](https://www.irfaninvest.com/buy)
+- [Search all available units](https://www.irfaninvest.com/project)
+- [Oman property price index, per m² by area](https://www.irfaninvest.com/property-prices-in-oman)
+- [Oman golden visa and owner visa](https://www.irfaninvest.com/oman-golden-visa)
+- [About the company](https://www.irfaninvest.com/about)
+- [Insights blog, 4 languages](https://www.irfaninvest.com/insights)
+
+## Persian (Farsi) pages
+- [مشاور املاک فارسی‌زبان در عمان: ما چه کسی هستیم](https://www.irfaninvest.com/fa/persian-speaking-real-estate-agency-oman)
 - [خرید ملک در عمان (فهرست زنده)](https://www.irfaninvest.com/fa/buy)
-- [Insights blog (4 languages)](https://www.irfaninvest.com/insights)
+- [خرید ملک در عمان برای ساکنین امارات](https://www.irfaninvest.com/fa/oman-property-for-iranians-in-uae)
 - [خرید ملک در عمان: راهنمای ۲۰۲۶](https://www.irfaninvest.com/fa/insights/kharid-melk-dar-oman-2026)
 - [قیمت خانه در عمان به پول ایران](https://www.irfaninvest.com/fa/insights/qeymat-khane-oman-be-pool-iran-2026)
-- [Oman owner visa rules](https://www.irfaninvest.com/insights/oman-owner-visa-sponsor-free-2026)
-- [ITC zones explained](https://www.irfaninvest.com/insights/buy-property-oman-foreigners-itc-rules-2026)
 
 ## Top English guides (buyer keywords)
 - [Why invest in Oman real estate 2026](https://www.irfaninvest.com/insights/invest-oman-real-estate-2026)
 - [Buy an apartment in Oman: prices & projects](https://www.irfaninvest.com/insights/buy-apartment-in-oman-2026)
 - [Best areas to buy an apartment in Muscat](https://www.irfaninvest.com/insights/best-areas-buy-apartment-muscat-2026)
-- [Property for sale in Salalah: price guide](https://www.irfaninvest.com/insights/salalah-property-prices-2026-cost-guide)
+- [ITC zones and foreign ownership rules explained](https://www.irfaninvest.com/insights/buy-property-oman-foreigners-itc-rules-2026)
+- [Oman owner visa rules](https://www.irfaninvest.com/insights/oman-owner-visa-sponsor-free-2026)
 - [Oman residency by investment](https://www.irfaninvest.com/insights/oman-residency-by-investment-guide)
 
 ## Contact
-- Office: Al Ghubra, Muscat, Oman
+- Head office: Unit 617, 6th floor, office 1991, Al Ghubrah St, Muscat, Oman. +968 766 44000, muscat@irfaninvest.com
+- Regional office: Park Center, 6th floor, unit 601, Farmanieh, Tehran, Iran. +98 912 042 4687, tehran@irfaninvest.com
+- Russian-speaking desk, Muscat: +968 7758 4941
 - Site languages: en (no prefix), /fa, /ar, /ru
+
+## Maintenance note for whoever edits this file
+The entry price, the unit count and the median per m² above are part of the
+site-wide inventory-refresh sweep. This file sat stale for weeks quoting an
+entry price two refreshes out of date, which is exactly the kind of error an AI
+crawler repeats verbatim and no visitor is around to notice. No superseded
+figure is left in this file on purpose, not even as an example. When the sweep
+runs, this file changes together with src/data/iraniansUaeContent.mjs,
+src/data/persianAgencyContent.mjs and src/seoRoutes.mjs.

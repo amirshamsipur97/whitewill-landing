@@ -152,6 +152,7 @@ const GoldenVisaPage = lazy(() => import('./pages/GoldenVisaPage'))
 // Persian-only segment landing. Reachable at /fa/... only: seoRoutes marks it
 // `langs: ['fa']` and vercel.json allowlists just that shape.
 const IraniansUaePage = lazy(() => import('./pages/IraniansUaePage'))
+const PersianAgencyPage = lazy(() => import('./pages/PersianAgencyPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const MaisonShirdelPage = lazy(() => import('./pages/MaisonShirdelPage'))
 const InvestPage = lazy(() => import('./pages/InvestPage'))
@@ -293,6 +294,7 @@ function PageRoutes() {
       <Route path="oman-golden-visa" element={<GoldenVisaPage />} />
       {/* Iranians living in the UAE — Persian only, see the page header. */}
       <Route path="oman-property-for-iranians-in-uae" element={<IraniansUaePage />} />
+      <Route path="persian-speaking-real-estate-agency-oman" element={<PersianAgencyPage />} />
       <Route path="maison-shirdel" element={<MaisonShirdelPage />} />
       <Route path="invest" element={<InvestPage />} />
       <Route path="investment" element={<InvestmentPage />} />

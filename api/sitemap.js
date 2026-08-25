@@ -33,6 +33,9 @@ const STATIC = [
   // keeps the other three out of the sitemap — they are not served either,
   // see the vercel.json allowlist.
   { path: '/oman-property-for-iranians-in-uae', priority: '0.9', changefreq: 'weekly', langs: ['fa'] },
+  // Persian-only entity page: what this company is, in Persian. Same `langs`
+  // mechanism as the line above.
+  { path: '/persian-speaking-real-estate-agency-oman', priority: '0.8', changefreq: 'monthly', langs: ['fa'] },
   { path: '/invest', priority: '0.8', changefreq: 'monthly' },
   { path: '/schools', priority: '0.8', changefreq: 'monthly' },
   { path: '/investment', priority: '0.7', changefreq: 'monthly' },

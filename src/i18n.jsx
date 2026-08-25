@@ -388,7 +388,7 @@ const dict = {
       open: 'Speak to an expert',
     },
     footer: {
-      desc: 'Premium real estate brokerage helping clients find homes across Oman and the UAE.',
+      desc: 'Real estate brokerage in Muscat, Oman. Freehold property for foreign buyers, with advisors working in English, Persian, Arabic and Russian.',
       agency: 'Agency',
       properties: 'Properties',
       legal: 'Legal',
@@ -881,7 +881,7 @@ const dict = {
       open: 'Связаться с экспертом',
     },
     footer: {
-      desc: 'Премиальное агентство недвижимости: помогаем клиентам найти дом в Омане и ОАЭ.',
+      desc: 'Агентство недвижимости в Маскате, Оман. Фрихолд для иностранных покупателей; консультанты говорят по-русски, английски, персидски и арабски.',
       agency: 'Компания',
       properties: 'Недвижимость',
       legal: 'Правовая информация',
@@ -1349,7 +1349,7 @@ const dict = {
       open: 'تحدث إلى خبير',
     },
     footer: {
-      desc: 'وساطة عقارية متميزة في عُمان والإمارات.',
+      desc: 'وساطة عقارية في مسقط، عُمان. تملّك حر للمشترين الأجانب، ومستشارون يعملون بالعربية والإنجليزية والفارسية والروسية.',
       agency: 'الوكالة',
       properties: 'العقارات',
       legal: 'قانوني',

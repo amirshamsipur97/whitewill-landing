@@ -287,6 +287,23 @@ export const ROUTES = {
       en: 'Freehold property in Oman for Iranians based in the UAE, from about AED 588,700 with renewable owner residency. Dirham budgets, live inventory.',
     },
   },
+  // Persian-only entity page. Google's AI Mode was listing Persian-speaking
+  // Oman brokerages and omitting us while citing this site as a source in the
+  // same answer, because the phrase «فارسی‌زبان» appeared nowhere in src/.
+  // This page makes the category claim. `langs` restricts it to fa; an English
+  // "Persian-speaking agency" page would be nonsense and an ar/ru one a thin
+  // duplicate of /about. Copy lives in src/data/persianAgencyContent.mjs.
+  '/persian-speaking-real-estate-agency-oman': {
+    langs: ['fa'],
+    title: {
+      fa: 'مشاور املاک فارسی‌زبان در عمان | ایرفان اینوستمنت',
+      en: 'Persian-Speaking Real Estate Agency in Oman | Irfan Investment',
+    },
+    desc: {
+      fa: 'کارگزاری املاک با مشاوران فارسی‌زبان و دفتر در مسقط و تهران. انتخاب واحد، بررسی قرارداد، ثبت سند و اقامت مالک ملک به فارسی. ۴۷۸ واحد از ۶۱٬۶۳۵ ریال عمان.',
+      en: 'Persian-speaking real estate brokerage in Oman with offices in Muscat and Tehran. Unit selection, contract review, title registration and owner residency, handled in Farsi.',
+    },
+  },
   '/terms': {
     title: {
       en: 'Terms of Use | Irfan Investment Group',

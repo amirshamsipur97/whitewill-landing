@@ -221,6 +221,7 @@ export default function Header() {
       ? [
           { group: 'بر اساس خریدار' },
           { label: 'ایرانیان مقیم امارات', to: '/oman-property-for-iranians-in-uae' },
+          { label: 'مشاور فارسی‌زبان در عمان', to: '/persian-speaking-real-estate-agency-oman' },
         ]
       : []),
   ]

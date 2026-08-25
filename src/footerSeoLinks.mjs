@@ -56,6 +56,9 @@ export const SERVICES = [
   // nav, which is React-rendered and therefore invisible on a crawler's first
   // fetch. That is the exact gap this whole module exists to close.
   { to: '/oman-property-for-iranians-in-uae', key: 'iraniansUae', langs: ['fa'] },
+  // The Persian entity page. Same reasoning: its only other site-wide link is
+  // the React-rendered nav, invisible on a crawler's first fetch.
+  { to: '/persian-speaking-real-estate-agency-oman', key: 'persianAgency', langs: ['fa'] },
 ]
 
 export function servicesFor(lang) {
@@ -116,6 +119,7 @@ export const FOOTER_SEO = {
       banking: 'بانکداری و تامین مالی در عمان',
       legal: 'الزامات قانونی تامین مالی',
       iraniansUae: 'خرید ملک در عمان برای ایرانیان مقیم امارات',
+      persianAgency: 'مشاور املاک فارسی‌زبان در عمان',
     },
   },
   ar: {

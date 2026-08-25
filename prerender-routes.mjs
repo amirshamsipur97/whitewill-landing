@@ -21,9 +21,15 @@ import {
   copy as uaeCopy, links as uaeLinks,
   faqJsonLd as uaeFaqJsonLd, breadcrumbJsonLd as uaeBreadcrumbJsonLd,
 } from './src/data/iraniansUaeContent.mjs'
+import {
+  copy as paCopy, links as paLinks,
+  faqJsonLd as paFaqJsonLd, breadcrumbJsonLd as paBreadcrumbJsonLd,
+  agencyJsonLd as paAgencyJsonLd,
+} from './src/data/persianAgencyContent.mjs'
 import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
 import { POPULAR, COMMUNITIES, PROJECTS, servicesFor, footerSeoCopy } from './src/footerSeoLinks.mjs'
+import { BRANCHES } from './src/data/branches.js'
 import { buildPriceIndex, fmtInt, fmtOmr, fmtRange, fmtSqm } from './src/priceIndexData.mjs'
 import { priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill } from './src/priceIndexContent.mjs'
 import { buildGoldenVisa, TIER_5_OMR, TIER_10_OMR } from './src/goldenVisaData.mjs'
@@ -105,6 +111,7 @@ function pageFor(route, lang) {
     (route === PRICE_INDEX_ROUTE ? priceIndexHtml(lang) : '') +
     (route === GOLDEN_VISA_ROUTE ? goldenVisaHtml(lang) : '') +
     (route === UAE_ROUTE ? iraniansUaeHtml() : '') +
+    (route === PERSIAN_AGENCY_ROUTE ? persianAgencyHtml() : '') +
     footerLinksHtml(lang)
   // The light page needs a FULL-BLEED white backdrop: the global stylesheet
   // paints body black, so a centred max-width block alone would sit between
@@ -190,6 +197,17 @@ function pageFor(route, lang) {
       `    <script type="application/ld+json" id="iranians-uae-breadcrumb-jsonld">${JSON.stringify(uaeBreadcrumbJsonLd())}</script>\n  </head>`,
     )
   }
+  // Persian entity page. The organization node reuses the SAME @id index.html
+  // declares, so this attaches the Persian name and the Persian-language claim
+  // to the entity Google already knows rather than creating a rival one.
+  if (route === PERSIAN_AGENCY_ROUTE) {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="persian-agency-faq-jsonld">${JSON.stringify(paFaqJsonLd())}</script>\n` +
+      `    <script type="application/ld+json" id="persian-agency-breadcrumb-jsonld">${JSON.stringify(paBreadcrumbJsonLd())}</script>\n` +
+      `    <script type="application/ld+json" id="persian-agency-org-jsonld">${JSON.stringify(paAgencyJsonLd())}</script>\n  </head>`,
+    )
+  }
   if (route === GOLDEN_VISA_ROUTE && goldenVisa.units > 0) {
     const v = gvVars(lang)
     html = html.replace(
@@ -262,6 +280,7 @@ function landingSeoHtml(slug, lang) {
 const PRICE_INDEX_ROUTE = '/property-prices-in-oman'
 const GOLDEN_VISA_ROUTE = '/oman-golden-visa'
 const UAE_ROUTE = '/oman-property-for-iranians-in-uae'
+const PERSIAN_AGENCY_ROUTE = '/persian-speaking-real-estate-agency-oman'
 
 // Crawlable body for the Persian-only UAE landing. The React page is a stack
 // of MUI cards, so without this the crawler's first fetch would be an h1, a
@@ -299,6 +318,48 @@ function iraniansUaeHtml() {
     `<h2>${esc(uaeLinks.heading)}</h2><ul>${items}</ul>`
   )
 }
+// Crawlable body for the Persian entity page. This shell matters more than
+// most: the whole point of the page is to be READ by a machine on the first
+// fetch, and the React version is a stack of MUI cards. Everything here is the
+// SAME data the page renders, never a second version of it. Persian only, so
+// it takes no `lang` argument.
+//
+// The two office blocks are emitted as a real <address> each, with the phone
+// as a tel: link, because a postal address plus a dialable number is the
+// cheapest and strongest "this business exists" signal a page can carry.
+function persianAgencyHtml() {
+  const p = langPrefix('fa')
+  const who = paCopy.who.map((w) => `<h3>${esc(w.title)}</h3><p>${esc(w.body)}</p>`).join('')
+  const services = paCopy.services.map((x) => `<li>${esc(x)}</li>`).join('')
+  const choose = paCopy.choose.map((c) => `<h3>${esc(c.title)}</h3><p>${esc(c.body)}</p>`).join('')
+  const offices = BRANCHES.filter((b) => b.code === 'om' || b.code === 'ir')
+    .map((b) => {
+      const head = b.code === 'om' ? 'مسقط، عمان: دفتر مرکزی' : 'تهران، ایران: دفتر منطقه‌ای'
+      const lines = b.address.split('\n').map((l) => esc(l)).join('<br>')
+      return (
+        `<h3>${esc(head)}</h3>` +
+        `<address>${lines}<br>` +
+        `<a href="tel:${b.phone.replace(/\s/g, '')}" style="color:#8c8d25">${esc(b.phone)}</a><br>` +
+        `<a href="mailto:${esc(b.email)}" style="color:#8c8d25">${esc(b.email)}</a></address>`
+      )
+    })
+    .join('')
+  const faq = paCopy.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
+  const items = paLinks.items
+    .map((l) => `<li><a href="${p}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
+    .join('')
+  return (
+    `<p><strong>${esc(paCopy.answerLabel)}:</strong> ${esc(paCopy.answer)}</p>` +
+    `<p>${esc(paCopy.lead)}</p>` +
+    `<h2>${esc(paCopy.whoTitle)}</h2><p>${esc(paCopy.whoIntro)}</p>${who}` +
+    `<h2>${esc(paCopy.servicesTitle)}</h2><p>${esc(paCopy.servicesIntro)}</p><ul>${services}</ul>` +
+    `<h2>${esc(paCopy.chooseTitle)}</h2><p>${esc(paCopy.chooseIntro)}</p>${choose}` +
+    `<h2>${esc(paCopy.officesTitle)}</h2>${offices}<p>${esc(paCopy.officesNote)}</p>` +
+    `<h2>${esc(paCopy.faqTitle)}</h2>${faq}` +
+    `<h2>${esc(paLinks.heading)}</h2><ul>${items}</ul>`
+  )
+}
+
 const BUILD_DAY = (process.env.VERCEL_DEPLOYMENT_CREATED_AT
   ? new Date(Number(process.env.VERCEL_DEPLOYMENT_CREATED_AT))
   : new Date()

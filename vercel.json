@@ -286,6 +286,10 @@
       "destination": "/app.html"
     },
     {
+      "source": "/fa/persian-speaking-real-estate-agency-oman",
+      "destination": "/app.html"
+    },
+    {
       "source": "/:lang(ru|ar|fa)/maison-shirdel",
       "destination": "/app.html"
     },
