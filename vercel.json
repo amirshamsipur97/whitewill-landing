@@ -130,6 +130,21 @@
       "source": "/insights/car-import-oman-to-iran",
       "destination": "/insights/iranians-abroad-car-import-oman-law-1405",
       "permanent": true
+    },
+    {
+      "source": "/fa/insights/buy-property-oman-pakistani-investors-guide-2026",
+      "destination": "/fa/insights/kharid-melk-dar-oman-2026",
+      "permanent": true
+    },
+    {
+      "source": "/fa/insights/can-indians-buy-property-oman-nri-guide-2026",
+      "destination": "/fa/insights/kharid-melk-dar-oman-2026",
+      "permanent": true
+    },
+    {
+      "source": "/fa/insights/buy-property-salalah-indian-investors-nri-2026",
+      "destination": "/fa/buy-property-in-salalah",
+      "permanent": true
     }
   ],
   "rewrites": [
