@@ -12,7 +12,16 @@ const U = 'https://owgvrxipqlusepozlujv.supabase.co'
 const K = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93Z3ZyeGlwcWx1c2Vwb3psdWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTYxMjQsImV4cCI6MjA5MjM3MjEyNH0.vZK4z9p9pUF1rZ8LHadFReBcEcwidwy9ZdEXnSmK4Fs'
 const H = { apikey: K, Authorization: `Bearer ${K}`, 'Content-Type': 'application/json' }
 const DRY = process.env.DRY === '1'
-const ADMIN_PW = 'Mohsen7843'
+// 🚨 NEVER hardcode this again. This repo is PUBLIC, and the literal sat here
+// and in three handoff files, so the password it protected has to be treated
+// as compromised and rotated. The insights-admin function can create, edit and
+// unpublish every article on the site, which is the whole organic funnel.
+//   INSIGHTS_ADMIN_PW=... node tools/retrofit_articles.mjs
+const ADMIN_PW = process.env.INSIGHTS_ADMIN_PW
+if (!ADMIN_PW) {
+  console.error('Set INSIGHTS_ADMIN_PW in the environment. It is deliberately not stored in this repo.')
+  process.exit(1)
+}
 
 const HEADING = {
   en: 'Browse live listings',
