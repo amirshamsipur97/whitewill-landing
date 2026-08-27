@@ -57,17 +57,32 @@ almost never what they ask for. "Price list" appears in only 3 of 160 articles.
    hold at 94 days. Writing a price-detail article off 24-May data would
    publish stale numbers at the top of the funnel. **Ask the owner for the
    current St. Regis file first**, then write it the same way as Vistal.
-3. **The Arc Residences, second article.** OMR 28.7m, fresh data, carries the
-   site's most expensive stock (a penthouse at OMR 2,168,938) and three
-   collections (Opal, Onda, Oria) that the single existing article does not
-   break down.
-4. **"Oman apartment price list by project"**, all languages. Directly answers
-   the 44% price ask and the popup's own wording, and nothing on the site is
-   shaped like a price list. The price index page is per m², not per project.
-5. **Payment plans, expanded.** Already the strongest asset per the 08-24
+3. ~~The Arc Residences, second article.~~ **DROPPED on 08-27, and the reason
+   matters.** This entry claimed the existing article "does not break down the
+   three collections". That was wrong: id 158 is 8,448 characters, covers all
+   three collections by name, carries four price tables and the OMR 2,168,938
+   penthouse. A second Arc article would have been a near-duplicate, which is
+   exactly the cannibalization the 08-25 work spent two rounds undoing.
+   🔑 **Rule: before writing any project article, open the existing coverage
+   and read it.** A count of dedicated slugs tells you whether a page exists,
+   never whether it is thorough.
+4. ⚠️ **"Oman apartment price list by project"** was considered on 08-27 and
+   deferred. It answers the 44% price ask, but it would sit very close to
+   `/property-prices-in-oman`, which already ranks. Do not build it as a
+   general price page. If it is ever built, it needs an angle the index page
+   does not have (per project and per unit type, not per m²), and somebody
+   should check the overlap in GSC first.
+
+5. ✅ **Wadi Zaha** (done 08-27, ids 179-182, 4 langs). Chosen once The Arc was
+   dropped. OMR 5.8m and 56 units is mid-table by value, but it holds the
+   **OMR 61,635 site entry price that is quoted on the homepage, in seoRoutes
+   titles, in llms.txt, on the UAE landing and on the Persian entity page**,
+   and no page had ever said what that number buys. Fresh data (12 days) and
+   zero dedicated coverage.
+6. **Payment plans, expanded.** Already the strongest asset per the 08-24
    handoff, but it prints real terms for only 3 of 12 projects. Still blocked
    on the owner supplying the remaining plan sheets.
-6. **Aida refresh then article.** OMR 9.3m and 92-day-old data, 21 mentions but
+7. **Aida refresh then article.** OMR 9.3m and 92-day-old data, 21 mentions but
    no dedicated page.
 
 ## Rules that came out of this
