@@ -182,6 +182,12 @@ export function buildPriceIndex(items) {
 // people copy into spreadsheets, and the rest of the site already prints
 // prices with toLocaleString('en-US').
 export const fmtInt = (n) => (n == null ? '–' : Number(n).toLocaleString('en-US'))
-export const fmtOmr = (n) => (n == null ? '–' : `OMR ${Number(n).toLocaleString('en-US')}`)
+// Rounded to whole rials on purpose. Some developer files carry fractional
+// prices (Sarooj Apartments and Aida do), and unrounded they reached the
+// <title> of 105 unit pages as "OMR 66,592.63", which reads as a spreadsheet
+// export rather than a price. Nobody quotes property in baisa. Display only:
+// the stored value is untouched, and the rounding is immaterial on a
+// six-figure price. Audited 2026-08-30.
+export const fmtOmr = (n) => (n == null ? '–' : `OMR ${Math.round(Number(n)).toLocaleString('en-US')}`)
 export const fmtRange = (a, b) => (a == null || b == null ? '–' : `${fmtInt(a)} – ${fmtInt(b)}`)
 export const fmtSqm = (n) => (n == null ? '–' : `${fmtInt(n)} m²`)

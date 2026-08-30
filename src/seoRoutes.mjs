@@ -88,8 +88,8 @@ export const ROUTES = {
     desc: {
       en: 'Buy freehold property in Salalah from OMR 98,000: beachfront villas and chalets at Hawana Salalah. All nationalities, two rental seasons, investor residency.',
       ru: 'Купить недвижимость в Салале во фрихолд от 98 000 OMR: пляжные виллы и шале в Hawana Salalah. Для всех национальностей, с резиденцией инвестора.',
-      ar: 'شراء عقار بتملّك حر في صلالة: فلل وشاليهات شاطئية في هوانا صلالة من 98,000 ر.ع. متاح لجميع الجنسيات، طلب إيجار قوي في موسم الخريف، بلا ضريبة على دخل الإيجار، مع إقامة المستثمر.',
-      fa: 'خرید ملک فری‌هولد در صلاله عمان: ویلا و شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال عمان. برای همه ملیت‌ها، تقاضای قوی اجاره در فصل خریف، بدون مالیات بر درآمد اجاره، همراه با اقامت سرمایه‌گذاری.',
+      ar: 'شراء عقار بتملّك حر في صلالة: فلل وشاليهات شاطئية في هوانا صلالة من 98,000 ر.ع، لجميع الجنسيات، بلا ضريبة على دخل الإيجار، مع إقامة المستثمر.',
+      fa: 'خرید ملک فری‌هولد در صلاله عمان: ویلا و شاله ساحلی در هوانا صلاله از ۹۸٬۰۰۰ ریال، برای همه ملیت‌ها، بدون مالیات بر درآمد اجاره، همراه اقامت.',
     },
   },
   // Data asset, not a listing page — the one page here worth LINKING to.
@@ -108,8 +108,8 @@ export const ROUTES = {
     desc: {
       en: 'What property costs in Oman, area by area: median price per square metre across Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah and Salalah.',
       ru: 'Сколько стоит недвижимость в Омане по районам: медианная цена за м² в Al Mouj, Muscat Bay, Sultan Haitham City, Yiti, Jebel Sifah и Салале.',
-      ar: 'كم تكلّف العقارات في عُمان منطقة بمنطقة: وسيط سعر المتر المربع في الموج وخليج مسقط ومدينة السلطان هيثم وييتي وجبل سيفة وهوانا صلالة، محتسب من مخزون التملّك الحر المتاح ويُحدَّث باستمرار.',
-      fa: 'قیمت ملک در عمان منطقه به منطقه: میانه قیمت هر مترمربع در الموج، خلیج مسقط، شهر سلطان هیثم، ییتی، جبل سیفه و هوانا صلاله، محاسبه‌شده از موجودی زنده فری‌هولد و به‌روزرسانی پیوسته.',
+      ar: 'أسعار العقارات في عُمان منطقة بمنطقة: وسيط سعر المتر في الموج وخليج مسقط ومدينة السلطان هيثم وييتي وجبل سيفة وصلالة، من مخزوننا المباشر.',
+      fa: 'قیمت ملک در عمان منطقه به منطقه: میانه قیمت هر مترمربع در الموج، خلیج مسقط، شهر سلطان هیثم، ییتی، جبل سیفه و صلاله، از موجودی زنده ما.',
     },
   },
   '/maison-shirdel': {
@@ -151,7 +151,7 @@ export const ROUTES = {
     },
     desc: {
       en: 'Company formation in Oman with up to 100% foreign ownership: LLC and SPC registration, Commercial Registration, licensing, banking and investor visas.',
-      ru: 'Регистрация компании в Омане со 100% иностранным владением: LLC, SPC, коммерческая регистрация (CR), лицензии, корпоративный банкинг, инвесторские визы и налоги.',
+      ru: 'Регистрация компании в Омане со 100% иностранным владением: LLC и SPC, коммерческая регистрация, лицензии, банкинг и инвесторские визы.',
       ar: 'تأسيس الشركات في عُمان بملكية أجنبية تصل إلى 100%: تسجيل LLC وSPC والشركات المساهمة، والسجل التجاري، والتراخيص، والخدمات المصرفية للشركات، وتأشيرات المستثمرين.',
       fa: 'ثبت شرکت و راه‌اندازی کسب‌وکار در عمان با مالکیت خارجی تا ۱۰۰٪: ثبت LLC و SPC، ثبت تجاری (CR)، مجوزها، بانکداری شرکتی، ویزای سرمایه‌گذار و مالیات.',
     },
@@ -238,7 +238,7 @@ export const ROUTES = {
     },
     desc: {
       en: 'Freehold waterfront chalets and villas at Hawana Salalah from OMR 98,000. Two rental seasons, Oman residency eligibility, 3-year payment plans.',
-      ru: 'Купите недвижимость в Салале: шале у воды и виллы во фрихолде в Hawana Salalah от 98 000 OMR. Два арендных сезона, право на резидентство Омана, рассрочка до 3 лет.',
+      ru: 'Недвижимость в Салале: шале у воды и виллы во фрихолде в Hawana Salalah от 98 000 OMR, право на резидентство Омана, рассрочка до 3 лет.',
       ar: 'اشترِ عقاراً في صلالة: شاليهات وفلل بتملك حر في هوانا صلالة من 98,000 ر.ع. موسمان إيجاريان، أهلية إقامة المستثمر، وخطط دفع 3 سنوات. إصدار جزيرة لوبانا الجديد.',
       fa: 'خرید ملک در صلاله: شاله‌های رو به آب و ویلا با مالکیت آزاد در هوانا صلاله از ۹۸٬۰۰۰ ریال عمانی. دو فصل اجاره در سال، واجد شرایط اقامت عمان و طرح پرداخت ۳ ساله.',
     },
@@ -301,7 +301,7 @@ export const ROUTES = {
     },
     desc: {
       fa: 'کارگزاری املاک با مشاوران فارسی‌زبان و دفتر در مسقط و تهران. انتخاب واحد، بررسی قرارداد، ثبت سند و اقامت مالک ملک به فارسی. ۴۷۸ واحد از ۶۱٬۶۳۵ ریال عمان.',
-      en: 'Persian-speaking real estate brokerage in Oman with offices in Muscat and Tehran. Unit selection, contract review, title registration and owner residency, handled in Farsi.',
+      en: 'Persian-speaking real estate brokerage in Oman, with offices in Muscat and Tehran. Unit selection, contracts and owner residency handled in Farsi.',
     },
   },
   '/terms': {
@@ -334,8 +334,8 @@ const PROJECT_META_OVERRIDES = {
       fa: 'د آرک رزیدنسز یتی: آپارتمان و پنت‌هاوس از ۴۲۳٬۸۸۳ ریال عمان | ایرفان',
     },
     desc: {
-      en: 'The Arc Residences on the Yiti waterfront from OMR 423,883: 2 to 4-bedroom apartments, duplexes, sky terraces and full-floor penthouses. Freehold, all nationalities.',
-      ru: 'The Arc Residences на набережной Yiti от 423 883 OMR: квартиры с 2-4 спальнями, дуплексы, sky terrace и пентхаусы во весь этаж. Фрихолд для всех национальностей.',
+      en: 'The Arc Residences on the Yiti waterfront from OMR 423,883: 2 to 4-bedroom apartments, duplexes and full-floor penthouses. Freehold, any nationality.',
+      ru: 'The Arc Residences на набережной Yiti от 423 883 OMR: квартиры 2-4 спальни, дуплексы и пентхаусы во весь этаж. Фрихолд, любое гражданство.',
       ar: 'ذا آرك ريزيدنسز على واجهة يتي من 423,883 ر.ع: شقق من غرفتين إلى أربع غرف نوم ودوبلكس وسكاي تراس وبنتهاوس بطابق كامل. تملّك حر لجميع الجنسيات.',
       fa: 'د آرک رزیدنسز روی ساحل یتی از ۴۲۳٬۸۸۳ ریال عمان: آپارتمان دو تا چهار خوابه، دوبلکس، اسکای‌تراس و پنت‌هاوس تمام‌طبقه. فری‌هولد برای همه ملیت‌ها.',
     },
@@ -355,10 +355,10 @@ export function projectMeta(name) {
       fa: `${name}: قیمت، واحدهای موجود و شرایط پرداخت | املاک عمان`,
     },
     desc: {
-      en: `${name} in Oman: current prices, available units, payment plans, photos and investor residency visa details. View the live inventory with Irfan Investment Group.`,
-      ru: `${name} в Омане: актуальные цены, доступные юниты, планы оплаты, фото и резидентская виза инвестора. Смотрите живой каталог Irfan Investment Group.`,
-      ar: `${name} في عُمان: الأسعار الحالية والوحدات المتاحة وخطط السداد والصور وتفاصيل تأشيرة إقامة المستثمر مع Irfan Investment Group.`,
-      fa: `${name} در عمان: قیمت‌های به‌روز، واحدهای موجود، شرایط پرداخت، تصاویر و جزئیات ویزای اقامت سرمایه‌گذار همراه Irfan Investment Group.`,
+      en: `${name} in Oman: live prices, available units, payment plans and investor residency details, from the developer inventory we sell.`,
+      ru: `${name} в Омане: актуальные цены, доступные юниты, планы оплаты и резидентская виза инвестора. Живой каталог застройщика.`,
+      ar: `${name} في عُمان: الأسعار الحالية والوحدات المتاحة وخطط السداد وتفاصيل إقامة المستثمر، من مخزون المطوّر.`,
+      fa: `${name} در عمان: قیمت‌های به‌روز، واحدهای موجود، شرایط پرداخت و جزئیات اقامت سرمایه‌گذار، از موجودی مستقیم سازنده.`,
     },
   }
 }

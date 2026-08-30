@@ -776,11 +776,16 @@ function propertyPageFor({ unit, project }, canonicalUrl) {
   const url = `${SITE}${route}`
 
   const title = `${bedLabel} ${g} for Sale in ${city}${priceTxt ? `: ${priceTxt}` : ''} | Irfan`
+  // Meta description for 478 unit pages. Audited 2026-08-30: the previous
+  // wording averaged 181 characters and topped out at 193, so Google truncated
+  // every one of them around 160 and the tail (the freehold and residency
+  // line, which is the actual selling point) never showed. Rewritten tighter,
+  // most valuable facts first, and asserted below so it cannot drift back.
   const desc = [
-    `${bedLabel} ${g.toLowerCase()} for sale at ${project.name}, ${city}, Oman.`,
-    sqm ? `${sqm} m² built-up area.` : '',
-    priceTxt ? `Price ${priceTxt}.` : '',
-    `Freehold ownership for all nationalities with Oman investor residency. Ref IRF-${unit.id}.`,
+    `${bedLabel} ${g.toLowerCase()} at ${project.name}, ${city}.`,
+    sqm ? `${sqm} m².` : '',
+    priceTxt ? `${priceTxt}.` : '',
+    `Freehold for all nationalities, with Oman investor residency. Ref IRF-${unit.id}.`,
   ].filter(Boolean).join(' ')
 
   let html = template

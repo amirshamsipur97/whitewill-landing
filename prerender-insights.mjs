@@ -140,9 +140,30 @@ function footerLinksHtml(lang) {
   )
 }
 
+// The page chrome already prints the article title as the <h1>. Several
+// article bodies ALSO open with a markdown `# Title` line, which marked would
+// render as a second, identical <h1>.
+//
+// 🔑 This only ever broke the STATIC shell, which is the version a crawler
+// reads: the client renderer (components/insights/Markdown.jsx) has always
+// mapped h1 to an h2, so a human never saw it and it survived unnoticed until
+// a site-wide audit on 2026-08-30 counted 40 pages across 17 slugs with two
+// h1s. Demote here so the shell matches what React hydrates to, and so any
+// future article that includes its own title line is covered without an edit
+// to the row.
+const mdRenderer = new marked.Renderer()
+mdRenderer.heading = function (text, level, raw) {
+  const l = level === 1 ? 2 : level
+  const id = String(raw || '')
+    .toLowerCase()
+    .replace(/[^\w\u0600-\u06FF\u0400-\u04FF]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+  return `<h${l}${id ? ` id="${id}"` : ''}>${text}</h${l}>\n`
+}
+
 function renderArticleHtml(a) {
   const rtl = RTL.has(a.lang)
-  const body = marked.parse(String(a.body_md || ''))
+  const body = marked.parse(String(a.body_md || ''), { renderer: mdRenderer })
   const date = a.published_at ? new Date(a.published_at).toISOString().slice(0, 10) : ''
   // Plain semantic HTML inside #root — React replaces it on hydration; until
   // then (and for crawlers) it IS the page. Minimal inline styling keeps it
