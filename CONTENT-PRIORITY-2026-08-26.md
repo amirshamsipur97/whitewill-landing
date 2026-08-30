@@ -79,11 +79,44 @@ almost never what they ask for. "Price list" appears in only 3 of 160 articles.
    titles, in llms.txt, on the UAE landing and on the Persian entity page**,
    and no page had ever said what that number buys. Fresh data (12 days) and
    zero dedicated coverage.
-6. **Payment plans, expanded.** Already the strongest asset per the 08-24
+6. ✅ **Hay Al Wafa** (done 08-30, ids 183-186, 4 langs). Top of the eligible
+   list once the staleness rule was applied: OMR 5.4m, 44 units, data 19 days
+   old, zero dedicated articles, only passing mentions inside the Sultan
+   Haitham City guide. It also carries the site's most distinctive number,
+   **OMR 593 per sqm against a 1,082 inventory median**, the cheapest metre we
+   hold and roughly a quarter of the Al Mouj rate.
+   🔑 The article states plainly that the advertised 158 sqm is GROSS and the
+   built-up area is about 127, so the honest per-metre figure is 583 gross or
+   725 built-up. Most listings in this market quote only the larger number, and
+   saying which one you were quoted is a differentiator worth reusing.
+
+7. **Payment plans, expanded.** Already the strongest asset per the 08-24
    handoff, but it prints real terms for only 3 of 12 projects. Still blocked
    on the owner supplying the remaining plan sheets.
-7. **Aida refresh then article.** OMR 9.3m and 92-day-old data, 21 mentions but
+8. **Aida refresh then article.** OMR 9.3m and 96-day-old data, 21 mentions but
    no dedicated page.
+
+## The eligibility filter, as of 2026-08-30
+
+Applying "fresh data AND no dedicated article" to live inventory leaves only
+three candidates, which is why the queue keeps skipping bigger projects:
+
+| project | value OMR | units | data age | dedicated |
+|---|---:|---:|---:|---:|
+| St. Regis | 32.4m | 59 | **98d** | 0 |
+| Aida | 9.3m | 49 | **96d** | 0 |
+| Yenaier | 6.4m | 65 | **94d** | 0 |
+| **Hay Al Wafa** | 5.4m | 44 | 19d | 0 ✅ done |
+| Sarooj Apartments | 3.6m | 38 | 15d | 0 |
+| Jebel Sifah | 2.2m | 18 | 19d | 0 |
+
+⚠️ Yenaier's 94 days is partly an artefact: `created_at` does not move on an
+UPDATE, and building 101 was refreshed on 08-18. Building 100 is genuinely
+stale, so skipping it is still right, but do not read that number as the whole
+story.
+
+**Next eligible: Sarooj Apartments** (OMR 3.6m, 38 units, 15 days old).
+Everything larger is blocked on a refreshed developer file from the owner.
 
 ## Rules that came out of this
 
