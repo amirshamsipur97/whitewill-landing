@@ -26,14 +26,16 @@
  * No pinning anywhere here, deliberately: the pin-spacer crash on route change
  * is a known hazard in this repo.
  *
- * ══ WHY THIS SAYS 478 WHILE /project SAYS 373 ══
+ * ══ WHY THIS COUNT IS HIGHER THAN THE /project LISTING COUNT ══
  * Both are correct and they measure different things. This counts UNITS. The
  * portal collapses near-identical units into one card, keyed
  * `project_id|typeGroup|bedrooms|round(price)` (SearchPage.jsx), and shows a
- * count badge on the card, so 478 units render as 373 listings.
+ * count badge on the card, so the unit total renders as fewer listings
+ * (478 units showed as 373 listings when this was measured on 2026-08-18).
  * The owner chose on 2026-08-18 to keep the true unit count here and make the
  * sub-line say what the portal does, rather than shrink this number.
- * 🚨 Do NOT "fix" 478 down to 373: it is not a bug, and the sub-line is what
+ * 🚨 Do NOT "fix" the counter down to the listing count: it is not a bug,
+ * and the sub-line is what
  * keeps the pair honest. If you change one, change the other.
  */
 import { useEffect, useRef, useState } from 'react'
@@ -52,7 +54,7 @@ const OLIVE_BRIGHT = '#8c8d25'
 const TITLE_FONT = '"Arsenal SC", "Peyda", "Manrope", "Inter", system-ui, sans-serif'
 
 // Last verified count, 2026-08-18. Only ever shown if the count request fails.
-const FALLBACK = 478
+const FALLBACK = 475
 
 const COPY = {
   en: {

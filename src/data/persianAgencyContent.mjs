@@ -44,13 +44,13 @@
  *
  * ══ FIGURES ══
  * Live from project_units (availability_status = 'available'), read
- * 2026-08-25: 478 units across 12 projects, entry OMR 61,635 (Wadi Zaha
- * studio, 56 sqm, Sultan Haitham City). Median OMR 1,103/m² is taken from the
+ * 2026-08-31: 475 units across 12 projects, entry OMR 61,635 (Wadi Zaha
+ * studio, 56 sqm, Sultan Haitham City). Median OMR 1,107/m² is taken from the
  * site's OWN price index, never re-derived here, for the same reason
  * iraniansUaeContent.mjs takes it from there: two pages publishing two medians
  * for one inventory is the kind of thing a buyer notices.
  *
- * ⚠️ ENTRY-PRICE CASCADE: OMR 61,635 and the 478 count appear here too, so
+ * ⚠️ ENTRY-PRICE CASCADE: OMR 61,635 and the 475 count appear here too, so
  * this file joins iraniansUaeContent.mjs and seoRoutes.mjs in every inventory
  * refresh sweep (runbook in HANDOFF-2026-08-17.md §6).
  */
@@ -59,10 +59,10 @@
 // than formatted at render time because the surrounding prose is hand-written
 // around them and a locale formatter would fight the RTL punctuation.
 export const LIVE = {
-  units: 478,
+  units: 475,
   projects: 12,
   entryOmr: 61635,
-  medianPpsmOmr: 1103,
+  medianPpsmOmr: 1107,
   langs: 4,
   offices: 2,
 }
@@ -77,18 +77,18 @@ export const copy = {
   // is verifiable elsewhere on the site. Keep it self-contained: no "ما" that
   // needs a previous sentence, no pronoun without an antecedent.
   answer:
-    'بله. ایرفان اینوستمنت گروپ یک کارگزاری املاک با دفتر در مسقط عمان است که تیم مشاوران فارسی‌زبان دارد و کل فرایند خرید را به زبان فارسی پیش می‌برد: انتخاب واحد، گرفتن برنامه پرداخت از سازنده، بررسی قرارداد، مکاتبات عربی، ثبت سند و اقدام برای اقامت مالک ملک. دفتر مرکزی در الغبره مسقط و دفتر منطقه‌ای در فرمانیه تهران است. موجودی ۴۷۸ واحد در ۱۲ پروژه با قیمت زنده روی همین سایت منتشر می‌شود، کمترین قیمت ورود ۶۱٬۶۳۵ ریال عمان است، و خرید کامل از راه دور با وکالت‌نامه هم انجام‌شدنی است.',
+    'بله. ایرفان اینوستمنت گروپ یک کارگزاری املاک با دفتر در مسقط عمان است که تیم مشاوران فارسی‌زبان دارد و کل فرایند خرید را به زبان فارسی پیش می‌برد: انتخاب واحد، گرفتن برنامه پرداخت از سازنده، بررسی قرارداد، مکاتبات عربی، ثبت سند و اقدام برای اقامت مالک ملک. دفتر مرکزی در الغبره مسقط و دفتر منطقه‌ای در فرمانیه تهران است. موجودی ۴۷۵ واحد در ۱۲ پروژه با قیمت زنده روی همین سایت منتشر می‌شود، کمترین قیمت ورود ۶۱٬۶۳۵ ریال عمان است، و خرید کامل از راه دور با وکالت‌نامه هم انجام‌شدنی است.',
 
   lead:
     'اگر دنبال کسی می‌گردید که در عمان کنار شما بایستد و فارسی حرف بزند، این صفحه دقیقاً می‌گوید ما چه هستیم، چه کاری را انجام می‌دهیم و چه کاری را انجام نمی‌دهیم. بدون شعار و بدون عددی که نشود جای دیگری روی همین سایت راستی‌آزمایی کرد.',
 
-  ctaPrimary: 'دیدن ۴۷۸ واحد موجود',
+  ctaPrimary: 'دیدن ۴۷۵ واحد موجود',
   ctaSecondary: 'گفت‌وگو با مشاور فارسی‌زبان',
 
   stats: [
     { value: 'فارسی، انگلیسی، عربی، روسی', label: 'زبان‌های کاری تیم' },
     { value: 'مسقط و تهران', label: 'دو دفتر، هر دو با نشانی مشخص' },
-    { value: '۴۷۸ واحد در ۱۲ پروژه', label: 'موجودی زنده با قیمت روز' },
+    { value: '۴۷۵ واحد در ۱۲ پروژه', label: 'موجودی زنده با قیمت روز' },
     { value: '۶۱٬۶۳۵ ریال عمان', label: 'کمترین قیمت ورود، فری‌هولد' },
   ],
 
@@ -115,7 +115,7 @@ export const copy = {
     {
       title: 'قیمت‌ها را منتشر می‌کنیم',
       body:
-        'قیمت هر ۴۷۸ واحد موجود روی سایت باز است و شاخص قیمت متری عمان را هم خودمان منتشر می‌کنیم؛ میانه فعلی حدود ۱٬۱۰۳ ریال عمان برای هر مترمربع. برای دیدن عدد لازم نیست شماره بدهید.',
+        'قیمت هر ۴۷۵ واحد موجود روی سایت باز است و شاخص قیمت متری عمان را هم خودمان منتشر می‌کنیم؛ میانه فعلی حدود ۱٬۱۰۷ ریال عمان برای هر مترمربع. برای دیدن عدد لازم نیست شماره بدهید.',
     },
   ],
 
@@ -219,7 +219,7 @@ export const copy = {
 export const links = {
   heading: 'ادامه مسیر',
   items: [
-    { href: '/project', label: 'جستجوی ۴۷۸ ملک موجود در عمان با قیمت زنده' },
+    { href: '/project', label: 'جستجوی ۴۷۵ ملک موجود در عمان با قیمت زنده' },
     { href: '/buy', label: 'خرید ملک در عمان: پروژه‌ها و قیمت‌ها' },
     { href: '/property-prices-in-oman', label: 'شاخص قیمت ملک عمان، متری و به تفکیک منطقه' },
     { href: '/oman-property-for-iranians-in-uae', label: 'خرید ملک در عمان برای ایرانیان مقیم امارات' },
