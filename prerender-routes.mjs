@@ -27,6 +27,7 @@ import {
   agencyJsonLd as paAgencyJsonLd,
 } from './src/data/persianAgencyContent.mjs'
 import { PROJECT_SEO, projectFaqJsonLd } from './src/projectSeoContent.mjs'
+import { getProjectDetails } from './src/data/projectDetails.js'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
 import { POPULAR, COMMUNITIES, PROJECTS, servicesFor, footerSeoCopy } from './src/footerSeoLinks.mjs'
 import { BRANCHES } from './src/data/branches.js'
@@ -112,6 +113,7 @@ function pageFor(route, lang) {
     (route === GOLDEN_VISA_ROUTE ? goldenVisaHtml(lang) : '') +
     (route === UAE_ROUTE ? iraniansUaeHtml() : '') +
     (route === PERSIAN_AGENCY_ROUTE ? persianAgencyHtml() : '') +
+    (route.startsWith('/buy/') ? projectBodyHtml(route.slice(5), lang) : '') +
     footerLinksHtml(lang)
   // The light page needs a FULL-BLEED white backdrop: the global stylesheet
   // paints body black, so a centred max-width block alone would sit between
@@ -358,6 +360,74 @@ function persianAgencyHtml() {
     `<h2>${esc(paCopy.faqTitle)}</h2>${faq}` +
     `<h2>${esc(paLinks.heading)}</h2><ul>${items}</ul>`
   )
+}
+
+// Crawlable body for the 12 project pages x 4 languages.
+//
+// WHY: audited 2026-08-30. These 48 pages are the ones a buyer searching a
+// project by name lands on, and their static shell carried a median of 211
+// words, ALL of it the shared footer link block. No description, no unit data,
+// no table. The localized copy already existed in src/data/projectDetails.js
+// and the inventory already sat in `inventory` for the AggregateOffer; both
+// were simply never written into the shell, so only visitors with JS ever saw
+// them. Same class of defect as the duplicate h1 fixed the same day: content
+// that exists for humans and is missing for crawlers.
+//
+// 🔑 This is deliberately NOT a per-unit page in each language. Translating
+// the 478 unit pages would mint ~1,434 near-identical templated URLs, which is
+// the duplicate-content problem this prerenderer was built to solve. The unit
+// DATA belongs here, on one strong page per project per language, instead.
+const PROJ_L10N = {
+  en: { units: 'Available units', from: 'From', beds: 'Bedrooms', handover: 'Handover',
+        mix: 'Available unit mix', cols: ['Type', 'Units', 'Size', 'Price'], studio: 'Studio', br: 'BR' },
+  fa: { units: 'واحدهای موجود', from: 'شروع قیمت', beds: 'تعداد خواب', handover: 'تحویل',
+        mix: 'ترکیب واحدهای موجود', cols: ['نوع', 'تعداد', 'متراژ', 'قیمت'], studio: 'استودیو', br: 'خوابه' },
+  ar: { units: 'الوحدات المتاحة', from: 'يبدأ من', beds: 'غرف النوم', handover: 'التسليم',
+        mix: 'توزيع الوحدات المتاحة', cols: ['النوع', 'العدد', 'المساحة', 'السعر'], studio: 'استوديو', br: 'غرف' },
+  ru: { units: 'Доступные лоты', from: 'От', beds: 'Спальни', handover: 'Передача',
+        mix: 'Состав доступных лотов', cols: ['Тип', 'Лотов', 'Площадь', 'Цена'], studio: 'Студия', br: 'сп.' },
+}
+
+// unit mix per project slug, built once from the same fetch as the AggregateOffer
+const mixBySlug = new Map()
+
+function projectBodyHtml(slug, lang) {
+  const agg = aggBySlug.get(slug)
+  if (!agg) return ''
+  const d = getProjectDetails(agg.name, lang)
+  const t = PROJ_L10N[lang] || PROJ_L10N.en
+  const out = []
+
+  if (d?.tagline) out.push(`<p><strong>${esc(d.tagline)}</strong></p>`)
+  if (d?.description) out.push(`<p>${esc(d.description)}</p>`)
+
+  const facts = [
+    `<li><strong>${esc(t.units)}:</strong> ${agg.count}</li>`,
+    agg.min > 0 ? `<li><strong>${esc(t.from)}:</strong> ${esc(fmtOmr(agg.min))}</li>` : '',
+    d?.bedrooms ? `<li><strong>${esc(t.beds)}:</strong> ${esc(String(d.bedrooms))}</li>` : '',
+    d?.handover ? `<li><strong>${esc(t.handover)}:</strong> ${esc(String(d.handover))}</li>` : '',
+  ].filter(Boolean).join('')
+  if (facts) out.push(`<ul>${facts}</ul>`)
+
+  const rows = mixBySlug.get(slug) || []
+  if (rows.length) {
+    const head = t.cols.map((c) => `<th>${esc(c)}</th>`).join('')
+    const body = rows.map((r) => {
+      const bed = r.beds === 0 || r.beds == null ? t.studio : `${r.beds} ${t.br}`
+      const size = r.minA && r.maxA
+        ? (r.minA === r.maxA ? `${r.minA} m²` : `${r.minA}-${r.maxA} m²`) : '–'
+      const price = r.min > 0
+        ? (r.min === r.max ? fmtOmr(r.min) : `${fmtOmr(r.min)} - ${fmtOmr(r.max)}`) : '–'
+      return `<tr><td>${esc(r.type)} · ${esc(bed)}</td><td>${r.n}</td><td>${esc(size)}</td><td>${esc(price)}</td></tr>`
+    }).join('')
+    out.push(`<h2>${esc(t.mix)}</h2><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`)
+  }
+
+  for (const sec of d?.sections || []) {
+    if (!sec?.title || !sec?.body) continue
+    out.push(`<h2>${esc(sec.title)}</h2><p>${esc(sec.body)}</p>`)
+  }
+  return out.join('')
 }
 
 const BUILD_DAY = (process.env.VERCEL_DEPLOYMENT_CREATED_AT
@@ -672,6 +742,32 @@ for (const { unit, project } of inventory) {
   aggBySlug.set(k, a)
 }
 for (const a of aggBySlug.values()) if (a.min === Infinity) a.min = 0
+
+// Unit mix per project, grouped by type + bedrooms, for the project-page table.
+{
+  const g = new Map()
+  for (const { unit, project } of inventory) {
+    const slug = slugify(project.name)
+    const type = unit.unit_type || 'Unit'
+    const beds = unit.bedrooms
+    const k = `${slug}|${type}|${beds}`
+    const price = Number(unit.price_omr) || 0
+    const area = Math.round(Number(unit.total_area_sqm || unit.internal_area_sqm || 0)) || 0
+    const r = g.get(k) || { slug, type, beds, n: 0, min: Infinity, max: 0, minA: 0, maxA: 0 }
+    r.n++
+    if (price > 0) { r.min = Math.min(r.min, price); r.max = Math.max(r.max, price) }
+    if (area > 0) { r.minA = r.minA ? Math.min(r.minA, area) : area; r.maxA = Math.max(r.maxA, area) }
+    g.set(k, r)
+  }
+  for (const r of g.values()) {
+    if (r.min === Infinity) r.min = 0
+    const list = mixBySlug.get(r.slug) || []
+    list.push(r)
+    mixBySlug.set(r.slug, list)
+  }
+  // Most units first, so the table opens with the format actually on offer.
+  for (const list of mixBySlug.values()) list.sort((x, y) => y.n - x.n)
+}
 
 // …and the same fetch feeds the price index. Must be initialised before the
 // route loop below, which is what calls pageFor().
