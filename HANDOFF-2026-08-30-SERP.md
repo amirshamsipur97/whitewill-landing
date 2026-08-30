@@ -1,7 +1,12 @@
-# Why irfaninvest.com was absent from «خرید ملک در عمان» (2026-08-27)
+# Why irfaninvest.com looked absent from «خرید ملک در عمان» (2026-08-30)
 
 Owner searched the term over a French OpenVPN and found no irfaninvest result
 anywhere on page one, and asked whether it was a bug.
+
+⚠️ **This file was originally written as HANDOFF-2026-08-27. That date was
+wrong: `date -u` and the Supabase server clock both say 2026-08-30. If a
+handoff date ever looks off, check `date -u`, do not trust a date carried
+forward in conversation.**
 
 ## It is not a bug. Proven, not assumed
 
@@ -90,3 +95,74 @@ query from a French IP. Use GSC → Performance → filter the query → Pages. 
 is the only reliable read, and it needs the owner.
 
 ⏳ Give the pillar rewrite and the redirects 2 to 3 weeks before judging.
+
+
+## Round two, same day: "no links for buy property in muscat / oman either"
+
+The owner then reported the same for the two English head terms, from a French
+VPN and from an Iranian IP with no VPN, adding the decisive detail: **from
+Muscat the site ranked well in both English and Persian; from France and Iran
+it did not.** Minutes later they tested again and reported the site IS on page
+one in both languages.
+
+### What was checked, and what it rules out
+
+| check | result |
+|---|---|
+| production deployments | **20 of 20 Ready, zero failed** |
+| geo logic in the codebase | `api/geo.js` only READS `x-vercel-ip-country` and returns it, for the popup's currency. **No redirect, no country block anywhere in `api/`, `src/` or `vercel.json`.** |
+| pillar serving | 200, zero redirects, index,follow, correct canonical and hreflang |
+| `noindex` in `dist/` | zero |
+
+🔑 **The pillar rewrite deployed roughly five minutes before the owner's
+successful test. Google cannot recrawl and re-rank in five minutes, so the
+rewrite did not cause the site to reappear. It was already ranking.**
+
+### The honest conclusion
+
+Absent, then present, within days, across three different network positions, on
+a site with no serving fault and no indexation block, is the signature of **a
+ranking that sits near the page-one boundary combined with Google's geo
+personalization**, not of a bug. Ranking well from Muscat and poorly from
+Tehran is exactly what Google does with a business whose entity signals are all
+Omani: address, phone, and the (still unclaimed) Business Profile.
+
+🚨 **That is not a reason to relax.** The buyers are in Iran and the UAE, not
+Oman. A site that ranks best where its customers are NOT is a real commercial
+problem, even though it is not a defect. The levers are off-site: claim the
+Business Profile, and earn links from Iranian and regional domains, which is
+what every competitor ranking for the Persian term has and we do not.
+
+⚠️ **What cannot be settled from here: whether there was a genuine dip around
+25 August when the three fa pages were redirected.** Only GSC → Performance,
+filtered to the query, with a date comparison across 25 August, can answer
+that. It needs the owner.
+
+## The instrumentation gap this exposed, now fixed
+
+The owner's question was "are Persian searchers finding us", and **the site
+could not answer it from its own data**:
+
+- `ContactCTA`, the form on all 154 article pages, the Persian entity page and
+  the UAE landing, **never sent `language`**. The column was therefore
+  meaningless: 81 rows say `en` from a path that does not set it, and only 2 of
+  164 leads say `fa`. That number cannot be read as "Persian does not convert",
+  because the field was never wired.
+- `country` was derived from the **phone dial code**, not from where the
+  visitor was, and 152 of 164 rows are unknown.
+
+Fixed in `src/supabase.js` inside `submitForm`, so every form gets it at once
+rather than six call sites each remembering:
+
+- `language` from the URL prefix via `langFromPath`. Free and exact.
+- `geo_country` from `/api/geo`, cached per session, **1.2s timeout, every
+  failure path resolves to null**, so it can never delay or lose a submit. It
+  rides in the body into `raw_data`, leaving the historic dial-code `country`
+  column with its original meaning.
+
+Verified in the browser on both a `/fa/` and a bare-English article, with the
+request intercepted so no test lead was created: `language` came back `fa` and
+`en` correctly. Live bundle confirmed to contain it, and `/api/geo` answers.
+
+📅 From 30 August forward, "do Persian readers convert" is answerable. Before
+that date it is not, and no chart should pretend otherwise.

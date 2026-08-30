@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { trackLead } from './analytics.js'
 import { getAttribution } from './lib/attribution.js'
+import { langFromPath } from './lib/localize.js'
 
 const url = import.meta.env.VITE_SUPABASE_URL
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -25,6 +26,44 @@ export const supabase = createClient(url, key)
  * @param {string} [payload.language]
  * @param {object} [payload.extra]
  */
+// ── Who the lead actually was ──────────────────────────────────────
+//
+// WHY THIS EXISTS: on 2026-08-30 the owner asked whether Persian searchers
+// were finding the site, and the honest answer was that we could not tell from
+// our own data. `ContactCTA` (the form on all 154 article pages, the Persian
+// entity page and the UAE landing) never sent `language`, so the column was
+// meaningless, and `country` was derived from the phone DIAL CODE rather than
+// from where the visitor actually was. Both are filled here, once, rather than
+// in each call site, because there are six forms and a seventh will forget.
+//
+// `language` comes from the URL prefix, which is free and exact: a reader on
+// /fa/insights/... was reading Persian, full stop.
+//
+// `geo_country` is best effort. It rides in the body, so the edge function
+// spreads it into `raw_data` and the existing dial-code `country` column keeps
+// its old meaning instead of being silently redefined under the historic rows.
+// ⚠️ It must never delay or break a submit: one 1.2s timeout, cached for the
+// session, and every failure path resolves to null.
+let geoCountryPromise = null
+function visitorCountry() {
+  if (typeof window === 'undefined') return Promise.resolve(null)
+  if (geoCountryPromise) return geoCountryPromise
+  geoCountryPromise = (async () => {
+    try {
+      const ctl = new AbortController()
+      const t = setTimeout(() => ctl.abort(), 1200)
+      const r = await fetch('/api/geo', { signal: ctl.signal })
+      clearTimeout(t)
+      if (!r.ok) return null
+      const d = await r.json()
+      return d?.country || null
+    } catch {
+      return null // dev, offline, blocked, slow: never a reason to lose a lead
+    }
+  })()
+  return geoCountryPromise
+}
+
 export async function submitForm(payload) {
   // Campaign attribution. `getAttribution()` returns the first-touch UTM tags +
   // click ids captured on the landing pageview and persisted in sessionStorage,
@@ -62,11 +101,20 @@ export async function submitForm(payload) {
     return `${src}_${rand}`
   }
 
+  const language =
+    payload.language ||
+    (typeof window !== 'undefined' ? langFromPath(window.location.pathname) : null)
+  const geo_country = payload.geo_country ?? (await visitorCountry())
+
   const body = {
     ...attribution,
     ...utmFromQuery,
     page_url: typeof window !== 'undefined' ? window.location.href : undefined,
     ...payload,
+    // After the spread on purpose: a call site that passes neither still gets
+    // both, and one that passes either keeps its own value.
+    language,
+    geo_country,
     dedup_key: payload.dedup_key || mintDedupKey(),
   }
 
@@ -89,7 +137,7 @@ export async function submitForm(payload) {
   // the single place we fire the GA4 `generate_lead` event (+ optional Google
   // Ads conversion). Wrapped so an analytics hiccup never breaks the submit.
   try {
-    trackLead({ source: payload.source, language: payload.language })
+    trackLead({ source: payload.source, language })
   } catch { /* ignore analytics errors */ }
 
   return res.json()
