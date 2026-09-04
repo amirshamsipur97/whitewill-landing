@@ -293,7 +293,7 @@ const D = {
       'Branded residences with full St. Regis services — Butler service, private pools and the brand\'s signature waterfront hospitality.',
     units: ['Apartment', 'Penthouse'],
     bedrooms: '2 – 5',
-    priceFrom: 'OMR 540,000',
+    priceFrom: 'OMR 441,631',
     handover: '2028',
     features: ['waterfront', 'butlerService', 'privatePool', 'brandedResidences', 'spa', 'fineDining', 'gym', 'concierge', 'freehold'],
     sections: [
@@ -311,7 +311,7 @@ const D = {
       },
       {
         title: 'Investment & ownership',
-        body: 'Branded residences command premium resale and rental performance, and St. Regis is sold freehold with residency eligibility. With prices from OMR 540,000 and handover in 2028, this is among the most exclusive addresses in Oman.',
+        body: 'St. Regis is sold freehold, open to all nationalities, and the purchase carries eligibility for Oman investor residency. Available units currently start at OMR 441,631, with handover in 2028.',
       },
     ],
   },
@@ -600,7 +600,7 @@ const AR_OVERLAY = {
       },
       {
         title: 'الاستثمار والتملّك',
-        body: 'تحقّق الإقامات المُوقَّعة أداءً متميّزاً في إعادة البيع والإيجار، وتُباع St. Regis تملّكاً حراً مع أهلية الإقامة. بأسعار من 540,000 ر.ع وتسليم 2028، هذا من أكثر العناوين حصرية في عُمان.',
+        body: 'تُباع St. Regis تملّكاً حراً لجميع الجنسيات، والشراء يمنح أهلية إقامة المستثمر في عُمان. تبدأ الوحدات المتاحة حالياً من 441,631 ر.ع، والتسليم في 2028.',
       },
     ],
   },

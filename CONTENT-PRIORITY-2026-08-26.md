@@ -52,7 +52,17 @@ almost never what they ask for. "Price list" appears in only 3 of 160 articles.
 1. ✅ **Vistal** (done 08-26, ids 175-178, 4 langs).
    Chosen first over St. Regis purely on data freshness: 71 units, the most of
    any project, OMR 19.1m, zero coverage, and inventory only 15 days old.
-2. 🔴 **St. Regis. BLOCKED ON A DATA REFRESH.** Biggest asset on the site,
+2. ✅ **St. Regis** (done 2026-09-04, ids 187-190, 4 langs). Unblocked the day
+   the owner sent the refreshed file. Was the site's largest asset with zero
+   coverage; the refresh cut it from 59 units to 36 and from OMR 32.4m to
+   20.8m, and it is still the most expensive metre we hold at ~2,317 OMR/m²
+   against a 1,063 site median.
+   🔑 Its one genuinely distinctive fact: **every one of the 36 units clears
+   the OMR 250,000 golden threshold**, which is the exact inverse of Wadi Zaha
+   and Hay Al Wafa where none do. That contrast is the article's spine.
+
+~~2. 🔴 St. Regis. BLOCKED ON A DATA REFRESH.~~ (resolved)
+   Original note kept for the reasoning: **BLOCKED ON A DATA REFRESH.** Biggest asset on the site,
    OMR 32.4m, 59 units, zero dedicated articles, and the oldest inventory we
    hold at 94 days. Writing a price-detail article off 24-May data would
    publish stale numbers at the top of the funnel. **Ask the owner for the

@@ -283,7 +283,7 @@ export const ROUTES = {
       en: 'Oman Property for Iranians Living in the UAE | Irfan Investment',
     },
     desc: {
-      fa: 'خرید ملک در عمان برای ساکنین امارات: فری‌هولد برای هر ملیتی از ۵۸۸٬۷۰۰ درهم، اقامت قابل تمدید، مقایسه قیمت با دبی و ۴۷۵ واحد موجود.',
+      fa: 'خرید ملک در عمان برای ساکنین امارات: فری‌هولد برای هر ملیتی از ۵۸۸٬۷۰۰ درهم، اقامت قابل تمدید، مقایسه قیمت با دبی و ۴۵۲ واحد موجود.',
       en: 'Freehold property in Oman for Iranians based in the UAE, from about AED 588,700 with renewable owner residency. Dirham budgets, live inventory.',
     },
   },
@@ -300,7 +300,7 @@ export const ROUTES = {
       en: 'Persian-Speaking Real Estate Agency in Oman | Irfan Investment',
     },
     desc: {
-      fa: 'کارگزاری املاک با مشاوران فارسی‌زبان و دفتر در مسقط و تهران. انتخاب واحد، بررسی قرارداد، ثبت سند و اقامت مالک ملک به فارسی. ۴۷۵ واحد از ۶۱٬۶۳۵ ریال عمان.',
+      fa: 'کارگزاری املاک با مشاوران فارسی‌زبان و دفتر در مسقط و تهران. انتخاب واحد، بررسی قرارداد، ثبت سند و اقامت مالک ملک به فارسی. ۴۵۲ واحد از ۶۱٬۶۳۵ ریال عمان.',
       en: 'Persian-speaking real estate brokerage in Oman, with offices in Muscat and Tehran. Unit selection, contracts and owner residency handled in Farsi.',
     },
   },

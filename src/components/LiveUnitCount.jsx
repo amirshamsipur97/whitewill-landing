@@ -54,7 +54,7 @@ const OLIVE_BRIGHT = '#8c8d25'
 const TITLE_FONT = '"Arsenal SC", "Peyda", "Manrope", "Inter", system-ui, sans-serif'
 
 // Last verified count, 2026-08-18. Only ever shown if the count request fails.
-const FALLBACK = 475
+const FALLBACK = 452
 
 const COPY = {
   en: {
