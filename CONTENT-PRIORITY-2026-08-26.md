@@ -128,6 +128,38 @@ story.
 **Next eligible: Sarooj Apartments** (OMR 3.6m, 38 units, 15 days old).
 Everything larger is blocked on a refreshed developer file from the owner.
 
+## 2026-09-05: the queue was overruled by demand, on purpose
+
+Rotating to the next uncovered project would have meant Sarooj Apartments
+(OMR 3.6m, 38 units, fresh). Checked demand first and it argued against:
+
+| what leads ask about | of 122 messages |
+|---|---:|
+| price | **58 (48%)** |
+| payment plan | **23 (19%)** |
+| finance or mortgage | 2 |
+| residency | 2 |
+| rent or yield | 2 |
+| **Sarooj by name** | **0** |
+
+Two thirds of expressed demand is price and payment terms. Nobody has ever
+named Sarooj. So the project article would have filled an inventory gap while
+serving almost no asked question.
+
+**The gap that mattered instead:** 46 articles mention a down payment in
+passing and **zero own the term in a title**. Nothing on the site answered
+"how much cash do I actually need on the day I sign", which is the bridge
+between the 48% and the 19%.
+
+Checked for cannibalization before writing: every existing price or cost
+article is project-specific, area-specific or audience-specific, plus one on
+the cheapest properties. None targets cash-to-start. This is why the article
+was written and the queue was not followed.
+
+🔑 **The rule this establishes: the queue orders projects, it does not outrank
+demand.** When a topic serves two thirds of asked questions and no page owns
+it, write that first and note why.
+
 ## Rules that came out of this
 
 - **Do not write a price article off inventory older than about 60 days.**
