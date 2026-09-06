@@ -92,3 +92,54 @@ Next candidates on this evidence, in order:
 2. **`company-formation-cost-oman-2026` in fa, ar and ru.** It is the number
    two page on the site by clicks, up 81%, and exists in English only.
 3. Only then the next uncovered project (Sarooj Apartments).
+
+---
+
+## Language-gap audit and the first fix (same day)
+
+Audited every published slug for missing language editions. 13 of 54 slugs are
+not in all four languages, but they split into three very different cases.
+
+**Deliberately single-language, leave alone:**
+
+| slug | langs | why |
+|---|---|---|
+| `kharid-melk-dar-oman-2026` | fa | the fa pillar; an English twin would duplicate `/buy` |
+| `qeymat-khane-oman-be-pool-iran-2026` | fa | prices in Iranian currency, meaningless elsewhere |
+| `behtarin-sayt-kharid-melk-oman-2026` | fa | fa-only by design, see the 08-25 work |
+| the three nationality guides | ar,en,ru | **fa was removed on purpose on 08-25.** Do NOT re-add it, that was the cannibalization fix |
+
+**Fixed today:** `company-formation-cost-oman-2026` went from **English only to
+all four languages** (ids 200-202). This was the highest-value gap on the site:
+**the number two page by clicks, up 81 percent in 28 days**, and three quarters
+of the audience could not read it. Figures carried across unchanged from the
+English: OMR 500 government fees, OMR 980 with a one-year investor visa, OMR
+1,250 with two years, OMR 1,700 to 3,500 fully set up with an office, free zone
+from OMR 1,000, and zero minimum capital for an LLC, plus the GCC comparison.
+
+**Still open, in priority order:**
+1. `invest-oman-real-estate-2026` needs **fa and ru** (en and ar today).
+2. `property-tax-in-oman-2026`, `buy-apartment-in-oman-2026` and
+   `school-setup-consultants-oman-2026` are **English only**.
+3. `oman-realty-2026` is **Russian only** and overlaps the property pillar; it
+   may be better merged than translated. Check before writing.
+
+## The stock-cover problem
+
+🚨 **44 published rows, 11 slugs, still use external Pexels covers**, against
+the site's own rule that covers are real photos from `/images/blog/` and that
+no two articles share one. Each one is a third-party image request on an
+article page and breaks if Pexels changes the URL.
+
+Fixed two today: `company-formation-cost-oman-2026` (now `muscat-2.jpg`, also
+swapping its inline image) and `oman-property-owner-residency-visa-2026` (now
+`almouj-3.jpg`).
+
+⚠️ **The remaining nine cannot be fixed with what is on disk.** They are
+banking, company-formation and car-import topics, and every unused image in
+`/images/blog/` is a beach or resort shot. A villa photo on "open a corporate
+bank account" is worse than the stock photo it replaces.
+
+**What is actually needed: Muscat business-district, office and city
+photography.** Until the owner supplies it, leave those nine alone rather than
+forcing a mismatched image.
