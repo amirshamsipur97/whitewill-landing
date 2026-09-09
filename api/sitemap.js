@@ -5,6 +5,8 @@
 // multilingual sitemap form). New articles the SEO agent publishes appear
 // automatically.
 
+import { clusterHead, slugForLang } from '../src/insightAliases.mjs'
+
 const SUPABASE_URL = 'https://owgvrxipqlusepozlujv.supabase.co'
 const ANON =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93Z3ZyeGlwcWx1c2Vwb3psdWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTYxMjQsImV4cCI6MjA5MjM3MjEyNH0.vZK4z9p9pUF1rZ8LHadFReBcEcwidwy9ZdEXnSmK4Fs'
@@ -64,12 +66,16 @@ function loc(lang, path) {
   return path === '/' ? SITE + (pre || '/') : SITE + pre + path
 }
 // `langs` defaults to all four; articles pass only the languages they exist in.
-function altBlock(path, langs = LANGS) {
+// `pathByLang` lets ONE logical page use a different path per language. Only
+// articles need it, and only when a language edition was published under its
+// own slug (see src/insightAliases.mjs); everything else resolves to `path`.
+function altBlock(path, langs = LANGS, pathByLang = null) {
+  const at = (l) => pathByLang?.[l] || path
   const lines = langs.map(
-    (l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${esc(loc(l, path))}"/>`,
+    (l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${esc(loc(l, at(l)))}"/>`,
   )
   const xdef = langs.includes('en') ? 'en' : langs[0]
-  if (xdef) lines.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(loc(xdef, path))}"/>`)
+  if (xdef) lines.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(loc(xdef, at(xdef)))}"/>`)
   return lines.join('\n')
 }
 
@@ -94,22 +100,34 @@ export default async function handler(req, res) {
     // have no prerendered file and fall through to the SPA shell — a 200 that
     // carries the HOMEPAGE canonical, i.e. a self-inflicted
     // "Duplicate, Google chose different canonical".
+    //
+    // Coverage is tracked per CLUSTER, not per slug: an article whose Russian
+    // edition lives on its own slug is one article in N languages, not two
+    // orphans each missing the other. clusterHead collapses them; slugForLang
+    // gives each language back the URL it actually publishes under.
     const latest = new Map()
     const langsFor = new Map()
     for (const a of rows) {
       if (!a.slug) continue
+      const head = clusterHead(a.slug)
       const d = (a.updated_at || a.published_at || today).slice(0, 10)
-      if (!latest.has(a.slug) || d > latest.get(a.slug)) latest.set(a.slug, d)
-      if (!langsFor.has(a.slug)) langsFor.set(a.slug, new Set())
-      if (a.lang) langsFor.get(a.slug).add(a.lang)
+      if (!latest.has(head) || d > latest.get(head)) latest.set(head, d)
+      if (!langsFor.has(head)) langsFor.set(head, new Set())
+      if (a.lang) langsFor.get(head).add(a.lang)
     }
-    articlePaths = [...latest.entries()].map(([slug, lastmod]) => ({
-      path: `/insights/${slug}`,
-      lastmod,
-      priority: '0.7',
-      changefreq: 'monthly',
-      langs: LANGS.filter((l) => langsFor.get(slug)?.has(l)),
-    }))
+    articlePaths = [...latest.entries()].map(([head, lastmod]) => {
+      const langs = LANGS.filter((l) => langsFor.get(head)?.has(l))
+      const pathByLang = {}
+      for (const l of langs) pathByLang[l] = `/insights/${slugForLang(head, l)}`
+      return {
+        path: `/insights/${head}`,
+        pathByLang,
+        lastmod,
+        priority: '0.7',
+        changefreq: 'monthly',
+        langs,
+      }
+    })
   } catch {
     /* still serve static routes */
   }
@@ -180,9 +198,9 @@ export default async function handler(req, res) {
   for (const p of logical) {
     // Only emit the languages this path actually has a page for.
     const langs = p.langs?.length ? p.langs : LANGS
-    const alts = altBlock(p.path, langs)
+    const alts = altBlock(p.path, langs, p.pathByLang)
     for (const lang of langs) {
-      const href = loc(lang, p.path)
+      const href = loc(lang, p.pathByLang?.[lang] || p.path)
       urls.push(
         `  <url>\n    <loc>${esc(href)}</loc>\n    <lastmod>${p.lastmod}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n${alts}\n  </url>`,
       )

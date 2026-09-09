@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { dirname, join } from 'path'
 import { marked } from 'marked'
 import { POPULAR, COMMUNITIES, PROJECTS, servicesFor, footerSeoCopy } from './src/footerSeoLinks.mjs'
+import { clusterHead, slugForLang, clusterLangs } from './src/insightAliases.mjs'
 
 const SITE = 'https://www.irfaninvest.com'
 const SUPABASE_URL = 'https://owgvrxipqlusepozlujv.supabase.co'
@@ -26,7 +27,9 @@ const LANGS = ['en', 'ru', 'ar', 'fa']
 const RTL = new Set(['ar', 'fa'])
 
 const langPrefix = (lang) => (lang === 'en' ? '' : `/${lang}`)
-const urlFor = (lang, slug) => `${SITE}${langPrefix(lang)}/insights/${slug}`
+// Alias-aware: asks insightAliases which slug THIS language publishes under,
+// so a cluster split across two slugs still emits one correct hreflang set.
+const urlFor = (lang, slug) => `${SITE}${langPrefix(lang)}/insights/${slugForLang(slug, lang)}`
 
 const esc = (s) =>
   String(s ?? '')
@@ -225,15 +228,111 @@ for (const r of rows) {
   if (!bySlug.has(r.slug)) bySlug.set(r.slug, [])
   bySlug.get(r.slug).push(r)
 }
+// True language coverage per ARTICLE, not per slug: a cluster split across two
+// slugs (see src/insightAliases.mjs) counts as one article in four languages.
+const langsByHead = clusterLangs(rows)
+
+// ── Missing language editions ────────────────────────────────────────────────
+// WHY: vercel.json rewrites /:lang/insights/:slug to the SPA shell for any
+// slug, so a language edition that was never written still answered HTTP 200
+// with the English homepage <title>, canonical="/" and robots="index, follow".
+// A 2026-09-09 audit found 26 such URLs. They are textbook soft 404s, and the
+// canonical pointing at the homepage is worse than the 200 itself.
+//
+// They are NOT in the sitemap, but Google reaches them anyway: it guesses
+// localized variants of URLs it already knows, and any mistyped internal or
+// external link lands here. So write a REAL page for each: noindex so it can
+// never be indexed, follow so any inbound equity still flows, no canonical at
+// all (a self-canonical on a noindex page is noise, and the homepage canonical
+// was the bug), and a list of the editions that DO exist so a reader who
+// arrived in the wrong language is one click from the right one.
+//
+// A static file wins over a rewrite in Vercel's pipeline, so these serve
+// without touching vercel.json. Redirects run BEFORE the filesystem, so any
+// combination already 301'd there keeps redirecting; those are skipped below
+// purely so the build does not write files nothing can ever reach.
+const redirectedPaths = new Set(
+  (JSON.parse(readFileSync('vercel.json', 'utf8')).redirects || [])
+    .map((r) => r.source)
+    .filter((p) => p.includes('/insights/')),
+)
+
+const STUB_COPY = {
+  en: { h: 'This guide is not available in English', p: 'It is published in the languages below.', o: 'Other languages', i: 'All insights', b: 'Back to home' },
+  ru: { h: 'Этот материал недоступен на русском', p: 'Он опубликован на языках ниже.', o: 'Другие языки', i: 'Все материалы', b: 'На главную' },
+  ar: { h: 'هذا الدليل غير متوفر بالعربية', p: 'وهو منشور باللغات التالية.', o: 'لغات أخرى', i: 'كل المقالات', b: 'الصفحة الرئيسية' },
+  fa: { h: 'این راهنما به فارسی موجود نیست', p: 'این مطلب به زبان‌های زیر منتشر شده است.', o: 'زبان‌های دیگر', i: 'همه مقالات', b: 'صفحه اصلی' },
+}
+const LANG_NAME = { en: 'English', ru: 'Русский', ar: 'العربية', fa: 'فارسی' }
+
+function stubPage(lang, headSlug, availableLangs, titleByLang) {
+  const c = STUB_COPY[lang]
+  const rtl = RTL.has(lang)
+  let html = template
+  const title = `${c.h} | Irfan Investment Group`
+  html = html.replace(/<html lang="[^"]*"/, `<html lang="${lang}"${rtl ? ' dir="rtl"' : ''}`)
+  html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
+  html = html.replace(/(<meta name="description" content=")[^"]*(")/, `$1${esc(c.p)}$2`)
+  // The template ships the HOMEPAGE canonical. On a page that does not exist in
+  // this language that tag was actively telling Google "this URL is the
+  // homepage". Strip it and add none.
+  html = html.replace(/<link rel="canonical"[^>]*>\s*/g, '')
+  html = html.replace(/<meta name="robots"[^>]*>\s*/g, '')
+  html = html.replace(
+    '</head>',
+    `    <meta name="robots" content="noindex,follow">\n` +
+      availableLangs
+        .map((l) => `    <link rel="alternate" hreflang="${l}" href="${urlFor(l, headSlug)}">`)
+        .join('\n') +
+      `\n  </head>`,
+  )
+  const links = availableLangs
+    .map(
+      (l) =>
+        `<li><a href="${langPrefix(l)}/insights/${slugForLang(headSlug, l)}" style="color:#8c8d25">${LANG_NAME[l]}: ${esc(titleByLang[l] || headSlug)}</a></li>`,
+    )
+    .join('')
+  html = html.replace(
+    /<div id="root"><\/div>/,
+    `<div id="root"><div dir="${rtl ? 'rtl' : 'ltr'}" style="max-width:680px;margin:0 auto;padding:96px 20px 48px;color:#fff;background:#000;font-family:Inter,system-ui,sans-serif;line-height:1.7">` +
+      `<h1>${esc(c.h)}</h1><p style="color:#999">${esc(c.p)}</p>` +
+      `<h2>${esc(c.o)}</h2><ul>${links}</ul>` +
+      `<p><a href="${langPrefix(lang)}/insights" style="color:#8c8d25">${esc(c.i)}</a> · <a href="${langPrefix(lang)}/" style="color:#8c8d25">${esc(c.b)}</a></p>` +
+      `</div></div>`,
+  )
+  return html
+}
 
 let count = 0
+let stubs = 0
+const writtenHeads = new Set()
 for (const [slug, variants] of bySlug) {
-  const langsForSlug = LANGS.filter((l) => variants.some((v) => v.lang === l))
+  const head = clusterHead(slug)
+  const langsForSlug = LANGS.filter((l) => langsByHead.get(head)?.has(l))
   for (const a of variants) {
     const out = join('dist', ...(a.lang === 'en' ? [] : [a.lang]), 'insights', slug, 'index.html')
     mkdirSync(dirname(out), { recursive: true })
     writeFileSync(out, pageFor(a, langsForSlug))
     count++
   }
+
+  // One stub pass per cluster, not per slug, or an aliased cluster would write
+  // the same missing language twice under two different slugs.
+  if (writtenHeads.has(head)) continue
+  writtenHeads.add(head)
+  const titleByLang = {}
+  for (const r of rows) if (clusterHead(r.slug) === head) titleByLang[r.lang] = r.title
+  for (const lang of LANGS) {
+    if (langsForSlug.includes(lang)) continue
+    const path = `${langPrefix(lang)}/insights/${slugForLang(head, lang)}`
+    if (redirectedPaths.has(path)) continue
+    const out = join('dist', ...(lang === 'en' ? [] : [lang]), 'insights', slugForLang(head, lang), 'index.html')
+    mkdirSync(dirname(out), { recursive: true })
+    writeFileSync(out, stubPage(lang, head, langsForSlug, titleByLang))
+    stubs++
+  }
 }
-console.log(`prerender-insights: wrote ${count} article pages for ${bySlug.size} slugs`)
+console.log(
+  `prerender-insights: wrote ${count} article pages for ${bySlug.size} slugs, ` +
+    `plus ${stubs} noindex stubs for missing language editions`,
+)

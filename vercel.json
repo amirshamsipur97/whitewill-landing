@@ -145,6 +145,11 @@
       "source": "/fa/insights/buy-property-salalah-indian-investors-nri-2026",
       "destination": "/fa/buy-property-in-salalah",
       "permanent": true
+    },
+    {
+      "source": "/ru/insights/invest-oman-real-estate-2026",
+      "destination": "/ru/insights/oman-realty-2026",
+      "permanent": true
     }
   ],
   "rewrites": [
