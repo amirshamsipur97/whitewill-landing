@@ -3,12 +3,24 @@
 // (prerender-routes.mjs). Plain data module: no JSX, importable from node.
 
 export const ROUTES = {
+  // 🔑 DELIBERATELY NOT "Buy Property in Oman", changed 2026-09-10.
+  // The homepage and /buy both opened with that exact phrase, so the site was
+  // asking Google to choose between two of its own pages for its most valuable
+  // commercial head term. GSC on 2026-09-05 showed the symptom: the homepage
+  // was the ONLY page in the top five that was falling, at -22 percent, while
+  // ranking for the property cluster that /buy is built to serve.
+  //
+  // The split is now clean, one page per intent, no two titles competing:
+  //   /         → "oman real estate" (590/mo) and brand
+  //   /buy      → "buy property in oman" (the head term, exact match)
+  //   /project  → "properties/apartments for sale in oman"
+  // Branded search is unaffected because the brand still closes the title.
   '/': {
     title: {
-      en: 'Buy Property in Oman & Invest | Irfan Investment Group',
-      ru: 'Irfan Investment Group: купить недвижимость в Омане',
-      ar: 'Irfan Investment Group: شراء العقارات والاستثمار في عُمان',
-      fa: 'خرید ملک در عمان و سرمایه‌گذاری | گروه سرمایه‌گذاری ایرفان',
+      en: 'Oman Real Estate: Freehold Homes & Investment | Irfan Investment Group',
+      ru: 'Недвижимость Омана: фригольд и инвестиции | Irfan Investment Group',
+      ar: 'عقارات عُمان: تملك حر واستثمار | Irfan Investment Group',
+      fa: 'املاک عمان: مالکیت فری‌هولد و سرمایه‌گذاری | گروه سرمایه‌گذاری ایرفان',
     },
     desc: {
       en: 'Premium real estate brokerage in Oman. Buy apartments, villas and off-plan property in Muscat with freehold ownership and Oman residency for foreign investors.',

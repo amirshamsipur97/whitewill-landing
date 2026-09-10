@@ -16,7 +16,9 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { ROUTES, projectMeta } from './src/seoRoutes.mjs'
-import { BUY_SEO, buyFaqJsonLd } from './src/buySeoContent.mjs'
+import {
+  BUY_SEO, buyFaqJsonLd, BUY_TABLES, BUY_AREA_LABELS, BUY_TYPE_LABELS, BUY_FAQ_EXTRA,
+} from './src/buySeoContent.mjs'
 import {
   copy as uaeCopy, links as uaeLinks,
   faqJsonLd as uaeFaqJsonLd, breadcrumbJsonLd as uaeBreadcrumbJsonLd,
@@ -247,15 +249,118 @@ function pageFor(route, lang) {
 
 // Crawlable "buy property in Oman" copy + FAQ + guide links for the static
 // /buy pages — mirrors the SEO block BuyPage.jsx renders below the grid.
+// Inventory tables for /buy, built at BUILD TIME from the same `inventory`
+// fetch that feeds the AggregateOffer. See the note above BUY_TABLES for why
+// this is computed and not written into the copy: a count typed into a
+// sentence is wrong the first time a unit sells.
+//
+// `inventory` is declared further down the file but only READ here, and this
+// function is called from the render loop after that fetch resolves, so the
+// ordering is fine.
+const TYPE_BUCKET = (raw) => {
+  const t = String(raw || '').toLowerCase()
+  if (t.includes('townhouse')) return 'townhouse'
+  if (t.includes('penthouse')) return 'penthouse'
+  if (t.includes('duplex')) return 'duplex'
+  if (t.includes('farm')) return 'farm'
+  if (t.includes('chalet')) return 'chalet'
+  if (t.includes('villa')) return 'villa'   // after townhouse, catches Sky/Twin/Standalone Villa
+  return 'apartment'                        // Apartment*, Studio, Sky Residence
+}
+
+function buyInventoryTables(lang) {
+  if (!inventory.length) return ''
+  const t = BUY_TABLES[lang] || BUY_TABLES.en
+  const areaL = BUY_AREA_LABELS[lang] || BUY_AREA_LABELS.en
+  const typeL = BUY_TYPE_LABELS[lang] || BUY_TYPE_LABELS.en
+  // Round before formatting. project_units.price_omr carries decimals on some
+  // rows (Aida stores 85,971.27), and a price with cents in a table of round
+  // thousands reads like a bug. Matches fmtOmr() in priceIndexData.mjs.
+  const n = (x) => Math.round(Number(x)).toLocaleString('en-US')
+
+  const priced = inventory.filter(({ unit }) => Number(unit.price_omr) > 0)
+
+  const byArea = new Map()
+  for (const { unit, project } of priced) {
+    const key = project.areas?.name || project.location || 'Oman'
+    const a = byArea.get(key) || { n: 0, min: Infinity, names: new Set() }
+    a.n++
+    a.min = Math.min(a.min, Number(unit.price_omr))
+    a.names.add(project.name)
+    byArea.set(key, a)
+  }
+  const areaRows = [...byArea.entries()]
+    .sort((x, y) => y[1].n - x[1].n)
+    .map(([k, v]) =>
+      `<tr><td>${esc(areaL[k] || k)}</td><td>${n(v.n)}</td><td>${n(v.min)}</td><td>${esc([...v.names].sort().join(', '))}</td></tr>`)
+    .join('')
+
+  const byType = new Map()
+  for (const { unit } of priced) {
+    const k = TYPE_BUCKET(unit.unit_type)
+    const b = byType.get(k) || { n: 0, min: Infinity, max: 0 }
+    b.n++
+    b.min = Math.min(b.min, Number(unit.price_omr))
+    b.max = Math.max(b.max, Number(unit.price_omr))
+    byType.set(k, b)
+  }
+  const typeRows = [...byType.entries()]
+    .sort((x, y) => y[1].n - x[1].n)
+    .map(([k, v]) =>
+      `<tr><td>${esc(typeL[k] || k)}</td><td>${n(v.n)}</td><td>${n(v.min)} - ${n(v.max)}</td></tr>`)
+    .join('')
+
+  const bands = [0, 0, 0]
+  for (const { unit } of priced) {
+    const p = Number(unit.price_omr)
+    if (p < 100000) bands[0]++
+    else if (p < 250000) bands[1]++
+    else bands[2]++
+  }
+  const bandRows = t.bands
+    .map((label, i) => `<tr><td>${esc(label)}</td><td>${n(bands[i])}</td></tr>`)
+    .join('')
+
+  const projects = new Set(priced.map(({ project }) => project.name)).size
+  const entry = Math.min(...priced.map(({ unit }) => Number(unit.price_omr)))
+  const note = t.totalNote
+    .replace('{units}', n(priced.length))
+    .replace('{projects}', n(projects))
+    .replace('{entry}', n(entry))
+
+  const table = (cols, rows) =>
+    `<table><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`
+
+  return (
+    `<h2>${esc(t.areaHeading)}</h2>` +
+    `<p>${esc(t.areaIntro)}</p>` +
+    `<p><strong>${esc(note)}</strong></p>` +
+    table(t.areaCols, areaRows) +
+    `<h2>${esc(t.typeHeading)}</h2>` +
+    table(t.typeCols, typeRows) +
+    `<h2>${esc(t.bandHeading)}</h2>` +
+    table(t.bandCols, bandRows)
+  )
+}
+
 function buySeoHtml(lang) {
   const c = BUY_SEO[lang] || BUY_SEO.en
   const prefix = langPrefix(lang)
   const paras = c.paras.map((p) => `<p>${esc(p)}</p>`).join('')
-  const faq = c.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
+  const allFaq = [...c.faq, ...(BUY_FAQ_EXTRA[lang] || BUY_FAQ_EXTRA.en)]
+  const faq = allFaq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')
   const links = c.links
     .map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`)
     .join('')
-  return `<h2>${esc(c.heading)}</h2>${paras}${faq}<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+  // Tables sit between the prose and the FAQ: the prose establishes the rule
+  // (any nationality, freehold, inside an ITC), the tables prove we hold the
+  // stock, and the FAQ closes the objections Google itself surfaces in PAA.
+  return (
+    `<h2>${esc(c.heading)}</h2>${paras}` +
+    buyInventoryTables(lang) +
+    faq +
+    `<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
+  )
 }
 
 // Same pattern for /project — the search portal had no crawlable body copy at
