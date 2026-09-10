@@ -198,18 +198,25 @@ export const ROUTES = {
       fa: 'خدمات واردات خودرو از عمان به ایران؛ انتخاب و خرید خودرو، ترخیص گمرکی، حمل و ترانزیت، بیمه و تحویل.',
     },
   },
+  // 🔑 KEYWORD-FIRST ON PURPOSE, changed 2026-09-10. The old title opened
+  // "About Irfan Investment Group" and the description said "strategic
+  // investment division", which is what the company calls itself rather than
+  // what a buyer types. "real estate company in oman" is 260/mo at Medium
+  // competition and is the highest COMMERCIAL intent in the EN keyword
+  // database (AG3), and the phrase appeared nowhere in src/. The brand still
+  // closes the title, so branded searches are unaffected.
   '/about': {
     title: {
-      en: 'About Irfan Investment Group: Real Estate Advisory in Oman',
-      ru: 'О компании Irfan Investment Group: недвижимость в Омане',
-      ar: 'عن Irfan Investment Group: استشارات عقارية في عُمان',
-      fa: 'درباره Irfan Investment Group: مشاور املاک در عمان',
+      en: 'Real Estate Company in Oman | Irfan Investment Group',
+      ru: 'Агентство недвижимости в Омане | Irfan Investment Group',
+      ar: 'شركة عقارية في عُمان | Irfan Investment Group',
+      fa: 'آژانس املاک در عمان | Irfan Investment Group',
     },
     desc: {
-      en: 'Irfan Investment Group is a strategic investment division focused on business growth and international real estate opportunities in Oman.',
-      ru: 'Irfan Investment Group, стратегическое инвестиционное подразделение, специализирующееся на росте бизнеса и международной недвижимости в Омане.',
-      ar: 'Irfan Investment Group قسم استثماري استراتيجي يركز على نمو الأعمال وفرص العقارات الدولية في عُمان.',
-      fa: 'Irfan Investment Group یک مجموعه سرمایه‌گذاری راهبردی متمرکز بر رشد کسب‌وکار و فرصت‌های املاک بین‌المللی در عمان است.',
+      en: 'A licensed real estate company in Oman selling freehold property to all nationalities: 452 units in 12 projects from OMR 61,635, plus residency and company formation.',
+      ru: 'Лицензированное агентство недвижимости в Омане: фригольд для любых гражданств, 452 объекта в 12 проектах от 61 635 риалов, резидентство и регистрация компании.',
+      ar: 'شركة عقارية مرخصة في عُمان تبيع التملك الحر لجميع الجنسيات: 452 وحدة في 12 مشروعاً من 61,635 ريالاً، مع الإقامة وتأسيس الشركات.',
+      fa: 'آژانس املاک دارای مجوز در عمان، فروش فری‌هولد به همه ملیت‌ها: ۴۵۲ واحد در ۱۲ پروژه از ۶۱٬۶۳۵ ریال، به‌همراه اقامت و ثبت شرکت.',
     },
   },
   '/insights': {

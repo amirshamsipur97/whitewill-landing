@@ -31,6 +31,7 @@ import { getProjectDetails } from './src/data/projectDetails.js'
 import { LANDINGS, landingCopy, landingFaqJsonLd } from './src/cityLandingContent.mjs'
 import { POPULAR, COMMUNITIES, PROJECTS, servicesFor, footerSeoCopy } from './src/footerSeoLinks.mjs'
 import { BRANCHES } from './src/data/branches.js'
+import { ABOUT_ENTITY, aboutJsonLd } from './src/data/aboutEntityContent.mjs'
 import { buildPriceIndex, fmtInt, fmtOmr, fmtRange, fmtSqm } from './src/priceIndexData.mjs'
 import { priceIndexCopy, priceIndexFaqJsonLd, priceIndexJsonLd, fill } from './src/priceIndexContent.mjs'
 import { buildGoldenVisa, TIER_5_OMR, TIER_10_OMR } from './src/goldenVisaData.mjs'
@@ -113,6 +114,7 @@ function pageFor(route, lang) {
     (route === GOLDEN_VISA_ROUTE ? goldenVisaHtml(lang) : '') +
     (route === UAE_ROUTE ? iraniansUaeHtml() : '') +
     (route === PERSIAN_AGENCY_ROUTE ? persianAgencyHtml() : '') +
+    (route === '/about' ? aboutBodyHtml(lang) : '') +
     (route.startsWith('/buy/') ? projectBodyHtml(route.slice(5), lang) : '') +
     footerLinksHtml(lang)
   // The light page needs a FULL-BLEED white backdrop: the global stylesheet
@@ -208,6 +210,28 @@ function pageFor(route, lang) {
       `    <script type="application/ld+json" id="persian-agency-faq-jsonld">${JSON.stringify(paFaqJsonLd())}</script>\n` +
       `    <script type="application/ld+json" id="persian-agency-breadcrumb-jsonld">${JSON.stringify(paBreadcrumbJsonLd())}</script>\n` +
       `    <script type="application/ld+json" id="persian-agency-org-jsonld">${JSON.stringify(paAgencyJsonLd())}</script>\n  </head>`,
+    )
+  }
+  // /about is the company's entity URL, so it carries the RealEstateAgent node
+  // and the FAQ. The node deliberately REUSES the site-wide organization @id
+  // rather than minting a second one: the goal is to describe the entity
+  // Google already knows, not to create a rival that splits the signal. Same
+  // reasoning as the Persian agency page above.
+  if (route === '/about') {
+    const ac = ABOUT_ENTITY[lang] || ABOUT_ENTITY.en
+    const aboutFaq = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: ac.faq.map(([q, a]) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    }
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="about-faq-jsonld">${JSON.stringify(aboutFaq)}</script>\n` +
+      `    <script type="application/ld+json" id="about-org-jsonld">${JSON.stringify(aboutJsonLd(SITE, lang))}</script>\n  </head>`,
     )
   }
   if (route === GOLDEN_VISA_ROUTE && goldenVisa.units > 0) {
@@ -329,6 +353,57 @@ function iraniansUaeHtml() {
 // The two office blocks are emitted as a real <address> each, with the phone
 // as a tel: link, because a postal address plus a dialable number is the
 // cheapest and strongest "this business exists" signal a page can carry.
+// Crawlable body for /about in all four languages.
+//
+// WHY: audited 2026-09-10 while chasing a lead drop. Fetched the way a crawler
+// fetches it, /about contained an <h1> and the footer link block and nothing
+// else. The site's own company page said nothing about the company until React
+// mounted, and the phrase buyers search, "real estate company in oman" (260/mo
+// and the highest commercial intent in the EN keyword database), appeared
+// nowhere in src/ at all.
+//
+// Same class of defect as the 48 project pages above: content that exists for
+// humans and is missing for crawlers. The copy lives in
+// src/data/aboutEntityContent.mjs, which also carries the claims allowlist,
+// because a wrong sentence on the page describing the company is worse than a
+// wrong sentence anywhere else on the site.
+function aboutBodyHtml(lang) {
+  const c = ABOUT_ENTITY[lang] || ABOUT_ENTITY.en
+  const p = langPrefix(lang)
+  // Markdown-lite: only **bold** is used in this copy, so a full parser here
+  // would be more dependency than the job needs.
+  const bold = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+
+  const what = c.what.map((x) => `<li>${bold(x)}</li>`).join('')
+  const why = c.why.map((x) => `<p>${esc(x)}</p>`).join('')
+  const offices = BRANCHES.map((b) => {
+    const label =
+      b.label === 'Headquarters' ? c.officeLabels.hq
+        : b.label === 'Regional office' ? c.officeLabels.regional
+          : c.officeLabels.desk
+    const lines = b.address.split('\n').map((l) => esc(l)).join('<br>')
+    return (
+      `<h3>${esc(`${b.city}: ${label}`)}</h3>` +
+      `<address>${lines}<br>` +
+      `<a href="tel:${b.phone.replace(/\s/g, '')}" style="color:#8c8d25">${esc(b.phone)}</a><br>` +
+      `<a href="mailto:${esc(b.email)}" style="color:#8c8d25">${esc(b.email)}</a></address>`
+    )
+  }).join('')
+  const faq = c.faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join('')
+  const links = c.links
+    .map(([href, label]) => `<li><a href="${p}${href}" style="color:#8c8d25">${esc(label)}</a></li>`)
+    .join('')
+
+  return (
+    `<p><strong>${esc(c.answer)}</strong></p>` +
+    `<h2>${esc(c.h.what)}</h2><ul>${what}</ul>` +
+    `<h2>${esc(c.h.why)}</h2>${why}` +
+    `<h2>${esc(c.h.offices)}</h2>${offices}` +
+    `<h2>${esc(c.h.faq)}</h2>${faq}` +
+    `<h2>${esc(c.h.next)}</h2><p>${esc(c.next)}</p><ul>${links}</ul>`
+  )
+}
+
 function persianAgencyHtml() {
   const p = langPrefix('fa')
   const who = paCopy.who.map((w) => `<h3>${esc(w.title)}</h3><p>${esc(w.body)}</p>`).join('')
