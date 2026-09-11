@@ -268,7 +268,14 @@ export default function PropertyPage() {
     const sqm_ = Math.round(Number(unit.total_area_sqm || unit.internal_area_sqm || 0))
     const priceTxt = unit.price_omr > 0 ? `OMR ${Number(unit.price_omr).toLocaleString()}` : null
 
-    const seoTitle = `${bedLabel} ${word} for Sale in ${city}${priceTxt ? ` — ${priceTxt}` : ''} | Irfan`
+    // Must match the static title in prerender-routes.mjs propertyPageFor():
+    // project name instead of city, size instead of price, brand dropped past
+    // 60 characters. Read the note there for the CTR measurement behind it.
+    // (This also retires an em-dash that had been sitting in a page title
+    // against the site-wide no-dash rule.)
+    const titleCore =
+      `${bedLabel} ${word} for Sale at ${project.name}${sqm_ ? `: ${sqm_} m²` : ''}`
+    const seoTitle = titleCore.length + 8 <= 60 ? `${titleCore} | Irfan` : titleCore
     const seoDesc = [
       `${bedLabel} ${word.toLowerCase()} for sale at ${project.name}, ${city}, Oman.`,
       sqm_ ? `${sqm_} m² built-up area.` : '',

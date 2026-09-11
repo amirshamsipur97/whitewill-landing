@@ -1051,7 +1051,32 @@ function propertyPageFor({ unit, project }, canonicalUrl) {
   const route = `/property/${unit.id}`
   const url = `${SITE}${route}`
 
-  const title = `${bedLabel} ${g} for Sale in ${city}${priceTxt ? `: ${priceTxt}` : ''} | Irfan`
+  // 🔑 PROJECT NAME, NOT CITY. Changed 2026-09-11 from
+  //   `${bedLabel} ${g} for Sale in ${city}: ${priceTxt} | Irfan`
+  // after GSC showed 95.9K impressions converting at 1.9% CTR against an
+  // average position of 6.5. Position 6 should return 3 to 6 percent, so the
+  // gap was never ranking, it was the snippet.
+  //
+  // The cause, measured across the built output: 345 of the 351 indexable unit
+  // pages shared a title with at least one other page. 351 URLs carried 23
+  // distinct titles. Seventy-nine of them read "2-Bedroom Apartment for Sale
+  // in Muscat", differing only by a price the searcher never asked about. That
+  // is half the indexed site competing with itself for one geo phrase, which
+  // is also the phrase /buy-apartment-in-muscat is supposed to own.
+  //
+  // Swapping city for project name and adding the size takes it from 23
+  // distinct titles to 217. The project name is not a guess: GSC shows project
+  // queries already earning clicks ("hay al wafa sultan haitham city" 5 clicks
+  // on 46 impressions, "yenaier residences oman" 3 on 44) with no page titled
+  // for them. Price stays in the meta description, which is where a figure
+  // that long belongs.
+  //
+  // The brand suffix is dropped when it would push past 60 characters, which
+  // it does for the longer project names, rather than letting Google truncate
+  // the size off the end.
+  const titleCore =
+    `${bedLabel} ${g} for Sale at ${project.name}${sqm ? `: ${sqm} m²` : ''}`
+  const title = titleCore.length + 8 <= 60 ? `${titleCore} | Irfan` : titleCore
   // Meta description for 478 unit pages. Audited 2026-08-30: the previous
   // wording averaged 181 characters and topped out at 193, so Google truncated
   // every one of them around 160 and the tail (the freehold and residency
