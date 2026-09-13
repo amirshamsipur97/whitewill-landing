@@ -16,16 +16,20 @@ export const ROUTES = {
   //   /project  → "properties/apartments for sale in oman"
   // Branded search is unaffected because the brand still closes the title.
   //
-  // ⚠️ ENGLISH ONLY. Reverted for ru/ar/fa on 2026-09-13. The evidence above
-  // (homepage -22% then -40% on the property cluster) was English GSC data,
-  // and on 09-10 the same split was applied to all four languages without
-  // checking which URL Google ranked for the Persian head term. That term,
-  // «خرید ملک در عمان», is the site's number one query, and the Persian
-  // homepage lost it from both <title> and H1. Three days later the owner
-  // reported the site missing from Google again. Correlation, not proof, but
-  // the non-English titles are back to their last known-working state until
-  // GSC (Performance, filter that query, Pages tab) shows whether /fa or
-  // /fa/buy holds it. Only then decide per language.
+  // ⚠️ ENGLISH ONLY. ru/ar/fa were restored to their pre-09-10 titles on
+  // 2026-09-13, because the evidence above is English GSC data and was never
+  // checked per language.
+  //
+  // 🔑 The suspicion that prompted the restore turned out to be WRONG, and the
+  // restore changed nothing either way. The GSC export of 2026-09-13 (last 3
+  // months) shows /fa with 4 impressions and 0 clicks, and /fa/buy with 1.
+  // Neither URL was ever what Google ranked for «خرید ملک در عمان», so this
+  // title could not have caused, or fixed, a drop on that query. The click dip
+  // on 09-10 and 09-11 (22 and 21 a day against ~33) also started before the
+  // retitle could take effect: it deployed at 18:01 UTC on the 10th and needs
+  // a recrawl, while impressions and average position held (6.4, 6.0).
+  // Keep the restored titles as the neutral state. Before touching them again,
+  // filter GSC by the head term and read the Pages tab.
   '/': {
     title: {
       en: 'Oman Real Estate: Freehold Homes & Investment | Irfan Investment Group',
