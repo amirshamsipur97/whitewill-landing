@@ -15,12 +15,23 @@ export const ROUTES = {
   //   /buy      → "buy property in oman" (the head term, exact match)
   //   /project  → "properties/apartments for sale in oman"
   // Branded search is unaffected because the brand still closes the title.
+  //
+  // ⚠️ ENGLISH ONLY. Reverted for ru/ar/fa on 2026-09-13. The evidence above
+  // (homepage -22% then -40% on the property cluster) was English GSC data,
+  // and on 09-10 the same split was applied to all four languages without
+  // checking which URL Google ranked for the Persian head term. That term,
+  // «خرید ملک در عمان», is the site's number one query, and the Persian
+  // homepage lost it from both <title> and H1. Three days later the owner
+  // reported the site missing from Google again. Correlation, not proof, but
+  // the non-English titles are back to their last known-working state until
+  // GSC (Performance, filter that query, Pages tab) shows whether /fa or
+  // /fa/buy holds it. Only then decide per language.
   '/': {
     title: {
       en: 'Oman Real Estate: Freehold Homes & Investment | Irfan Investment Group',
-      ru: 'Недвижимость Омана: фригольд и инвестиции | Irfan Investment Group',
-      ar: 'عقارات عُمان: تملك حر واستثمار | Irfan Investment Group',
-      fa: 'املاک عمان: مالکیت فری‌هولد و سرمایه‌گذاری | گروه سرمایه‌گذاری ایرفان',
+      ru: 'Irfan Investment Group: купить недвижимость в Омане',
+      ar: 'Irfan Investment Group: شراء العقارات والاستثمار في عُمان',
+      fa: 'خرید ملک در عمان و سرمایه‌گذاری | گروه سرمایه‌گذاری ایرفان',
     },
     desc: {
       en: 'Premium real estate brokerage in Oman. Buy apartments, villas and off-plan property in Muscat with freehold ownership and Oman residency for foreign investors.',
