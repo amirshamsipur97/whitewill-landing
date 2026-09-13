@@ -206,6 +206,33 @@ export default async function handler(req, res) {
       )
     }
   }
+  // ── TEMPORARY: redirected URLs Google is still serving ────────────────────
+  // On 2026-08-25 these Persian editions were unpublished and 301'd in
+  // vercel.json, because their audiences do not read Persian and they were
+  // outranking the Persian pillar for «خرید ملک در عمان». On 2026-09-13, 19
+  // days later, Google still showed the Pakistani one for that exact query,
+  // with a title older than the row's current seo_title: a cached copy of a
+  // URL it had not revisited.
+  //
+  // Nothing was sending it back. No article links to these URLs, nothing in
+  // the repo does, and they were correctly absent from the sitemap, so Google
+  // had no reason to recrawl them and never saw the redirect. Listing a
+  // redirected URL with a fresh lastmod is Google's own recommended way to get
+  // a redirect processed. Search Console will report "page with redirect" for
+  // these three; that warning is expected and harmless.
+  //
+  // ⚠️ REMOVE this block once URL Inspection shows each URL as redirected, or
+  // by 2026-10-31 at the latest. Left in permanently it becomes the noise it
+  // was added to clear.
+  const RECRAWL_REDIRECTS = [
+    '/fa/insights/buy-property-oman-pakistani-investors-guide-2026',
+    '/fa/insights/can-indians-buy-property-oman-nri-guide-2026',
+    '/fa/insights/buy-property-salalah-indian-investors-nri-2026',
+  ]
+  for (const path of RECRAWL_REDIRECTS) {
+    urls.push(`  <url>\n    <loc>${esc(SITE + path)}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`)
+  }
+
   for (const p of unitPaths) {
     urls.push(
       `  <url>\n    <loc>${esc(loc('en', p.path))}</loc>\n    <lastmod>${p.lastmod}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`,
