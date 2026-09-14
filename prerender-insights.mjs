@@ -155,18 +155,31 @@ function footerLinksHtml(lang) {
 // future article that includes its own title line is covered without an edit
 // to the row.
 const mdRenderer = new marked.Renderer()
-mdRenderer.heading = function (text, level, raw) {
-  const l = level === 1 ? 2 : level
-  const id = String(raw || '')
+// 🚨 marked v5+ (installed: 18) calls renderer methods with ONE token object,
+// not the old positional (text, level, raw). Written against the old signature
+// on 2026-08-30 (ad30b67), this renderer turned EVERY article heading in the
+// static HTML into `<hundefined>[object Object]</hundefined>` for two weeks:
+// level was undefined and text was the tokens array. React fixed it for humans
+// on hydration, so it was invisible in a browser and only showed in the raw
+// HTML a crawler reads first. Found 2026-09-14. The assertion in
+// renderArticleHtml below now fails the build if it ever comes back.
+mdRenderer.heading = function ({ tokens, depth, text }) {
+  const l = depth === 1 ? 2 : depth
+  const inner = this.parser.parseInline(tokens)
+  const id = String(text || '')
     .toLowerCase()
     .replace(/[^\w\u0600-\u06FF\u0400-\u04FF]+/g, '-')
     .replace(/(^-|-$)/g, '')
-  return `<h${l}${id ? ` id="${id}"` : ''}>${text}</h${l}>\n`
+  return `<h${l}${id ? ` id="${id}"` : ''}>${inner}</h${l}>\n`
 }
 
 function renderArticleHtml(a) {
   const rtl = RTL.has(a.lang)
   const body = marked.parse(String(a.body_md || ''), { renderer: mdRenderer })
+  // Fail the build, never ship it: a broken renderer is invisible in a browser.
+  if (/<h(undefined|NaN)|\[object Object\]/.test(body)) {
+    throw new Error(`prerender-insights: broken markdown render in ${a.lang}/${a.slug}`)
+  }
   const date = a.published_at ? new Date(a.published_at).toISOString().slice(0, 10) : ''
   // Plain semantic HTML inside #root — React replaces it on hydration; until
   // then (and for crawlers) it IS the page. Minimal inline styling keeps it
