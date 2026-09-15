@@ -20,7 +20,11 @@
  *    the new route was requested under its old hash. Catching it at mount means
  *    the tab corrects itself before anything can be clicked;
  *  - version.json is fetched no-store, so the check itself is never cached;
- *  - it reloads AT MOST ONCE per tab, guarded in sessionStorage;
+ *  - it reloads AT MOST ONCE PER BUILD per tab: sessionStorage remembers the
+ *    entry hash it last reloaded FOR, so a second deploy in the same session
+ *    still gets its one reload. The first version stored a bare boolean, and
+ *    on 2026-09-16 (three deploys in one hour) a tab that had already used
+ *    its single reload could never recover from the next stale chunk;
  *  - every failure path is silent. A missing or unreachable version.json must
  *    never break navigation.
  */
@@ -36,14 +40,32 @@ function runningEntry() {
 
 export async function reloadIfStaleBuild() {
   try {
-    if (sessionStorage.getItem(FLAG) === '1') return   // one reload per tab, ever
     const mine = runningEntry()
     if (!mine) return
     const r = await fetch('/version.json', { cache: 'no-store' })
     if (!r.ok) return
     const { entry } = await r.json()
     if (!entry || entry === mine) return
-    sessionStorage.setItem(FLAG, '1')
+    // Already reloaded once for THIS build and still stale? Then the reload
+    // did not help (proxy cache, offline); stop, do not loop.
+    if (sessionStorage.getItem(FLAG) === entry) return
+    sessionStorage.setItem(FLAG, entry)
     window.location.reload()
   } catch { /* never let this break the app */ }
+}
+
+/**
+ * Used by the chunk error boundary: true when production has moved on from
+ * the build this tab is running, which means one reload will fix a failed
+ * lazy import. Silent false on any failure.
+ */
+export async function isBuildStale() {
+  try {
+    const mine = runningEntry()
+    if (!mine) return false
+    const r = await fetch('/version.json', { cache: 'no-store' })
+    if (!r.ok) return false
+    const { entry } = await r.json()
+    return Boolean(entry) && entry !== mine
+  } catch { return false }
 }

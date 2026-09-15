@@ -24,8 +24,24 @@
  * does not.
  */
 import { Component } from 'react'
+import { isBuildStale } from '../lib/buildVersion.js'
 
 const RELOAD_FLAG = 'irfan_chunk_reload'
+
+// The visitor's language comes from the URL prefix; the boundary sits above
+// the i18n-aware routes, so it cannot use the hook. Keep the copy plain.
+const COPY = {
+  en: { msg: 'This page did not load correctly. Refreshing usually fixes it.', btn: 'Reload' },
+  fa: { msg: 'این صفحه درست بارگذاری نشد. معمولاً با یک بار بارگذاری مجدد درست می‌شود.', btn: 'بارگذاری مجدد' },
+  ar: { msg: 'لم يتم تحميل هذه الصفحة بشكل صحيح. عادةً تحل إعادة التحميل المشكلة.', btn: 'إعادة التحميل' },
+  ru: { msg: 'Страница загрузилась некорректно. Обычно помогает обновление.', btn: 'Обновить' },
+}
+const copyFor = () => {
+  try {
+    const seg = window.location.pathname.split('/')[1]
+    return COPY[seg] || COPY.en
+  } catch { return COPY.en }
+}
 
 // Vite, webpack and the browsers all word this differently, so match broadly.
 const isChunkError = (err) => {
@@ -67,7 +83,12 @@ export default class ChunkErrorBoundary extends Component {
       alreadyTried = sessionStorage.getItem(RELOAD_FLAG) === '1'
       if (!alreadyTried) sessionStorage.setItem(RELOAD_FLAG, '1')
     } catch { /* private mode: fall through to the message */ }
-    if (!alreadyTried) window.location.reload()
+    if (!alreadyTried) { window.location.reload(); return }
+    // The single retry is spent, but if production has shipped a NEWER build
+    // since then (several deploys a day here), the failure is a stale chunk
+    // again and one more reload is the fix, not a loop: the flag is cleared on
+    // every clean mount, so a loop would need the reload itself to fail.
+    isBuildStale().then((stale) => { if (stale) window.location.reload() })
   }
 
   componentDidMount() {
@@ -78,18 +99,19 @@ export default class ChunkErrorBoundary extends Component {
 
   render() {
     if (!this.state.failed) return this.props.children
+    const c = copyFor()
     return (
       <div style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', background: '#000', color: '#fff', padding: 24, textAlign: 'center' }}>
         <div>
           <p style={{ fontSize: 17, marginBottom: 18, opacity: 0.85 }}>
-            This page did not load correctly. Refreshing usually fixes it.
+            {c.msg}
           </p>
           <button
             type="button"
             onClick={() => window.location.reload()}
             style={{ background: '#8c8d25', color: '#000', border: 0, borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}
           >
-            Reload
+            {c.btn}
           </button>
         </div>
       </div>
