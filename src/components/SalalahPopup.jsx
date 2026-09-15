@@ -51,7 +51,7 @@ export const OPEN_EVENT = 'irfan:open-salalah-popup'
 
 // ── geo-currency ─────────────────────────────────────────────────────
 // ⚠️ DO NOT name communities next to this price. It is the entry price of ONE
-// development (Wadi Zaha, OMR 61,635). Al Mouj starts at OMR 140,316 and
+// development (Wadi Zaha, OMR 61,635). Al Mouj starts at OMR 140,000 and
 // Muscat Bay at OMR 138,000, so listing them beside a $16,000 deposit implied
 // a deposit ~2.3x lower than reality. Same class of error as the "up to 8%
 // yield" claim removed on 2026-07-26: a true number attached to the wrong thing.

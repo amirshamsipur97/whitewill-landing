@@ -265,7 +265,7 @@ const D = {
       'A low-rise residential community at Al Mouj — 1- and 2-bedroom apartments plus beachfront duplexes with sea, pool and golf-course views.',
     units: ['Apartment', 'Duplex'],
     bedrooms: '1 – 3',
-    priceFrom: 'OMR 140,316',
+    priceFrom: 'OMR 140,000',
     handover: '2026 – 2027',
     features: ['seaView', 'beachAccess', 'golfCourse', 'pool', 'marina', 'gym', 'landscapedGardens', 'freehold'],
     sections: [
@@ -283,7 +283,7 @@ const D = {
       },
       {
         title: 'Investment & ownership',
-        body: 'Al Mouj is a freehold Integrated Tourism Complex open to all nationalities, with title that carries Omani residency. Priced from OMR 140,316 with handover in 2026–2027, Vistal offers off-plan beachfront ownership in a proven, rental-strong location.',
+        body: 'Al Mouj is a freehold Integrated Tourism Complex open to all nationalities, with title that carries Omani residency. Priced from OMR 140,000 with handover in 2026–2027, Vistal offers off-plan beachfront ownership in a proven, rental-strong location.',
       },
     ],
   },
@@ -578,7 +578,7 @@ const AR_OVERLAY = {
       },
       {
         title: 'الاستثمار والتملّك',
-        body: 'الموج مجمّع سياحي متكامل تملّك حر مفتوح لجميع الجنسيات مع إقامة عُمانية. بسعر من 140,316 ر.ع وتسليم 2026–2027، يقدّم فيستال تملّكاً شاطئياً على المخطط في موقع مثبت قوي الإيجار.',
+        body: 'الموج مجمّع سياحي متكامل تملّك حر مفتوح لجميع الجنسيات مع إقامة عُمانية. بسعر من 140,000 ر.ع وتسليم 2026–2027، يقدّم فيستال تملّكاً شاطئياً على المخطط في موقع مثبت قوي الإيجار.',
       },
     ],
   },
