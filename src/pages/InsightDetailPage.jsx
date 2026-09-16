@@ -56,6 +56,16 @@ const ARTICLE_CTA = {
   },
 }
 
+/** Tells the site-wide popup what kind of article is open (see SalalahPopup:
+ *  it auto-opens on PROPERTY articles only). Cleared on unmount. */
+function ArticleKindTag({ business }) {
+  useEffect(() => {
+    try { document.body.dataset.articleKind = business ? 'business' : 'property' } catch { /* SSR */ }
+    return () => { try { delete document.body.dataset.articleKind } catch { /* ignore */ } }
+  }, [business])
+  return null
+}
+
 /** Split markdown after the Nth H2 so a card can sit between two halves. */
 function splitAfterHeading(md, n = 3) {
   if (!md) return [md, null]
@@ -313,6 +323,7 @@ export default function InsightDetailPage() {
   const a = article
   return (
     <Box dir={rtl ? 'rtl' : 'ltr'} sx={{ bgcolor: '#000', color: '#fff', fontFamily: FONT, textAlign: rtl ? 'right' : 'left' }}>
+      <ArticleKindTag business={BUSINESS_CATEGORIES.has(a.category)} />
       {/* Header */}
       <Box sx={{ borderBottom: HAIR, background: 'radial-gradient(90% 120% at 50% -10%, rgba(140,141,37,0.12) 0%, rgba(0,0,0,0) 60%)' }}>
         <Container maxWidth="md" sx={{ pt: { xs: 10, md: 14 }, pb: { xs: 4, md: 6 } }}>

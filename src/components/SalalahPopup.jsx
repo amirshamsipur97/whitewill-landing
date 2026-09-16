@@ -30,6 +30,8 @@ import { isPaidVisit } from '../lib/attribution.js'
 
 const SLIDE_MS = 2600
 const FIRST_MS = 5000
+const ARTICLE_DWELL_MS = 20000   // articles: at least 20s on the page
+const ARTICLE_DEPTH = 0.45        // and past 45% of its height
 // ONE auto-open per page per user, and that is the whole rule.
 //
 // It used to re-arm a 45s timer every time the visitor closed it, so somebody
@@ -200,6 +202,16 @@ export default function SalalahPopup() {
   // we rank organically. Organic visitors still get it; the launcher button
   // stays for everyone, so nobody loses the offer, they just have to ask.
   const onAutoOpenPage = (logical === '/' || logical === '/buy') && !isPaidVisit()
+  // Articles (2026-09-16, owner accepted the interstitial risk): the popup is
+  // the site's best converter and articles are its biggest organic surface,
+  // but a full-screen card on arrival from Google is exactly what the mobile
+  // intrusive-interstitial signal punishes. So on an article it opens only
+  // after the reader has BOTH stayed ARTICLE_DWELL_MS and scrolled past
+  // ARTICLE_DEPTH of the page, only on organic visits, only on PROPERTY
+  // articles (InsightDetailPage tags <body data-article-kind>; the Muscat
+  // price-list offer is wrong under a company-registration guide), and once
+  // per path like everywhere else.
+  const onArticle = /^\/insights\/[^/]+$/.test(logical) && !isPaidVisit()
 
   // Muscat visuals: Muscat Bay (Zen Residences) + Al Mouj (Vistal) renders.
   const slides = [...galleryFor('zen-residences'), ...galleryFor('vistal').slice(0, 3)]
@@ -312,6 +324,26 @@ export default function SalalahPopup() {
     }, FIRST_MS)
     return () => clearTimeout(timerRef.current)
   }, [onAutoOpenPage, logical])
+
+  // Article auto-open: dwell + scroll depth, polled once a second. A poll is
+  // deliberate: Lenis smooth scrolling and native scrolling report position
+  // differently, and a 1 Hz check of scrollY is cheaper than two listeners.
+  useEffect(() => {
+    if (!onArticle || isDone() || hasSeen(logical)) return
+    const armedAt = Date.now()
+    const id = setInterval(() => {
+      if (isDone() || hasSeen(logical)) { clearInterval(id); return }
+      if (document.body?.dataset?.articleKind !== 'property') return
+      if (Date.now() - armedAt < ARTICLE_DWELL_MS) return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const depth = max > 0 ? window.scrollY / max : 1
+      if (depth < ARTICLE_DEPTH) return
+      clearInterval(id)
+      markSeen(logical)
+      setOpen(true)
+    }, 1000)
+    return () => clearInterval(id)
+  }, [onArticle, logical])
 
   // The Salalah banner (and anything else) can open it via a window event.
   // Explicit opens always work, even after a submitted lead.
