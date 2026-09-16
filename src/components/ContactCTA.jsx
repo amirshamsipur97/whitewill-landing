@@ -21,6 +21,12 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { submitForm } from '../supabase'
 import { useI18n } from '../i18n.jsx'
+import { trackContactClick } from '../analytics.js'
+
+// The agency's WhatsApp Business link (same one the footer and the Meta
+// landing page use). A form is a commitment; a WhatsApp tap is not, and
+// Iranian and Gulf buyers overwhelmingly start there.
+const WHATSAPP_URL = 'https://wa.me/message/L22KC3L6RYINE1'
 import { COUNTRY_CODES, DEFAULT_DIAL_CODE, countryForDialCode } from '../data/countryCodes.js'
 
 const OLIVE = '#7c7856'
@@ -81,8 +87,12 @@ export default function ContactCTA({
   const onSubmit = async (e) => {
     e.preventDefault()
     if (submitting) return
-    if (!form.full_name.trim() || !form.email.trim()) {
-      setSnack({ open: true, ok: false, msg: c.errorMsg })
+    // Name + phone are the lead. Email was the required field until
+    // 2026-09-16 and phone optional; 60 days of data said the opposite of
+    // what the form asked for: the popup (name + phone only) converted, the
+    // form barely did, and Persian visitors, who rarely give an email, left.
+    if (!form.full_name.trim() || !form.phone.trim()) {
+      setSnack({ open: true, ok: false, msg: c.phoneRequiredMsg || c.errorMsg })
       return
     }
     setSubmitting(true)
@@ -184,8 +194,8 @@ export default function ContactCTA({
         >
           {[
             { k: 'full_name', label: c.placeholderName, required: true, col: { xs: '1 / -1', md: 'auto' } },
-            { k: 'email', label: c.placeholderEmail, type: 'email', required: true, col: { xs: '1 / -1', md: 'auto' } },
-            { k: 'phone', label: c.placeholderPhone, col: '1 / -1', phoneField: true },
+            { k: 'phone', label: c.placeholderPhone, required: true, col: { xs: '1 / -1', md: 'auto' }, phoneField: true },
+            { k: 'email', label: c.placeholderEmail, type: 'email', col: { xs: '1 / -1', md: 'auto' } },
             { k: 'message', label: c.placeholderMessage, textarea: true, col: '1 / -1' },
           ].map((f) => {
             const inputSx = {
@@ -220,7 +230,7 @@ export default function ContactCTA({
                 {f.required && <Box component="span" sx={{ color: OLIVE_BRIGHT, ml: 0.5 }}>*</Box>}
               </Typography>
               {f.phoneField ? (
-                <Box sx={{ display: 'grid', gridTemplateColumns: '116px 1fr', gap: 1 }} dir="ltr">
+                <Box sx={{ display: 'grid', gridTemplateColumns: '108px 1fr', gap: 1 }} dir="ltr">
                   <Box
                     component="select"
                     aria-label="Country code"
@@ -295,6 +305,30 @@ export default function ContactCTA({
               {submitting ? c.sending : c.submit}
             </Button>
           </Box>
+
+          {c.whatsappLead && (
+            <Box sx={{ gridColumn: '1 / -1', mt: 1, pt: 2.5, borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
+              <Typography sx={{ fontFamily: '"Arsenal SC", "Inter", sans-serif', fontSize: 14.5, color: 'rgba(255,255,255,0.7)' }}>
+                {c.whatsappLead}
+              </Typography>
+              <Button
+                component="a"
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener"
+                onClick={() => trackContactClick({ channel: 'whatsapp', language: lang })}
+                variant="outlined"
+                sx={{
+                  borderColor: 'rgba(37,211,102,0.55)', color: '#25d366',
+                  fontFamily: '"Arsenal SC", "Inter", sans-serif', fontWeight: 600, fontSize: 14,
+                  textTransform: 'none', borderRadius: '10px', px: 2.5, py: 1.1,
+                  '&:hover': { borderColor: '#25d366', bgcolor: 'rgba(37,211,102,0.08)' },
+                }}
+              >
+                {c.whatsappBtn}
+              </Button>
+            </Box>
+          )}
         </Box>
       </Container>
 

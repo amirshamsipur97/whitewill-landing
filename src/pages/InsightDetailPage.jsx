@@ -18,6 +18,98 @@ import { INSIGHTS_UI, formatDate, RTL_LANGS } from './insights/strings.js'
 import { localizePath } from '../lib/localize.js'
 import { setAlternates } from '../seo.jsx'
 import ContactCTA from '../components/ContactCTA'
+import { OPEN_EVENT } from '../components/SalalahPopup.jsx'
+import { trackContactClick } from '../analytics.js'
+
+/* ── conversion layer ───────────────────────────────────────────────────
+   Articles are the site's largest organic surface and, until 2026-09-16, its
+   worst converter: 60 days of leads showed the top five business articles
+   (about 500 clicks a month between them) producing two leads, while the
+   project pages and the popup produced the rest. Two reasons, both fixed here:
+   the closing form talked about "your next investment" under a guide about
+   company registration or bank loans, and a reader who did not scroll to the
+   very end never saw a way to ask anything. So: topic-aware copy on the
+   closing form, and one compact card a third of the way down with the two
+   lowest-friction actions (the popup that already converts, or WhatsApp). */
+const BUSINESS_CATEGORIES = new Set(['Company Registration', 'Banking', 'Investment', 'Car Import', 'ثبت شرکت'])
+const WHATSAPP_URL = 'https://wa.me/message/L22KC3L6RYINE1'
+const ARTICLE_CTA = {
+  en: {
+    property: { eyebrow: 'Talk to an advisor', title: 'Want the live price list for the homes in this guide?', subtitle: 'Leave your name and WhatsApp number. An advisor sends the current units, prices and payment plans within one business day.', mid: 'Want current prices and payment plans for the homes mentioned here?', midBtn: 'Get the price list' },
+    business: { eyebrow: 'Free consultation', title: 'Setting up a company, bank account or residency in Oman?', subtitle: 'Tell us what you are planning. Our company-formation team replies within one business day with the exact steps, costs and timeline for your case.', mid: 'Have a question about your own company, visa or bank account in Oman?', midBtn: 'Ask an advisor' },
+    wa: 'WhatsApp',
+  },
+  fa: {
+    property: { eyebrow: 'مشاوره رایگان فارسی', title: 'لیست قیمت زنده واحدهای این راهنما را می‌خواهید؟', subtitle: 'نام و شماره واتساپ خود را بنویسید. مشاور فارسی‌زبان ما ظرف یک روز کاری واحدهای موجود، قیمت روز و برنامه پرداخت را می‌فرستد.', mid: 'قیمت روز و برنامه پرداخت واحدهایی که اینجا آمده را می‌خواهید؟', midBtn: 'دریافت لیست قیمت' },
+    business: { eyebrow: 'مشاوره رایگان فارسی', title: 'ثبت شرکت، حساب بانکی یا اقامت عمان در برنامه‌تان است؟', subtitle: 'بنویسید چه کاری می‌خواهید بکنید. تیم ثبت شرکت ما ظرف یک روز کاری مراحل دقیق، هزینه و زمان‌بندی پرونده شما را می‌فرستد.', mid: 'درباره شرکت، ویزا یا حساب بانکی خودتان در عمان سوال دارید؟', midBtn: 'سوال از مشاور' },
+    wa: 'واتساپ',
+  },
+  ar: {
+    property: { eyebrow: 'تحدث مع مستشار', title: 'هل تريد قائمة الأسعار الحالية للوحدات المذكورة في هذا الدليل؟', subtitle: 'اترك اسمك ورقم واتساب. يرسل لك مستشارنا الوحدات المتاحة والأسعار وخطط الدفع خلال يوم عمل واحد.', mid: 'هل تريد الأسعار الحالية وخطط الدفع للوحدات المذكورة هنا؟', midBtn: 'احصل على قائمة الأسعار' },
+    business: { eyebrow: 'استشارة مجانية', title: 'هل تخطط لتأسيس شركة أو فتح حساب بنكي أو الحصول على إقامة في عُمان؟', subtitle: 'أخبرنا بما تخطط له. يرد فريق تأسيس الشركات خلال يوم عمل واحد بالخطوات الدقيقة والتكاليف والمدة لحالتك.', mid: 'لديك سؤال عن شركتك أو إقامتك أو حسابك البنكي في عُمان؟', midBtn: 'اسأل مستشاراً' },
+    wa: 'واتساب',
+  },
+  ru: {
+    property: { eyebrow: 'Консультация', title: 'Нужен актуальный прайс-лист по объектам из этого гида?', subtitle: 'Оставьте имя и номер WhatsApp. Консультант пришлёт доступные лоты, цены и планы оплаты в течение одного рабочего дня.', mid: 'Хотите актуальные цены и планы оплаты по объектам из статьи?', midBtn: 'Получить прайс-лист' },
+    business: { eyebrow: 'Бесплатная консультация', title: 'Планируете компанию, банковский счёт или резидентство в Омане?', subtitle: 'Расскажите о задаче. Команда по регистрации компаний ответит в течение одного рабочего дня с точными шагами, стоимостью и сроками для вашего случая.', mid: 'Есть вопрос о своей компании, визе или счёте в Омане?', midBtn: 'Спросить консультанта' },
+    wa: 'WhatsApp',
+  },
+}
+
+/** Split markdown after the Nth H2 so a card can sit between two halves. */
+function splitAfterHeading(md, n = 3) {
+  if (!md) return [md, null]
+  const re = /\n## /g
+  let m, count = 0
+  while ((m = re.exec(md))) {
+    count += 1
+    if (count === n) return [md.slice(0, m.index + 1), md.slice(m.index + 1)]
+  }
+  return [md, null]
+}
+
+function MidArticleCTA({ copy, business, lang, rtl }) {
+  const primary = () => {
+    if (business) {
+      document.getElementById('article-contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else {
+      window.dispatchEvent(new CustomEvent(OPEN_EVENT))
+    }
+  }
+  return (
+    <Box
+      role="complementary"
+      sx={{
+        my: { xs: 4, md: 5 }, p: { xs: 2.5, md: 3 }, borderRadius: '16px',
+        border: '1px solid rgba(140,141,37,0.45)',
+        background: 'linear-gradient(135deg, rgba(140,141,37,0.16) 0%, rgba(140,141,37,0.04) 100%)',
+        display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 2,
+      }}
+    >
+      <Typography sx={{ fontFamily: FONT, fontSize: { xs: 16, md: 18 }, fontWeight: 500, lineHeight: 1.45, flex: '1 1 260px' }}>
+        {copy.mid}
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 1.2, flexWrap: 'wrap' }}>
+        <Box
+          component="button" type="button" onClick={primary}
+          sx={{ cursor: 'pointer', border: 0, borderRadius: '10px', px: 2.4, py: 1.2, bgcolor: OLIVE_BRIGHT, color: '#000', fontFamily: FONT, fontWeight: 700, fontSize: 14.5, '&:hover': { bgcolor: '#7c7856' } }}
+        >
+          {copy.midBtn}
+        </Box>
+        <Box
+          component="a" href={WHATSAPP_URL} target="_blank" rel="noopener"
+          onClick={() => trackContactClick({ channel: 'whatsapp', language: lang })}
+          sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.8, textDecoration: 'none', borderRadius: '10px', px: 2.2, py: 1.2, border: '1px solid rgba(37,211,102,0.55)', color: '#25d366', fontFamily: FONT, fontWeight: 600, fontSize: 14.5, '&:hover': { bgcolor: 'rgba(37,211,102,0.08)' } }}
+        >
+          <Box component="svg" viewBox="0 0 24 24" sx={{ width: 18, height: 18, fill: 'currentColor', transform: rtl ? 'scaleX(-1)' : 'none' }} aria-hidden>
+            <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.5-.3z" />
+          </Box>
+          {copy.wa}
+        </Box>
+      </Box>
+    </Box>
+  )
+}
 
 const SITE = 'https://www.irfaninvest.com'
 
@@ -260,9 +352,21 @@ export default function InsightDetailPage() {
           <Box component="img" src={a.cover_image} alt={a.title} sx={{ display: 'block', width: '100%', aspectRatio: '16 / 8', objectFit: 'cover', borderRadius: '16px', border: HAIR, mb: { xs: 4, md: 5 } }} />
         )}
 
-        {/* Body */}
+        {/* Body, with one conversion card after the third H2 */}
         <Box sx={{ maxWidth: 760, mx: 'auto' }}>
-          <Markdown>{a.body_md}</Markdown>
+          {(() => {
+            const business = BUSINESS_CATEGORIES.has(a.category)
+            const copySet = ARTICLE_CTA[lang] || ARTICLE_CTA.en
+            const copy = { ...(business ? copySet.business : copySet.property), wa: copySet.wa }
+            const [head, tail] = (a.body_md || '').length > 2500 ? splitAfterHeading(a.body_md, 3) : [a.body_md, null]
+            return (
+              <>
+                <Markdown>{head}</Markdown>
+                {tail && <MidArticleCTA copy={copy} business={business} lang={lang} rtl={rtl} />}
+                {tail && <Markdown>{tail}</Markdown>}
+              </>
+            )
+          })()}
         </Box>
 
         {/* Tags */}
@@ -329,7 +433,21 @@ export default function InsightDetailPage() {
           `source` is its own value so article leads are separable in the leads
           table; ContactCTA already sends page_url, so the exact article is
           recorded without inventing 154 source strings. */}
-      <ContactCTA source="insight_article" />
+      {(() => {
+        const business = BUSINESS_CATEGORIES.has(a.category)
+        const copySet = ARTICLE_CTA[lang] || ARTICLE_CTA.en
+        const copy = business ? copySet.business : copySet.property
+        return (
+          <Box id="article-contact">
+            <ContactCTA
+              source={business ? 'insight_article_business' : 'insight_article'}
+              eyebrow={copy.eyebrow}
+              title={copy.title}
+              subtitle={copy.subtitle}
+            />
+          </Box>
+        )
+      })()}
     </Box>
   )
 }
