@@ -16,6 +16,8 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { ROUTES, projectMeta } from './src/seoRoutes.mjs'
+import { clampTitle } from './src/lib/clampTitle.mjs'
+import { HOME_SEO } from './src/homeSeoContent.mjs'
 import {
   BUY_SEO, buyFaqJsonLd, BUY_TABLES, BUY_AREA_LABELS, BUY_TYPE_LABELS, BUY_FAQ_EXTRA,
 } from './src/buySeoContent.mjs'
@@ -70,7 +72,7 @@ writeFileSync('dist/app.html', template)
 
 function pageFor(route, lang) {
   const r = ROUTES[route]
-  const title = pick(r.title, lang)
+  const title = clampTitle(pick(r.title, lang))
   const desc = pick(r.desc, lang)
   const url = urlFor(lang, route)
   let html = template
@@ -109,6 +111,7 @@ function pageFor(route, lang) {
     : 'max-width:760px;margin:0 auto;padding:96px 20px'
   const body =
     `<h1>${esc(title.split('|')[0].trim())}</h1><p>${esc(desc)}</p>` +
+    (route === '/' ? homeSeoHtml(lang) : '') +
     (route === '/buy' ? buySeoHtml(lang) : '') +
     (route === '/project' ? projectSeoHtml(lang) : '') +
     (LANDINGS[route.slice(1)] ? landingSeoHtml(route.slice(1), lang) : '') +
@@ -361,6 +364,29 @@ function buySeoHtml(lang) {
     faq +
     `<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
   )
+}
+
+// Homepage body: market overview + live community table (see homeSeoContent.mjs).
+function homeSeoHtml(lang) {
+  const c = HOME_SEO[lang] || HOME_SEO.en
+  const idx = priceIndex
+  if (!idx?.units) return ''
+  const prefix = langPrefix(lang)
+  const areaL = BUY_AREA_LABELS[lang] || BUY_AREA_LABELS.en
+  const loc = lang === 'fa' ? 'fa-IR' : 'en-US'
+  const num = (n) => Number(n).toLocaleString(loc).replace(/٬/g, '٬')
+  const entry = Math.min(...idx.byArea.map((a) => a.minPrice).filter((n) => n > 0))
+  const vars = { UNITS: num(idx.units), PROJECTS: num(idx.projects), ENTRY: num(entry), MEDIAN: num(idx.overall.medianPpsm) }
+  const fillVars = (t) => String(t).replace(/\{(UNITS|PROJECTS|ENTRY|MEDIAN)\}/g, (_, k) => vars[k])
+  const paras = c.paras.map((p) => `<p>${esc(fillVars(p))}</p>`).join('')
+  const rows = [...idx.byArea]
+    .sort((a, b) => (a.minPrice ?? 0) - (b.minPrice ?? 0))
+    .map((a) => `<tr><td>${esc(areaL[a.key] || a.label)}</td><td>${num(a.n)}</td><td>${num(a.minPrice)}</td><td>${a.medianPpsm ? num(a.medianPpsm) : ''}</td></tr>`)
+    .join('')
+  const table = `<table><thead><tr>${c.cols.map((h) => `<th style="text-align:start">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`
+  const faq = c.faq.map((f) => `<h3>${esc(fillVars(f.q))}</h3><p>${esc(fillVars(f.a))}</p>`).join('')
+  const links = c.links.map((l) => `<li><a href="${prefix}${l.href}" style="color:#8c8d25">${esc(l.label)}</a></li>`).join('')
+  return `<h2>${esc(c.heading)}</h2>${paras}${table}${faq}<h3>${esc(c.linksHeading)}</h3><ul>${links}</ul>`
 }
 
 // Same pattern for /project — the search portal had no crawlable body copy at

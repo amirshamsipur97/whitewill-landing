@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { ALL_LANGS, langFromPath, stripLang, localizePath } from './lib/localize.js'
 import { ROUTES, projectMeta } from './seoRoutes.mjs'
+import { clampTitle } from './lib/clampTitle.mjs'
 
 /**
  * SeoManager — per-route <head> metadata for the SPA.
@@ -138,7 +139,7 @@ export default function SeoManager() {
     const selfPath = localizePath(logical === '/' ? '/' : logical.replace(/\/$/, ''), lang)
     const url = SITE + selfPath
 
-    document.title = title
+    document.title = clampTitle(title)
     setMeta('name', 'description', desc)
     setMeta(
       'name',
